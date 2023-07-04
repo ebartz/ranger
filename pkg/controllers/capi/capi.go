@@ -3,11 +3,11 @@ package capi
 import (
 	"context"
 
-	controllerruntime "github.com/rancher/lasso/controller-runtime"
-	"github.com/rancher/rancher/pkg/controllers/capi/logger"
-	rkecontrollers "github.com/rancher/rancher/pkg/generated/controllers/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/wrangler"
-	"github.com/rancher/wrangler/pkg/schemes"
+	controllerruntime "github.com/ranger/lasso/controller-runtime"
+	"github.com/ranger/ranger/pkg/controllers/capi/logger"
+	rkecontrollers "github.com/ranger/ranger/pkg/generated/controllers/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/wrangler"
+	"github.com/ranger/wrangler/pkg/schemes"
 	corev1 "k8s.io/api/core/v1"
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"

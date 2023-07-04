@@ -28,22 +28,22 @@ func TestGreaterThan(t *testing.T) {
 	})
 
 	testAscending(t, []string{
-		"v0.1.0-rancher0",
-		"v0.1.0-rancher1",
-		"v0.1.0-rancher1.1",
-		"v1.2.4-rancher6",
-		"v1.2.4-rancher6.1",
-		"v1.2.4-rancher7",
-		"v1.2.4-rancher7.2",
-		"v1.2.4-rancher7.3",
-		"v1.2.4-rancher9.0",
-		"v1.2.4-rancher10.10",
-		"v1.2.4-rancher12.0",
-		"v1.2.4-rancher12.5",
-		"v1.2.4-rancher14",
-		"v1.2.4-rancher15.10",
-		"v1.3.0-rancher3",
-		"v1.3.0-rancher4",
+		"v0.1.0-ranger0",
+		"v0.1.0-ranger1",
+		"v0.1.0-ranger1.1",
+		"v1.2.4-ranger6",
+		"v1.2.4-ranger6.1",
+		"v1.2.4-ranger7",
+		"v1.2.4-ranger7.2",
+		"v1.2.4-ranger7.3",
+		"v1.2.4-ranger9.0",
+		"v1.2.4-ranger10.10",
+		"v1.2.4-ranger12.0",
+		"v1.2.4-ranger12.5",
+		"v1.2.4-ranger14",
+		"v1.2.4-ranger15.10",
+		"v1.3.0-ranger3",
+		"v1.3.0-ranger4",
 	})
 
 	testAscending(t, []string{

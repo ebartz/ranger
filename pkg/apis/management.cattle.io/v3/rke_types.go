@@ -1,8 +1,8 @@
 package v3
 
 import (
-	"github.com/rancher/norman/types"
-	rketypes "github.com/rancher/rke/types"
+	"github.com/ranger/norman/types"
+	rketypes "github.com/ranger/rke/types"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 

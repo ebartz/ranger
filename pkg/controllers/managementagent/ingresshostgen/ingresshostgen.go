@@ -8,10 +8,10 @@ import (
 
 	"k8s.io/apimachinery/pkg/runtime"
 
-	"github.com/rancher/rancher/pkg/controllers/managementuserlegacy/approuter"
-	"github.com/rancher/rancher/pkg/ingresswrapper"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/ranger/pkg/controllers/managementuserlegacy/approuter"
+	"github.com/ranger/ranger/pkg/ingresswrapper"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/types/config"
 )
 
 type IngressHostGen struct {

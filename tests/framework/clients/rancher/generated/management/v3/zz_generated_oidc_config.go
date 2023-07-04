@@ -18,7 +18,7 @@ const (
 	OIDCConfigFieldName                = "name"
 	OIDCConfigFieldOwnerReferences     = "ownerReferences"
 	OIDCConfigFieldPrivateKey          = "privateKey"
-	OIDCConfigFieldRancherURL          = "rancherUrl"
+	OIDCConfigFieldRangerURL          = "rangerUrl"
 	OIDCConfigFieldRemoved             = "removed"
 	OIDCConfigFieldScopes              = "scope"
 	OIDCConfigFieldType                = "type"
@@ -42,7 +42,7 @@ type OIDCConfig struct {
 	Name                string            `json:"name,omitempty" yaml:"name,omitempty"`
 	OwnerReferences     []OwnerReference  `json:"ownerReferences,omitempty" yaml:"ownerReferences,omitempty"`
 	PrivateKey          string            `json:"privateKey,omitempty" yaml:"privateKey,omitempty"`
-	RancherURL          string            `json:"rancherUrl,omitempty" yaml:"rancherUrl,omitempty"`
+	RangerURL          string            `json:"rangerUrl,omitempty" yaml:"rangerUrl,omitempty"`
 	Removed             string            `json:"removed,omitempty" yaml:"removed,omitempty"`
 	Scopes              string            `json:"scope,omitempty" yaml:"scope,omitempty"`
 	Type                string            `json:"type,omitempty" yaml:"type,omitempty"`

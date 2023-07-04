@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"strings"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/controllers/management/rbac"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/types/config"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/controllers/management/rbac"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -102,7 +102,7 @@ func (nt *nodeTemplateController) sync(key string, nodeTemplate *v3.NodeTemplate
 
 	// Create Role and RBs if they do not exist
 	if err := rbac.CreateRoleAndRoleBinding(rbac.NodeTemplateResource, v3.NodeTemplateGroupVersionKind.Kind, nodeTemplate.Name, namespace.NodeTemplateGlobalNamespace,
-		rbac.RancherManagementAPIVersion, creatorID, []string{rbac.RancherManagementAPIGroup},
+		rbac.RangerManagementAPIVersion, creatorID, []string{rbac.RangerManagementAPIGroup},
 		nodeTemplate.UID,
 		[]v32.Member{}, nt.mgmtCtx); err != nil {
 		return nil, err

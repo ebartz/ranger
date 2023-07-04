@@ -7,19 +7,19 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/rancher/pkg/api/scheme"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	apisV1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	kubeProvisioning "github.com/rancher/rancher/tests/framework/clients/provisioning"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/defaults"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
-	rancherProvisioning "github.com/rancher/rancher/tests/v2/validation/provisioning"
-	"github.com/rancher/wrangler/pkg/summary"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	apisV1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	kubeProvisioning "github.com/ranger/ranger/tests/framework/clients/provisioning"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/defaults"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
+	rangerProvisioning "github.com/ranger/ranger/tests/v2/validation/provisioning"
+	"github.com/ranger/wrangler/pkg/summary"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -35,7 +35,7 @@ const (
 )
 
 // GetClusterIDByName is a helper function that returns the cluster ID by name
-func GetClusterIDByName(client *rancher.Client, clusterName string) (string, error) {
+func GetClusterIDByName(client *ranger.Client, clusterName string) (string, error) {
 	clusterList, err := client.Management.Cluster.List(&types.ListOpts{})
 	if err != nil {
 		return "", err
@@ -51,7 +51,7 @@ func GetClusterIDByName(client *rancher.Client, clusterName string) (string, err
 }
 
 // GetClusterNameByID is a helper function that returns the cluster ID by name
-func GetClusterNameByID(client *rancher.Client, clusterID string) (string, error) {
+func GetClusterNameByID(client *ranger.Client, clusterID string) (string, error) {
 	clusterList, err := client.Management.Cluster.List(&types.ListOpts{})
 	if err != nil {
 		return "", err
@@ -102,7 +102,7 @@ func IsHostedProvisioningClusterReady(event watch.Event) (ready bool, err error)
 }
 
 // CheckServiceAccountTokenSecret verifies if a serviceAccountTokenSecret exists or not in the cluster.
-func CheckServiceAccountTokenSecret(client *rancher.Client, clusterName string) (success bool, err error) {
+func CheckServiceAccountTokenSecret(client *ranger.Client, clusterName string) (success bool, err error) {
 	clusterID, err := GetClusterIDByName(client, clusterName)
 	if err != nil {
 		return false, err
@@ -122,8 +122,8 @@ func CheckServiceAccountTokenSecret(client *rancher.Client, clusterName string) 
 	}
 }
 
-// NewRKE1lusterConfig is a constructor for a v3.Cluster object, to be used by the rancher.Client.Provisioning client.
-func NewRKE1ClusterConfig(clusterName, cni, kubernetesVersion string, psact string, client *rancher.Client, advancedOptions rancherProvisioning.AdvancedOptions) *management.Cluster {
+// NewRKE1lusterConfig is a constructor for a v3.Cluster object, to be used by the ranger.Client.Provisioning client.
+func NewRKE1ClusterConfig(clusterName, cni, kubernetesVersion string, psact string, client *ranger.Client, advancedOptions rangerProvisioning.AdvancedOptions) *management.Cluster {
 	clusterConfig := &management.Cluster{
 		DockerRootDir:           "/var/lib/docker",
 		EnableClusterAlerting:   false,
@@ -132,7 +132,7 @@ func NewRKE1ClusterConfig(clusterName, cni, kubernetesVersion string, psact stri
 			Enabled: true,
 		},
 		Name: clusterName,
-		RancherKubernetesEngineConfig: &management.RancherKubernetesEngineConfig{
+		RangerKubernetesEngineConfig: &management.RangerKubernetesEngineConfig{
 			DNS: &management.DNSConfig{
 				Provider: "coredns",
 				Options: map[string]string{
@@ -163,8 +163,8 @@ func NewRKE1ClusterConfig(clusterName, cni, kubernetesVersion string, psact stri
 	return clusterConfig
 }
 
-// NewK3SRKE2ClusterConfig is a constructor for a apisV1.Cluster object, to be used by the rancher.Client.Provisioning client.
-func NewK3SRKE2ClusterConfig(clusterName, namespace, cni, cloudCredentialSecretName, kubernetesVersion string, psact string, machinePools []apisV1.RKEMachinePool, advancedOptions rancherProvisioning.AdvancedOptions) *apisV1.Cluster {
+// NewK3SRKE2ClusterConfig is a constructor for a apisV1.Cluster object, to be used by the ranger.Client.Provisioning client.
+func NewK3SRKE2ClusterConfig(clusterName, namespace, cni, cloudCredentialSecretName, kubernetesVersion string, psact string, machinePools []apisV1.RKEMachinePool, advancedOptions rangerProvisioning.AdvancedOptions) *apisV1.Cluster {
 	typeMeta := metav1.TypeMeta{
 		Kind:       "Cluster",
 		APIVersion: "provisioning.cattle.io/v1",
@@ -574,15 +574,15 @@ func AgentAffinityConfigHelper(advancedClusterAffinity *management.Affinity) *co
 	return agentAffinity
 }
 
-// HardenK3SRKE2ClusterConfig is a constructor for a apisV1.Cluster object, to be used by the rancher.Client.Provisioning client.
-func HardenK3SRKE2ClusterConfig(clusterName, namespace, cni, cloudCredentialSecretName, kubernetesVersion string, psact string, machinePools []apisV1.RKEMachinePool, advancedOptions rancherProvisioning.AdvancedOptions) *apisV1.Cluster {
+// HardenK3SRKE2ClusterConfig is a constructor for a apisV1.Cluster object, to be used by the ranger.Client.Provisioning client.
+func HardenK3SRKE2ClusterConfig(clusterName, namespace, cni, cloudCredentialSecretName, kubernetesVersion string, psact string, machinePools []apisV1.RKEMachinePool, advancedOptions rangerProvisioning.AdvancedOptions) *apisV1.Cluster {
 	v1Cluster := NewK3SRKE2ClusterConfig(clusterName, namespace, cni, cloudCredentialSecretName, kubernetesVersion, psact, machinePools, advancedOptions)
 
 	if strings.Contains(kubernetesVersion, "k3s") {
 		v1Cluster.Spec.RKEConfig.MachineGlobalConfig.Data["kube-apiserver-arg"] = []string{
 			"enable-admission-plugins=NodeRestriction,PodSecurityPolicy,ServiceAccount",
-			"audit-policy-file=/var/lib/rancher/k3s/server/audit.yaml",
-			"audit-log-path=/var/lib/rancher/k3s/server/logs/audit.log",
+			"audit-policy-file=/var/lib/ranger/k3s/server/audit.yaml",
+			"audit-log-path=/var/lib/ranger/k3s/server/logs/audit.log",
 			"audit-log-maxage=30",
 			"audit-log-maxbackup=10",
 			"audit-log-maxsize=100",
@@ -618,9 +618,9 @@ func HardenK3SRKE2ClusterConfig(clusterName, namespace, cni, cloudCredentialSecr
 	return v1Cluster
 }
 
-// CreateRKE1Cluster is a "helper" functions that takes a rancher client, and the rke1 cluster config as parameters. This function
+// CreateRKE1Cluster is a "helper" functions that takes a ranger client, and the rke1 cluster config as parameters. This function
 // registers a delete cluster fuction with a wait.WatchWait to ensure the cluster is removed cleanly.
-func CreateRKE1Cluster(client *rancher.Client, rke1Cluster *management.Cluster) (*management.Cluster, error) {
+func CreateRKE1Cluster(client *ranger.Client, rke1Cluster *management.Cluster) (*management.Cluster, error) {
 	cluster, err := client.Management.Cluster.Create(rke1Cluster)
 	if err != nil {
 		return nil, err
@@ -645,7 +645,7 @@ func CreateRKE1Cluster(client *rancher.Client, rke1Cluster *management.Cluster) 
 	}
 
 	client.Session.RegisterCleanupFunc(func() error {
-		adminClient, err := rancher.NewClient(client.RancherConfig.AdminToken, client.Session)
+		adminClient, err := ranger.NewClient(client.RangerConfig.AdminToken, client.Session)
 		if err != nil {
 			return err
 		}
@@ -686,9 +686,9 @@ func CreateRKE1Cluster(client *rancher.Client, rke1Cluster *management.Cluster) 
 	return cluster, nil
 }
 
-// CreateK3SRKE2Cluster is a "helper" functions that takes a rancher client, and the rke2 cluster config as parameters. This function
+// CreateK3SRKE2Cluster is a "helper" functions that takes a ranger client, and the rke2 cluster config as parameters. This function
 // registers a delete cluster fuction with a wait.WatchWait to ensure the cluster is removed cleanly.
-func CreateK3SRKE2Cluster(client *rancher.Client, rke2Cluster *apisV1.Cluster) (*v1.SteveAPIObject, error) {
+func CreateK3SRKE2Cluster(client *ranger.Client, rke2Cluster *apisV1.Cluster) (*v1.SteveAPIObject, error) {
 	cluster, err := client.Steve.SteveType(ProvisioningSteveResourceType).Create(rke2Cluster)
 	if err != nil {
 		return nil, err
@@ -713,7 +713,7 @@ func CreateK3SRKE2Cluster(client *rancher.Client, rke2Cluster *apisV1.Cluster) (
 	}
 
 	client.Session.RegisterCleanupFunc(func() error {
-		adminClient, err := rancher.NewClient(client.RancherConfig.AdminToken, client.Session)
+		adminClient, err := ranger.NewClient(client.RangerConfig.AdminToken, client.Session)
 		if err != nil {
 			return err
 		}
@@ -758,8 +758,8 @@ func CreateK3SRKE2Cluster(client *rancher.Client, rke2Cluster *apisV1.Cluster) (
 	return cluster, nil
 }
 
-// UpdateK3SRKE2Cluster is a "helper" functions that takes a rancher client, old rke2/k3s cluster config, and the new rke2/k3s cluster config as parameters.
-func UpdateK3SRKE2Cluster(client *rancher.Client, cluster *v1.SteveAPIObject, updatedCluster *apisV1.Cluster) (*v1.SteveAPIObject, error) {
+// UpdateK3SRKE2Cluster is a "helper" functions that takes a ranger client, old rke2/k3s cluster config, and the new rke2/k3s cluster config as parameters.
+func UpdateK3SRKE2Cluster(client *ranger.Client, cluster *v1.SteveAPIObject, updatedCluster *apisV1.Cluster) (*v1.SteveAPIObject, error) {
 	updateCluster, err := client.Steve.SteveType(ProvisioningSteveResourceType).ByID(cluster.ID)
 	if err != nil {
 		return nil, err
@@ -799,11 +799,11 @@ func UpdateK3SRKE2Cluster(client *rancher.Client, cluster *v1.SteveAPIObject, up
 	return cluster, nil
 }
 
-// WaitForClusterToBeUpgraded is a "helper" functions that takes a rancher client, and the cluster id as parameters. This function
+// WaitForClusterToBeUpgraded is a "helper" functions that takes a ranger client, and the cluster id as parameters. This function
 // contains two stages. First stage is to wait to be cluster in upgrade state. And the other is to wait until cluster is ready.
 // Cluster error states that declare control plane is inaccessible and cluster object modified are ignored.
 // Same cluster summary information logging is ignored.
-func WaitClusterToBeUpgraded(client *rancher.Client, clusterID string) (err error) {
+func WaitClusterToBeUpgraded(client *ranger.Client, clusterID string) (err error) {
 	clusterStateUpgrading := "upgrading" // For imported RKE2 and K3s clusters
 	clusterStateUpdating := "updating"   // For all clusters except imported K3s and RKE2
 
@@ -918,7 +918,7 @@ func WatchAndWaitForCluster(steveClient *v1.Client, kubeProvisioningClient *kube
 }
 
 // GetProvisioningClusterByName is a helper function to get cluster object with the cluster name
-func GetProvisioningClusterByName(client *rancher.Client, clusterName string, namespace string) (*apisV1.Cluster, *v1.SteveAPIObject, error) {
+func GetProvisioningClusterByName(client *ranger.Client, clusterName string, namespace string) (*apisV1.Cluster, *v1.SteveAPIObject, error) {
 	clusterObj, err := client.Steve.SteveType(ProvisioningSteveResourceType).ByID(namespace + "/" + clusterName)
 	if err != nil {
 		return nil, nil, err

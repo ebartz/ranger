@@ -19,12 +19,12 @@ import (
 
 	"github.com/crewjam/saml"
 	"github.com/gorilla/mux"
-	responsewriter "github.com/rancher/apiserver/pkg/middleware"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/auth/settings"
-	"github.com/rancher/rancher/pkg/auth/tokens"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/namespace"
+	responsewriter "github.com/ranger/apiserver/pkg/middleware"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/auth/settings"
+	"github.com/ranger/ranger/pkg/auth/tokens"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/namespace"
 	log "github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -123,8 +123,8 @@ func InitializeSamlServiceProvider(configToSet *v32.SamlConfig, name string) err
 
 	log.Debugf("SAML [InitializeSamlServiceProvider]: Initializing provider %v", name)
 
-	rancherAPIHost := strings.TrimRight(configToSet.RancherAPIHost, "/")
-	samlURL := rancherAPIHost + "/v1-saml/"
+	rangerAPIHost := strings.TrimRight(configToSet.RangerAPIHost, "/")
+	samlURL := rangerAPIHost + "/v1-saml/"
 	samlURL += name
 	actURL, err := url.Parse(samlURL)
 	if err != nil {
@@ -272,11 +272,11 @@ func (s *Provider) HandleSamlAssertion(w http.ResponseWriter, r *http.Request, a
 		s.clientState.DeleteState(w, r, relayState)
 	}
 
-	redirectURL := s.clientState.GetState(r, "Rancher_FinalRedirectURL")
-	rancherAction := s.clientState.GetState(r, "Rancher_Action")
-	if rancherAction == loginAction {
+	redirectURL := s.clientState.GetState(r, "Ranger_FinalRedirectURL")
+	rangerAction := s.clientState.GetState(r, "Ranger_Action")
+	if rangerAction == loginAction {
 		redirectURL += "/login?"
-	} else if rancherAction == testAndEnableAction {
+	} else if rangerAction == testAndEnableAction {
 		// the first query param is config=saml_provider_name set by UI
 		redirectURL += "&"
 	}
@@ -323,8 +323,8 @@ func (s *Provider) HandleSamlAssertion(w http.ResponseWriter, r *http.Request, a
 		return
 	}
 
-	userID := s.clientState.GetState(r, "Rancher_UserID")
-	if userID != "" && rancherAction == testAndEnableAction {
+	userID := s.clientState.GetState(r, "Ranger_UserID")
+	if userID != "" && rangerAction == testAndEnableAction {
 		user, err := s.userMGR.SetPrincipalOnCurrentUserByUserID(userID, userPrincipal)
 		if err != nil && user == nil {
 			log.Errorf("SAML: Error setting principal on current user %v", err)
@@ -347,19 +347,19 @@ func (s *Provider) HandleSamlAssertion(w http.ResponseWriter, r *http.Request, a
 		if r.URL.Scheme == "https" {
 			isSecure = true
 		}
-		err = s.setRancherToken(w, r, s.tokenMGR, user.Name, userPrincipal, groupPrincipals, isSecure)
+		err = s.setRangerToken(w, r, s.tokenMGR, user.Name, userPrincipal, groupPrincipals, isSecure)
 		if err != nil {
 			log.Errorf("SAML: Failed creating token with error: %v", err)
 			http.Redirect(w, r, redirectURL+"errorCode=500", http.StatusFound)
 		}
 		// delete the cookies
-		s.clientState.DeleteState(w, r, "Rancher_UserID")
-		s.clientState.DeleteState(w, r, "Rancher_Action")
-		redirectURL := s.clientState.GetState(r, "Rancher_FinalRedirectURL")
-		s.clientState.DeleteState(w, r, "Rancher_FinalRedirectURL")
+		s.clientState.DeleteState(w, r, "Ranger_UserID")
+		s.clientState.DeleteState(w, r, "Ranger_Action")
+		redirectURL := s.clientState.GetState(r, "Ranger_FinalRedirectURL")
+		s.clientState.DeleteState(w, r, "Ranger_FinalRedirectURL")
 		if redirectURL != "" {
 			// delete the cookie
-			s.clientState.DeleteState(w, r, "Rancher_FinalRedirectURL")
+			s.clientState.DeleteState(w, r, "Ranger_FinalRedirectURL")
 			http.Redirect(w, r, redirectURL, http.StatusFound)
 		}
 		return
@@ -382,23 +382,23 @@ func (s *Provider) HandleSamlAssertion(w http.ResponseWriter, r *http.Request, a
 		return
 	}
 
-	err = s.setRancherToken(w, r, s.tokenMGR, user.Name, userPrincipal, groupPrincipals, true)
+	err = s.setRangerToken(w, r, s.tokenMGR, user.Name, userPrincipal, groupPrincipals, true)
 	if err != nil {
 		log.Errorf("SAML: Failed creating token with error: %v", err)
 		http.Redirect(w, r, redirectURL+"errorCode=500", http.StatusFound)
 	}
-	redirectURL = s.clientState.GetState(r, "Rancher_FinalRedirectURL")
+	redirectURL = s.clientState.GetState(r, "Ranger_FinalRedirectURL")
 
 	if redirectURL != "" {
 		// delete the cookie
-		s.clientState.DeleteState(w, r, "Rancher_FinalRedirectURL")
+		s.clientState.DeleteState(w, r, "Ranger_FinalRedirectURL")
 
-		requestID := s.clientState.GetState(r, "Rancher_RequestID")
+		requestID := s.clientState.GetState(r, "Ranger_RequestID")
 		log.Debugf("SAML: requestID: %s", requestID)
 		if requestID != "" {
 			// generate kubeconfig saml token
-			responseType := s.clientState.GetState(r, "Rancher_ResponseType")
-			publicKey := s.clientState.GetState(r, "Rancher_PublicKey")
+			responseType := s.clientState.GetState(r, "Ranger_ResponseType")
+			publicKey := s.clientState.GetState(r, "Ranger_PublicKey")
 
 			token, tokenValue, err := tokens.GetKubeConfigToken(user.Name, responseType, s.userMGR, userPrincipal)
 			if err != nil {
@@ -448,10 +448,10 @@ func (s *Provider) HandleSamlAssertion(w http.ResponseWriter, r *http.Request, a
 				http.Redirect(w, r, redirectURL+"errorCode=500", http.StatusFound)
 			}
 
-			s.clientState.DeleteState(w, r, "Rancher_ConnToken")
-			s.clientState.DeleteState(w, r, "Rancher_RequestUUID")
-			s.clientState.DeleteState(w, r, "Rancher_ResponseType")
-			s.clientState.DeleteState(w, r, "Rancher_PublicKey")
+			s.clientState.DeleteState(w, r, "Ranger_ConnToken")
+			s.clientState.DeleteState(w, r, "Ranger_RequestUUID")
+			s.clientState.DeleteState(w, r, "Ranger_ResponseType")
+			s.clientState.DeleteState(w, r, "Ranger_PublicKey")
 
 		}
 
@@ -460,7 +460,7 @@ func (s *Provider) HandleSamlAssertion(w http.ResponseWriter, r *http.Request, a
 	}
 }
 
-func (s *Provider) setRancherToken(w http.ResponseWriter, r *http.Request, tokenMGR *tokens.Manager, userID string, userPrincipal v3.Principal,
+func (s *Provider) setRangerToken(w http.ResponseWriter, r *http.Request, tokenMGR *tokens.Manager, userID string, userPrincipal v3.Principal,
 	groupPrincipals []v3.Principal, isSecure bool) error {
 	authTimeout := settings.AuthUserSessionTTLMinutes.Get()
 	var ttl int64

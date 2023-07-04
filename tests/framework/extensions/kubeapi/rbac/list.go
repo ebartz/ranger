@@ -3,15 +3,15 @@ package rbac
 import (
 	"context"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
 	rbacv1 "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // ListRoleBindings is a helper function that uses the dynamic client to list rolebindings on a namespace for a specific cluster.
 // ListRoleBindings accepts ListOptions for specifying desired parameters for listed objects.
-func ListRoleBindings(client *rancher.Client, clusterName, namespace string, listOpt metav1.ListOptions) (*rbacv1.RoleBindingList, error) {
+func ListRoleBindings(client *ranger.Client, clusterName, namespace string, listOpt metav1.ListOptions) (*rbacv1.RoleBindingList, error) {
 	dynamicClient, err := client.GetDownStreamClusterClient(clusterName)
 	if err != nil {
 		return nil, err
@@ -38,7 +38,7 @@ func ListRoleBindings(client *rancher.Client, clusterName, namespace string, lis
 
 // ListClusterRoleBindings is a helper function that uses the dynamic client to list clusterrolebindings for a specific cluster.
 // ListClusterRoleBindings accepts ListOptions for specifying desired parameters for listed objects.
-func ListClusterRoleBindings(client *rancher.Client, clusterName string, listOpt metav1.ListOptions) (*rbacv1.ClusterRoleBindingList, error) {
+func ListClusterRoleBindings(client *ranger.Client, clusterName string, listOpt metav1.ListOptions) (*rbacv1.ClusterRoleBindingList, error) {
 	dynamicClient, err := client.GetDownStreamClusterClient(clusterName)
 	if err != nil {
 		return nil, err

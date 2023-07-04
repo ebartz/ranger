@@ -1,7 +1,7 @@
 import kubernetes
 from .conftest import kubernetes_api_client, wait_for, set_cluster_psp
 from .common import random_str
-from rancher import ApiError
+from ranger import ApiError
 import pytest
 from kubernetes.client.rest import ApiException
 
@@ -114,7 +114,7 @@ def test_pod_security_policy_template_del(admin_mc, admin_pc, remove_resource,
     """ Test for pod security policy template binding correctly.
     May have to mark this test as nonparallel if new test are introduced
     that toggle pspEnabled.
-    ref https://github.com/rancher/rancher/issues/15728
+    ref https://github.com/ranger/ranger/issues/15728
     ref https://localhost:8443/v3/podsecuritypolicytemplates
     """
     api_client = admin_mc.client

@@ -5,24 +5,24 @@ import (
 	"reflect"
 	"time"
 
-	v33 "github.com/rancher/rancher/pkg/apis/project.cattle.io/v3"
+	v33 "github.com/ranger/ranger/pkg/apis/project.cattle.io/v3"
 
-	"github.com/rancher/norman/controller"
-	"github.com/rancher/norman/types/slice"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	manager2 "github.com/rancher/rancher/pkg/catalog/manager"
-	alertutil "github.com/rancher/rancher/pkg/controllers/managementuserlegacy/alert/common"
-	"github.com/rancher/rancher/pkg/controllers/managementuserlegacy/alert/manager"
-	appsv1 "github.com/rancher/rancher/pkg/generated/norman/apps/v1"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	mgmtv3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	projectv3 "github.com/rancher/rancher/pkg/generated/norman/project.cattle.io/v3"
-	monitorutil "github.com/rancher/rancher/pkg/monitoring"
-	"github.com/rancher/rancher/pkg/namespace"
-	projectutil "github.com/rancher/rancher/pkg/project"
-	"github.com/rancher/rancher/pkg/ref"
-	"github.com/rancher/rancher/pkg/systemaccount"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/norman/controller"
+	"github.com/ranger/norman/types/slice"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	manager2 "github.com/ranger/ranger/pkg/catalog/manager"
+	alertutil "github.com/ranger/ranger/pkg/controllers/managementuserlegacy/alert/common"
+	"github.com/ranger/ranger/pkg/controllers/managementuserlegacy/alert/manager"
+	appsv1 "github.com/ranger/ranger/pkg/generated/norman/apps/v1"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	mgmtv3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	projectv3 "github.com/ranger/ranger/pkg/generated/norman/project.cattle.io/v3"
+	monitorutil "github.com/ranger/ranger/pkg/monitoring"
+	"github.com/ranger/ranger/pkg/namespace"
+	projectutil "github.com/ranger/ranger/pkg/project"
+	"github.com/ranger/ranger/pkg/ref"
+	"github.com/ranger/ranger/pkg/systemaccount"
+	"github.com/ranger/ranger/pkg/types/config"
 
 	"golang.org/x/sync/errgroup"
 	"gopkg.in/yaml.v2"
@@ -334,9 +334,9 @@ func (d *appDeployer) deploy(appName, appTargetNamespace, systemProjectID string
 		return true, nil
 	}
 
-	template, err := d.templateLister.Get(namespace.GlobalNamespace, monitorutil.RancherMonitoringTemplateName)
+	template, err := d.templateLister.Get(namespace.GlobalNamespace, monitorutil.RangerMonitoringTemplateName)
 	if err != nil {
-		return false, fmt.Errorf("get template %s:%s failed, %v", namespace.GlobalNamespace, monitorutil.RancherMonitoringTemplateName, err)
+		return false, fmt.Errorf("get template %s:%s failed, %v", namespace.GlobalNamespace, monitorutil.RangerMonitoringTemplateName, err)
 	}
 	templateVersion, err := d.catalogManager.LatestAvailableTemplateVersion(template, clusterName)
 	if err != nil {
@@ -367,7 +367,7 @@ func (d *appDeployer) deploy(appName, appTargetNamespace, systemProjectID string
 				"operator.enabled":                    "false",
 				WebhookReceiverEnable:                 enableWebhookReceiver,
 			},
-			Description:     "Alertmanager for Rancher Monitoring",
+			Description:     "Alertmanager for Ranger Monitoring",
 			ExternalID:      templateVersion.ExternalID,
 			ProjectName:     systemProjectID,
 			TargetNamespace: appTargetNamespace,

@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"testing"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3/fakes"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3/fakes"
 	"github.com/stretchr/testify/assert"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

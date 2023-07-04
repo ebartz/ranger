@@ -15,7 +15,7 @@ Please see below for more details for your config.
 6. [Back to general provisioning](../README.md)
 
 ## Provisioning Input
-provisioningInput is needed to the run the RKE1 tests, specifically kubernetesVersion, cni, and providers. nodesAndRoles is only needed for the TestProvisioningDynamicInput test, node pools are divided by "{nodepool},". psact is optional and takes values `rancher-privileged` and `rancher-restricted` only.
+provisioningInput is needed to the run the RKE1 tests, specifically kubernetesVersion, cni, and providers. nodesAndRoles is only needed for the TestProvisioningDynamicInput test, node pools are divided by "{nodepool},". psact is optional and takes values `ranger-privileged` and `ranger-restricted` only.
 
 **nodeProviders is only needed for custom cluster tests; the framework only supports custom clusters through aws/ec2 instances.**
 
@@ -32,7 +32,7 @@ provisioningInput is needed to the run the RKE1 tests, specifically kubernetesVe
         "quantity": 2,
       },
     ],
-    "rke1KubernetesVersion": ["v1.24.2-rancher1-1"],
+    "rke1KubernetesVersion": ["v1.24.2-ranger1-1"],
     "providers": ["linode", "aws", "azure", "harvester"],
     "nodeProviders": ["ec2"],
     "psact": ""
@@ -174,7 +174,7 @@ RKE1 specifically needs a node template config to run properly. These are the in
     "tags": "",
     "token": "",
     "type": "linodeConfig",
-    "uaPrefix": "Rancher"
+    "uaPrefix": "Ranger"
 }
 ```
 
@@ -231,7 +231,7 @@ Dependencies:
           ""
         ],
         "awsSSHKeyName": "",
-        "awsCICDInstanceTag": "rancher-validation",
+        "awsCICDInstanceTag": "ranger-validation",
         "awsIAMProfile": "",
         "awsUser": "ubuntu",
         "volumeSize": 25,
@@ -245,7 +245,7 @@ Dependencies:
           ""
         ],
         "awsSSHKeyName": "",
-        "awsCICDInstanceTag": "rancher-validation",
+        "awsCICDInstanceTag": "ranger-validation",
         "awsIAMProfile": "",
         "awsUser": "ubuntu",
         "volumeSize": 25,
@@ -274,7 +274,7 @@ To do this, ensure that your `provisioningInput` has `flannel` and `canal` both 
         "quantity": 2,
       },
     ],
-    "rke1KubernetesVersion": ["v1.25.9-rancher2-1", "v1.26.4-rancher2-1"],
+    "rke1KubernetesVersion": ["v1.25.9-ranger2-1", "v1.26.4-ranger2-1"],
     "nodeProviders": ["ec2"],
     "cni": ["flannel", "canal"],
     "psact": ""

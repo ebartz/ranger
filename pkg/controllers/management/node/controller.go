@@ -12,28 +12,28 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/objectclient"
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/norman/types/values"
-	apimgmtv3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	util "github.com/rancher/rancher/pkg/cluster"
-	"github.com/rancher/rancher/pkg/clustermanager"
-	"github.com/rancher/rancher/pkg/controllers/dashboard/clusterregistrationtoken"
-	"github.com/rancher/rancher/pkg/controllers/management/drivers/nodedriver"
-	"github.com/rancher/rancher/pkg/controllers/management/secretmigrator/assemblers"
-	"github.com/rancher/rancher/pkg/encryptedstore"
-	corev1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/jailer"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/nodeconfig"
-	"github.com/rancher/rancher/pkg/ref"
-	"github.com/rancher/rancher/pkg/systemaccount"
-	"github.com/rancher/rancher/pkg/taints"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/types/config/systemtokens"
-	"github.com/rancher/rancher/pkg/user"
-	rketypes "github.com/rancher/rke/types"
+	"github.com/ranger/norman/objectclient"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/norman/types/values"
+	apimgmtv3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	util "github.com/ranger/ranger/pkg/cluster"
+	"github.com/ranger/ranger/pkg/clustermanager"
+	"github.com/ranger/ranger/pkg/controllers/dashboard/clusterregistrationtoken"
+	"github.com/ranger/ranger/pkg/controllers/management/drivers/nodedriver"
+	"github.com/ranger/ranger/pkg/controllers/management/secretmigrator/assemblers"
+	"github.com/ranger/ranger/pkg/encryptedstore"
+	corev1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/jailer"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/nodeconfig"
+	"github.com/ranger/ranger/pkg/ref"
+	"github.com/ranger/ranger/pkg/systemaccount"
+	"github.com/ranger/ranger/pkg/taints"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/types/config/systemtokens"
+	"github.com/ranger/ranger/pkg/user"
+	rketypes "github.com/ranger/rke/types"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/ssh"
 	v1 "k8s.io/api/core/v1"
@@ -45,7 +45,7 @@ import (
 )
 
 const (
-	defaultEngineInstallURL         = "https://releases.rancher.com/install-docker/24.0.sh"
+	defaultEngineInstallURL         = "https://releases.ranger.com/install-docker/24.0.sh"
 	amazonec2                       = "amazonec2"
 	userNodeRemoveCleanupAnnotation = "cleanup.cattle.io/user-node-remove"
 	userNodeRemoveFinalizerPrefix   = "clusterscoped.controller.cattle.io/user-node-remove_"
@@ -716,11 +716,11 @@ func (m *Lifecycle) isNodeInAppliedSpec(node *apimgmtv3.Node) (bool, error) {
 	if cluster.DeletionTimestamp != nil {
 		return false, nil
 	}
-	if cluster.Status.AppliedSpec.RancherKubernetesEngineConfig == nil {
+	if cluster.Status.AppliedSpec.RangerKubernetesEngineConfig == nil {
 		return false, nil
 	}
 
-	for _, rkeNode := range cluster.Status.AppliedSpec.RancherKubernetesEngineConfig.Nodes {
+	for _, rkeNode := range cluster.Status.AppliedSpec.RangerKubernetesEngineConfig.Nodes {
 		nodeName := rkeNode.NodeName
 		if len(nodeName) == 0 {
 			continue

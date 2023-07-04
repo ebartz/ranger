@@ -11,17 +11,17 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	jsonpatch "github.com/evanphx/json-patch"
-	"github.com/rancher/rancher/pkg/api/steve/catalog/types"
-	catalog "github.com/rancher/rancher/pkg/apis/catalog.cattle.io/v1"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/catalogv2/content"
-	"github.com/rancher/rancher/pkg/catalogv2/helmop"
-	catalogcontrollers "github.com/rancher/rancher/pkg/generated/controllers/catalog.cattle.io/v1"
-	mgmtcontrollers "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3"
-	corev1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	"github.com/rancher/rancher/pkg/settings"
-	corecontrollers "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
-	"github.com/rancher/wrangler/pkg/merr"
+	"github.com/ranger/ranger/pkg/api/steve/catalog/types"
+	catalog "github.com/ranger/ranger/pkg/apis/catalog.cattle.io/v1"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/catalogv2/content"
+	"github.com/ranger/ranger/pkg/catalogv2/helmop"
+	catalogcontrollers "github.com/ranger/ranger/pkg/generated/controllers/catalog.cattle.io/v1"
+	mgmtcontrollers "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3"
+	corev1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	"github.com/ranger/ranger/pkg/settings"
+	corecontrollers "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
+	"github.com/ranger/wrangler/pkg/merr"
 	"github.com/sirupsen/logrus"
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/release"
@@ -116,9 +116,9 @@ func (m *Manager) onSetting(key string, obj *v3.Setting) (*v3.Setting, error) {
 }
 
 func (m *Manager) onTrigger(_ string, obj *catalog.ClusterRepo) (*catalog.ClusterRepo, error) {
-	// We only want to trigger on "rancher-charts" in order to ensure that required charts, such as
-	// Fleet, are up-to-date upon Rancher startup or upgrade.
-	if obj == nil || obj.DeletionTimestamp != nil || obj.Name != "rancher-charts" {
+	// We only want to trigger on "ranger-charts" in order to ensure that required charts, such as
+	// Fleet, are up-to-date upon Ranger startup or upgrade.
+	if obj == nil || obj.DeletionTimestamp != nil || obj.Name != "ranger-charts" {
 		return obj, nil
 	}
 
@@ -239,7 +239,7 @@ func (m *Manager) Remove(namespace, name string) {
 }
 
 func (m *Manager) install(namespace, name, minVersion, exactVersion string, values map[string]interface{}, forceAdopt bool, installImageOverride string) error {
-	index, err := m.content.Index("", "rancher-charts", true)
+	index, err := m.content.Index("", "ranger-charts", true)
 	if err != nil {
 		return err
 	}
@@ -297,7 +297,7 @@ func (m *Manager) install(namespace, name, minVersion, exactVersion string, valu
 		return err
 	}
 
-	op, err := m.operation.Upgrade(m.ctx, installUser, "", "rancher-charts", bytes.NewBuffer(upgrade), installImageOverride)
+	op, err := m.operation.Upgrade(m.ctx, installUser, "", "ranger-charts", bytes.NewBuffer(upgrade), installImageOverride)
 	if err != nil {
 		return err
 	}

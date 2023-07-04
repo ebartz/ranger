@@ -21,19 +21,19 @@ func TestVersionServeHTTP(t *testing.T) {
 			name:     "unmodified",
 			setPrime: func() {},
 			cleanup:  func() {},
-			want:     `{"Version":"dev","GitCommit":"HEAD","RancherPrime":"false"}`,
+			want:     `{"Version":"dev","GitCommit":"HEAD","RangerPrime":"false"}`,
 		},
 		{
 			name:     "prime=true",
 			setPrime: func() { os.Setenv("RANCHER_PRIME", "true") },
 			cleanup:  func() { os.Unsetenv("RANCHER_PRIME") },
-			want:     `{"Version":"dev","GitCommit":"HEAD","RancherPrime":"true"}`,
+			want:     `{"Version":"dev","GitCommit":"HEAD","RangerPrime":"true"}`,
 		},
 		{
 			name:     "prime=false",
 			setPrime: func() { os.Setenv("RANCHER_PRIME", "false") },
 			cleanup:  func() { os.Unsetenv("RANCHER_PRIME") },
-			want:     `{"Version":"dev","GitCommit":"HEAD","RancherPrime":"false"}`,
+			want:     `{"Version":"dev","GitCommit":"HEAD","RangerPrime":"false"}`,
 		},
 	}
 
@@ -41,7 +41,7 @@ func TestVersionServeHTTP(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.setPrime()
 			defer tt.cleanup()
-			req := httptest.NewRequest(http.MethodGet, "/rancherversion", nil)
+			req := httptest.NewRequest(http.MethodGet, "/rangerversion", nil)
 			rr := httptest.NewRecorder()
 			handler := NewVersionHandler()
 			handler.ServeHTTP(rr, req)

@@ -3,16 +3,16 @@ package rke1
 import (
 	"testing"
 
-	"github.com/rancher/norman/types"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	nodestat "github.com/rancher/rancher/tests/framework/extensions/nodes"
-	nodepools "github.com/rancher/rancher/tests/framework/extensions/rke1/nodepools"
-	"github.com/rancher/rancher/tests/framework/extensions/workloads/pods"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
-	"github.com/rancher/rancher/tests/v2/validation/provisioning"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	nodestat "github.com/ranger/ranger/tests/framework/extensions/nodes"
+	nodepools "github.com/ranger/ranger/tests/framework/extensions/rke1/nodepools"
+	"github.com/ranger/ranger/tests/framework/extensions/workloads/pods"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/v2/validation/provisioning"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -22,7 +22,7 @@ import (
 type EtcdNodeDeleteAndReplace struct {
 	suite.Suite
 	session                *session.Session
-	client                 *rancher.Client
+	client                 *ranger.Client
 	ns                     string
 	rke1kubernetesVersions []string
 	cnis                   []string
@@ -53,7 +53,7 @@ func (e *EtcdNodeDeleteAndReplace) SetupSuite() {
 	e.psact = clustersConfig.PSACT
 	e.advancedOptions = clustersConfig.AdvancedOptions
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(e.T(), err)
 
 	e.client = client

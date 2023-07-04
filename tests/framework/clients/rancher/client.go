@@ -1,4 +1,4 @@
-package rancher
+package ranger
 
 import (
 	"bytes"
@@ -9,19 +9,19 @@ import (
 	"net/http"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/httperror"
-	frameworkDynamic "github.com/rancher/rancher/tests/framework/clients/dynamic"
-	"github.com/rancher/rancher/tests/framework/clients/ec2"
-	"github.com/rancher/rancher/tests/framework/clients/rancher/catalog"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
+	"github.com/ranger/norman/httperror"
+	frameworkDynamic "github.com/ranger/ranger/tests/framework/clients/dynamic"
+	"github.com/ranger/ranger/tests/framework/clients/ec2"
+	"github.com/ranger/ranger/tests/framework/clients/ranger/catalog"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
 
-	kubeProvisioning "github.com/rancher/rancher/tests/framework/clients/provisioning"
-	kubeRKE "github.com/rancher/rancher/tests/framework/clients/rke"
-	"github.com/rancher/rancher/tests/framework/pkg/clientbase"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
-	"github.com/rancher/rancher/tests/framework/pkg/environmentflag"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
+	kubeProvisioning "github.com/ranger/ranger/tests/framework/clients/provisioning"
+	kubeRKE "github.com/ranger/ranger/tests/framework/clients/rke"
+	"github.com/ranger/ranger/tests/framework/pkg/clientbase"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
+	"github.com/ranger/ranger/tests/framework/pkg/environmentflag"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/watch"
@@ -30,8 +30,8 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
-// Client is the main rancher Client object that gives an end user access to the Provisioning and Management
-// clients in order to create resources on rancher
+// Client is the main ranger Client object that gives an end user access to the Provisioning and Management
+// clients in order to create resources on ranger
 type Client struct {
 	// Client used to access management.cattle.io v3 API resources
 	Management *management.Client
@@ -39,47 +39,47 @@ type Client struct {
 	Steve *v1.Client
 	// Client used to access catalog.cattle.io v1 API resources (apps, charts, etc.)
 	Catalog *catalog.Client
-	// Config used to test against a rancher instance
-	RancherConfig *Config
+	// Config used to test against a ranger instance
+	RangerConfig *Config
 	// Session is the session object used by the client to track all the resources being created by the client.
 	Session *session.Session
-	// Flags is the environment flags used by the client to test selectively against a rancher instance.
+	// Flags is the environment flags used by the client to test selectively against a ranger instance.
 	Flags      *environmentflag.EnvironmentFlags
 	restConfig *rest.Config
 }
 
-// NewClient is the constructor to the initializing a rancher Client. It takes a bearer token and session.Session. If bearer token is not provided,
+// NewClient is the constructor to the initializing a ranger Client. It takes a bearer token and session.Session. If bearer token is not provided,
 // the bearer token provided in the configuration file is used.
 func NewClient(bearerToken string, session *session.Session) (*Client, error) {
-	rancherConfig := new(Config)
-	config.LoadConfig(ConfigurationFileKey, rancherConfig)
+	rangerConfig := new(Config)
+	config.LoadConfig(ConfigurationFileKey, rangerConfig)
 
 	environmentFlags := environmentflag.NewEnvironmentFlags()
 	environmentflag.LoadEnvironmentFlags(environmentflag.ConfigurationFileKey, environmentFlags)
 
 	if bearerToken == "" {
-		bearerToken = rancherConfig.AdminToken
+		bearerToken = rangerConfig.AdminToken
 	}
 
 	c := &Client{
-		RancherConfig: rancherConfig,
+		RangerConfig: rangerConfig,
 		Flags:         &environmentFlags,
 	}
 
-	session.CleanupEnabled = *rancherConfig.Cleanup
+	session.CleanupEnabled = *rangerConfig.Cleanup
 
 	var err error
-	restConfig := newRestConfig(bearerToken, rancherConfig)
+	restConfig := newRestConfig(bearerToken, rangerConfig)
 	c.restConfig = restConfig
 	c.Session = session
-	c.Management, err = management.NewClient(clientOpts(restConfig, c.RancherConfig))
+	c.Management, err = management.NewClient(clientOpts(restConfig, c.RangerConfig))
 	if err != nil {
 		return nil, err
 	}
 
 	c.Management.Ops.Session = session
 
-	c.Steve, err = v1.NewClient(clientOptsV1(restConfig, c.RancherConfig))
+	c.Steve, err = v1.NewClient(clientOptsV1(restConfig, c.RangerConfig))
 	if err != nil {
 		return nil, err
 	}
@@ -97,34 +97,34 @@ func NewClient(bearerToken string, session *session.Session) (*Client, error) {
 }
 
 // newRestConfig is a constructor that sets ups rest.Config the configuration used by the Provisioning client.
-func newRestConfig(bearerToken string, rancherConfig *Config) *rest.Config {
+func newRestConfig(bearerToken string, rangerConfig *Config) *rest.Config {
 	return &rest.Config{
-		Host:        rancherConfig.Host,
+		Host:        rangerConfig.Host,
 		BearerToken: bearerToken,
 		TLSClientConfig: rest.TLSClientConfig{
-			Insecure: *rancherConfig.Insecure,
-			CAFile:   rancherConfig.CAFile,
+			Insecure: *rangerConfig.Insecure,
+			CAFile:   rangerConfig.CAFile,
 		},
 	}
 }
 
 // clientOpts is a constructor that sets ups clientbase.ClientOpts the configuration used by the Management client.
-func clientOpts(restConfig *rest.Config, rancherConfig *Config) *clientbase.ClientOpts {
+func clientOpts(restConfig *rest.Config, rangerConfig *Config) *clientbase.ClientOpts {
 	return &clientbase.ClientOpts{
-		URL:      fmt.Sprintf("https://%s/v3", rancherConfig.Host),
+		URL:      fmt.Sprintf("https://%s/v3", rangerConfig.Host),
 		TokenKey: restConfig.BearerToken,
 		Insecure: restConfig.Insecure,
-		CACerts:  rancherConfig.CACerts,
+		CACerts:  rangerConfig.CACerts,
 	}
 }
 
-// clientOptsV1 is a constructor that sets ups clientbase.ClientOpts the configuration used by the v1 Rancher clients.
-func clientOptsV1(restConfig *rest.Config, rancherConfig *Config) *clientbase.ClientOpts {
+// clientOptsV1 is a constructor that sets ups clientbase.ClientOpts the configuration used by the v1 Ranger clients.
+func clientOptsV1(restConfig *rest.Config, rangerConfig *Config) *clientbase.ClientOpts {
 	return &clientbase.ClientOpts{
-		URL:      fmt.Sprintf("https://%s/v1", rancherConfig.Host),
+		URL:      fmt.Sprintf("https://%s/v1", rangerConfig.Host),
 		TokenKey: restConfig.BearerToken,
 		Insecure: restConfig.Insecure,
-		CACerts:  rancherConfig.CACerts,
+		CACerts:  rangerConfig.CACerts,
 	}
 }
 
@@ -201,8 +201,8 @@ func (c *Client) GetClusterCatalogClient(clusterID string) (*catalog.Client, err
 	return catalogClient, nil
 }
 
-// GetRancherDynamicClient is a helper function that instantiates a dynamic client to communicate with the rancher host.
-func (c *Client) GetRancherDynamicClient() (dynamic.Interface, error) {
+// GetRangerDynamicClient is a helper function that instantiates a dynamic client to communicate with the ranger host.
+func (c *Client) GetRangerDynamicClient() (dynamic.Interface, error) {
 	dynamic, err := frameworkDynamic.NewForConfig(c.Session, c.restConfig)
 	if err != nil {
 		return nil, err
@@ -285,7 +285,7 @@ func (c *Client) GetManagementWatchInterface(schemaType string, opts metav1.List
 		Version:  "v3",
 		Resource: schemaResource.PluralName,
 	}
-	dynamicClient, err := c.GetRancherDynamicClient()
+	dynamicClient, err := c.GetRangerDynamicClient()
 	if err != nil {
 		return nil, err
 	}

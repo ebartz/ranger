@@ -13,8 +13,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/rancher/rancher/pkg/auth/util"
-	"github.com/rancher/rancher/pkg/data/management"
+	"github.com/ranger/ranger/pkg/auth/util"
+	"github.com/ranger/ranger/pkg/data/management"
 	"github.com/sirupsen/logrus"
 )
 
@@ -92,7 +92,7 @@ func (h auditHandler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	defer h.errLock.Unlock()
 
 	// Only log duplicate error messages at most every errorDebounceTime.
-	// This is to prevent the rancher logs from being flooded with error messages
+	// This is to prevent the ranger logs from being flooded with error messages
 	// when the log path is invalid or any other error that will always cause a write to fail.
 	if lastSeen, ok := h.errMap[err.Error()]; !ok || time.Since(lastSeen) > errorDebounceTime {
 		logrus.Warnf("Failed to write audit log: %s", err)

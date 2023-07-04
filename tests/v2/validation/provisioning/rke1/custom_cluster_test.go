@@ -3,26 +3,26 @@ package rke1
 import (
 	"testing"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters/kubernetesversions"
-	nodepools "github.com/rancher/rancher/tests/framework/extensions/rke1/nodepools"
-	"github.com/rancher/rancher/tests/framework/extensions/users"
-	password "github.com/rancher/rancher/tests/framework/extensions/users/passwordgenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
-	namegen "github.com/rancher/rancher/tests/framework/pkg/namegenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
-	"github.com/rancher/rancher/tests/v2/validation/provisioning"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters/kubernetesversions"
+	nodepools "github.com/ranger/ranger/tests/framework/extensions/rke1/nodepools"
+	"github.com/ranger/ranger/tests/framework/extensions/users"
+	password "github.com/ranger/ranger/tests/framework/extensions/users/passwordgenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
+	namegen "github.com/ranger/ranger/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/v2/validation/provisioning"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 )
 
 type CustomClusterProvisioningTestSuite struct {
 	suite.Suite
-	client             *rancher.Client
+	client             *ranger.Client
 	session            *session.Session
-	standardUserClient *rancher.Client
+	standardUserClient *ranger.Client
 	kubernetesVersions []string
 	cnis               []string
 	nodeProviders      []string
@@ -47,7 +47,7 @@ func (c *CustomClusterProvisioningTestSuite) SetupSuite() {
 	c.psact = clustersConfig.PSACT
 	c.advancedOptions = clustersConfig.AdvancedOptions
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(c.T(), err)
 
 	c.client = client
@@ -86,7 +86,7 @@ func (c *CustomClusterProvisioningTestSuite) TestProvisioningRKE1CustomCluster()
 	tests := []struct {
 		name      string
 		nodeRoles []nodepools.NodeRoles
-		client    *rancher.Client
+		client    *ranger.Client
 		psact     string
 	}{
 		{"1 Node all roles " + provisioning.AdminClientName.String(), nodeRolesAll, c.client, c.psact},
@@ -133,7 +133,7 @@ func (c *CustomClusterProvisioningTestSuite) TestProvisioningRKE1CustomClusterDy
 
 	tests := []struct {
 		name   string
-		client *rancher.Client
+		client *ranger.Client
 		psact  string
 	}{
 		{provisioning.AdminClientName.String(), c.client, c.psact},

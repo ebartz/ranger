@@ -24,15 +24,15 @@ import (
 	"github.com/docker/docker/client"
 	"github.com/hashicorp/go-multierror"
 	"github.com/mattn/go-colorable"
-	"github.com/rancher/rancher/pkg/agent/clean"
-	"github.com/rancher/rancher/pkg/agent/cluster"
-	"github.com/rancher/rancher/pkg/agent/node"
-	"github.com/rancher/rancher/pkg/agent/rancher"
-	"github.com/rancher/rancher/pkg/features"
-	"github.com/rancher/rancher/pkg/logserver"
-	"github.com/rancher/rancher/pkg/rkenodeconfigclient"
-	"github.com/rancher/remotedialer"
-	"github.com/rancher/wrangler/pkg/signals"
+	"github.com/ranger/ranger/pkg/agent/clean"
+	"github.com/ranger/ranger/pkg/agent/cluster"
+	"github.com/ranger/ranger/pkg/agent/node"
+	"github.com/ranger/ranger/pkg/agent/ranger"
+	"github.com/ranger/ranger/pkg/features"
+	"github.com/ranger/ranger/pkg/logserver"
+	"github.com/ranger/ranger/pkg/rkenodeconfigclient"
+	"github.com/ranger/remotedialer"
+	"github.com/ranger/wrangler/pkg/signals"
 	"github.com/sirupsen/logrus"
 )
 
@@ -187,7 +187,7 @@ func cleanup(ctx context.Context) error {
 func run(ctx context.Context) error {
 	topContext := signals.SetupSignalContext()
 
-	logrus.Infof("Rancher agent version %s is starting", VERSION)
+	logrus.Infof("Ranger agent version %s is starting", VERSION)
 	params, err := getParams()
 	if err != nil {
 		return err
@@ -223,7 +223,7 @@ func run(ctx context.Context) error {
 		if strings.Contains(err.Error(), "x509:") {
 			certErr := err
 			if strings.Contains(err.Error(), "certificate signed by unknown authority") {
-				certErr = fmt.Errorf("Certificate chain is not complete, please check if all needed intermediate certificates are included in the server certificate (in the correct order) and if the cacerts setting in Rancher either contains the correct CA certificate (in the case of using self signed certificates) or is empty (in the case of using a certificate signed by a recognized CA). Certificate information is displayed above. error: %s", err)
+				certErr = fmt.Errorf("Certificate chain is not complete, please check if all needed intermediate certificates are included in the server certificate (in the correct order) and if the cacerts setting in Ranger either contains the correct CA certificate (in the case of using self signed certificates) or is empty (in the case of using a certificate signed by a recognized CA). Certificate information is displayed above. error: %s", err)
 			}
 			if strings.Contains(err.Error(), "certificate has expired or is not yet valid") {
 				certErr = fmt.Errorf("Server certificate is not valid, please check if the host has the correct time configured and if the server certificate has a notAfter date and time in the future. Certificate information is displayed above. error: %s", err)
@@ -320,7 +320,7 @@ func run(ctx context.Context) error {
 		}
 
 		if isCluster() {
-			err = rancher.Run(topContext)
+			err = ranger.Run(topContext)
 			if err != nil {
 				logrus.Fatal(err)
 			}
@@ -384,7 +384,7 @@ func run(ctx context.Context) error {
 
 func exitCertWriter(ctx context.Context) {
 	// share-mnt process needs an always restart policy and to be killed so it can restart on startup
-	// this functionality is really only needed for OSes with ephemeral /etc like RancherOS
+	// this functionality is really only needed for OSes with ephemeral /etc like RangerOS
 	// everything here will just exit(0) with errors as we need to bail out completely.
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGTERM)
@@ -402,7 +402,7 @@ func exitCertWriter(ctx context.Context) {
 	}
 
 	args := filters.NewArgs()
-	args.Add("label", "io.rancher.rke.container.name=share-mnt")
+	args.Add("label", "io.ranger.rke.container.name=share-mnt")
 	containers, err := c.ContainerList(ctx, types.ContainerListOptions{
 		All:     true,
 		Filters: args,
@@ -463,7 +463,7 @@ func reconcileKubelet(ctx context.Context) (bool, error) {
 	defer c.Close()
 
 	args := filters.NewArgs()
-	args.Add("label", "io.rancher.rke.container.name=kubelet")
+	args.Add("label", "io.ranger.rke.container.name=kubelet")
 
 	containers, err := c.ContainerList(ctx, types.ContainerListOptions{
 		All:     true,

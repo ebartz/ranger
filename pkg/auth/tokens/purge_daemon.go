@@ -4,10 +4,10 @@ import (
 	"context"
 	"time"
 
-	"github.com/rancher/norman/clientbase"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/norman/clientbase"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -54,7 +54,7 @@ func (p *purger) purge() {
 		logrus.Infof("Purged %v expired tokens", count)
 	}
 
-	// saml tokens store encrypted token for login request from rancher cli
+	// saml tokens store encrypted token for login request from ranger cli
 	samlTokens, err := p.samlTokensLister.List(namespace.GlobalNamespace, labels.Everything())
 	if err != nil {
 		return

@@ -3,11 +3,11 @@ package machine
 import (
 	"net/http"
 
-	"github.com/rancher/apiserver/pkg/types"
-	"github.com/rancher/rancher/pkg/capr"
-	"github.com/rancher/rancher/pkg/wrangler"
-	schema2 "github.com/rancher/steve/pkg/schema"
-	steve "github.com/rancher/steve/pkg/server"
+	"github.com/ranger/apiserver/pkg/types"
+	"github.com/ranger/ranger/pkg/capr"
+	"github.com/ranger/ranger/pkg/wrangler"
+	schema2 "github.com/ranger/steve/pkg/schema"
+	steve "github.com/ranger/steve/pkg/server"
 )
 
 func Register(server *steve.Server, clients *wrangler.Context) {

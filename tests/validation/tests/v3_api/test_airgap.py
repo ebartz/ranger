@@ -28,8 +28,8 @@ TARBALL_TYPE = os.environ.get("K3S_TARBALL_TYPE", "tar.gz")
 ARCH = os.environ.get("K3S_ARCH", "amd64")
 
 AG_HOST_NAME = random_test_name(HOST_NAME)
-RANCHER_AG_INTERNAL_HOSTNAME = AG_HOST_NAME + "-internal.qa.rancher.space"
-RANCHER_AG_HOSTNAME = AG_HOST_NAME + ".qa.rancher.space"
+RANCHER_AG_INTERNAL_HOSTNAME = AG_HOST_NAME + "-internal.qa.ranger.space"
+RANCHER_AG_HOSTNAME = AG_HOST_NAME + ".qa.ranger.space"
 RESOURCE_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                             'resource')
 SSH_KEY_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)),
@@ -41,19 +41,19 @@ def test_deploy_bastion():
     assert node.public_ip_address is not None
 
 
-def test_deploy_airgap_rancher(check_hostname_length):
+def test_deploy_airgap_ranger(check_hostname_length):
     bastion_node = deploy_bastion_server()
-    save_res, load_res = add_rancher_images_to_private_registry(bastion_node)
-    assert "Image pull success: rancher/rancher:{}".format(
+    save_res, load_res = add_ranger_images_to_private_registry(bastion_node)
+    assert "Image pull success: ranger/ranger:{}".format(
         RANCHER_SERVER_VERSION) in save_res[0]
-    assert "The push refers to repository [{}/rancher/rancher]".format(
+    assert "The push refers to repository [{}/ranger/ranger]".format(
         bastion_node.host_name) in load_res[0]
-    ag_node = deploy_airgap_rancher(bastion_node)
+    ag_node = deploy_airgap_ranger(bastion_node)
     public_dns = create_nlb_and_add_targets([ag_node])
     print(
         "\nConnect to bastion node with:\nssh -i {}.pem {}@{}\n"
-        "Connect to rancher node by connecting to bastion, then run:\n"
-        "ssh -i {}.pem {}@{}\n\nOpen the Rancher UI with: https://{}\n"
+        "Connect to ranger node by connecting to bastion, then run:\n"
+        "ssh -i {}.pem {}@{}\n\nOpen the Ranger UI with: https://{}\n"
         "** IMPORTANT: SET THE RANCHER SERVER URL UPON INITIAL LOGIN TO: {} **"
         "\nWhen creating a cluster, enable private registry with below"
         " settings:\nPrivate Registry URL: {}\nPrivate Registry User: {}\n"
@@ -64,7 +64,7 @@ def test_deploy_airgap_rancher(check_hostname_length):
             public_dns, RANCHER_AG_INTERNAL_HOSTNAME,
             bastion_node.host_name, PRIVATE_REGISTRY_USERNAME))
     time.sleep(180)
-    setup_rancher_server()
+    setup_ranger_server()
 
 
 def test_prepare_airgap_nodes():
@@ -109,16 +109,16 @@ def test_deploy_airgap_nodes():
                                                    AGENT_REG_CMD)
         results.append(deploy_result)
     for result in results:
-        assert "Downloaded newer image for {}/rancher/rancher-agent".format(
+        assert "Downloaded newer image for {}/ranger/ranger-agent".format(
             bastion_node.host_name) in result[1]
 
 
-def test_add_rancher_images_to_private_registry():
+def test_add_ranger_images_to_private_registry():
     bastion_node = get_bastion_node()
-    save_res, load_res = add_rancher_images_to_private_registry(bastion_node)
-    assert "Image pull success: rancher/rancher:{}".format(
+    save_res, load_res = add_ranger_images_to_private_registry(bastion_node)
+    assert "Image pull success: ranger/ranger:{}".format(
         RANCHER_SERVER_VERSION) in save_res[0]
-    assert "The push refers to repository [{}/rancher/rancher]".format(
+    assert "The push refers to repository [{}/ranger/ranger]".format(
         bastion_node.host_name) in load_res[0]
 
 
@@ -130,14 +130,14 @@ def test_add_images_to_private_registry():
 
 def test_deploy_private_registry_without_image_push():
     bastion_node = deploy_bastion_server()
-    save_res, load_res = add_rancher_images_to_private_registry(
+    save_res, load_res = add_ranger_images_to_private_registry(
         bastion_node, push_images=False)
-    assert "Image pull success: rancher/rancher:{}".format(
+    assert "Image pull success: ranger/ranger:{}".format(
         RANCHER_SERVER_VERSION) in save_res[0]
     assert load_res is None
 
 
-def setup_rancher_server():
+def setup_ranger_server():
     base_url = "https://" + RANCHER_AG_HOSTNAME
     wait_for_status_code(url=base_url + "/v3", expected_code=401)
     auth_url = base_url + "/v3-public/localproviders/local?action=login"
@@ -155,7 +155,7 @@ def deploy_noauth_bastion_server():
     generate_certs_command = \
         'mkdir -p certs && sudo openssl req -newkey rsa:4096 -nodes -sha256 ' \
         '-keyout certs/domain.key -x509 -days 365 -out certs/domain.crt ' \
-        '-subj "/C=US/ST=AZ/O=Rancher QA/CN={0}" ' \
+        '-subj "/C=US/ST=AZ/O=Ranger QA/CN={0}" ' \
         '-addext "subjectAltName = DNS:{0}"'.format(bastion_node.host_name)
     bastion_node.execute_command(generate_certs_command)
 
@@ -246,33 +246,33 @@ def deploy_bastion_server():
     return bastion_node
 
 
-def add_rancher_images_to_private_registry(bastion_node, push_images=True):
+def add_ranger_images_to_private_registry(bastion_node, push_images=True):
     get_images_command = \
-        'wget -O rancher-images.txt https://github.com/rancher/rancher/' \
-        'releases/download/{0}/rancher-images.txt && ' \
-        'wget -O rancher-save-images.sh https://github.com/rancher/rancher/' \
-        'releases/download/{0}/rancher-save-images.sh && ' \
-        'wget -O rancher-load-images.sh https://github.com/rancher/rancher/' \
-        'releases/download/{0}/rancher-load-images.sh'.format(
+        'wget -O ranger-images.txt https://github.com/ranger/ranger/' \
+        'releases/download/{0}/ranger-images.txt && ' \
+        'wget -O ranger-save-images.sh https://github.com/ranger/ranger/' \
+        'releases/download/{0}/ranger-save-images.sh && ' \
+        'wget -O ranger-load-images.sh https://github.com/ranger/ranger/' \
+        'releases/download/{0}/ranger-load-images.sh'.format(
             RANCHER_SERVER_VERSION)
     bastion_node.execute_command(get_images_command)
 
     # comment out the "docker save" and "docker load" lines to save time
     edit_save_and_load_command = \
-        "sudo sed -i -e 's/docker save /# docker/g' rancher-save-images.sh && " \
-        "sudo sed -i -e 's/docker load /# docker/g' rancher-load-images.sh && " \
-        "chmod +x rancher-save-images.sh && chmod +x rancher-load-images.sh"
+        "sudo sed -i -e 's/docker save /# docker/g' ranger-save-images.sh && " \
+        "sudo sed -i -e 's/docker load /# docker/g' ranger-load-images.sh && " \
+        "chmod +x ranger-save-images.sh && chmod +x ranger-load-images.sh"
     bastion_node.execute_command(edit_save_and_load_command)
 
     save_images_command = \
-        "./rancher-save-images.sh --image-list ./rancher-images.txt" \
+        "./ranger-save-images.sh --image-list ./ranger-images.txt" \
 
     save_res = bastion_node.execute_command(save_images_command)
 
     if push_images:
         load_images_command = \
             "docker login {} -u \"{}\" -p \"{}\" && " \
-            "./rancher-load-images.sh --image-list ./rancher-images.txt " \
+            "./ranger-load-images.sh --image-list ./ranger-images.txt " \
             "--registry {}".format(
                 bastion_node.host_name, PRIVATE_REGISTRY_USERNAME,
                 PRIVATE_REGISTRY_PASSWORD, bastion_node.host_name)
@@ -288,7 +288,7 @@ def add_cleaned_images(bastion_node, images):
     failures = []
     for image in images:
         pull_image(bastion_node, image)
-        cleaned_image = re.search(".*(rancher/.*)", image).group(1)
+        cleaned_image = re.search(".*(ranger/.*)", image).group(1)
         tag_image(bastion_node, cleaned_image)
         push_image(bastion_node, cleaned_image)
 
@@ -415,8 +415,8 @@ def add_tarball_to_node(bastion_node, ag_node, tar_file, cluster_type):
                                ag_node.private_ip_address, tar_file)
     bastion_node.execute_command(ag_node_copy_tarball)
     ag_node_add_tarball_to_dir = \
-        'sudo mkdir -p /var/lib/rancher/{0}/agent/images/ && ' \
-        'sudo cp ./{1} /var/lib/rancher/{0}/agent/images/'.format(cluster_type,
+        'sudo mkdir -p /var/lib/ranger/{0}/agent/images/ && ' \
+        'sudo cp ./{1} /var/lib/ranger/{0}/agent/images/'.format(cluster_type,
                                                                   tar_file)
     run_command_on_airgap_node(bastion_node, ag_node,
                                ag_node_add_tarball_to_dir)
@@ -443,15 +443,15 @@ def prepare_private_registry(bastion_node, version):
         stripped_version = re.search("v(\d+.\d+.\d+)", version).group(1)
         if compare_versions(stripped_version, "1.21.2") < 0:
             get_images_command = \
-                'wget -O rke2-images.txt https://github.com/rancher/rke2/' \
+                'wget -O rke2-images.txt https://github.com/ranger/rke2/' \
                 'releases/download/{0}/rke2-images.linux-amd64.txt && ' \
-                'wget -O rke2 https://github.com/rancher/rke2/' \
+                'wget -O rke2 https://github.com/ranger/rke2/' \
                 'releases/download/{0}/rke2.linux-amd64'.format(version)
         else:
             get_images_command = \
-                'wget -O rke2-images.txt https://github.com/rancher/rke2/' \
+                'wget -O rke2-images.txt https://github.com/ranger/rke2/' \
                 'releases/download/{0}/rke2-images-all.linux-amd64.txt && ' \
-                'wget -O rke2 https://github.com/rancher/rke2/' \
+                'wget -O rke2 https://github.com/ranger/rke2/' \
                 'releases/download/{0}/rke2.linux-amd64'.format(version)
         bastion_node.execute_command(get_images_command)
 
@@ -475,12 +475,12 @@ def prepare_registries_mirror_on_node(bastion_node, ag_node, cluster_type):
     reg_file = reg_file.replace("$PASSWORD", PRIVATE_REGISTRY_PASSWORD)
     # Add registry file to node
     ag_node_create_dir = \
-        'sudo mkdir -p /etc/rancher/{0} && ' \
-        'sudo chown {1} /etc/rancher/{0}'.format(cluster_type, AWS_USER)
+        'sudo mkdir -p /etc/ranger/{0} && ' \
+        'sudo chown {1} /etc/ranger/{0}'.format(cluster_type, AWS_USER)
     run_command_on_airgap_node(bastion_node, ag_node,
                                ag_node_create_dir)
     write_reg_file_command = \
-        "cat <<EOT >> /etc/rancher/{}/registries.yaml\n{}\nEOT".format(
+        "cat <<EOT >> /etc/ranger/{}/registries.yaml\n{}\nEOT".format(
             cluster_type, reg_file)
     run_command_on_airgap_node(bastion_node, ag_node,
                                write_reg_file_command)
@@ -496,7 +496,7 @@ def deploy_airgap_cluster(bastion_node, ag_nodes, k8s, server_ops, agent_ops):
             if k8s == "k3s":
                 install_server = \
                     'INSTALL_K3S_SKIP_DOWNLOAD=true ./install.sh {} && sudo ' \
-                    'chmod 644 /etc/rancher/k3s/k3s.yaml'.format(server_ops)
+                    'chmod 644 /etc/ranger/k3s/k3s.yaml'.format(server_ops)
             else:
                 install_server = \
                     'sudo rke2 server --write-kubeconfig-mode 644 {} ' \
@@ -505,7 +505,7 @@ def deploy_airgap_cluster(bastion_node, ag_nodes, k8s, server_ops, agent_ops):
             print("Install server command: {}".format(install_server))
             run_command_on_airgap_node(bastion_node, ag_node, install_server)
             time.sleep(30)
-            token_command = 'sudo cat /var/lib/rancher/{}/server/node-token'.format(k8s)
+            token_command = 'sudo cat /var/lib/ranger/{}/server/node-token'.format(k8s)
             token = run_command_on_airgap_node(bastion_node, ag_node,
                                                token_command)[0].strip()
         else:
@@ -528,11 +528,11 @@ def deploy_airgap_cluster(bastion_node, ag_nodes, k8s, server_ops, agent_ops):
     else:
         time.sleep(60)
         wait_for_airgap_pods_ready(bastion_node, ag_nodes,
-                                   kubectl='/var/lib/rancher/rke2/bin/kubectl',
-                                   kubeconfig='/etc/rancher/rke2/rke2.yaml')
+                                   kubectl='/var/lib/ranger/rke2/bin/kubectl',
+                                   kubeconfig='/etc/ranger/rke2/rke2.yaml')
 
 
-def optionally_add_cluster_to_rancher(bastion_node, ag_nodes, prep="none"):
+def optionally_add_cluster_to_ranger(bastion_node, ag_nodes, prep="none"):
     if AGENT_REG_CMD:
         if prep == "k3s":
             for num, ag_node in enumerate(ag_nodes):
@@ -540,15 +540,15 @@ def optionally_add_cluster_to_rancher(bastion_node, ag_nodes, prep="none"):
                 restart_k3s = 'sudo systemctl restart k3s-agent'
                 if num == 0:
                     restart_k3s = 'sudo systemctl restart k3s && ' \
-                                  'sudo chmod 644 /etc/rancher/k3s/k3s.yaml'
+                                  'sudo chmod 644 /etc/ranger/k3s/k3s.yaml'
                 run_command_on_airgap_node(bastion_node, ag_node, restart_k3s)
-        print("Adding to rancher server")
+        print("Adding to ranger server")
         result = run_command_on_airgap_node(bastion_node, ag_nodes[0],
                                             AGENT_REG_CMD)
         assert "deployment.apps/cattle-cluster-agent created" in result
 
 
-def deploy_airgap_rancher(bastion_node):
+def deploy_airgap_ranger(bastion_node):
     ag_node = prepare_airgap_node(bastion_node, 1)[0]
     if "v2.5" in RANCHER_SERVER_VERSION or \
             "v2.6" in RANCHER_SERVER_VERSION or \
@@ -565,32 +565,32 @@ def deploy_airgap_rancher(bastion_node):
             base64.b64decode(RANCHER_VALID_TLS_KEY).decode("utf-8"))
         run_command_on_airgap_node(bastion_node, ag_node,
                                    write_key_command)
-        deploy_rancher_command = \
+        deploy_ranger_command = \
             'sudo docker run -d {} --restart=unless-stopped ' \
             '-p 80:80 -p 443:443 ' \
-            '-v ${{PWD}}/fullchain.pem:/etc/rancher/ssl/cert.pem ' \
-            '-v ${{PWD}}/privkey.pem:/etc/rancher/ssl/key.pem ' \
+            '-v ${{PWD}}/fullchain.pem:/etc/ranger/ssl/cert.pem ' \
+            '-v ${{PWD}}/privkey.pem:/etc/ranger/ssl/key.pem ' \
             '-e CATTLE_SYSTEM_DEFAULT_REGISTRY={} ' \
             '-e CATTLE_SYSTEM_CATALOG=bundled ' \
             '-e CATTLE_BOOTSTRAP_PASSWORD=\\\"{}\\\" ' \
-            '{}/rancher/rancher:{} --no-cacerts --trace'.format(
+            '{}/ranger/ranger:{} --no-cacerts --trace'.format(
                 privileged, bastion_node.host_name, ADMIN_PASSWORD,
                 bastion_node.host_name, RANCHER_SERVER_VERSION)
     else:
-        deploy_rancher_command = \
+        deploy_ranger_command = \
             'sudo docker run -d {} --restart=unless-stopped ' \
             '-p 80:80 -p 443:443 ' \
             '-e CATTLE_SYSTEM_DEFAULT_REGISTRY={} ' \
             '-e CATTLE_BOOTSTRAP_PASSWORD=\\\"{}\\\" ' \
-            '-e CATTLE_SYSTEM_CATALOG=bundled {}/rancher/rancher:{} --trace'.format(
+            '-e CATTLE_SYSTEM_CATALOG=bundled {}/ranger/ranger:{} --trace'.format(
                 privileged, bastion_node.host_name, 
                 ADMIN_PASSWORD,
                 bastion_node.host_name,
                 RANCHER_SERVER_VERSION)
     deploy_result = run_command_on_airgap_node(bastion_node, ag_node,
-                                               deploy_rancher_command,
+                                               deploy_ranger_command,
                                                log_out=True)
-    assert "Downloaded newer image for {}/rancher/rancher:{}".format(
+    assert "Downloaded newer image for {}/ranger/ranger:{}".format(
         bastion_node.host_name, RANCHER_SERVER_VERSION) in deploy_result[1]
     return ag_node
 

@@ -4,13 +4,13 @@ import (
 	"encoding/base64"
 	"encoding/json"
 
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/controllers/management/secretmigrator/assemblers"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/settings"
-	rketypes "github.com/rancher/rke/types"
-	"github.com/rancher/rke/util"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/controllers/management/secretmigrator/assemblers"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/settings"
+	rketypes "github.com/ranger/rke/types"
+	"github.com/ranger/rke/util"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/kubernetes/pkg/credentialprovider"
@@ -46,8 +46,8 @@ func GetPrivateRegistry(cluster *v3.Cluster) *rketypes.PrivateRegistry {
 // GetPrivateClusterLevelRegistry returns the cluster-level registry for the given clusters.management.cattle.io/v3
 // object (or nil if one is not found).
 func GetPrivateClusterLevelRegistry(cluster *v3.Cluster) *rketypes.PrivateRegistry {
-	if cluster != nil && cluster.Spec.RancherKubernetesEngineConfig != nil && len(cluster.Spec.RancherKubernetesEngineConfig.PrivateRegistries) > 0 {
-		config := cluster.Spec.RancherKubernetesEngineConfig
+	if cluster != nil && cluster.Spec.RangerKubernetesEngineConfig != nil && len(cluster.Spec.RangerKubernetesEngineConfig.PrivateRegistries) > 0 {
+		config := cluster.Spec.RangerKubernetesEngineConfig
 		return &config.PrivateRegistries[0]
 	}
 	return nil
@@ -83,7 +83,7 @@ func GeneratePrivateRegistryEncodedDockerConfig(cluster *v3.Cluster, secretListe
 	registrySecretName := cluster.GetSecret(v3.ClusterPrivateRegistrySecret)
 
 	// Private registry will only be defined on the cluster if it is an RKE1 cluster, mgmt clusters generated from
-	// provisioning clusters do not have a populated `RancherKubernetesEngineConfig`.
+	// provisioning clusters do not have a populated `RangerKubernetesEngineConfig`.
 	if registry := GetPrivateRegistry(cluster); registry != nil {
 		// check for RKE1 ECR credentials first
 		if registry.ECRCredentialPlugin != nil {

@@ -2,13 +2,13 @@
 
 ## Supported Versions
 
-Please review our [support maintenance and terms](https://rancher.com/support-maintenance-terms/) to view the current support lifecycle.
+Please review our [support maintenance and terms](https://ranger.com/support-maintenance-terms/) to view the current support lifecycle.
 
 ## Reporting a Vulnerability
 
-SUSE Rancher supports responsible disclosure and endeavors to resolve security issues in a reasonable timeframe. To report a security vulnerability, email security-rancher@suse.com . You may (but are not required to) use the GPG key `rsa4096/C9DF50BDAC351DA9` for encrypted communication.
+SUSE Ranger supports responsible disclosure and endeavors to resolve security issues in a reasonable timeframe. To report a security vulnerability, email security-ranger@suse.com . You may (but are not required to) use the GPG key `rsa4096/C9DF50BDAC351DA9` for encrypted communication.
 
-### GPG Key - `security-rancher@suse.com`
+### GPG Key - `security-ranger@suse.com`
 
 ```
 -----BEGIN PGP PUBLIC KEY BLOCK-----

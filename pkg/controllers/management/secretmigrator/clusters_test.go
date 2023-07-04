@@ -10,11 +10,11 @@ import (
 	"testing"
 	"time"
 
-	apimgmtv3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/controllers/management/secretmigrator/assemblers"
-	corefakes "github.com/rancher/rancher/pkg/generated/norman/core/v1/fakes"
-	v3fakes "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3/fakes"
-	rketypes "github.com/rancher/rke/types"
+	apimgmtv3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/controllers/management/secretmigrator/assemblers"
+	corefakes "github.com/ranger/ranger/pkg/generated/norman/core/v1/fakes"
+	v3fakes "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3/fakes"
+	rketypes "github.com/ranger/rke/types"
 	"github.com/stretchr/testify/assert"
 	corev1 "k8s.io/api/core/v1"
 	apierror "k8s.io/apimachinery/pkg/api/errors"
@@ -172,7 +172,7 @@ func TestMigrateClusterSecrets(t *testing.T) {
 		},
 		Spec: apimgmtv3.ClusterSpec{
 			ClusterSpecBase: apimgmtv3.ClusterSpecBase{
-				RancherKubernetesEngineConfig: &rketypes.RancherKubernetesEngineConfig{
+				RangerKubernetesEngineConfig: &rketypes.RangerKubernetesEngineConfig{
 					PrivateRegistries: []rketypes.PrivateRegistry{
 						{
 							URL:      "testurl",
@@ -243,56 +243,56 @@ func TestMigrateClusterSecrets(t *testing.T) {
 	}{
 		{
 			name:       "privateRegistry",
-			field:      cluster.Spec.RancherKubernetesEngineConfig.PrivateRegistries[0].Password,
+			field:      cluster.Spec.RangerKubernetesEngineConfig.PrivateRegistries[0].Password,
 			secretName: cluster.Spec.ClusterSecrets.PrivateRegistrySecret,
 			key:        corev1.DockerConfigJsonKey,
 			expected:   string(registryJSON),
 		},
 		{
 			name:       "s3Secret",
-			field:      cluster.Spec.RancherKubernetesEngineConfig.Services.Etcd.BackupConfig.S3BackupConfig.SecretKey,
+			field:      cluster.Spec.RangerKubernetesEngineConfig.Services.Etcd.BackupConfig.S3BackupConfig.SecretKey,
 			secretName: cluster.Spec.ClusterSecrets.S3CredentialSecret,
 			key:        SecretKey,
 			expected:   secretKey,
 		},
 		{
 			name:       "WeavePassword",
-			field:      cluster.Spec.RancherKubernetesEngineConfig.Network.WeaveNetworkProvider.Password,
+			field:      cluster.Spec.RangerKubernetesEngineConfig.Network.WeaveNetworkProvider.Password,
 			secretName: cluster.Spec.ClusterSecrets.WeavePasswordSecret,
 			key:        SecretKey,
 			expected:   secretKey,
 		},
 		{
 			name:       "VspherePassword",
-			field:      cluster.Spec.RancherKubernetesEngineConfig.CloudProvider.VsphereCloudProvider.Global.Password,
+			field:      cluster.Spec.RangerKubernetesEngineConfig.CloudProvider.VsphereCloudProvider.Global.Password,
 			secretName: cluster.Spec.ClusterSecrets.VsphereSecret,
 			key:        SecretKey,
 			expected:   secretKey,
 		},
 		{
 			name:       "VirtualCenterPassword",
-			field:      cluster.Spec.RancherKubernetesEngineConfig.CloudProvider.VsphereCloudProvider.VirtualCenter["vc1"].Password,
+			field:      cluster.Spec.RangerKubernetesEngineConfig.CloudProvider.VsphereCloudProvider.VirtualCenter["vc1"].Password,
 			secretName: cluster.Spec.ClusterSecrets.VirtualCenterSecret,
 			key:        "vc1",
 			expected:   secretKey,
 		},
 		{
 			name:       "OpenStackPassword",
-			field:      cluster.Spec.RancherKubernetesEngineConfig.CloudProvider.OpenstackCloudProvider.Global.Password,
+			field:      cluster.Spec.RangerKubernetesEngineConfig.CloudProvider.OpenstackCloudProvider.Global.Password,
 			secretName: cluster.Spec.ClusterSecrets.OpenStackSecret,
 			key:        SecretKey,
 			expected:   secretKey,
 		},
 		{
 			name:       "AADClientSecret",
-			field:      cluster.Spec.RancherKubernetesEngineConfig.CloudProvider.AzureCloudProvider.AADClientSecret,
+			field:      cluster.Spec.RangerKubernetesEngineConfig.CloudProvider.AzureCloudProvider.AADClientSecret,
 			secretName: cluster.Spec.ClusterSecrets.AADClientSecret,
 			key:        SecretKey,
 			expected:   secretKey,
 		},
 		{
 			name:       "AADClientCertSecret",
-			field:      cluster.Spec.RancherKubernetesEngineConfig.CloudProvider.AzureCloudProvider.AADClientCertPassword,
+			field:      cluster.Spec.RangerKubernetesEngineConfig.CloudProvider.AzureCloudProvider.AADClientCertPassword,
 			secretName: cluster.Spec.ClusterSecrets.AADClientCertSecret,
 			key:        SecretKey,
 			expected:   secretKey,
@@ -323,7 +323,7 @@ func TestMigrateClusterSecrets(t *testing.T) {
 		},
 		Spec: apimgmtv3.ClusterSpec{
 			ClusterSpecBase: apimgmtv3.ClusterSpecBase{
-				RancherKubernetesEngineConfig: &rketypes.RancherKubernetesEngineConfig{
+				RangerKubernetesEngineConfig: &rketypes.RangerKubernetesEngineConfig{
 					Services: rketypes.RKEConfigServices{
 						Etcd: rketypes.ETCDService{
 							BackupConfig: &rketypes.BackupConfig{
@@ -340,7 +340,7 @@ func TestMigrateClusterSecrets(t *testing.T) {
 	cluster, err = h.migrateClusterSecrets(testCluster2)
 	assert.Equal(t, err.Error(), fmt.Sprintf(" \"cluster [%s]\" not found", testCluster2.Name))
 	// no change should
-	assert.Equal(t, cluster.Spec.RancherKubernetesEngineConfig, testCluster2.Spec.RancherKubernetesEngineConfig)
+	assert.Equal(t, cluster.Spec.RangerKubernetesEngineConfig, testCluster2.Spec.RangerKubernetesEngineConfig)
 	assert.Equal(t, cluster, testCluster2)
 	assert.True(t, apimgmtv3.ClusterConditionSecretsMigrated.IsFalse(cluster))
 }
@@ -390,7 +390,7 @@ func TestMigrateRKESecrets(t *testing.T) {
 		},
 		Spec: apimgmtv3.ClusterSpec{
 			ClusterSpecBase: apimgmtv3.ClusterSpecBase{
-				RancherKubernetesEngineConfig: &rketypes.RancherKubernetesEngineConfig{
+				RangerKubernetesEngineConfig: &rketypes.RangerKubernetesEngineConfig{
 					BastionHost: rketypes.BastionHost{
 						SSHKey: "sshKey",
 					},
@@ -473,53 +473,53 @@ func TestMigrateRKESecrets(t *testing.T) {
 		{
 			name: "rkeSecretsEncryptionCustomConfig",
 			cleanupVerifyFunc: func(t *testing.T, cluster *apimgmtv3.Cluster) {
-				assert.Nil(t, cluster.Spec.RancherKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig.CustomConfig.Resources)
+				assert.Nil(t, cluster.Spec.RangerKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig.CustomConfig.Resources)
 			},
 			secretName: cluster.Spec.ClusterSecrets.SecretsEncryptionProvidersSecret,
 			key:        SecretKey,
 			expected:   `[{"resources":null,"providers":[{"aesgcm":{"keys":[{"name":"testName","secret":"testSecret"}]}}]}]`,
 			assembler:  assemblers.AssembleSecretsEncryptionProvidersSecretCredential,
 			assembleVerifyFunc: func(t *testing.T, cluster *apimgmtv3.Cluster) {
-				assert.Equal(t, testCluster.Spec.RancherKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig, cluster.Spec.RancherKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig)
+				assert.Equal(t, testCluster.Spec.RangerKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig, cluster.Spec.RangerKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig)
 			},
 		},
 		{
 			name:              "bastionHostSSHKey",
-			cleanupVerifyFunc: emptyStringCondition(cluster.Spec.RancherKubernetesEngineConfig.BastionHost.SSHKey),
+			cleanupVerifyFunc: emptyStringCondition(cluster.Spec.RangerKubernetesEngineConfig.BastionHost.SSHKey),
 			secretName:        cluster.Spec.ClusterSecrets.BastionHostSSHKeySecret,
 			key:               SecretKey,
 			expected:          "sshKey",
 			assembler:         assemblers.AssembleBastionHostSSHKeyCredential,
 			assembleVerifyFunc: func(t *testing.T, cluster *apimgmtv3.Cluster) {
-				assert.Equal(t, testCluster.Spec.RancherKubernetesEngineConfig.BastionHost.SSHKey, cluster.Spec.RancherKubernetesEngineConfig.BastionHost.SSHKey)
+				assert.Equal(t, testCluster.Spec.RangerKubernetesEngineConfig.BastionHost.SSHKey, cluster.Spec.RangerKubernetesEngineConfig.BastionHost.SSHKey)
 			},
 		},
 		{
 			name: "kubeletExtraEnv",
 			cleanupVerifyFunc: func(t *testing.T, cluster *apimgmtv3.Cluster) {
-				assert.Len(t, cluster.Spec.RancherKubernetesEngineConfig.Services.Kubelet.ExtraEnv, 1)
-				assert.Equal(t, "AWS_ACCESS_KEY_ID=keyId", cluster.Spec.RancherKubernetesEngineConfig.Services.Kubelet.ExtraEnv[0])
+				assert.Len(t, cluster.Spec.RangerKubernetesEngineConfig.Services.Kubelet.ExtraEnv, 1)
+				assert.Equal(t, "AWS_ACCESS_KEY_ID=keyId", cluster.Spec.RangerKubernetesEngineConfig.Services.Kubelet.ExtraEnv[0])
 			},
 			secretName: cluster.Spec.ClusterSecrets.KubeletExtraEnvSecret,
 			key:        SecretKey,
 			expected:   "secret",
 			assembler:  assemblers.AssembleKubeletExtraEnvCredential,
 			assembleVerifyFunc: func(t *testing.T, cluster *apimgmtv3.Cluster) {
-				assert.Equal(t, testCluster.Spec.RancherKubernetesEngineConfig.Services.Kubelet.ExtraEnv, cluster.Spec.RancherKubernetesEngineConfig.Services.Kubelet.ExtraEnv)
+				assert.Equal(t, testCluster.Spec.RangerKubernetesEngineConfig.Services.Kubelet.ExtraEnv, cluster.Spec.RangerKubernetesEngineConfig.Services.Kubelet.ExtraEnv)
 			},
 		},
 		{
 			name: "privateRegistryECR",
 			cleanupVerifyFunc: emptyStringCondition(
-				cluster.Spec.RancherKubernetesEngineConfig.PrivateRegistries[0].ECRCredentialPlugin.AwsSecretAccessKey,
-				cluster.Spec.RancherKubernetesEngineConfig.PrivateRegistries[0].ECRCredentialPlugin.AwsSessionToken,
+				cluster.Spec.RangerKubernetesEngineConfig.PrivateRegistries[0].ECRCredentialPlugin.AwsSecretAccessKey,
+				cluster.Spec.RangerKubernetesEngineConfig.PrivateRegistries[0].ECRCredentialPlugin.AwsSessionToken,
 			),
 			secretName: cluster.Spec.ClusterSecrets.PrivateRegistryECRSecret,
 			key:        SecretKey,
 			expected:   `{"testurl":"{\"awsSecretAccessKey\":\"secret\",\"awsAccessToken\":\"token\"}"}`,
 			assembler:  assemblers.AssemblePrivateRegistryECRCredential,
 			assembleVerifyFunc: func(t *testing.T, cluster *apimgmtv3.Cluster) {
-				assert.Equal(t, testCluster.Spec.RancherKubernetesEngineConfig.PrivateRegistries, cluster.Spec.RancherKubernetesEngineConfig.PrivateRegistries)
+				assert.Equal(t, testCluster.Spec.RangerKubernetesEngineConfig.PrivateRegistries, cluster.Spec.RangerKubernetesEngineConfig.PrivateRegistries)
 			},
 		},
 	}
@@ -551,7 +551,7 @@ func TestMigrateACISecrets(t *testing.T) {
 		},
 		Spec: apimgmtv3.ClusterSpec{
 			ClusterSpecBase: apimgmtv3.ClusterSpecBase{
-				RancherKubernetesEngineConfig: &rketypes.RancherKubernetesEngineConfig{
+				RangerKubernetesEngineConfig: &rketypes.RangerKubernetesEngineConfig{
 					Network: rketypes.NetworkConfig{
 						Plugin: "aci",
 						AciNetworkProvider: &rketypes.AciNetworkProvider{
@@ -596,35 +596,35 @@ func TestMigrateACISecrets(t *testing.T) {
 	}{
 		{
 			name:              "token",
-			cleanupVerifyFunc: emptyStringCondition(cluster.Spec.RancherKubernetesEngineConfig.Network.AciNetworkProvider.Token),
+			cleanupVerifyFunc: emptyStringCondition(cluster.Spec.RangerKubernetesEngineConfig.Network.AciNetworkProvider.Token),
 			secretName:        cluster.Spec.ClusterSecrets.ACITokenSecret,
 			key:               SecretKey,
 			expected:          "secret",
 			assembler:         assemblers.AssembleACITokenCredential,
 			assembleVerifyFunc: func(t *testing.T, cluster *apimgmtv3.Cluster) {
-				assert.Equal(t, testCluster.Spec.RancherKubernetesEngineConfig.Network.AciNetworkProvider.Token, cluster.Spec.RancherKubernetesEngineConfig.Network.AciNetworkProvider.Token)
+				assert.Equal(t, testCluster.Spec.RangerKubernetesEngineConfig.Network.AciNetworkProvider.Token, cluster.Spec.RangerKubernetesEngineConfig.Network.AciNetworkProvider.Token)
 			},
 		},
 		{
 			name:              "user key",
-			cleanupVerifyFunc: emptyStringCondition(cluster.Spec.RancherKubernetesEngineConfig.Network.AciNetworkProvider.ApicUserKey),
+			cleanupVerifyFunc: emptyStringCondition(cluster.Spec.RangerKubernetesEngineConfig.Network.AciNetworkProvider.ApicUserKey),
 			secretName:        cluster.Spec.ClusterSecrets.ACIAPICUserKeySecret,
 			key:               SecretKey,
 			expected:          "secret",
 			assembler:         assemblers.AssembleACIAPICUserKeyCredential,
 			assembleVerifyFunc: func(t *testing.T, cluster *apimgmtv3.Cluster) {
-				assert.Equal(t, testCluster.Spec.RancherKubernetesEngineConfig.Network.AciNetworkProvider.ApicUserKey, cluster.Spec.RancherKubernetesEngineConfig.Network.AciNetworkProvider.ApicUserKey)
+				assert.Equal(t, testCluster.Spec.RangerKubernetesEngineConfig.Network.AciNetworkProvider.ApicUserKey, cluster.Spec.RangerKubernetesEngineConfig.Network.AciNetworkProvider.ApicUserKey)
 			},
 		},
 		{
 			name:              "kafka key",
-			cleanupVerifyFunc: emptyStringCondition(cluster.Spec.RancherKubernetesEngineConfig.Network.AciNetworkProvider.KafkaClientKey),
+			cleanupVerifyFunc: emptyStringCondition(cluster.Spec.RangerKubernetesEngineConfig.Network.AciNetworkProvider.KafkaClientKey),
 			secretName:        cluster.Spec.ClusterSecrets.ACIKafkaClientKeySecret,
 			key:               SecretKey,
 			expected:          "secret",
 			assembler:         assemblers.AssembleACIKafkaClientKeyCredential,
 			assembleVerifyFunc: func(t *testing.T, cluster *apimgmtv3.Cluster) {
-				assert.Equal(t, testCluster.Spec.RancherKubernetesEngineConfig.Network.AciNetworkProvider.KafkaClientKey, cluster.Spec.RancherKubernetesEngineConfig.Network.AciNetworkProvider.KafkaClientKey)
+				assert.Equal(t, testCluster.Spec.RangerKubernetesEngineConfig.Network.AciNetworkProvider.KafkaClientKey, cluster.Spec.RangerKubernetesEngineConfig.Network.AciNetworkProvider.KafkaClientKey)
 			},
 		},
 	}

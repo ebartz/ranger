@@ -3,10 +3,10 @@ package disallow
 import (
 	"net/http"
 
-	"github.com/rancher/apiserver/pkg/types"
-	"github.com/rancher/steve/pkg/attributes"
-	schema2 "github.com/rancher/steve/pkg/schema"
-	steve "github.com/rancher/steve/pkg/server"
+	"github.com/ranger/apiserver/pkg/types"
+	"github.com/ranger/steve/pkg/attributes"
+	schema2 "github.com/ranger/steve/pkg/schema"
+	steve "github.com/ranger/steve/pkg/server"
 )
 
 var (

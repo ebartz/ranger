@@ -7,8 +7,8 @@ import (
 
 	"strings"
 
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	"github.com/rancher/rancher/pkg/types/config"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -19,7 +19,7 @@ import (
 
 // This controller is responsible for monitoring workloads and
 // creating services for them
-// a) when rancher ports annotation is present, create service based on annotation ports
+// a) when ranger ports annotation is present, create service based on annotation ports
 // b) when annotation is missing, create a headless service
 
 const (

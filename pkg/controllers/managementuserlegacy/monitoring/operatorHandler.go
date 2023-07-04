@@ -7,13 +7,13 @@ import (
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v33 "github.com/rancher/rancher/pkg/apis/project.cattle.io/v3"
-	app2 "github.com/rancher/rancher/pkg/app"
-	"github.com/rancher/rancher/pkg/catalog/manager"
-	mgmtv3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	projectv3 "github.com/rancher/rancher/pkg/generated/norman/project.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/monitoring"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v33 "github.com/ranger/ranger/pkg/apis/project.cattle.io/v3"
+	app2 "github.com/ranger/ranger/pkg/app"
+	"github.com/ranger/ranger/pkg/catalog/manager"
+	mgmtv3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	projectv3 "github.com/ranger/ranger/pkg/generated/norman/project.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/monitoring"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -206,7 +206,7 @@ func deploySystemMonitor(cluster *mgmtv3.Cluster, app *appHandler, catalogManage
 		Spec: v33.AppSpec{
 			Answers:          appAnswers,
 			AnswersSetString: answersSetString,
-			Description:      "Prometheus Operator for Rancher Monitoring",
+			Description:      "Prometheus Operator for Ranger Monitoring",
 			ExternalID:       appCatalogID,
 			ProjectName:      appProjectName,
 			TargetNamespace:  appTargetNamespace,

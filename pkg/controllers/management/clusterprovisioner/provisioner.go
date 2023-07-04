@@ -12,27 +12,27 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/controller"
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/norman/types/slice"
-	"github.com/rancher/norman/types/values"
-	apimgmtv3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	util "github.com/rancher/rancher/pkg/cluster"
-	"github.com/rancher/rancher/pkg/controllers/management/imported"
-	kd "github.com/rancher/rancher/pkg/controllers/management/kontainerdrivermetadata"
-	"github.com/rancher/rancher/pkg/controllers/management/secretmigrator"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/apps/v1"
-	corev1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/kontainer-engine/drivers/rke"
-	"github.com/rancher/rancher/pkg/kontainer-engine/service"
-	"github.com/rancher/rancher/pkg/kontainerdriver"
-	"github.com/rancher/rancher/pkg/ref"
-	"github.com/rancher/rancher/pkg/rkedialerfactory"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rke/services"
-	rketypes "github.com/rancher/rke/types"
+	"github.com/ranger/norman/controller"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/norman/types/slice"
+	"github.com/ranger/norman/types/values"
+	apimgmtv3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	util "github.com/ranger/ranger/pkg/cluster"
+	"github.com/ranger/ranger/pkg/controllers/management/imported"
+	kd "github.com/ranger/ranger/pkg/controllers/management/kontainerdrivermetadata"
+	"github.com/ranger/ranger/pkg/controllers/management/secretmigrator"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/apps/v1"
+	corev1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/kontainer-engine/drivers/rke"
+	"github.com/ranger/ranger/pkg/kontainer-engine/service"
+	"github.com/ranger/ranger/pkg/kontainerdriver"
+	"github.com/ranger/ranger/pkg/ref"
+	"github.com/ranger/ranger/pkg/rkedialerfactory"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/rke/services"
+	rketypes "github.com/ranger/rke/types"
 	"github.com/sirupsen/logrus"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -43,7 +43,7 @@ import (
 )
 
 const (
-	RKEDriverKey          = "rancherKubernetesEngineConfig"
+	RKEDriverKey          = "rangerKubernetesEngineConfig"
 	KontainerEngineUpdate = "provisioner.cattle.io/ke-driver-update"
 	RkeRestoreAnnotation  = "rke.cattle.io/restore"
 )
@@ -98,7 +98,7 @@ func Register(ctx context.Context, management *config.ManagementContext) {
 		Ctx:     ctx,
 	}
 
-	driver := service.Drivers[service.RancherKubernetesEngineDriverName]
+	driver := service.Drivers[service.RangerKubernetesEngineDriverName]
 	rkeDriver := driver.(*rke.Driver)
 	rkeDriver.DockerDialer = docker.Build
 	rkeDriver.LocalDialer = local.Build
@@ -321,14 +321,14 @@ func (p *Provisioner) setKontainerEngineUpdate(cluster *apimgmtv3.Cluster, anno 
 }
 
 func setVersion(cluster *apimgmtv3.Cluster) {
-	if cluster.Spec.RancherKubernetesEngineConfig != nil {
-		if cluster.Spec.RancherKubernetesEngineConfig.Version == "" {
+	if cluster.Spec.RangerKubernetesEngineConfig != nil {
+		if cluster.Spec.RangerKubernetesEngineConfig.Version == "" {
 			//set version from the applied spec
-			if cluster.Status.AppliedSpec.RancherKubernetesEngineConfig != nil {
-				if cluster.Status.AppliedSpec.RancherKubernetesEngineConfig.Version != "" {
-					cluster.Spec.RancherKubernetesEngineConfig.Version = cluster.Status.AppliedSpec.RancherKubernetesEngineConfig.Version
+			if cluster.Status.AppliedSpec.RangerKubernetesEngineConfig != nil {
+				if cluster.Status.AppliedSpec.RangerKubernetesEngineConfig.Version != "" {
+					cluster.Spec.RangerKubernetesEngineConfig.Version = cluster.Status.AppliedSpec.RangerKubernetesEngineConfig.Version
 				} else {
-					cluster.Spec.RancherKubernetesEngineConfig.Version = settings.KubernetesVersion.Get()
+					cluster.Spec.RangerKubernetesEngineConfig.Version = settings.KubernetesVersion.Get()
 				}
 			}
 		}
@@ -364,7 +364,7 @@ func (p *Provisioner) update(cluster *apimgmtv3.Cluster, create bool) (*apimgmtv
 	apimgmtv3.ClusterConditionProvisioned.Reason(cluster, "")
 	apimgmtv3.ClusterConditionPending.True(cluster)
 
-	if cluster.Spec.RancherKubernetesEngineConfig != nil || cluster.Spec.GenericEngineConfig != nil {
+	if cluster.Spec.RangerKubernetesEngineConfig != nil || cluster.Spec.GenericEngineConfig != nil {
 		return cluster, nil
 	}
 	nodes, err := p.NodeLister.List(cluster.Name, labels.Everything())
@@ -437,8 +437,8 @@ func (p *Provisioner) pending(cluster *apimgmtv3.Cluster) (*apimgmtv3.Cluster, e
 
 	if driver != cluster.Status.Driver {
 		cluster.Status.Driver = driver
-		if driver == apimgmtv3.ClusterDriverRKE && cluster.Spec.RancherKubernetesEngineConfig == nil {
-			cluster.Spec.RancherKubernetesEngineConfig = &rketypes.RancherKubernetesEngineConfig{}
+		if driver == apimgmtv3.ClusterDriverRKE && cluster.Spec.RangerKubernetesEngineConfig == nil {
+			cluster.Spec.RangerKubernetesEngineConfig = &rketypes.RangerKubernetesEngineConfig{}
 		}
 		return p.Clusters.Update(cluster)
 	}
@@ -539,19 +539,19 @@ func (p *Provisioner) reconcileCluster(cluster *apimgmtv3.Cluster, create bool) 
 			logrus.Infof("Create done, Updating cluster [%s]", cluster.Name)
 			apiEndpoint, serviceAccountToken, caCert, updateTriggered, err = p.driverUpdate(cluster, *spec)
 		}
-	} else if spec.RancherKubernetesEngineConfig != nil && spec.RancherKubernetesEngineConfig.Restore.Restore {
+	} else if spec.RangerKubernetesEngineConfig != nil && spec.RangerKubernetesEngineConfig.Restore.Restore {
 		logrus.Infof("Restoring cluster [%s] from backup", cluster.Name)
 		// cluster may need to be restored if key rotation fails
 		// ensure restore does not get short-circuited by key rotation since RKE checks for key rotation before restore
-		spec.RancherKubernetesEngineConfig.RotateEncryptionKey = false
+		spec.RangerKubernetesEngineConfig.RotateEncryptionKey = false
 		apiEndpoint, serviceAccountToken, caCert, err = p.restoreClusterBackup(cluster, *spec)
 	} else if strings.Contains(apimgmtv3.ClusterConditionUpdated.GetMessage(cluster), errKeyRotationFailed.Error()) {
 		logrus.Infof("Key rotation failed, cluster needs to be restored. Skipping driver updates.")
 		return cluster, nil // prevent driver updates if the cluster needs to be restored
-	} else if spec.RancherKubernetesEngineConfig != nil && spec.RancherKubernetesEngineConfig.RotateCertificates != nil {
+	} else if spec.RangerKubernetesEngineConfig != nil && spec.RangerKubernetesEngineConfig.RotateCertificates != nil {
 		logrus.Infof("Rotating certificates for cluster [%s]", cluster.Name)
 		apiEndpoint, serviceAccountToken, caCert, updateTriggered, err = p.driverUpdate(cluster, *spec)
-	} else if spec.RancherKubernetesEngineConfig != nil && spec.RancherKubernetesEngineConfig.RotateEncryptionKey {
+	} else if spec.RangerKubernetesEngineConfig != nil && spec.RangerKubernetesEngineConfig.RotateEncryptionKey {
 		logrus.Infof("Rotating encryption key for cluster [%s]", cluster.Name)
 		apiEndpoint, serviceAccountToken, caCert, updateTriggered, err = p.driverUpdate(cluster, *spec)
 		if err != nil {
@@ -618,7 +618,7 @@ func (p *Provisioner) reconcileCluster(cluster *apimgmtv3.Cluster, create bool) 
 		resetRkeConfigFlags(cluster, updateTriggered)
 
 		// initialize on first rke up
-		if cluster.Status.AppliedSpec.RancherKubernetesEngineConfig != nil && cluster.Status.NodeVersion == 0 {
+		if cluster.Status.AppliedSpec.RangerKubernetesEngineConfig != nil && cluster.Status.NodeVersion == 0 {
 			cluster.Status.NodeVersion++
 		}
 
@@ -635,7 +635,7 @@ func (p *Provisioner) reconcileCluster(cluster *apimgmtv3.Cluster, create bool) 
 		return cluster, fmt.Errorf("failed to update cluster")
 	}
 
-	if cluster.Status.AppliedSpec.RancherKubernetesEngineConfig != nil {
+	if cluster.Status.AppliedSpec.RangerKubernetesEngineConfig != nil {
 		logrus.Infof("Updated cluster [%s] with node version [%v]", cluster.Name, cluster.Status.NodeVersion)
 		p.reconcileForUpgrade(cluster.Name)
 	}
@@ -678,17 +678,17 @@ func (p *Provisioner) setGenericConfigs(cluster *apimgmtv3.Cluster) {
 }
 
 func resetRkeConfigFlags(cluster *apimgmtv3.Cluster, updateTriggered bool) {
-	if cluster.Spec.RancherKubernetesEngineConfig != nil {
-		cluster.Spec.RancherKubernetesEngineConfig.RotateEncryptionKey = false
-		cluster.Spec.RancherKubernetesEngineConfig.RotateCertificates = nil
-		if cluster.Spec.RancherKubernetesEngineConfig.Restore.Restore {
+	if cluster.Spec.RangerKubernetesEngineConfig != nil {
+		cluster.Spec.RangerKubernetesEngineConfig.RotateEncryptionKey = false
+		cluster.Spec.RangerKubernetesEngineConfig.RotateCertificates = nil
+		if cluster.Spec.RangerKubernetesEngineConfig.Restore.Restore {
 			cluster.Annotations[RkeRestoreAnnotation] = "true"
 			cluster.Status.NodeVersion++
 		}
-		cluster.Spec.RancherKubernetesEngineConfig.Restore = rketypes.RestoreConfig{}
-		if cluster.Status.AppliedSpec.RancherKubernetesEngineConfig != nil {
-			cluster.Status.AppliedSpec.RancherKubernetesEngineConfig.RotateCertificates = nil
-			cluster.Status.AppliedSpec.RancherKubernetesEngineConfig.Restore = rketypes.RestoreConfig{}
+		cluster.Spec.RangerKubernetesEngineConfig.Restore = rketypes.RestoreConfig{}
+		if cluster.Status.AppliedSpec.RangerKubernetesEngineConfig != nil {
+			cluster.Status.AppliedSpec.RangerKubernetesEngineConfig.RotateCertificates = nil
+			cluster.Status.AppliedSpec.RangerKubernetesEngineConfig.Restore = rketypes.RestoreConfig{}
 		}
 		if !updateTriggered {
 			return
@@ -760,15 +760,15 @@ func skipLocalK3sImported(cluster *apimgmtv3.Cluster) bool {
 		cluster.Status.Driver == apimgmtv3.ClusterDriverK3s ||
 		cluster.Status.Driver == apimgmtv3.ClusterDriverK3os ||
 		cluster.Status.Driver == apimgmtv3.ClusterDriverRke2 ||
-		cluster.Status.Driver == apimgmtv3.ClusterDriverRancherD
+		cluster.Status.Driver == apimgmtv3.ClusterDriverRangerD
 }
 
 func (p *Provisioner) getConfig(reconcileRKE bool, spec apimgmtv3.ClusterSpec, driverName, clusterName string) (*apimgmtv3.ClusterSpec, interface{}, error) {
 	var v interface{}
 	if spec.GenericEngineConfig == nil {
-		if spec.RancherKubernetesEngineConfig != nil {
+		if spec.RangerKubernetesEngineConfig != nil {
 			var err error
-			v, err = convert.EncodeToMap(spec.RancherKubernetesEngineConfig)
+			v, err = convert.EncodeToMap(spec.RangerKubernetesEngineConfig)
 			if err != nil {
 				return nil, nil, err
 			}
@@ -779,15 +779,15 @@ func (p *Provisioner) getConfig(reconcileRKE bool, spec apimgmtv3.ClusterSpec, d
 		v = *spec.GenericEngineConfig
 	}
 
-	if driverName == apimgmtv3.ClusterDriverRKE && spec.RancherKubernetesEngineConfig != nil {
-		spec.RancherKubernetesEngineConfig = spec.RancherKubernetesEngineConfig.DeepCopy()
+	if driverName == apimgmtv3.ClusterDriverRKE && spec.RangerKubernetesEngineConfig != nil {
+		spec.RangerKubernetesEngineConfig = spec.RangerKubernetesEngineConfig.DeepCopy()
 
 		if reconcileRKE {
 			nodes, err := p.reconcileRKENodes(clusterName)
 			if err != nil {
 				return nil, nil, err
 			}
-			spec.RancherKubernetesEngineConfig.Nodes = nodes
+			spec.RangerKubernetesEngineConfig.Nodes = nodes
 		}
 
 		systemImages, err := p.getSystemImages(spec)
@@ -795,7 +795,7 @@ func (p *Provisioner) getConfig(reconcileRKE bool, spec apimgmtv3.ClusterSpec, d
 			return nil, nil, err
 		}
 
-		spec.RancherKubernetesEngineConfig.SystemImages = *systemImages
+		spec.RangerKubernetesEngineConfig.SystemImages = *systemImages
 		data, _ := convert.EncodeToMap(spec)
 		v, _ = data[RKEDriverKey]
 	}
@@ -838,9 +838,9 @@ func (p *Provisioner) validateDriver(cluster *apimgmtv3.Cluster) (string, error)
 }
 
 func (p *Provisioner) getSystemImages(spec apimgmtv3.ClusterSpec) (*rketypes.RKESystemImages, error) {
-	version := spec.RancherKubernetesEngineConfig.Version
+	version := spec.RangerKubernetesEngineConfig.Version
 	if version == "" {
-		return nil, fmt.Errorf("kubernetes version (spec.rancherKubernetesEngineConfig.kubernetesVersion) is unset")
+		return nil, fmt.Errorf("kubernetes version (spec.rangerKubernetesEngineConfig.kubernetesVersion) is unset")
 	}
 	// fetch system images from settings
 	systemImages, err := kd.GetRKESystemImages(version, p.RKESystemImagesLister, p.RKESystemImages)
@@ -999,7 +999,7 @@ func (p *Provisioner) recordFailure(cluster *apimgmtv3.Cluster, spec apimgmtv3.C
 }
 
 func (p *Provisioner) restoreClusterBackup(cluster *apimgmtv3.Cluster, spec apimgmtv3.ClusterSpec) (api string, token string, cert string, err error) {
-	snapshot := strings.Split(spec.RancherKubernetesEngineConfig.Restore.SnapshotName, ":")[1]
+	snapshot := strings.Split(spec.RangerKubernetesEngineConfig.Restore.SnapshotName, ":")[1]
 	backup, err := p.Backups.Get(cluster.Name, snapshot)
 	if err != nil {
 		return "", "", "", err
@@ -1014,9 +1014,9 @@ func (p *Provisioner) restoreClusterBackup(cluster *apimgmtv3.Cluster, spec apim
 	}
 	// checking if we have s3 config and that it's not inconsistent. This happens
 	// when restore is performed with invalid credentials and then the cluster is updated to fix it.
-	if spec.RancherKubernetesEngineConfig.Services.Etcd.BackupConfig.S3BackupConfig != nil {
-		s3Config := cluster.Spec.RancherKubernetesEngineConfig.Services.Etcd.BackupConfig.S3BackupConfig
-		appliedS3Conf := cluster.Status.AppliedSpec.RancherKubernetesEngineConfig.Services.Etcd.BackupConfig.S3BackupConfig
+	if spec.RangerKubernetesEngineConfig.Services.Etcd.BackupConfig.S3BackupConfig != nil {
+		s3Config := cluster.Spec.RangerKubernetesEngineConfig.Services.Etcd.BackupConfig.S3BackupConfig
+		appliedS3Conf := cluster.Status.AppliedSpec.RangerKubernetesEngineConfig.Services.Etcd.BackupConfig.S3BackupConfig
 
 		if !reflect.DeepEqual(s3Config, appliedS3Conf) {
 			logrus.Infof("updated spec during restore detected for cluster [%s], update is required", cluster.Name)
@@ -1073,7 +1073,7 @@ func (p *Provisioner) k3sBasedClusterConfig(cluster *apimgmtv3.Cluster, nodes []
 	if cluster.Status.Driver == apimgmtv3.ClusterDriverK3s ||
 		cluster.Status.Driver == apimgmtv3.ClusterDriverK3os ||
 		cluster.Status.Driver == apimgmtv3.ClusterDriverRke2 ||
-		cluster.Status.Driver == apimgmtv3.ClusterDriverRancherD ||
+		cluster.Status.Driver == apimgmtv3.ClusterDriverRangerD ||
 		imported.IsAdministratedByProvisioningCluster(cluster) {
 		return nil //no-op
 	}
@@ -1098,13 +1098,13 @@ func (p *Provisioner) k3sBasedClusterConfig(cluster *apimgmtv3.Cluster, nodes []
 		}
 	} else if strings.Contains(cluster.Status.Version.String(), "rke2") {
 
-		_, err := p.DaemonsetLister.Get("cattle-system", "rancher")
+		_, err := p.DaemonsetLister.Get("cattle-system", "ranger")
 		if apierrors.IsNotFound(err) {
 			cluster.Status.Driver = apimgmtv3.ClusterDriverRke2
 		} else if err != nil {
 			return err
 		} else {
-			cluster.Status.Driver = apimgmtv3.ClusterDriverRancherD
+			cluster.Status.Driver = apimgmtv3.ClusterDriverRangerD
 			return nil
 		}
 		if cluster.Spec.Rke2Config == nil {

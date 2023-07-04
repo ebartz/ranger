@@ -18,7 +18,7 @@ const (
 	KeyCloakOIDCConfigFieldName                = "name"
 	KeyCloakOIDCConfigFieldOwnerReferences     = "ownerReferences"
 	KeyCloakOIDCConfigFieldPrivateKey          = "privateKey"
-	KeyCloakOIDCConfigFieldRancherURL          = "rancherUrl"
+	KeyCloakOIDCConfigFieldRangerURL          = "rangerUrl"
 	KeyCloakOIDCConfigFieldRemoved             = "removed"
 	KeyCloakOIDCConfigFieldScopes              = "scope"
 	KeyCloakOIDCConfigFieldType                = "type"
@@ -42,7 +42,7 @@ type KeyCloakOIDCConfig struct {
 	Name                string            `json:"name,omitempty" yaml:"name,omitempty"`
 	OwnerReferences     []OwnerReference  `json:"ownerReferences,omitempty" yaml:"ownerReferences,omitempty"`
 	PrivateKey          string            `json:"privateKey,omitempty" yaml:"privateKey,omitempty"`
-	RancherURL          string            `json:"rancherUrl,omitempty" yaml:"rancherUrl,omitempty"`
+	RangerURL          string            `json:"rangerUrl,omitempty" yaml:"rangerUrl,omitempty"`
 	Removed             string            `json:"removed,omitempty" yaml:"removed,omitempty"`
 	Scopes              string            `json:"scope,omitempty" yaml:"scope,omitempty"`
 	Type                string            `json:"type,omitempty" yaml:"type,omitempty"`

@@ -1,17 +1,17 @@
 package digitalocean
 
 import (
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	"github.com/rancher/rancher/tests/framework/extensions/cloudcredentials"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/extensions/cloudcredentials"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
 )
 
 const digitalOceanCloudCredNameBase = "digitalOceanCloudCredential"
 
-// CreateDigitalOceanCloudCredentials is a helper function that takes the rancher Client as a parameter and creates
+// CreateDigitalOceanCloudCredentials is a helper function that takes the ranger Client as a parameter and creates
 // a Digital Ocean cloud credential, and returns the CloudCredential response
-func CreateDigitalOceanCloudCredentials(rancherClient *rancher.Client) (*cloudcredentials.CloudCredential, error) {
+func CreateDigitalOceanCloudCredentials(rangerClient *ranger.Client) (*cloudcredentials.CloudCredential, error) {
 	var digitalOceanCredentialConfig cloudcredentials.DigitalOceanCredentialConfig
 	config.LoadConfig(cloudcredentials.DigitalOceanCredentialConfigurationFileKey, &digitalOceanCredentialConfig)
 
@@ -21,7 +21,7 @@ func CreateDigitalOceanCloudCredentials(rancherClient *rancher.Client) (*cloudcr
 	}
 
 	resp := &cloudcredentials.CloudCredential{}
-	err := rancherClient.Management.APIBaseClient.Ops.DoCreate(management.CloudCredentialType, cloudCredential, resp)
+	err := rangerClient.Management.APIBaseClient.Ops.DoCreate(management.CloudCredentialType, cloudCredential, resp)
 	if err != nil {
 		return nil, err
 	}

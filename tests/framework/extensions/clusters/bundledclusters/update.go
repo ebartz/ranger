@@ -3,16 +3,16 @@ package bundledclusters
 import (
 	"github.com/pkg/errors"
 
-	apiv1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	v3 "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
+	apiv1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	v3 "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
 )
 
 // Update is a method of BundledCluster that uses provisioning and management clients
 // to update related cluster data depending on cluster version.
-func (bc *BundledCluster) Update(client *rancher.Client, cUpdates *BundledCluster) (updatedCluster *BundledCluster, err error) {
+func (bc *BundledCluster) Update(client *ranger.Client, cUpdates *BundledCluster) (updatedCluster *BundledCluster, err error) {
 	updatedCluster = new(BundledCluster)
 	updatedCluster.Meta = bc.Meta
 
@@ -38,7 +38,7 @@ func (bc *BundledCluster) Update(client *rancher.Client, cUpdates *BundledCluste
 
 // UpdateKubernetesVersion is a method of BundledCluster that uses update method of BundledCluster
 // depending on cluster's provider information. Returns updated BundledCluster and error if any.
-func (bc *BundledCluster) UpdateKubernetesVersion(client *rancher.Client, versionToUpgrade *string) (updatedCluster *BundledCluster, err error) {
+func (bc *BundledCluster) UpdateKubernetesVersion(client *ranger.Client, versionToUpgrade *string) (updatedCluster *BundledCluster, err error) {
 	if bc.V1 == nil && bc.V3 == nil {
 		return nil, errors.Wrapf(err, "cluster %v doesn't contain related data: v1: {%v}, v3: {%v}", bc.Meta.Name, bc.V1, bc.V3)
 	}
@@ -49,8 +49,8 @@ func (bc *BundledCluster) UpdateKubernetesVersion(client *rancher.Client, versio
 	switch bc.Meta.Provider {
 	case clusters.KubernetesProviderRKE:
 		bundledv3.V3.Name = bc.Meta.Name
-		bundledv3.V3.RancherKubernetesEngineConfig = bc.V3.RancherKubernetesEngineConfig
-		bundledv3.V3.RancherKubernetesEngineConfig.Version = *versionToUpgrade
+		bundledv3.V3.RangerKubernetesEngineConfig = bc.V3.RangerKubernetesEngineConfig
+		bundledv3.V3.RangerKubernetesEngineConfig.Version = *versionToUpgrade
 
 		updatedCluster, err = bc.Update(client, &bundledv3)
 		if err != nil {
@@ -144,7 +144,7 @@ func (bc *BundledCluster) UpdateKubernetesVersion(client *rancher.Client, versio
 
 // UpdateNodePoolKubernetesVersions is a method of BundledCluster that uses update method of BundledCluster
 // depending on cluster's provider information. Returns updated BundledCluster and error if any.
-func (bc *BundledCluster) UpdateNodepoolKubernetesVersions(client *rancher.Client, versionToUpgrade *string) (updatedCluster *BundledCluster, err error) {
+func (bc *BundledCluster) UpdateNodepoolKubernetesVersions(client *ranger.Client, versionToUpgrade *string) (updatedCluster *BundledCluster, err error) {
 	if bc.V3 == nil {
 		return nil, errors.Wrapf(err, "cluster %v doesn't contain related data", bc.V3)
 	}

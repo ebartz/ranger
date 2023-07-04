@@ -4,8 +4,8 @@
 You should have a basic understanding of Corral before running these tests. In order to run the entire airgap package set the package to `airgap/...` Your GO suite should be set to blank. 
 In your config file, set the following:
 ```yaml
-corralRancherHA:
-  name: rancherha # this is the name of your aigap corral package if it hasn't been created beforehand
+corralRangerHA:
+  name: rangerha # this is the name of your aigap corral package if it hasn't been created beforehand
 provisioningInput:
   cni:
   - calico
@@ -26,19 +26,19 @@ registries:
   existingNoAuthRegistry: <value> # only set this if the registry was created beforehand just do `corral vars <corral> registry_fqdn` to get the registry hostname 
 corralPackages:
   corralPackageImages:
-    airgapCustomCluster: dist/aws-rancher-custom-cluster-true
-    rancherHA: dist/aws-aws-registry-standalone-rke2-rancher-airgap-calico-true-2.15.1-1.8.0 # the name of the corral rancher is configurable with config entry above
+    airgapCustomCluster: dist/aws-ranger-custom-cluster-true
+    rangerHA: dist/aws-aws-registry-standalone-rke2-ranger-airgap-calico-true-2.15.1-1.8.0 # the name of the corral ranger is configurable with config entry above
     ...
   hasDebug: <bool, default=false>
   hasCleanup: <bool, default=true>
-  hasSetCorralSSHKeys: <bool, default=false> # If you are creating the airgap rancher instance in the same test run, please set this to true so then the air gap cluster can communicate with the rancher instance. If the rancher instance was created beforehand this boolean is ignored.
+  hasSetCorralSSHKeys: <bool, default=false> # If you are creating the airgap ranger instance in the same test run, please set this to true so then the air gap cluster can communicate with the ranger instance. If the ranger instance was created beforehand this boolean is ignored.
 corralConfigs:
   corralConfigUser: <string, default="jenkauto">
   corralConfigVars:
     <var1>: <string, "val1"> # for now only aws is supported, so use the appropriate aws vars
-    bastion_ip: <val> # if the air gap rancher instance is created beforehand (not in the same job) set this to the registry public IP, otherwise it is automatically done in the job.
-    corral_private_key: <val> # only set this if you have created the airgap rancher instance beforehand. By doing `corral vars <corral> corral_private_key`
-    corral_public_key: <val> # only set this if you have created the airgap rancher instance beforehand. By doing `corral vars <corral> corral_private_key`
+    bastion_ip: <val> # if the air gap ranger instance is created beforehand (not in the same job) set this to the registry public IP, otherwise it is automatically done in the job.
+    corral_private_key: <val> # only set this if you have created the airgap ranger instance beforehand. By doing `corral vars <corral> corral_private_key`
+    corral_public_key: <val> # only set this if you have created the airgap ranger instance beforehand. By doing `corral vars <corral> corral_private_key`
     registry_cert: <val> # cert for the registry
     registry_key: <val>  # key for the registry
     ...

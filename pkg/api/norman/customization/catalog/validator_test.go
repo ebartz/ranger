@@ -3,7 +3,7 @@ package catalog
 import (
 	"testing"
 
-	"github.com/rancher/norman/types"
+	"github.com/ranger/norman/types"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -1,6 +1,6 @@
 from .test_auth import enable_ad, load_setup_data
 from .common import *  # NOQA
-from rancher import ApiError
+from ranger import ApiError
 import pytest
 import requests
 
@@ -9,12 +9,12 @@ Prerequisite:
     - Enable Auth
     - Optional: searching nested group enabled
     - All users used for testing global group role binding should not be used
-      to create the cluster when preparing the Rancher setup
+      to create the cluster when preparing the Ranger setup
 '''
 
 # values used to create a catalog
 BRANCH = "dev"
-URL = "https://git.rancher.io/system-charts"
+URL = "https://git.ranger.io/system-charts"
 # the link to search principals in the auth provider
 
 

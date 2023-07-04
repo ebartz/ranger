@@ -8,7 +8,7 @@ drone_cli_help()
     echo ""
     echo "  To test if Drone CLI is properly configured type:"
     echo ""
-    echo "     drone build ls rancher/rancher"
+    echo "     drone build ls ranger/ranger"
     echo ""
     echo "  This will show the last 25 builds"
 }
@@ -39,10 +39,10 @@ echo "Promoting ${source_tag} to ${destination_tag}"
 page=1
 until [ $page -gt 100 ]; do
   echo "Finding build number for tag ${source_tag}"
-  build_number=$(drone build ls rancher/rancher --page $page --event tag --format "{{.Number}},{{.Ref}}"| grep ${source_tag}$ |cut -d',' -f1|head -1)
+  build_number=$(drone build ls ranger/ranger --page $page --event tag --format "{{.Number}},{{.Ref}}"| grep ${source_tag}$ |cut -d',' -f1|head -1)
   if [[ -n ${build_number} ]]; then
     echo "Found build number ${build_number} for tag ${source_tag}"
-    drone build promote rancher/rancher ${build_number} promote-docker-image --param=SOURCE_TAG=$source_tag --param=DESTINATION_TAG=$destination_tag
+    drone build promote ranger/ranger ${build_number} promote-docker-image --param=SOURCE_TAG=$source_tag --param=DESTINATION_TAG=$destination_tag
     exit 0
     break
   fi

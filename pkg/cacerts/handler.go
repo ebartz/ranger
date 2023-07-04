@@ -8,10 +8,10 @@ import (
 	"net/http"
 	"strings"
 
-	apimgmtv3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/tls"
+	apimgmtv3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/tls"
 )
 
 var (

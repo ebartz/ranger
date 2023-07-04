@@ -3,8 +3,8 @@ package common
 import (
 	"strings"
 
-	"github.com/rancher/norman/clientbase"
-	"github.com/rancher/norman/types"
+	"github.com/ranger/norman/clientbase"
+	"github.com/ranger/norman/types"
 )
 
 func SortSchema(schemas map[string]types.Schema) []string {

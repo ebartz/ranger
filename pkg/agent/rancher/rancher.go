@@ -1,4 +1,4 @@
-package rancher
+package ranger
 
 import (
 	"context"
@@ -6,14 +6,14 @@ import (
 	"os"
 	"sync"
 
-	"github.com/rancher/rancher/pkg/agent/cluster"
-	"github.com/rancher/rancher/pkg/features"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/rancher"
-	"github.com/rancher/wrangler/pkg/apply"
-	corefactory "github.com/rancher/wrangler/pkg/generated/controllers/core"
-	corecontrollers "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
-	"github.com/rancher/wrangler/pkg/kubeconfig"
+	"github.com/ranger/ranger/pkg/agent/cluster"
+	"github.com/ranger/ranger/pkg/features"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/ranger"
+	"github.com/ranger/wrangler/pkg/apply"
+	corefactory "github.com/ranger/wrangler/pkg/generated/controllers/core"
+	corecontrollers "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
+	"github.com/ranger/wrangler/pkg/kubeconfig"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	apierror "k8s.io/apimachinery/pkg/api/errors"
@@ -53,7 +53,7 @@ func Run(ctx context.Context) error {
 		serviceCache: core.Core().V1().Service().Cache(),
 	}
 
-	core.Core().V1().Service().OnChange(ctx, "rancher-installed", h.OnChange)
+	core.Core().V1().Service().OnChange(ctx, "ranger-installed", h.OnChange)
 	if err := core.Start(ctx, 1); err != nil {
 		return err
 	}
@@ -64,13 +64,13 @@ func Run(ctx context.Context) error {
 type handler struct {
 	lock            sync.Mutex
 	ctx             context.Context
-	rancherNotFound *bool
+	rangerNotFound *bool
 	serviceCache    corecontrollers.ServiceCache
 }
 
-func (h *handler) startRancher() {
+func (h *handler) startRanger() {
 	clientConfig := kubeconfig.GetNonInteractiveClientConfig("")
-	server, err := rancher.New(h.ctx, clientConfig, &rancher.Options{
+	server, err := ranger.New(h.ctx, clientConfig, &ranger.Options{
 		HTTPListenPort:  80,
 		HTTPSListenPort: 443,
 		Features:        os.Getenv("CATTLE_FEATURES"),
@@ -78,36 +78,36 @@ func (h *handler) startRancher() {
 		ClusterRegistry: os.Getenv("CATTLE_CLUSTER_REGISTRY"),
 	})
 	if err != nil {
-		logrus.Fatalf("Embedded rancher failed to initialize: %v", err)
+		logrus.Fatalf("Embedded ranger failed to initialize: %v", err)
 	}
 	go func() {
 		err = server.ListenAndServe(h.ctx)
-		logrus.Fatalf("Embedded rancher failed to start: %v", err)
+		logrus.Fatalf("Embedded ranger failed to start: %v", err)
 	}()
 }
 
 func (h *handler) OnChange(key string, service *corev1.Service) (*corev1.Service, error) {
 	h.lock.Lock()
 	defer h.lock.Unlock()
-	if h.rancherNotFound == nil {
-		_, err := h.serviceCache.Get(namespace.System, "rancher")
+	if h.rangerNotFound == nil {
+		_, err := h.serviceCache.Get(namespace.System, "ranger")
 		if notFound := apierror.IsNotFound(err); notFound {
-			h.rancherNotFound = &notFound
-			h.startRancher()
+			h.rangerNotFound = &notFound
+			h.startRanger()
 		} else if err != nil {
 			return nil, err
 		} else {
-			h.rancherNotFound = &notFound
+			h.rangerNotFound = &notFound
 		}
 	}
 
 	if service == nil {
-		if key == namespace.System+"/rancher" {
-			logrus.Info("Rancher has been uninstalled, restarting")
+		if key == namespace.System+"/ranger" {
+			logrus.Info("Ranger has been uninstalled, restarting")
 			os.Exit(0)
 		}
-	} else if service.Namespace == namespace.System && service.Name == "rancher" && *h.rancherNotFound {
-		logrus.Info("Rancher has been installed, restarting")
+	} else if service.Namespace == namespace.System && service.Name == "ranger" && *h.rangerNotFound {
+		logrus.Info("Ranger has been installed, restarting")
 		os.Exit(0)
 	}
 
@@ -148,7 +148,7 @@ func setupSteveAggregation() error {
 
 	return apply.
 		WithDynamicLookup().
-		WithSetID("rancher-stv-aggregation").
+		WithSetID("ranger-stv-aggregation").
 		WithListerNamespace(namespace.System).
 		ApplyObjects(&corev1.Secret{
 			ObjectMeta: metav1.ObjectMeta{

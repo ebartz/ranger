@@ -1,13 +1,13 @@
 package gke
 
 import (
-	"github.com/rancher/rancher/pkg/capr"
+	"github.com/ranger/ranger/pkg/capr"
 	"reflect"
 	"testing"
 
 	"github.com/Azure/go-autorest/autorest/to"
-	v1 "github.com/rancher/gke-operator/pkg/apis/gke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v1 "github.com/ranger/gke-operator/pkg/apis/gke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 )
 
 const (

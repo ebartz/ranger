@@ -13,10 +13,10 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	secretmigrator "github.com/rancher/rancher/pkg/controllers/management/secretmigrator/catalog"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/git"
+	secretmigrator "github.com/ranger/ranger/pkg/controllers/management/secretmigrator/catalog"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/git"
 	"github.com/sirupsen/logrus"
 )
 
@@ -268,7 +268,7 @@ func formatGitURL(endpoint, branch string) string {
 				repo := strings.TrimSuffix(pathParts[2], ".git")
 				formattedURL = fmt.Sprintf("https://api.github.com/repos/%s/%s/commits/%s", org, repo, branch)
 			}
-		case "git.rancher.io":
+		case "git.ranger.io":
 			repo := strings.TrimSuffix(pathParts[1], ".git")
 			u.Path = fmt.Sprintf("/repos/%s/commits/%s", repo, branch)
 			formattedURL = u.String()

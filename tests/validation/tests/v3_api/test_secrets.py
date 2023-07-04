@@ -1,5 +1,5 @@
 import base64
-from rancher import ApiError
+from ranger import ApiError
 import pytest
 from packaging import version
 
@@ -632,19 +632,19 @@ def create_project_client(request):
 
 
 def is_version_greater_than_v25():
-    # Checks if rancher version is greater than v2.5
+    # Checks if ranger version is greater than v2.5
     # eg: v2.5-head, v2.5 etc.
 
-    rancher_version = get_setting_value_by_name('server-version')
+    ranger_version = get_setting_value_by_name('server-version')
 
     version_check = False
-    if rancher_version.startswith('v'):
-        if "head" in rancher_version:
-            rancher_version = ''.join(rancher_version.split("-")[0])
+    if ranger_version.startswith('v'):
+        if "head" in ranger_version:
+            ranger_version = ''.join(ranger_version.split("-")[0])
         else:
-            rancher_version = '.'.join(rancher_version.split(".")[:2])
+            ranger_version = '.'.join(ranger_version.split(".")[:2])
 
-    if version.parse(rancher_version) > version.parse('v2.5'):
+    if version.parse(ranger_version) > version.parse('v2.5'):
         version_check = True
 
     return version_check
@@ -764,10 +764,10 @@ def create_and_validate_workload_with_secret_as_env_variable(p_client, secret,
     # Create Workload with secret as env variable
     secretName = secret['name']
 
-    # Checking if rancher version is 26 and above.
+    # Checking if ranger version is 26 and above.
     # If yes env should be "environment" and envFrom should be "environmentFrom"
-    rancher_version_26 = is_version_greater_than_v25()
-    if rancher_version_26:
+    ranger_version_26 = is_version_greater_than_v25()
+    if ranger_version_26:
         env_str = "envFrom"
         environment_data = [{
             "secretRef": {

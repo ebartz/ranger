@@ -16,11 +16,11 @@ package rbac
 import (
 	"context"
 
-	typesv1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/rbac.authorization.k8s.io/v1"
-	namespaces "github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/types/config"
+	typesv1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/rbac.authorization.k8s.io/v1"
+	namespaces "github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -144,7 +144,7 @@ func correctOwnerRefs(ownerReferences *[]metav1.OwnerReference) bool {
 			    name: nt-6wclz
 			    uid: fcd6be81-0368-4e0b-a511-705c2bae4d82
 			The APIVersion and Kind both fields are incorrect*/
-			ownerRef.APIVersion = RancherManagementAPIVersion
+			ownerRef.APIVersion = RangerManagementAPIVersion
 			ownerRef.Kind = v3.NodeTemplateGroupVersionKind.Kind
 			needsUpdate = true
 		case "clustertemplates":
@@ -154,7 +154,7 @@ func correctOwnerRefs(ownerReferences *[]metav1.OwnerReference) bool {
 			    name: ct-8thxx
 			    uid: a09f047d-f78e-4895-8848-0d12088435d1
 			The APIVersion and Kind both fields are incorrect*/
-			ownerRef.APIVersion = RancherManagementAPIVersion
+			ownerRef.APIVersion = RangerManagementAPIVersion
 			ownerRef.Kind = v3.ClusterTemplateGroupVersionKind.Kind
 			needsUpdate = true
 		case "clustertemplaterevisions":
@@ -164,7 +164,7 @@ func correctOwnerRefs(ownerReferences *[]metav1.OwnerReference) bool {
 			    name: ctr-98ks7
 			    uid: a1f5a67f-44bc-4011-aec6-d40ccfe12442
 			The APIVersion and Kind both fields are incorrect*/
-			ownerRef.APIVersion = RancherManagementAPIVersion
+			ownerRef.APIVersion = RangerManagementAPIVersion
 			ownerRef.Kind = v3.ClusterTemplateRevisionGroupVersionKind.Kind
 			needsUpdate = true
 		case "globaldnses":
@@ -174,7 +174,7 @@ func correctOwnerRefs(ownerReferences *[]metav1.OwnerReference) bool {
 			    name: gd-s82dh
 			    uid: 3ecf8b69-525b-4a11-85a9-e34cae71f761
 			The APIVersion and Kind both fields are incorrect*/
-			ownerRef.APIVersion = RancherManagementAPIVersion
+			ownerRef.APIVersion = RangerManagementAPIVersion
 			ownerRef.Kind = v3.GlobalDnsGroupVersionKind.Kind
 			needsUpdate = true
 		case "globaldnsproviders":
@@ -184,7 +184,7 @@ func correctOwnerRefs(ownerReferences *[]metav1.OwnerReference) bool {
 			    name: rajashree-test
 			    uid: 1e1775da-1eb2-4d9b-99d6-9020f7357ee2
 			The APIVersion and Kind both fields are incorrect*/
-			ownerRef.APIVersion = RancherManagementAPIVersion
+			ownerRef.APIVersion = RangerManagementAPIVersion
 			ownerRef.Kind = v3.GlobalDnsProviderGroupVersionKind.Kind
 			needsUpdate = true
 		case "multiclusterapps":
@@ -194,7 +194,7 @@ func correctOwnerRefs(ownerReferences *[]metav1.OwnerReference) bool {
 			    name: wp
 			    uid: fe24c360-d35d-48f6-8295-9a66fdefac79
 			The APIVersion and Kind both fields are incorrect*/
-			ownerRef.APIVersion = RancherManagementAPIVersion
+			ownerRef.APIVersion = RangerManagementAPIVersion
 			ownerRef.Kind = v3.MultiClusterAppGroupVersionKind.Kind
 			needsUpdate = true
 		case "multiclusterapprevisions":
@@ -204,7 +204,7 @@ func correctOwnerRefs(ownerReferences *[]metav1.OwnerReference) bool {
 			    name: mcapprevision-mbh68
 			    uid: f0c30e41-dbe0-4057-8fac-760b0d8f54e1
 			The APIVersion and Kind both fields are incorrect*/
-			ownerRef.APIVersion = RancherManagementAPIVersion
+			ownerRef.APIVersion = RangerManagementAPIVersion
 			ownerRef.Kind = v3.MultiClusterAppRevisionGroupVersionKind.Kind
 			needsUpdate = true
 		}

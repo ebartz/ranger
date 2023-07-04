@@ -2,20 +2,20 @@
 # This script is used to join one or more nodes as agents
 echo $@
 
-mkdir -p /etc/rancher/k3s
-cat <<EOF >>/etc/rancher/k3s/config.yaml
+mkdir -p /etc/ranger/k3s
+cat <<EOF >>/etc/ranger/k3s/config.yaml
 server: https://${4}:6443
 token:  "${5}"
 EOF
 
 if [[ ! -z "${7}" ]] && [[ "${7}" == *":"* ]]
 then
-   echo -e "${7}" >> /etc/rancher/k3s/config.yaml
-   cat /etc/rancher/k3s/config.yaml
+   echo -e "${7}" >> /etc/ranger/k3s/config.yaml
+   cat /etc/ranger/k3s/config.yaml
 fi
 if [[ -n "${7}" ]] && [[ "${7}" == *"protect-kernel-defaults"* ]]
 then
-  cat /tmp/cis_workerconfig.yaml >> /etc/rancher/k3s/config.yaml
+  cat /tmp/cis_workerconfig.yaml >> /etc/ranger/k3s/config.yaml
   echo -e "vm.panic_on_oom=0" >>/etc/sysctl.d/90-kubelet.conf
   echo -e "vm.overcommit_memory=1" >>/etc/sysctl.d/90-kubelet.conf
   echo -e "kernel.panic=10" >>/etc/sysctl.d/90-kubelet.conf

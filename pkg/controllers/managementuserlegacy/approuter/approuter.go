@@ -3,20 +3,20 @@ package approuter
 import (
 	"context"
 
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/ingresswrapper"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/types/config"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/ingresswrapper"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/types/config"
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
 var (
-	invalidRDNSServerBaseURL = "https://api.lb.rancher.cloud/v1"
+	invalidRDNSServerBaseURL = "https://api.lb.ranger.cloud/v1"
 )
 
 // This controller is responsible for watching all the ingress resources in the cluster and creates the following DNS entries
-// in <rancher_root_domain>:
-// <$ingress_name>.<$namespace>.<$cluster_id>.<rancher_root_domain> => [ingress IPs]
+// in <ranger_root_domain>:
+// <$ingress_name>.<$namespace>.<$cluster_id>.<ranger_root_domain> => [ingress IPs]
 // When an ingress resource has more than 10 IPs, only 10 IPs will be returned by DNS.
 // In an RKE cluster, when a node becomes unhealthy and the corresponding nginx ingress resource becomes unavailable,
 // the dynamic DNS controller updates the DNS mapping to remove that node IP from the list.

@@ -7,12 +7,12 @@ import (
 	"net/url"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/api/handler"
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/auth/providers/common"
-	managementschema "github.com/rancher/rancher/pkg/schemas/management.cattle.io/v3"
+	"github.com/ranger/norman/api/handler"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/auth/providers/common"
+	managementschema "github.com/ranger/ranger/pkg/schemas/management.cattle.io/v3"
 )
 
 func (o *OpenIDCProvider) Formatter(apiContext *types.APIContext, resource *types.RawResource) {

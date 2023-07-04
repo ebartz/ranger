@@ -7,12 +7,12 @@ import (
 	"path/filepath"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/norman/types/values"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/encryptedstore"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	"github.com/rancher/rancher/pkg/jailer"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/norman/types/values"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/encryptedstore"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	"github.com/ranger/ranger/pkg/jailer"
 	"github.com/sirupsen/logrus"
 	k8serror "k8s.io/apimachinery/pkg/api/errors"
 )
@@ -173,7 +173,7 @@ func (m *NodeConfig) Restore() error {
 // UpdateAmazonAuth updates the machine config.json file on disk with the most
 // recent version of creds from the cloud credential
 // This code should not be updated or duplicated - it should be deleted once
-// https://github.com/rancher/rancher/issues/24541 is implemented
+// https://github.com/ranger/ranger/issues/24541 is implemented
 func (m *NodeConfig) UpdateAmazonAuth(rawConfig interface{}) (bool, error) {
 	var update bool
 	c := convert.ToMapInterface(rawConfig)

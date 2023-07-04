@@ -4,25 +4,25 @@ import (
 	"context"
 
 	"github.com/docker/docker/api/types"
-	"github.com/rancher/norman/types/convert"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rke/cluster"
-	"github.com/rancher/rke/pki"
-	rketypes "github.com/rancher/rke/types"
+	"github.com/ranger/norman/types/convert"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/rke/cluster"
+	"github.com/ranger/rke/pki"
+	rketypes "github.com/ranger/rke/types"
 )
 
 type rke struct {
 }
 
-func (*rke) GenerateRKENodeCerts(ctx context.Context, rkeConfig rketypes.RancherKubernetesEngineConfig, nodeAddress string, certBundle map[string]pki.CertificatePKI) map[string]pki.CertificatePKI {
+func (*rke) GenerateRKENodeCerts(ctx context.Context, rkeConfig rketypes.RangerKubernetesEngineConfig, nodeAddress string, certBundle map[string]pki.CertificatePKI) map[string]pki.CertificatePKI {
 	return pki.GenerateRKENodeCerts(ctx, rkeConfig, nodeAddress, certBundle)
 }
 
-func (*rke) GenerateCerts(config *rketypes.RancherKubernetesEngineConfig) (map[string]pki.CertificatePKI, error) {
+func (*rke) GenerateCerts(config *rketypes.RangerKubernetesEngineConfig) (map[string]pki.CertificatePKI, error) {
 	return pki.GenerateRKECerts(context.Background(), *config, "", "")
 }
 
-func (*rke) GeneratePlan(ctx context.Context, rkeConfig *rketypes.RancherKubernetesEngineConfig, dockerInfo map[string]types.Info, data map[string]interface{}) (rketypes.RKEPlan, error) {
+func (*rke) GeneratePlan(ctx context.Context, rkeConfig *rketypes.RangerKubernetesEngineConfig, dockerInfo map[string]types.Info, data map[string]interface{}) (rketypes.RKEPlan, error) {
 	return cluster.GeneratePlan(ctx, rkeConfig.DeepCopy(), dockerInfo, data)
 }
 

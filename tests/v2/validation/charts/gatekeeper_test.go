@@ -4,13 +4,13 @@ import (
 	"os"
 	"testing"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/charts"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/namespaces"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/charts"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/namespaces"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -19,7 +19,7 @@ import (
 
 type GateKeeperTestSuite struct {
 	suite.Suite
-	client                        *rancher.Client
+	client                        *ranger.Client
 	session                       *session.Session
 	project                       *management.Project
 	gatekeeperChartInstallOptions *charts.InstallOptions
@@ -33,13 +33,13 @@ func (g *GateKeeperTestSuite) SetupSuite() {
 	testSession := session.NewSession()
 	g.session = testSession
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(g.T(), err)
 
 	g.client = client
 
 	// Get clusterName from config yaml
-	clusterName := client.RancherConfig.ClusterName
+	clusterName := client.RangerConfig.ClusterName
 	require.NotEmptyf(g.T(), clusterName, "Cluster name to install is not set")
 
 	// Get clusterID with clusterName
@@ -47,7 +47,7 @@ func (g *GateKeeperTestSuite) SetupSuite() {
 	require.NoError(g.T(), err)
 
 	// get latest version of gatekeeper chart
-	latestGatekeeperVersion, err := client.Catalog.GetLatestChartVersion(charts.RancherGatekeeperName)
+	latestGatekeeperVersion, err := client.Catalog.GetLatestChartVersion(charts.RangerGatekeeperName)
 	require.NoError(g.T(), err)
 
 	// Create project
@@ -77,22 +77,22 @@ func (g *GateKeeperTestSuite) TestGatekeeperChart() {
 	require.NoError(g.T(), err)
 
 	g.T().Log("Installing latest version of gatekeeper chart")
-	err = charts.InstallRancherGatekeeperChart(client, g.gatekeeperChartInstallOptions)
+	err = charts.InstallRangerGatekeeperChart(client, g.gatekeeperChartInstallOptions)
 	require.NoError(g.T(), err)
 
 	g.T().Log("Waiting for gatekeeper chart deployments to have expected number of available replicas")
-	err = charts.WatchAndWaitDeployments(client, g.project.ClusterID, charts.RancherGatekeeperNamespace, metav1.ListOptions{})
+	err = charts.WatchAndWaitDeployments(client, g.project.ClusterID, charts.RangerGatekeeperNamespace, metav1.ListOptions{})
 	require.NoError(g.T(), err)
 
 	g.T().Log("Waiting for gatekeeper chart DaemonSets to have expected number of available nodes")
-	err = charts.WatchAndWaitDaemonSets(client, g.project.ClusterID, charts.RancherGatekeeperNamespace, metav1.ListOptions{})
+	err = charts.WatchAndWaitDaemonSets(client, g.project.ClusterID, charts.RangerGatekeeperNamespace, metav1.ListOptions{})
 	require.NoError(g.T(), err)
 
 	g.T().Log("Applying constraint")
 	readYamlFile, err := os.ReadFile("./resources/opa-k8srequiredlabels.yaml")
 	require.NoError(g.T(), err)
 	yamlInput := &management.ImportClusterYamlInput{
-		DefaultNamespace: charts.RancherGatekeeperNamespace,
+		DefaultNamespace: charts.RangerGatekeeperNamespace,
 		YAML:             string(readYamlFile),
 	}
 
@@ -104,7 +104,7 @@ func (g *GateKeeperTestSuite) TestGatekeeperChart() {
 	require.NoError(g.T(), err)
 
 	g.T().Log("Create a namespace that doesn't have the proper label and assert that creation fails with the expected error")
-	_, err = namespaces.CreateNamespace(client, RancherDisallowedNamespace, "{}", map[string]string{}, map[string]string{}, g.project)
+	_, err = namespaces.CreateNamespace(client, RangerDisallowedNamespace, "{}", map[string]string{}, map[string]string{}, g.project)
 	assert.ErrorContains(g.T(), err, "Bad response statusCode [403]. Status [403 Forbidden].")
 	g.T().Log("Waiting for gatekeeper audit to finish")
 	err = getAuditTimestamp(client, g.project)
@@ -144,7 +144,7 @@ func (g *GateKeeperTestSuite) TestUpgradeGatekeeperChart() {
 	require.NoError(g.T(), err)
 
 	// Change gatekeeper install option version to previous version of the latest version
-	versionsList, err := client.Catalog.GetListChartVersions(charts.RancherGatekeeperName)
+	versionsList, err := client.Catalog.GetListChartVersions(charts.RangerGatekeeperName)
 	require.NoError(g.T(), err)
 
 	if len(versionsList) < 2 {
@@ -158,7 +158,7 @@ func (g *GateKeeperTestSuite) TestUpgradeGatekeeperChart() {
 	g.gatekeeperChartInstallOptions.Version = versionBeforeLatest
 
 	g.T().Log("Checking if the gatekeeper chart is installed with one of the previous versions")
-	initialGatekeeperChart, err := charts.GetChartStatus(client, g.project.ClusterID, charts.RancherGatekeeperNamespace, charts.RancherGatekeeperName)
+	initialGatekeeperChart, err := charts.GetChartStatus(client, g.project.ClusterID, charts.RangerGatekeeperNamespace, charts.RangerGatekeeperName)
 	require.NoError(g.T(), err)
 
 	if initialGatekeeperChart.IsAlreadyInstalled && initialGatekeeperChart.ChartDetails.Spec.Chart.Metadata.Version == versionLatest {
@@ -167,41 +167,41 @@ func (g *GateKeeperTestSuite) TestUpgradeGatekeeperChart() {
 
 	if !initialGatekeeperChart.IsAlreadyInstalled {
 		g.T().Log("Installing gatekeeper chart with the version before the latest version")
-		err = charts.InstallRancherGatekeeperChart(client, g.gatekeeperChartInstallOptions)
+		err = charts.InstallRangerGatekeeperChart(client, g.gatekeeperChartInstallOptions)
 		require.NoError(g.T(), err)
 
 		g.T().Log("Waiting gatekeeper chart deployments to have expected number of available replicas")
-		err = charts.WatchAndWaitDeployments(client, g.project.ClusterID, charts.RancherGatekeeperNamespace, metav1.ListOptions{})
+		err = charts.WatchAndWaitDeployments(client, g.project.ClusterID, charts.RangerGatekeeperNamespace, metav1.ListOptions{})
 		require.NoError(g.T(), err)
 
 		g.T().Log("Waiting gatekeeper chart DaemonSets to have expected number of available nodes")
-		err = charts.WatchAndWaitDaemonSets(client, g.project.ClusterID, charts.RancherGatekeeperNamespace, metav1.ListOptions{})
+		err = charts.WatchAndWaitDaemonSets(client, g.project.ClusterID, charts.RangerGatekeeperNamespace, metav1.ListOptions{})
 		require.NoError(g.T(), err)
 	}
 
-	gatekeeperChartPreUpgrade, err := charts.GetChartStatus(client, g.project.ClusterID, charts.RancherGatekeeperNamespace, charts.RancherGatekeeperName)
+	gatekeeperChartPreUpgrade, err := charts.GetChartStatus(client, g.project.ClusterID, charts.RangerGatekeeperNamespace, charts.RangerGatekeeperName)
 	require.NoError(g.T(), err)
 
-	// Validate current version of rancher-gatekeeper is one of the versions before latest
+	// Validate current version of ranger-gatekeeper is one of the versions before latest
 	chartVersionPreUpgrade := gatekeeperChartPreUpgrade.ChartDetails.Spec.Chart.Metadata.Version
 	require.Contains(g.T(), versionsList[1:], chartVersionPreUpgrade)
 
-	g.gatekeeperChartInstallOptions.Version, err = client.Catalog.GetLatestChartVersion(charts.RancherGatekeeperName)
+	g.gatekeeperChartInstallOptions.Version, err = client.Catalog.GetLatestChartVersion(charts.RangerGatekeeperName)
 	require.NoError(g.T(), err)
 
 	g.T().Log("Upgrading gatekeeper chart to the latest version")
-	err = charts.UpgradeRancherGatekeeperChart(client, g.gatekeeperChartInstallOptions)
+	err = charts.UpgradeRangerGatekeeperChart(client, g.gatekeeperChartInstallOptions)
 	require.NoError(g.T(), err)
 
 	g.T().Log("Waiting for gatekeeper chart deployments to have expected number of available replicas after upgrade")
-	err = charts.WatchAndWaitDeployments(client, g.project.ClusterID, charts.RancherGatekeeperNamespace, metav1.ListOptions{})
+	err = charts.WatchAndWaitDeployments(client, g.project.ClusterID, charts.RangerGatekeeperNamespace, metav1.ListOptions{})
 	require.NoError(g.T(), err)
 
 	g.T().Log("Waiting gatekeeper chart DaemonSets to have expected number of available nodes after upgrade")
-	err = charts.WatchAndWaitDaemonSets(client, g.project.ClusterID, charts.RancherGatekeeperNamespace, metav1.ListOptions{})
+	err = charts.WatchAndWaitDaemonSets(client, g.project.ClusterID, charts.RangerGatekeeperNamespace, metav1.ListOptions{})
 	require.NoError(g.T(), err)
 
-	gatekeeperChartPostUpgrade, err := charts.GetChartStatus(client, g.project.ClusterID, charts.RancherGatekeeperNamespace, charts.RancherGatekeeperName)
+	gatekeeperChartPostUpgrade, err := charts.GetChartStatus(client, g.project.ClusterID, charts.RangerGatekeeperNamespace, charts.RangerGatekeeperName)
 	require.NoError(g.T(), err)
 
 	g.T().Log("Comparing installed and desired gatekeeper versions")

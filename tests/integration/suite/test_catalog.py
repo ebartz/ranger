@@ -1,6 +1,6 @@
 import pytest
 import time
-from rancher import ApiError
+from ranger import ApiError
 from .common import wait_for_template_to_be_created, \
     wait_for_template_to_be_deleted, random_str, wait_for_atleast_workload
 from .conftest import set_server_version, wait_for, DEFAULT_CATALOG
@@ -127,9 +127,9 @@ def test_user_can_list_global_catalog(user_factory, remove_resource):
 
 @pytest.mark.nonparallel
 def test_template_version_links(admin_mc, admin_pc, custom_catalog,
-                                remove_resource, restore_rancher_version):
-    """Test that template versionLinks are being updated based off the rancher
-    version set on the server and the query paramater 'rancherVersion' being
+                                remove_resource, restore_ranger_version):
+    """Test that template versionLinks are being updated based off the ranger
+    version set on the server and the query paramater 'rangerVersion' being
     set.
     """
     # 1.6.0 uses 2.0.0-2.2.0
@@ -143,7 +143,7 @@ def test_template_version_links(admin_mc, admin_pc, custom_catalog,
     set_server_version(client, "2.1.0")
 
     templates = client.list_template(
-        rancherVersion='2.1.0', catalogId=c_name)
+        rangerVersion='2.1.0', catalogId=c_name)
 
     assert len(templates.data[0]['versionLinks']) == 2
     assert '1.6.0' in templates.data[0]['versionLinks']
@@ -153,7 +153,7 @@ def test_template_version_links(admin_mc, admin_pc, custom_catalog,
     set_server_version(client, "2.0.0")
 
     templates = client.list_template(
-        rancherVersion='2.0.0', catalogId=c_name)
+        rangerVersion='2.0.0', catalogId=c_name)
 
     assert len(templates.data[0]['versionLinks']) == 1
     assert '1.6.0' in templates.data[0]['versionLinks']
@@ -162,7 +162,7 @@ def test_template_version_links(admin_mc, admin_pc, custom_catalog,
     set_server_version(client, "2.3.0")
 
     templates = client.list_template(
-        rancherVersion='2.3.0', catalogId=c_name)
+        rangerVersion='2.3.0', catalogId=c_name)
 
     assert len(templates.data[0]['versionLinks']) == 1
     assert '1.6.2' in templates.data[0]['versionLinks']
@@ -172,18 +172,18 @@ def test_template_version_links(admin_mc, admin_pc, custom_catalog,
     set_server_version(client, "2.4.0")
 
     templates = client.list_template(
-        rancherVersion='2.4.0', catalogId=c_name)
+        rangerVersion='2.4.0', catalogId=c_name)
 
     assert len(templates.data[0]['versionLinks']) == 0
 
 
 def test_relative_paths(admin_mc, admin_pc, remove_resource):
     """ This test adds a catalog's index.yaml with a relative chart url
-    and ensures that rancher can resolve the relative url"""
+    and ensures that ranger can resolve the relative url"""
 
     client = admin_mc.client
     catalogname = "cat-" + random_str()
-    url = "https://raw.githubusercontent.com/rancher/integration-test-charts"\
+    url = "https://raw.githubusercontent.com/ranger/integration-test-charts"\
         "/relative-path"
     catalog = client.create_catalog(catalogName=catalogname, branch="master",
                                     url=url)

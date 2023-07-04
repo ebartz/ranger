@@ -3,12 +3,12 @@ package prime
 import (
 	"testing"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	prime "github.com/rancher/rancher/tests/framework/extensions/prime"
-	"github.com/rancher/rancher/tests/framework/extensions/rancherversion"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	prime "github.com/ranger/ranger/tests/framework/extensions/prime"
+	"github.com/ranger/ranger/tests/framework/extensions/rangerversion"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -23,10 +23,10 @@ const (
 type PrimeTestSuite struct {
 	suite.Suite
 	session        *session.Session
-	client         *rancher.Client
+	client         *ranger.Client
 	brand          string
 	isPrime        bool
-	rancherVersion string
+	rangerVersion string
 	primeRegistry  string
 }
 
@@ -38,33 +38,33 @@ func (t *PrimeTestSuite) SetupSuite() {
 	testSession := session.NewSession()
 	t.session = testSession
 
-	primeConfig := new(rancherversion.Config)
-	config.LoadConfig(rancherversion.ConfigurationFileKey, primeConfig)
+	primeConfig := new(rangerversion.Config)
+	config.LoadConfig(rangerversion.ConfigurationFileKey, primeConfig)
 
 	t.brand = primeConfig.Brand
 	t.isPrime = primeConfig.IsPrime
-	t.rancherVersion = primeConfig.RancherVersion
+	t.rangerVersion = primeConfig.RangerVersion
 	t.primeRegistry = primeConfig.Registry
 
-	client, err := rancher.NewClient("", t.session)
+	client, err := ranger.NewClient("", t.session)
 	assert.NoError(t.T(), err)
 
 	t.client = client
 }
 
 func (t *PrimeTestSuite) TestPrimeUIBrand() {
-	rancherBrand, err := t.client.Management.Setting.ByID(uiBrand)
+	rangerBrand, err := t.client.Management.Setting.ByID(uiBrand)
 	require.NoError(t.T(), err)
 
-	checkBrand := prime.CheckUIBrand(t.client, t.isPrime, rancherBrand, t.brand)
+	checkBrand := prime.CheckUIBrand(t.client, t.isPrime, rangerBrand, t.brand)
 	assert.NoError(t.T(), checkBrand)
 }
 
 func (t *PrimeTestSuite) TestPrimeVersion() {
-	serverConfig, err := rancherversion.RequestRancherVersion(t.client.RancherConfig.Host)
+	serverConfig, err := rangerversion.RequestRangerVersion(t.client.RangerConfig.Host)
 	require.NoError(t.T(), err)
 
-	checkVersion := prime.CheckVersion(t.isPrime, t.rancherVersion, serverConfig)
+	checkVersion := prime.CheckVersion(t.isPrime, t.rangerVersion, serverConfig)
 	assert.NoError(t.T(), checkVersion)
 }
 
@@ -76,14 +76,14 @@ func (t *PrimeTestSuite) TestSystemDefaultRegistry() {
 	assert.NoError(t.T(), checkRegistry)
 }
 
-func (t *PrimeTestSuite) TestLocalClusterRancherImages() {
-	adminClient, err := rancher.NewClient(t.client.RancherConfig.AdminToken, t.client.Session)
+func (t *PrimeTestSuite) TestLocalClusterRangerImages() {
+	adminClient, err := ranger.NewClient(t.client.RangerConfig.AdminToken, t.client.Session)
 	require.NoError(t.T(), err)
 
 	clusterID, err := clusters.GetClusterIDByName(adminClient, localCluster)
 	require.NoError(t.T(), err)
 
-	imageResults, imageErrors := prime.CheckLocalClusterRancherImages(t.client, t.isPrime, t.rancherVersion, t.primeRegistry, clusterID)
+	imageResults, imageErrors := prime.CheckLocalClusterRangerImages(t.client, t.isPrime, t.rangerVersion, t.primeRegistry, clusterID)
 	assert.NotEmpty(t.T(), imageResults)
 	assert.Empty(t.T(), imageErrors)
 }

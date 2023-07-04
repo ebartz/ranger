@@ -14,7 +14,7 @@ if (-not $TAG) {
 }
 $REPO = $env:REPO
 if (-not $REPO) {
-    $REPO = "rancher"
+    $REPO = "ranger"
 }
 
 if ($TAG | Select-String -Pattern 'dirty') {
@@ -34,7 +34,7 @@ if (-not $RELEASE_ID) {
     $RELEASE_ID = $HOST_RELEASE_ID
 }
 
-$AGENT_IMAGE = ('{0}/rancher-agent:{1}-windows-{2}' -f $REPO, $TAG, $RELEASE_ID)
+$AGENT_IMAGE = ('{0}/ranger-agent:{1}-windows-{2}' -f $REPO, $TAG, $RELEASE_ID)
 
 $ARCH = $env:ARCH
 if ($RELEASE_ID -eq $HOST_RELEASE_ID) {

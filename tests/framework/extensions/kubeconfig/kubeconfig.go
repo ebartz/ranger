@@ -1,12 +1,12 @@
 package kubeconfig
 
 import (
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
 	"k8s.io/client-go/tools/clientcmd"
 )
 
 // GetKubeconfig generates a kubeconfig froma specific cluster, and returns it in the form of a *clientcmd.ClientConfig
-func GetKubeconfig(client *rancher.Client, clusterID string) (*clientcmd.ClientConfig, error) {
+func GetKubeconfig(client *ranger.Client, clusterID string) (*clientcmd.ClientConfig, error) {
 	cluster, err := client.Management.Cluster.ByID(clusterID)
 	if err != nil {
 		return nil, err

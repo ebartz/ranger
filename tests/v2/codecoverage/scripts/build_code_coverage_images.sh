@@ -4,10 +4,10 @@ cd $(dirname $0)/../../../../
 
 
 echo "building cluster setup bin"
-env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o tests/v2/codecoverage/bin/setuprancher ./tests/v2/codecoverage/setuprancher
+env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o tests/v2/codecoverage/bin/setupranger ./tests/v2/codecoverage/setupranger
 
-echo "building rancher HA corral bin"
-env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o tests/v2/codecoverage/bin/ranchercorral ./tests/v2/codecoverage/rancherha
+echo "building ranger HA corral bin"
+env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o tests/v2/codecoverage/bin/rangercorral ./tests/v2/codecoverage/rangerha
 
-echo "building rancher cleanup bin"
-env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o tests/v2/codecoverage/bin/ranchercleanup ./tests/v2/codecoverage/ranchercleanup
+echo "building ranger cleanup bin"
+env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o tests/v2/codecoverage/bin/rangercleanup ./tests/v2/codecoverage/rangercleanup

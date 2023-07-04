@@ -6,11 +6,11 @@ import (
 	"strings"
 	"testing"
 
-	provisioningv1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/capr"
-	"github.com/rancher/rancher/tests/v2prov/clients"
-	"github.com/rancher/rancher/tests/v2prov/cluster"
-	"github.com/rancher/rancher/tests/v2prov/systemdnode"
+	provisioningv1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/capr"
+	"github.com/ranger/ranger/tests/v2prov/clients"
+	"github.com/ranger/ranger/tests/v2prov/cluster"
+	"github.com/ranger/ranger/tests/v2prov/systemdnode"
 	"github.com/stretchr/testify/assert"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -107,7 +107,7 @@ func Test_Provisioning_Custom_ThreeNode(t *testing.T) {
 	assert.NotEmpty(t, command)
 
 	for i := 0; i < 3; i++ {
-		_, err = systemdnode.New(clients, c.Namespace, "#!/usr/bin/env sh\n"+command+" --worker --etcd --controlplane --label rancher=awesome", map[string]string{"custom-cluster-name": c.Name}, nil)
+		_, err = systemdnode.New(clients, c.Namespace, "#!/usr/bin/env sh\n"+command+" --worker --etcd --controlplane --label ranger=awesome", map[string]string{"custom-cluster-name": c.Name}, nil)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -138,7 +138,7 @@ func Test_Provisioning_Custom_ThreeNode(t *testing.T) {
 		if err := json.Unmarshal([]byte(secret.Annotations[capr.LabelsAnnotation]), &labels); err != nil {
 			t.Error(err)
 		}
-		assert.Equal(t, labels, map[string]string{"cattle.io/os": "linux", "rancher": "awesome"})
+		assert.Equal(t, labels, map[string]string{"cattle.io/os": "linux", "ranger": "awesome"})
 	}
 	err = cluster.EnsureMinimalConflictsWithThreshold(clients, c, cluster.SaneConflictMessageThreshold)
 	assert.NoError(t, err)
@@ -259,7 +259,7 @@ func Test_Provisioning_Custom_ThreeNodeWithTaints(t *testing.T) {
 		if i == 1 {
 			taint = " --taint key=value:NoExecute"
 		}
-		_, err = systemdnode.New(clients, c.Namespace, "#!/usr/bin/env sh\n"+command+" --worker --etcd --controlplane --label rancher=awesome"+taint, map[string]string{"custom-cluster-name": c.Name}, nil)
+		_, err = systemdnode.New(clients, c.Namespace, "#!/usr/bin/env sh\n"+command+" --worker --etcd --controlplane --label ranger=awesome"+taint, map[string]string{"custom-cluster-name": c.Name}, nil)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -291,7 +291,7 @@ func Test_Provisioning_Custom_ThreeNodeWithTaints(t *testing.T) {
 		if err := json.Unmarshal([]byte(secret.Annotations[capr.LabelsAnnotation]), &labels); err != nil {
 			t.Error(err)
 		}
-		assert.Equal(t, labels, map[string]string{"cattle.io/os": "linux", "rancher": "awesome"})
+		assert.Equal(t, labels, map[string]string{"cattle.io/os": "linux", "ranger": "awesome"})
 
 		if len(secret.Annotations[capr.TaintsAnnotation]) != 0 {
 			// Only one node should have the taint

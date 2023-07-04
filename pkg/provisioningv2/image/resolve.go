@@ -4,10 +4,10 @@ import (
 	"path"
 	"strings"
 
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/settings"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/settings"
 )
 
 func ResolveWithControlPlane(image string, cp *rkev1.RKEControlPlane) string {
@@ -20,9 +20,9 @@ func ResolveWithCluster(image string, cluster *v1.Cluster) string {
 
 func resolve(reg, image string) string {
 	if reg != "" && !strings.HasPrefix(image, reg) {
-		//Images from Dockerhub Library repo, we add rancher prefix when using private registry
+		//Images from Dockerhub Library repo, we add ranger prefix when using private registry
 		if !strings.Contains(image, "/") {
-			image = "rancher/" + image
+			image = "ranger/" + image
 		}
 		return path.Join(reg, image)
 	}

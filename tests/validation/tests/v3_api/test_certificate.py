@@ -3,9 +3,9 @@ This test suite contains tests to validate certificate create/edit/delete with
 different possible way and with different roles of users.
 Test requirement:
 Below Env variables need to be set
-CATTLE_TEST_URL - url to rancher server
-ADMIN_TOKEN - Admin token from rancher
-USER_TOKEN - User token from rancher
+CATTLE_TEST_URL - url to ranger server
+ADMIN_TOKEN - Admin token from ranger
+USER_TOKEN - User token from ranger
 RANCHER_CLUSTER_NAME - Cluster name to run test on
 RANCHER_VALID_TLS_KEY - takes authentic certificate key base64 encoded
 RANCHER_VALID_TLS_CERT - takes authentic certificate base64 encoded
@@ -35,8 +35,8 @@ namespace = {"p_client": None, "ns": None, "cluster": None, "project": None,
              "c_client": None, "cert_valid": None, "cert_ssc": None,
              "cert_allns_valid": None, "cert_allns_ssc": None, "node_id": None}
 
-route_entry_53_1 = random_test_name('auto-valid') + '.qa.rancher.space'
-route_entry_53_2 = random_test_name('auto-ssc') + '.qa.rancher.space'
+route_entry_53_1 = random_test_name('auto-valid') + '.qa.ranger.space'
+route_entry_53_2 = random_test_name('auto-ssc') + '.qa.ranger.space'
 
 
 def get_ssh_key(ssh_key_name):
@@ -56,12 +56,12 @@ def get_private_key(env_var, key_name):
         return get_ssh_key(key_name)
 
 
-rancher_private_key = get_private_key('RANCHER_VALID_TLS_KEY',
+ranger_private_key = get_private_key('RANCHER_VALID_TLS_KEY',
                                       'privkey.pem')
-rancher_cert = get_private_key('RANCHER_VALID_TLS_CERT', 'fullchain.pem')
-rancher_ssc_private_key = get_private_key('RANCHER_BYO_TLS_KEY',
+ranger_cert = get_private_key('RANCHER_VALID_TLS_CERT', 'fullchain.pem')
+ranger_ssc_private_key = get_private_key('RANCHER_BYO_TLS_KEY',
                                           'key.pem')
-rancher_ssc_cert = get_private_key('RANCHER_BYO_TLS_CERT', 'cert.pem')
+ranger_ssc_cert = get_private_key('RANCHER_BYO_TLS_CERT', 'cert.pem')
 
 rbac_role_list = [
                   CLUSTER_OWNER,
@@ -317,7 +317,7 @@ class TestCertificate:
         )
         wait_for_ingress_to_active(self.p_client, self.ingress)
         self.p_client.update(
-            self.certificate_ssc, key=rancher_private_key, certs=rancher_cert
+            self.certificate_ssc, key=ranger_private_key, certs=ranger_cert
         )
         self.p_client.reload(self.certificate_ssc)
         self.p_client.update(self.ingress, rules=[rule_2], tls=[tls_2])
@@ -358,8 +358,8 @@ class TestCertificate:
         )
         wait_for_ingress_to_active(self.p_client, self.ingress)
         self.p_client.update(
-            self.certificate_all_ns_ssc, key=rancher_private_key,
-            certs=rancher_cert
+            self.certificate_all_ns_ssc, key=ranger_private_key,
+            certs=ranger_cert
         )
         self.p_client.reload(self.certificate_all_ns_ssc)
         self.p_client.update(self.ingress, rules=[rule_2], tls=[tls_2])
@@ -383,15 +383,15 @@ class TestCertificate:
         if role in (CLUSTER_MEMBER, PROJECT_READ_ONLY):
             with pytest.raises(ApiError) as e:
                 p_client.create_certificate(
-                    name=cert_name, key=rancher_private_key,
-                    certs=rancher_cert
+                    name=cert_name, key=ranger_private_key,
+                    certs=ranger_cert
                 )
                 assert e.value.error.status == 403
                 assert e.value.error.code == 'Forbidden'
         else:
             certificate_allns_valid = p_client.create_certificate(
-                name=cert_name, key=rancher_private_key,
-                certs=rancher_cert
+                name=cert_name, key=ranger_private_key,
+                certs=ranger_cert
             )
             assert certificate_allns_valid.issuer == 'R3'
             # Delete the certificate
@@ -413,15 +413,15 @@ class TestCertificate:
         if role in (CLUSTER_MEMBER, PROJECT_READ_ONLY):
             with pytest.raises(ApiError) as e:
                 p_client.create_namespaced_certificate(
-                    name=cert_name, key=rancher_private_key,
-                    certs=rancher_cert,
+                    name=cert_name, key=ranger_private_key,
+                    certs=ranger_cert,
                     namespaceId=ns['name']
                 )
                 assert e.value.error.status == 403
                 assert e.value.error.code == 'Forbidden'
         else:
             certificate_valid = p_client.create_namespaced_certificate(
-                name=cert_name, key=rancher_private_key, certs=rancher_cert,
+                name=cert_name, key=ranger_private_key, certs=ranger_cert,
                 namespaceId=ns['name']
             )
             assert certificate_valid.issuer == 'R3'
@@ -446,7 +446,7 @@ class TestCertificate:
         p_client_owner = get_project_client_for_token(project, c_owner_token)
         cert_name = random_test_name("cert-rbac")
         certificate_valid = p_client_owner.create_namespaced_certificate(
-            name=cert_name, key=rancher_private_key, certs=rancher_cert,
+            name=cert_name, key=ranger_private_key, certs=ranger_cert,
             namespaceId=ns['name']
         )
         if role in (CLUSTER_MEMBER, PROJECT_READ_ONLY):
@@ -479,8 +479,8 @@ class TestCertificate:
                                                       c_owner_token)
         cert_name = random_test_name("cert-rbac")
         certificate_allns_valid = p_client_owner.create_certificate(
-            name=cert_name, key=rancher_private_key,
-            certs=rancher_cert
+            name=cert_name, key=ranger_private_key,
+            certs=ranger_cert
         )
         if role in (CLUSTER_MEMBER, PROJECT_READ_ONLY):
             cert_count = p_client.list_certificate(name=cert_name)
@@ -512,22 +512,22 @@ class TestCertificate:
                                                       c_owner_token)
         cert_name = random_test_name("cert-rbac")
         certificate_allns_valid = p_client_owner.create_certificate(
-            name=cert_name, key=rancher_private_key,
-            certs=rancher_cert
+            name=cert_name, key=ranger_private_key,
+            certs=ranger_cert
         )
         if role in (CLUSTER_MEMBER, PROJECT_READ_ONLY):
             with pytest.raises(ApiError) as e:
                 p_client.update(
-                    certificate_allns_valid, key=rancher_ssc_private_key,
-                    certs=rancher_ssc_cert)
+                    certificate_allns_valid, key=ranger_ssc_private_key,
+                    certs=ranger_ssc_cert)
                 assert e.value.error.status == 403
                 assert e.value.error.code == 'Forbidden'
         else:
             certificate_allns_valid = p_client.update(
-                certificate_allns_valid, key=rancher_ssc_private_key,
-                certs=rancher_ssc_cert)
+                certificate_allns_valid, key=ranger_ssc_private_key,
+                certs=ranger_ssc_cert)
             p_client.reload(certificate_allns_valid)
-            assert certificate_allns_valid.issuer == 'Rancher QA CA'
+            assert certificate_allns_valid.issuer == 'Ranger QA CA'
             # Delete the resources
             p_client.delete(certificate_allns_valid)
 
@@ -550,21 +550,21 @@ class TestCertificate:
                                                       c_owner_token)
         cert_name = random_test_name("cert-rbac")
         certificate_valid = p_client_owner.create_namespaced_certificate(
-            name=cert_name, key=rancher_private_key, certs=rancher_cert,
+            name=cert_name, key=ranger_private_key, certs=ranger_cert,
             namespaceId=ns['name']
         )
         if role in (CLUSTER_MEMBER, PROJECT_READ_ONLY):
             with pytest.raises(ApiError) as e:
-                p_client.update(certificate_valid, key=rancher_ssc_private_key,
-                                certs=rancher_ssc_cert)
+                p_client.update(certificate_valid, key=ranger_ssc_private_key,
+                                certs=ranger_ssc_cert)
                 assert e.value.error.status == 403
                 assert e.value.error.code == 'Forbidden'
         else:
             certificate_valid = p_client.update(
-                certificate_valid, key=rancher_ssc_private_key,
-                certs=rancher_ssc_cert)
+                certificate_valid, key=ranger_ssc_private_key,
+                certs=ranger_ssc_cert)
             p_client.reload(certificate_valid)
-            assert certificate_valid.issuer == 'Rancher QA CA'
+            assert certificate_valid.issuer == 'Ranger QA CA'
             # Delete the resources
             p_client.delete(certificate_valid)
 
@@ -585,8 +585,8 @@ class TestCertificate:
                                                       c_owner_token)
         cert_name = random_test_name("cert-rbac")
         certificate_allns_valid = p_client_owner.create_certificate(
-            name=cert_name, key=rancher_private_key,
-            certs=rancher_cert
+            name=cert_name, key=ranger_private_key,
+            certs=ranger_cert
         )
         if role in (CLUSTER_MEMBER, PROJECT_READ_ONLY):
             with pytest.raises(ApiError) as e:
@@ -619,7 +619,7 @@ class TestCertificate:
                                                       c_owner_token)
         cert_name = random_test_name("cert-rbac")
         certificate_valid = p_client_owner.create_namespaced_certificate(
-            name=cert_name, key=rancher_private_key, certs=rancher_cert,
+            name=cert_name, key=ranger_private_key, certs=ranger_cert,
             namespaceId=ns['name']
         )
         if role in (CLUSTER_MEMBER, PROJECT_READ_ONLY):
@@ -691,8 +691,8 @@ class TestCertificate:
         p_client = get_project_client_for_token(project, token)
         certificate_valid = self.certificate_ssc
         with pytest.raises(ApiError) as e:
-            p_client.update(certificate_valid, key=rancher_private_key,
-                            certs=rancher_cert)
+            p_client.update(certificate_valid, key=ranger_private_key,
+                            certs=ranger_cert)
             assert e.value.error.status == 403
             assert e.value.error.code == 'Forbidden'
 
@@ -709,8 +709,8 @@ class TestCertificate:
         p_client = get_project_client_for_token(project, token)
         certificate_valid = self.certificate_all_ns_ssc
         with pytest.raises(ApiError) as e:
-            p_client.update(certificate_valid, key=rancher_private_key,
-                            certs=rancher_cert)
+            p_client.update(certificate_valid, key=ranger_private_key,
+                            certs=ranger_cert)
             assert e.value.error.status == 403
             assert e.value.error.code == 'Forbidden'
 
@@ -725,23 +725,23 @@ def create_project_client(request):
     p_client = get_project_client_for_token(project, USER_TOKEN)
     c_client = get_cluster_client_for_token(cluster, USER_TOKEN)
     certificate_valid = p_client.create_namespaced_certificate(
-        name="cert-valid", key=rancher_private_key, certs=rancher_cert,
+        name="cert-valid", key=ranger_private_key, certs=ranger_cert,
         namespaceId=ns['name']
     )
     assert certificate_valid.issuer == 'R3'
 
     certificate_allns_valid = p_client.create_certificate(
-        name="cert-all-ns-valid", key=rancher_private_key,
-        certs=rancher_cert
+        name="cert-all-ns-valid", key=ranger_private_key,
+        certs=ranger_cert
     )
     certificate_ssc = p_client.create_namespaced_certificate(
-        name="cert-ssc", key=rancher_ssc_private_key, certs=rancher_ssc_cert,
+        name="cert-ssc", key=ranger_ssc_private_key, certs=ranger_ssc_cert,
         namespaceId=ns['name']
     )
-    assert certificate_ssc.issuer == 'Rancher QA CA'
+    assert certificate_ssc.issuer == 'Ranger QA CA'
     certificate_allns_ssc = p_client.create_certificate(
-        name="cert-all-ns-ssc", key=rancher_ssc_private_key,
-        certs=rancher_ssc_cert
+        name="cert-all-ns-ssc", key=ranger_ssc_private_key,
+        certs=ranger_ssc_cert
     )
 
     nodes = client.list_node(clusterId=cluster.id).data

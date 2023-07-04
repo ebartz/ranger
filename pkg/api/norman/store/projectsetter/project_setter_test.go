@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/rancher/norman/types"
-	"github.com/rancher/rancher/pkg/project"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/ranger/pkg/project"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

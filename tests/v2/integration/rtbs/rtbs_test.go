@@ -5,17 +5,17 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	extnamespaces "github.com/rancher/rancher/tests/framework/extensions/kubeapi/namespaces"
-	"github.com/rancher/rancher/tests/framework/extensions/kubeapi/rbac"
-	"github.com/rancher/rancher/tests/framework/extensions/kubeapi/secrets"
-	"github.com/rancher/rancher/tests/framework/extensions/users"
-	password "github.com/rancher/rancher/tests/framework/extensions/users/passwordgenerator"
-	namegen "github.com/rancher/rancher/tests/framework/pkg/namegenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	extnamespaces "github.com/ranger/ranger/tests/framework/extensions/kubeapi/namespaces"
+	"github.com/ranger/ranger/tests/framework/extensions/kubeapi/rbac"
+	"github.com/ranger/ranger/tests/framework/extensions/kubeapi/secrets"
+	"github.com/ranger/ranger/tests/framework/extensions/users"
+	password "github.com/ranger/ranger/tests/framework/extensions/users/passwordgenerator"
+	namegen "github.com/ranger/ranger/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"golang.org/x/sync/errgroup"
@@ -29,7 +29,7 @@ import (
 type RTBTestSuite struct {
 	suite.Suite
 	testUser            *management.User
-	client              *rancher.Client
+	client              *ranger.Client
 	project             *management.Project
 	session             *session.Session
 	downstreamClusterID string
@@ -44,7 +44,7 @@ func (p *RTBTestSuite) SetupSuite() {
 	testSession := session.NewSession()
 	p.session = testSession
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(p.T(), err)
 
 	p.client = client
@@ -165,7 +165,7 @@ func (p *RTBTestSuite) TestPRTBRoleTemplateInheritance() {
 		ResourceNames: []string{anotherSecret.Name},
 		Verbs:         []string{"get"},
 	})
-	dynamicClient, err := client.GetRancherDynamicClient()
+	dynamicClient, err := client.GetRangerDynamicClient()
 	require.NoError(p.T(), err)
 	var eg errgroup.Group
 	timeout := int64(15)
@@ -293,7 +293,7 @@ func (p *RTBTestSuite) TestCRTBRoleTemplateInheritance() {
 		Verbs:         []string{"get"},
 	})
 
-	dynamicClient, err := client.GetRancherDynamicClient()
+	dynamicClient, err := client.GetRangerDynamicClient()
 	require.NoError(p.T(), err)
 	var eg errgroup.Group
 	timeout := int64(15)

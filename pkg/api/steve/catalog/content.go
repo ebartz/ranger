@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/rancher/apiserver/pkg/types"
-	"github.com/rancher/rancher/pkg/catalogv2/content"
-	"github.com/rancher/wrangler/pkg/schemas/validation"
+	"github.com/ranger/apiserver/pkg/types"
+	"github.com/ranger/ranger/pkg/catalogv2/content"
+	"github.com/ranger/wrangler/pkg/schemas/validation"
 	"helm.sh/helm/v3/pkg/repo"
 )
 

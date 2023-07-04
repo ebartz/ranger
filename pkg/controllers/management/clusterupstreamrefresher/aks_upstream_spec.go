@@ -3,10 +3,10 @@ package clusterupstreamrefresher
 import (
 	"context"
 
-	akscontroller "github.com/rancher/aks-operator/controller"
-	aksv1 "github.com/rancher/aks-operator/pkg/apis/aks.cattle.io/v1"
-	mgmtv3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	wranglerv1 "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
+	akscontroller "github.com/ranger/aks-operator/controller"
+	aksv1 "github.com/ranger/aks-operator/pkg/apis/aks.cattle.io/v1"
+	mgmtv3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	wranglerv1 "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
 )
 
 func BuildAKSUpstreamSpec(secretsCache wranglerv1.SecretCache, secretClient wranglerv1.SecretClient, cluster *mgmtv3.Cluster) (*aksv1.AKSClusterConfigSpec, error) {

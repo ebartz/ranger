@@ -1,9 +1,9 @@
 package nocondition
 
 import (
-	"github.com/rancher/norman/store/transform"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/values"
+	"github.com/ranger/norman/store/transform"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/values"
 )
 
 // NewWrapper returns a wrapper store which sets your object to transitioning state if your object has no conditions.

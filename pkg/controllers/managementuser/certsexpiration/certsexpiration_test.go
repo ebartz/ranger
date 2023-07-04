@@ -4,9 +4,9 @@ import (
 	"reflect"
 	"testing"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 
-	rketypes "github.com/rancher/rke/types"
+	rketypes "github.com/ranger/rke/types"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -14,7 +14,7 @@ func TestDeleteUnusedCerts(t *testing.T) {
 	tests := []struct {
 		name                          string
 		certs                         map[string]v32.CertExpiration
-		rancherKubernetesEngineConfig *rketypes.RancherKubernetesEngineConfig
+		rangerKubernetesEngineConfig *rketypes.RangerKubernetesEngineConfig
 		expectNewCerts                map[string]v32.CertExpiration
 	}{
 		{
@@ -27,7 +27,7 @@ func TestDeleteUnusedCerts(t *testing.T) {
 				"kube-apiserver":       v32.CertExpiration{},
 				"kube-proxy":           v32.CertExpiration{},
 			},
-			rancherKubernetesEngineConfig: &rketypes.RancherKubernetesEngineConfig{
+			rangerKubernetesEngineConfig: &rketypes.RangerKubernetesEngineConfig{
 				Services: rketypes.RKEConfigServices{
 					Kubelet: rketypes.KubeletService{
 						GenerateServingCertificate: true,
@@ -74,7 +74,7 @@ func TestDeleteUnusedCerts(t *testing.T) {
 				"kube-apiserver":          v32.CertExpiration{},
 				"kube-proxy":              v32.CertExpiration{},
 			},
-			rancherKubernetesEngineConfig: &rketypes.RancherKubernetesEngineConfig{
+			rangerKubernetesEngineConfig: &rketypes.RangerKubernetesEngineConfig{
 				Services: rketypes.RKEConfigServices{
 					Kubelet: rketypes.KubeletService{
 						GenerateServingCertificate: true,
@@ -123,7 +123,7 @@ func TestDeleteUnusedCerts(t *testing.T) {
 				"kube-apiserver":          v32.CertExpiration{},
 				"kube-proxy":              v32.CertExpiration{},
 			},
-			rancherKubernetesEngineConfig: &rketypes.RancherKubernetesEngineConfig{
+			rangerKubernetesEngineConfig: &rketypes.RangerKubernetesEngineConfig{
 				Services: rketypes.RKEConfigServices{
 					Kubelet: rketypes.KubeletService{
 						GenerateServingCertificate: true,
@@ -165,7 +165,7 @@ func TestDeleteUnusedCerts(t *testing.T) {
 				"kube-apiserver":          v32.CertExpiration{},
 				"kube-proxy":              v32.CertExpiration{},
 			},
-			rancherKubernetesEngineConfig: &rketypes.RancherKubernetesEngineConfig{
+			rangerKubernetesEngineConfig: &rketypes.RangerKubernetesEngineConfig{
 				Services: rketypes.RKEConfigServices{
 					Kubelet: rketypes.KubeletService{
 						GenerateServingCertificate: true,
@@ -206,7 +206,7 @@ func TestDeleteUnusedCerts(t *testing.T) {
 				"kube-apiserver":          v32.CertExpiration{},
 				"kube-proxy":              v32.CertExpiration{},
 			},
-			rancherKubernetesEngineConfig: &rketypes.RancherKubernetesEngineConfig{
+			rangerKubernetesEngineConfig: &rketypes.RangerKubernetesEngineConfig{
 				Services: rketypes.RKEConfigServices{
 					Kubelet: rketypes.KubeletService{
 						GenerateServingCertificate: false,
@@ -238,7 +238,7 @@ func TestDeleteUnusedCerts(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			deleteUnusedCerts(tt.certs, tt.rancherKubernetesEngineConfig)
+			deleteUnusedCerts(tt.certs, tt.rangerKubernetesEngineConfig)
 			assert.Equal(t, true, reflect.DeepEqual(tt.certs, tt.expectNewCerts))
 		})
 	}

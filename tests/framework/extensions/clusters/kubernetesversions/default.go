@@ -3,12 +3,12 @@ package kubernetesversions
 import (
 	"fmt"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
 	"github.com/sirupsen/logrus"
 )
 
-func Default(client *rancher.Client, provider string, kubernetesVersions []string) ([]string, error) {
+func Default(client *ranger.Client, provider string, kubernetesVersions []string) ([]string, error) {
 
 	switch {
 	case provider == clusters.RKE1ClusterType.String():

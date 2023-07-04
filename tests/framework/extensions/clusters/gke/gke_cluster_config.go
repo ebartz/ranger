@@ -1,8 +1,8 @@
 package gke
 
 import (
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
 )
 
 const (

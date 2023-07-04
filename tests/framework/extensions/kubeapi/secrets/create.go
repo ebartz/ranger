@@ -3,16 +3,16 @@ package secrets
 import (
 	"context"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/unstructured"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/unstructured"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/dynamic"
 )
 
-// CreateSecretForCluster is a helper function that uses the rancher client to create a secret in a namespace for a specific cluster.
-func CreateSecretForCluster(client *rancher.Client, secret *corev1.Secret, clusterID, namespace string) (*corev1.Secret, error) {
+// CreateSecretForCluster is a helper function that uses the ranger client to create a secret in a namespace for a specific cluster.
+func CreateSecretForCluster(client *ranger.Client, secret *corev1.Secret, clusterID, namespace string) (*corev1.Secret, error) {
 	dynamicClient, err := client.GetDownStreamClusterClient(clusterID)
 	if err != nil {
 		return nil, err

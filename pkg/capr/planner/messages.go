@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/rancher/rancher/pkg/capr"
+	"github.com/ranger/ranger/pkg/capr"
 	capi "sigs.k8s.io/cluster-api/api/v1beta1"
 )
 

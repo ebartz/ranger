@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/rancher/apiserver/pkg/types"
+	"github.com/ranger/apiserver/pkg/types"
 )
 
 func (s *sshClient) download(apiContext *types.APIRequest) error {

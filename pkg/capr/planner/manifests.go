@@ -4,9 +4,9 @@ import (
 	"encoding/base64"
 	"fmt"
 
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1/plan"
-	"github.com/rancher/rancher/pkg/capr"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1/plan"
+	"github.com/ranger/ranger/pkg/capr"
 	"github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -56,7 +56,7 @@ func getEtcdSnapshotExtraMetadata(controlPlane *rkev1.RKEControlPlane, runtime s
 		cm := fmt.Sprintf(EtcdSnapshotExtraMetadataConfigMapTemplate, runtime, metav1.NamespaceSystem, EtcdSnapshotConfigMapKey, v)
 		return &plan.File{
 			Content: base64.StdEncoding.EncodeToString([]byte(cm)),
-			Path:    fmt.Sprintf("/var/lib/rancher/%s/server/manifests/rancher/%s-etcd-snapshot-extra-metadata.yaml", runtime, runtime),
+			Path:    fmt.Sprintf("/var/lib/ranger/%s/server/manifests/ranger/%s-etcd-snapshot-extra-metadata.yaml", runtime, runtime),
 			Dynamic: true,
 			Minor:   true,
 		}
@@ -74,7 +74,7 @@ func (p *Planner) getClusterAgentManifestFile(controlPlane *rkev1.RKEControlPlan
 
 	return plan.File{
 		Content: base64.StdEncoding.EncodeToString(data),
-		Path:    fmt.Sprintf("/var/lib/rancher/%s/server/manifests/rancher/cluster-agent.yaml", runtime),
+		Path:    fmt.Sprintf("/var/lib/ranger/%s/server/manifests/ranger/cluster-agent.yaml", runtime),
 		Dynamic: true,
 		Minor:   true,
 	}, nil
@@ -84,7 +84,7 @@ func (p *Planner) getClusterAgentManifestFile(controlPlane *rkev1.RKEControlPlan
 func (p *Planner) getAddons(controlPlane *rkev1.RKEControlPlane, runtime string) plan.File {
 	return plan.File{
 		Content: base64.StdEncoding.EncodeToString([]byte(controlPlane.Spec.AdditionalManifest)),
-		Path:    fmt.Sprintf("/var/lib/rancher/%s/server/manifests/rancher/addons.yaml", runtime),
+		Path:    fmt.Sprintf("/var/lib/ranger/%s/server/manifests/ranger/addons.yaml", runtime),
 		Dynamic: true,
 	}
 }

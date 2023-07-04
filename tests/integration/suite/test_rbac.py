@@ -1,6 +1,6 @@
 import kubernetes
 import pytest
-from rancher import ApiError
+from ranger import ApiError
 import time
 
 from .common import random_str
@@ -74,7 +74,7 @@ def test_project_owner(admin_cc, admin_mc, user_mc, remove_resource):
     k8s_client = kubernetes_api_client(user_client, 'local')
     auth = kubernetes.client.AuthorizationV1Api(k8s_client)
 
-    # Rancher API doesn't have a surefire way of knowing exactly when the user
+    # Ranger API doesn't have a surefire way of knowing exactly when the user
     # has the ability to create namespaces yet. So we have to rely on an actual
     # kubernetes auth check.
     def can_create_ns():
@@ -103,7 +103,7 @@ def test_project_owner(admin_cc, admin_mc, user_mc, remove_resource):
     core.list_namespaced_pod(ns.name)
 
     # As the user, assert that the two expected role bindings exist in the
-    # namespace for the user. There should be one for the rancher role
+    # namespace for the user. There should be one for the ranger role
     # 'project-owner' and one for the k8s built-in role 'admin'
     rbac = kubernetes.client.RbacAuthorizationV1Api(api_client=k8s_client)
     rbs = rbac.list_namespaced_role_binding(ns.name)

@@ -3,9 +3,9 @@ package authprovisioningv2
 import (
 	"fmt"
 
-	v1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/controllers/capr/dynamicschema"
-	"github.com/rancher/wrangler/pkg/data"
+	v1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/controllers/capr/dynamicschema"
+	"github.com/ranger/wrangler/pkg/data"
 	"k8s.io/apimachinery/pkg/api/meta"
 	"k8s.io/apimachinery/pkg/runtime"
 	capi "sigs.k8s.io/cluster-api/api/v1beta1"

@@ -7,17 +7,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/clients/rancher/catalog"
-	stevev1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/kubeapi/workloads/deployments"
-	"github.com/rancher/rancher/tests/framework/extensions/kubeapi/workloads/pods"
-	"github.com/rancher/rancher/tests/framework/extensions/kubeconfig"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
-	"github.com/rancher/rancher/tests/integration/pkg/defaults"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/clients/ranger/catalog"
+	stevev1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/kubeapi/workloads/deployments"
+	"github.com/ranger/ranger/tests/framework/extensions/kubeapi/workloads/pods"
+	"github.com/ranger/ranger/tests/framework/extensions/kubeconfig"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
+	"github.com/ranger/ranger/tests/integration/pkg/defaults"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -33,12 +33,12 @@ import (
 
 const (
 	cattleSystemNameSpace = "cattle-system"
-	rancherWebhook        = "rancher-webhook"
+	rangerWebhook        = "ranger-webhook"
 )
 
 type SystemChartsVersionSuite struct {
 	suite.Suite
-	client               *rancher.Client
+	client               *ranger.Client
 	session              *session.Session
 	restClientGetter     genericclioptions.RESTClientGetter
 	catalogClient        *catalog.Client
@@ -54,7 +54,7 @@ func (w *SystemChartsVersionSuite) SetupSuite() {
 	testSession := session.NewSession()
 	w.session = testSession
 
-	w.client, err = rancher.NewClient("", testSession)
+	w.client, err = ranger.NewClient("", testSession)
 	require.NoError(w.T(), err)
 
 	w.catalogClient, err = w.client.GetClusterCatalogClient("local")
@@ -67,22 +67,22 @@ func (w *SystemChartsVersionSuite) SetupSuite() {
 	w.restClientGetter, err = kubeconfig.NewRestGetter(restConfig, *kubeConfig)
 	require.NoError(w.T(), err)
 
-	w.latestWebhookVersion, err = w.catalogClient.GetLatestChartVersion(rancherWebhook)
+	w.latestWebhookVersion, err = w.catalogClient.GetLatestChartVersion(rangerWebhook)
 	require.NoError(w.T(), err)
 
-	require.NoError(w.T(), w.updateSetting("rancher-webhook-version", w.latestWebhookVersion))
-	require.NoError(w.T(), w.updateSetting("rancher-webhook-min-version", ""))
+	require.NoError(w.T(), w.updateSetting("ranger-webhook-version", w.latestWebhookVersion))
+	require.NoError(w.T(), w.updateSetting("ranger-webhook-min-version", ""))
 	require.NoError(w.T(), w.updateSetting("system-feature-chart-refresh-seconds", "10"))
 }
 
 func (w *SystemChartsVersionSuite) resetSettings() {
 	w.T().Helper()
-	require.NoError(w.T(), w.updateSetting("rancher-webhook-version", w.latestWebhookVersion))
-	require.NoError(w.T(), w.updateSetting("rancher-webhook-min-version", ""))
+	require.NoError(w.T(), w.updateSetting("ranger-webhook-version", w.latestWebhookVersion))
+	require.NoError(w.T(), w.updateSetting("ranger-webhook-min-version", ""))
 	require.NoError(w.T(), w.updateSetting("system-feature-chart-refresh-seconds", "10"))
 
-	// need to recreate the rancher-webhook pod because there are rbac issues without doing so.
-	dynamicClient, err := w.client.GetRancherDynamicClient()
+	// need to recreate the ranger-webhook pod because there are rbac issues without doing so.
+	dynamicClient, err := w.client.GetRangerDynamicClient()
 	require.NoError(w.T(), err)
 
 	podList, err := dynamicClient.Resource(pods.PodGroupVersionResource).Namespace(cattleSystemNameSpace).List(context.Background(), metav1.ListOptions{})
@@ -92,7 +92,7 @@ func (w *SystemChartsVersionSuite) resetSettings() {
 
 	for _, pod := range podList.Items {
 		name := pod.GetName()
-		if strings.Contains(name, rancherWebhook) {
+		if strings.Contains(name, rangerWebhook) {
 			podName = name
 			break
 		}
@@ -102,7 +102,7 @@ func (w *SystemChartsVersionSuite) resetSettings() {
 	require.NoError(w.T(), err)
 
 	err = kwait.Poll(500*time.Millisecond, 10*time.Minute, func() (done bool, err error) {
-		deployment, err := dynamicClient.Resource(deployments.DeploymentGroupVersionResource).Namespace(cattleSystemNameSpace).Get(context.TODO(), rancherWebhook, metav1.GetOptions{})
+		deployment, err := dynamicClient.Resource(deployments.DeploymentGroupVersionResource).Namespace(cattleSystemNameSpace).Get(context.TODO(), rangerWebhook, metav1.GetOptions{})
 		if k8sErrors.IsNotFound(err) {
 			return false, nil
 		} else if err != nil {
@@ -132,18 +132,18 @@ func (w *SystemChartsVersionSuite) TestInstallWebhook() {
 	defer w.resetSettings()
 
 	const exactVersion = "2.0.3+up0.3.3"
-	w.Require().NoError(w.uninstallApp("cattle-system", "rancher-webhook"))
-	w.Require().NoError(w.updateSetting("rancher-webhook-version", exactVersion))
+	w.Require().NoError(w.uninstallApp("cattle-system", "ranger-webhook"))
+	w.Require().NoError(w.updateSetting("ranger-webhook-version", exactVersion))
 
 	watcher, err := w.catalogClient.Apps("cattle-system").Watch(context.TODO(), metav1.ListOptions{
-		FieldSelector:  "metadata.name=" + "rancher-webhook",
+		FieldSelector:  "metadata.name=" + "ranger-webhook",
 		TimeoutSeconds: &defaults.WatchTimeoutSeconds,
 	})
 	w.Require().NoError(err)
 
 	err = wait.WatchWait(watcher, func(event watch.Event) (ready bool, err error) {
 		if event.Type == watch.Error {
-			return false, fmt.Errorf("there was an error installing the rancher-webhook chart")
+			return false, fmt.Errorf("there was an error installing the ranger-webhook chart")
 		} else if event.Type == watch.Added {
 			return true, nil
 		}
@@ -154,7 +154,7 @@ func (w *SystemChartsVersionSuite) TestInstallWebhook() {
 	// Allow the new release to fully deploy. Otherwise, the client won't find it among current releases.
 	var newRelease *release.Release
 	err = kwait.Poll(10*time.Second, 2*time.Minute, func() (done bool, err error) {
-		newRelease, err = w.fetchRelease("cattle-system", "rancher-webhook")
+		newRelease, err = w.fetchRelease("cattle-system", "ranger-webhook")
 		if err != nil {
 			return false, nil
 		}
@@ -167,23 +167,23 @@ func (w *SystemChartsVersionSuite) TestInstallWebhook() {
 	w.Require().NoError(err)
 }
 
-// TODO (maxsokolovsky) remove once the rancher-webhook-min-version setting is fully removed.
+// TODO (maxsokolovsky) remove once the ranger-webhook-min-version setting is fully removed.
 func (w *SystemChartsVersionSuite) TestInstallWebhookMinVersion() {
 	defer w.resetSettings()
 
 	const minVersion = "2.0.3+up0.3.3"
-	w.Require().NoError(w.uninstallApp("cattle-system", "rancher-webhook"))
-	w.Require().NoError(w.updateSetting("rancher-webhook-min-version", minVersion))
+	w.Require().NoError(w.uninstallApp("cattle-system", "ranger-webhook"))
+	w.Require().NoError(w.updateSetting("ranger-webhook-min-version", minVersion))
 
 	watcher, err := w.catalogClient.Apps("cattle-system").Watch(context.TODO(), metav1.ListOptions{
-		FieldSelector:  "metadata.name=" + "rancher-webhook",
+		FieldSelector:  "metadata.name=" + "ranger-webhook",
 		TimeoutSeconds: &defaults.WatchTimeoutSeconds,
 	})
 	w.Require().NoError(err)
 
 	err = wait.WatchWait(watcher, func(event watch.Event) (ready bool, err error) {
 		if event.Type == watch.Error {
-			return false, fmt.Errorf("there was an error installing the rancher-webhook chart")
+			return false, fmt.Errorf("there was an error installing the ranger-webhook chart")
 		} else if event.Type == watch.Added {
 			return true, nil
 		}
@@ -194,7 +194,7 @@ func (w *SystemChartsVersionSuite) TestInstallWebhookMinVersion() {
 	// Allow the new release to fully deploy. Otherwise, the client won't find it among current releases.
 	var newRelease *release.Release
 	err = kwait.Poll(10*time.Second, 2*time.Minute, func() (done bool, err error) {
-		newRelease, err = w.fetchRelease("cattle-system", "rancher-webhook")
+		newRelease, err = w.fetchRelease("cattle-system", "ranger-webhook")
 		if err != nil {
 			return false, nil
 		}
@@ -245,7 +245,7 @@ func (w *SystemChartsVersionSuite) TestInstallFleet() {
 	latest, err := w.catalogClient.GetLatestChartVersion("fleet")
 	w.Require().NoError(err)
 
-	// Ensure Rancher deployed the latest version when the minimum version is below the latest.
+	// Ensure Ranger deployed the latest version when the minimum version is below the latest.
 	w.Assert().Equal(newRelease.Chart.Metadata.Version, latest)
 }
 

@@ -7,8 +7,8 @@ import (
 	"github.com/Azure/azure-sdk-for-go/services/graphrbac/1.6/graphrbac"
 	"github.com/Azure/go-autorest/autorest"
 	"github.com/Azure/go-autorest/autorest/adal"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
 	"github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -140,7 +140,7 @@ func NewADGraphClientFromCredential(config *v32.AzureADConfig, credential *v32.A
 		config.ApplicationID,
 		config.ApplicationSecret,
 		credential.Code,
-		config.RancherURL,
+		config.RangerURL,
 		config.GraphEndpoint,
 	)
 	if err != nil {

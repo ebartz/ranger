@@ -17,7 +17,7 @@ const (
 	ClusterSpecBaseFieldEnableNetworkPolicy                                  = "enableNetworkPolicy"
 	ClusterSpecBaseFieldFleetAgentDeploymentCustomization                    = "fleetAgentDeploymentCustomization"
 	ClusterSpecBaseFieldLocalClusterAuthEndpoint                             = "localClusterAuthEndpoint"
-	ClusterSpecBaseFieldRancherKubernetesEngineConfig                        = "rancherKubernetesEngineConfig"
+	ClusterSpecBaseFieldRangerKubernetesEngineConfig                        = "rangerKubernetesEngineConfig"
 	ClusterSpecBaseFieldWindowsPreferedCluster                               = "windowsPreferedCluster"
 )
 
@@ -37,6 +37,6 @@ type ClusterSpecBase struct {
 	EnableNetworkPolicy                                  *bool                          `json:"enableNetworkPolicy,omitempty" yaml:"enableNetworkPolicy,omitempty"`
 	FleetAgentDeploymentCustomization                    *AgentDeploymentCustomization  `json:"fleetAgentDeploymentCustomization,omitempty" yaml:"fleetAgentDeploymentCustomization,omitempty"`
 	LocalClusterAuthEndpoint                             *LocalClusterAuthEndpoint      `json:"localClusterAuthEndpoint,omitempty" yaml:"localClusterAuthEndpoint,omitempty"`
-	RancherKubernetesEngineConfig                        *RancherKubernetesEngineConfig `json:"rancherKubernetesEngineConfig,omitempty" yaml:"rancherKubernetesEngineConfig,omitempty"`
+	RangerKubernetesEngineConfig                        *RangerKubernetesEngineConfig `json:"rangerKubernetesEngineConfig,omitempty" yaml:"rangerKubernetesEngineConfig,omitempty"`
 	WindowsPreferedCluster                               bool                           `json:"windowsPreferedCluster,omitempty" yaml:"windowsPreferedCluster,omitempty"`
 }

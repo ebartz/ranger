@@ -2,11 +2,11 @@ package saml
 
 import (
 	"context"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/rancher/pkg/auth/providers/ldap"
-	"github.com/rancher/rancher/pkg/auth/tokens"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/ranger/pkg/auth/providers/ldap"
+	"github.com/ranger/ranger/pkg/auth/tokens"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

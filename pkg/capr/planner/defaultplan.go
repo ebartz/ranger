@@ -3,9 +3,9 @@ package planner
 import (
 	"encoding/base64"
 
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1/plan"
-	"github.com/rancher/rancher/pkg/capr"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1/plan"
+	"github.com/ranger/ranger/pkg/capr"
 )
 
 // commonNodePlan returns a "default" node plan with the corresponding registry configuration.
@@ -21,11 +21,11 @@ func (p *Planner) commonNodePlan(controlPlane *rkev1.RKEControlPlane, np plan.No
 		return plan.NodePlan{}, registries{}, err
 	}
 
-	// Render the registries.yaml file for the rancher-system-agent. The registries.yaml file for the respective distribution should be rendered elsewhere
+	// Render the registries.yaml file for the ranger-system-agent. The registries.yaml file for the respective distribution should be rendered elsewhere
 	// (at config file rendering)
 	np.Files = append(np.Files, plan.File{
 		Content: base64.StdEncoding.EncodeToString(reg.registriesFileRaw),
-		Path:    "/etc/rancher/agent/registries.yaml",
+		Path:    "/etc/ranger/agent/registries.yaml",
 		Dynamic: true,
 	})
 	// Add the corresponding certificate files (if they exist)

@@ -2,7 +2,7 @@ import pytest
 
 from .common import random_str
 from .conftest import wait_for
-from rancher import ApiError
+from ranger import ApiError
 
 
 def test_cannot_target_users_and_group(admin_mc, remove_resource):

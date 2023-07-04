@@ -3,8 +3,8 @@ package namespaces
 import (
 	"context"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -15,7 +15,7 @@ type NamespaceList struct {
 }
 
 // ListNamespaces is a helper function that uses the dynamic client to list namespaces in a cluster with its list options.
-func ListNamespaces(client *rancher.Client, clusterID string, listOpts metav1.ListOptions) (*NamespaceList, error) {
+func ListNamespaces(client *ranger.Client, clusterID string, listOpts metav1.ListOptions) (*NamespaceList, error) {
 	namespaceList := new(NamespaceList)
 
 	dynamicClient, err := client.GetDownStreamClusterClient(clusterID)

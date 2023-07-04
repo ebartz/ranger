@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/settings"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/settings"
 	corev1 "k8s.io/api/core/v1"
 )
 

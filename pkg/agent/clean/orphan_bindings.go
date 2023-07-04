@@ -14,17 +14,17 @@ import (
 	"strings"
 
 	"github.com/hashicorp/go-multierror"
-	"github.com/rancher/rancher/pkg/controllers/management/auth"
-	mgmt "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io"
-	v3 "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3"
-	rbacv1 "github.com/rancher/rancher/pkg/generated/norman/rbac.authorization.k8s.io/v1"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/wrangler/pkg/generated/controllers/core"
-	corev1 "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
-	"github.com/rancher/wrangler/pkg/generated/controllers/rbac"
-	v1 "github.com/rancher/wrangler/pkg/generated/controllers/rbac/v1"
-	"github.com/rancher/wrangler/pkg/ratelimit"
-	"github.com/rancher/wrangler/pkg/start"
+	"github.com/ranger/ranger/pkg/controllers/management/auth"
+	mgmt "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io"
+	v3 "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3"
+	rbacv1 "github.com/ranger/ranger/pkg/generated/norman/rbac.authorization.k8s.io/v1"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/wrangler/pkg/generated/controllers/core"
+	corev1 "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
+	"github.com/ranger/wrangler/pkg/generated/controllers/rbac"
+	v1 "github.com/ranger/wrangler/pkg/generated/controllers/rbac/v1"
+	"github.com/ranger/wrangler/pkg/ratelimit"
+	"github.com/ranger/wrangler/pkg/start"
 	"github.com/sirupsen/logrus"
 	k8srbacv1 "k8s.io/api/rbac/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
@@ -90,7 +90,7 @@ func newOrphanBindingsCleanup(clientConfig *restclient.Config) (*orphanBindingsC
 		return nil, err
 	}
 
-	rancherManagement, err := mgmt.NewFactoryFromConfig(config)
+	rangerManagement, err := mgmt.NewFactoryFromConfig(config)
 	if err != nil {
 		return nil, err
 	}
@@ -101,13 +101,13 @@ func newOrphanBindingsCleanup(clientConfig *restclient.Config) (*orphanBindingsC
 	}
 
 	ctx := context.Background()
-	starters := []start.Starter{rancherManagement, k8srbac, k8score}
+	starters := []start.Starter{rangerManagement, k8srbac, k8score}
 	if err := start.All(ctx, 5, starters...); err != nil {
 		return nil, err
 	}
 	bc := orphanBindingsCleanup{
 		namespaces:   k8score.Core().V1().Namespace(),
-		prtbs:        rancherManagement.Management().V3().ProjectRoleTemplateBinding(),
+		prtbs:        rangerManagement.Management().V3().ProjectRoleTemplateBinding(),
 		prtbUIDs:     make(map[string]struct{}),
 		roleBindings: k8srbac.Rbac().V1().RoleBinding(),
 		roles:        k8srbac.Rbac().V1().Role(),

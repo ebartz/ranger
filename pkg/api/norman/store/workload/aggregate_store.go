@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	client "github.com/rancher/rancher/pkg/client/generated/project/v3"
-	projectclient "github.com/rancher/rancher/pkg/client/generated/project/v3"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	client "github.com/ranger/ranger/pkg/client/generated/project/v3"
+	projectclient "github.com/ranger/ranger/pkg/client/generated/project/v3"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
 	corev1 "k8s.io/api/core/v1"
@@ -211,8 +211,8 @@ func getKey(key string) string {
 }
 
 // Related issue: #12619
-// In Rancher API schema, Capabilities is defined as enum type and `ALL` is one of the options, which means Rancher API only accepts `ALL`.
-// However, Kubernetes accepts both `all` and `ALL“ for capabilities, if user uses kubectl and use `all“ in the yaml, edit will fail in Rancher UI.
+// In Ranger API schema, Capabilities is defined as enum type and `ALL` is one of the options, which means Ranger API only accepts `ALL`.
+// However, Kubernetes accepts both `all` and `ALL“ for capabilities, if user uses kubectl and use `all“ in the yaml, edit will fail in Ranger UI.
 // Thus we should convert `all“ to `ALL` so that UI always get `ALL`.
 func capabilitiesToUpperCase(data map[string]interface{}) map[string]interface{} {
 	containers := convert.ToMapSlice(data["containers"])

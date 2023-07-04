@@ -6,11 +6,11 @@ import (
 
 	"k8s.io/apimachinery/pkg/runtime"
 
-	"github.com/rancher/norman/types/convert"
-	util "github.com/rancher/rancher/pkg/controllers/managementagent/workload"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	"github.com/rancher/rancher/pkg/ingresswrapper"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/norman/types/convert"
+	util "github.com/ranger/ranger/pkg/controllers/managementagent/workload"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	"github.com/ranger/ranger/pkg/ingresswrapper"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -19,7 +19,7 @@ import (
 
 // This controller is responsible for monitoring ingress and
 // creating services for them if the service is missing
-// Creation would only happen if the service reference was put by Rancher API based on
+// Creation would only happen if the service reference was put by Ranger API based on
 // ingress.backend.workloadId. This information is stored in state field in the annotation
 
 type Controller struct {
@@ -175,7 +175,7 @@ func updateOrDelete(obj *ingresswrapper.CompatIngress, service *corev1.Service, 
 		if service.Annotations == nil {
 			service.Annotations = map[string]string{}
 		}
-		// handling issue https://github.com/rancher/rancher/issues/13717.
+		// handling issue https://github.com/ranger/ranger/issues/13717.
 		// if node port is using by non-GKE for ingress service, we should replace them.
 		if service.Spec.Type == corev1.ServiceTypeNodePort && !isNeedNodePort && serviceIsOwnedByIngress {
 			shouldDelete = true

@@ -7,11 +7,11 @@ import (
 	"strconv"
 	"strings"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 
-	"github.com/rancher/machine/libmachine/drivers/plugin/localbinary"
-	rpcdriver "github.com/rancher/machine/libmachine/drivers/rpc"
-	cli "github.com/rancher/machine/libmachine/mcnflag"
+	"github.com/ranger/machine/libmachine/drivers/plugin/localbinary"
+	rpcdriver "github.com/ranger/machine/libmachine/drivers/rpc"
+	cli "github.com/ranger/machine/libmachine/mcnflag"
 	"github.com/sirupsen/logrus"
 )
 
@@ -32,9 +32,9 @@ func FlagToField(flag cli.Flag) (string, v32.Field, error) {
 		field.Description = v.Usage
 		field.Default.StringValue = v.Value
 	case *cli.IntFlag:
-		// This will make the int flag appear as a string field in the rancher API, but we are doing this to maintain
+		// This will make the int flag appear as a string field in the ranger API, but we are doing this to maintain
 		// backward compatibility, at least until we fix a bug that prevents nodeDriver schemas from updating upon
-		// a Rancher upgrade
+		// a Ranger upgrade
 		field.Description = v.Usage
 		field.Default.StringValue = strconv.Itoa(v.Value)
 	case *cli.BoolFlag:

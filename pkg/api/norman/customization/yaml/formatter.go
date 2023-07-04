@@ -1,7 +1,7 @@
 package yaml
 
 import (
-	"github.com/rancher/norman/types"
+	"github.com/ranger/norman/types"
 )
 
 func NewFormatter(next types.Formatter) types.Formatter {

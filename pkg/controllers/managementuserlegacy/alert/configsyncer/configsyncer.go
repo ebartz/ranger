@@ -9,24 +9,24 @@ import (
 	"strconv"
 	"time"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/controllers/management/secretmigrator/assemblers"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/controllers/management/secretmigrator/assemblers"
 
 	"github.com/pkg/errors"
 	"github.com/prometheus/common/model"
-	"github.com/rancher/norman/controller"
-	"github.com/rancher/rancher/pkg/controllers/managementuserlegacy/alert/common"
-	alertconfig "github.com/rancher/rancher/pkg/controllers/managementuserlegacy/alert/config"
-	"github.com/rancher/rancher/pkg/controllers/managementuserlegacy/alert/deployer"
-	"github.com/rancher/rancher/pkg/controllers/managementuserlegacy/alert/manager"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	projectv3 "github.com/rancher/rancher/pkg/generated/norman/project.cattle.io/v3"
-	monitorutil "github.com/rancher/rancher/pkg/monitoring"
-	notifierutil "github.com/rancher/rancher/pkg/notifiers"
-	"github.com/rancher/rancher/pkg/project"
-	"github.com/rancher/rancher/pkg/ref"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/norman/controller"
+	"github.com/ranger/ranger/pkg/controllers/managementuserlegacy/alert/common"
+	alertconfig "github.com/ranger/ranger/pkg/controllers/managementuserlegacy/alert/config"
+	"github.com/ranger/ranger/pkg/controllers/managementuserlegacy/alert/deployer"
+	"github.com/ranger/ranger/pkg/controllers/managementuserlegacy/alert/manager"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	projectv3 "github.com/ranger/ranger/pkg/generated/norman/project.cattle.io/v3"
+	monitorutil "github.com/ranger/ranger/pkg/monitoring"
+	notifierutil "github.com/ranger/ranger/pkg/notifiers"
+	"github.com/ranger/ranger/pkg/project"
+	"github.com/ranger/ranger/pkg/ref"
+	"github.com/ranger/ranger/pkg/types/config"
 
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
@@ -496,7 +496,7 @@ func (d *ConfigSyncer) addRecipients(notifiers []*v3.Notifier, receiver *alertco
 				pagerduty := &alertconfig.PagerdutyConfig{
 					NotifierConfig: commonNotifierConfig,
 					ServiceKey:     alertconfig.Secret(notifier.Spec.PagerdutyConfig.ServiceKey),
-					Description:    `{{ template "rancher.title" . }}`,
+					Description:    `{{ template "ranger.title" . }}`,
 				}
 
 				if notifierutil.IsHTTPClientConfigSet(notifier.Spec.PagerdutyConfig.HTTPClientConfig) {
@@ -605,7 +605,7 @@ func (d *ConfigSyncer) addRecipients(notifiers []*v3.Notifier, receiver *alertco
 					APIURL:         alertconfig.Secret(notifier.Spec.SlackConfig.URL),
 					Channel:        notifier.Spec.SlackConfig.DefaultRecipient,
 					Text:           `{{ template "slack.text" . }}`,
-					Title:          `{{ template "rancher.title" . }}`,
+					Title:          `{{ template "ranger.title" . }}`,
 					TitleLink:      "",
 					Color:          `{{ if eq (index .Alerts 0).Labels.severity "critical" }}danger{{ else if eq (index .Alerts 0).Labels.severity "warning" }}warning{{ else }}good{{ end }}`,
 				}
@@ -628,7 +628,7 @@ func (d *ConfigSyncer) addRecipients(notifiers []*v3.Notifier, receiver *alertco
 
 			} else if notifier.Spec.SMTPConfig != nil {
 				header := map[string]string{}
-				header["Subject"] = `{{ template "rancher.title" . }}`
+				header["Subject"] = `{{ template "ranger.title" . }}`
 				notifierSpec, err := assemblers.AssembleSMTPCredential(notifier, d.secretLister)
 				if err != nil {
 					logrus.Errorf("error getting SMTP credential: %v", err)

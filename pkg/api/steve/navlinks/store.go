@@ -3,8 +3,8 @@ package navlinks
 import (
 	"fmt"
 
-	"github.com/rancher/apiserver/pkg/types"
-	"github.com/rancher/wrangler/pkg/schemas/validation"
+	"github.com/ranger/apiserver/pkg/types"
+	"github.com/ranger/wrangler/pkg/schemas/validation"
 )
 
 type store struct {

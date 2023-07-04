@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"strings"
 
-	apimgmtv3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	"github.com/rancher/rancher/pkg/namespace"
+	apimgmtv3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	"github.com/ranger/ranger/pkg/namespace"
 
-	rketypes "github.com/rancher/rke/types"
+	rketypes "github.com/ranger/rke/types"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	configv1 "k8s.io/apiserver/pkg/apis/config/v1"
@@ -27,11 +27,11 @@ type Assembler func(secretRef, objType, objName string, spec apimgmtv3.ClusterSp
 // AssemblePrivateRegistryCredential looks up the registry Secret and inserts the keys into the PrivateRegistries list on the Cluster spec.
 // It returns a new copy of the spec without modifying the original. The Cluster is never updated.
 func AssemblePrivateRegistryCredential(secretRef, objType, objName string, spec apimgmtv3.ClusterSpec, secretLister v1.SecretLister) (apimgmtv3.ClusterSpec, error) {
-	if spec.RancherKubernetesEngineConfig == nil || len(spec.RancherKubernetesEngineConfig.PrivateRegistries) == 0 {
+	if spec.RangerKubernetesEngineConfig == nil || len(spec.RangerKubernetesEngineConfig.PrivateRegistries) == 0 {
 		return spec, nil
 	}
 	if secretRef == "" {
-		if spec.RancherKubernetesEngineConfig.PrivateRegistries[0].Password != "" {
+		if spec.RangerKubernetesEngineConfig.PrivateRegistries[0].Password != "" {
 			logrus.Warnf("[secretmigrator] secrets for %s %s are not finished migrating", objType, objName)
 		}
 		return spec, nil
@@ -47,10 +47,10 @@ func AssemblePrivateRegistryCredential(secretRef, objType, objName string, spec 
 		return spec, err
 	}
 	specCopy := spec.DeepCopy()
-	for i, privateRegistry := range specCopy.RancherKubernetesEngineConfig.PrivateRegistries {
+	for i, privateRegistry := range specCopy.RangerKubernetesEngineConfig.PrivateRegistries {
 		if reg, ok := dockerCfg.Auths[privateRegistry.URL]; ok {
-			specCopy.RancherKubernetesEngineConfig.PrivateRegistries[i].User = reg.Username
-			specCopy.RancherKubernetesEngineConfig.PrivateRegistries[i].Password = reg.Password
+			specCopy.RangerKubernetesEngineConfig.PrivateRegistries[i].User = reg.Username
+			specCopy.RangerKubernetesEngineConfig.PrivateRegistries[i].Password = reg.Password
 		}
 	}
 	return *specCopy, nil
@@ -59,11 +59,11 @@ func AssemblePrivateRegistryCredential(secretRef, objType, objName string, spec 
 // AssembleS3Credential looks up the S3 backup config Secret and inserts the keys into the S3BackupConfig on the Cluster spec.
 // It returns a new copy of the spec without modifying the original. The Cluster is never updated.
 func AssembleS3Credential(secretRef, objType, objName string, spec apimgmtv3.ClusterSpec, secretLister v1.SecretLister) (apimgmtv3.ClusterSpec, error) {
-	if spec.RancherKubernetesEngineConfig == nil || spec.RancherKubernetesEngineConfig.Services.Etcd.BackupConfig == nil || spec.RancherKubernetesEngineConfig.Services.Etcd.BackupConfig.S3BackupConfig == nil {
+	if spec.RangerKubernetesEngineConfig == nil || spec.RangerKubernetesEngineConfig.Services.Etcd.BackupConfig == nil || spec.RangerKubernetesEngineConfig.Services.Etcd.BackupConfig.S3BackupConfig == nil {
 		return spec, nil
 	}
 	if secretRef == "" {
-		if spec.RancherKubernetesEngineConfig.Services.Etcd.BackupConfig.S3BackupConfig.SecretKey != "" {
+		if spec.RangerKubernetesEngineConfig.Services.Etcd.BackupConfig.S3BackupConfig.SecretKey != "" {
 			logrus.Warnf("[secretmigrator] secrets for %s %s are not finished migrating", objType, objName)
 		}
 		return spec, nil
@@ -73,18 +73,18 @@ func AssembleS3Credential(secretRef, objType, objName string, spec apimgmtv3.Clu
 		return spec, err
 	}
 	specCopy := spec.DeepCopy()
-	specCopy.RancherKubernetesEngineConfig.Services.Etcd.BackupConfig.S3BackupConfig.SecretKey = string(s3Cred.Data[SecretKey])
+	specCopy.RangerKubernetesEngineConfig.Services.Etcd.BackupConfig.S3BackupConfig.SecretKey = string(s3Cred.Data[SecretKey])
 	return *specCopy, nil
 }
 
 // AssembleWeaveCredential looks up the weave Secret and inserts the keys into the network provider config on the Cluster spec.
 // It returns a new copy of the spec without modifying the original. The Cluster is never updated.
 func AssembleWeaveCredential(secretRef, objType, objName string, spec apimgmtv3.ClusterSpec, secretLister v1.SecretLister) (apimgmtv3.ClusterSpec, error) {
-	if spec.RancherKubernetesEngineConfig == nil || spec.RancherKubernetesEngineConfig.Network.WeaveNetworkProvider == nil {
+	if spec.RangerKubernetesEngineConfig == nil || spec.RangerKubernetesEngineConfig.Network.WeaveNetworkProvider == nil {
 		return spec, nil
 	}
 	if secretRef == "" {
-		if spec.RancherKubernetesEngineConfig.Network.WeaveNetworkProvider.Password != "" {
+		if spec.RangerKubernetesEngineConfig.Network.WeaveNetworkProvider.Password != "" {
 			logrus.Warnf("[secretmigrator] secrets for %s %s are not finished migrating", objType, objName)
 		}
 		return spec, nil
@@ -94,18 +94,18 @@ func AssembleWeaveCredential(secretRef, objType, objName string, spec apimgmtv3.
 		return spec, err
 	}
 	specCopy := spec.DeepCopy()
-	specCopy.RancherKubernetesEngineConfig.Network.WeaveNetworkProvider.Password = string(weaveSecret.Data[SecretKey])
+	specCopy.RangerKubernetesEngineConfig.Network.WeaveNetworkProvider.Password = string(weaveSecret.Data[SecretKey])
 	return *specCopy, nil
 }
 
 // AssembleVsphereGlobalCredential looks up the vsphere global Secret and inserts the keys into the cloud provider config on the Cluster spec.
 // It returns a new copy of the spec without modifying the original. The Cluster is never updated.
 func AssembleVsphereGlobalCredential(secretRef, objType, objName string, spec apimgmtv3.ClusterSpec, secretLister v1.SecretLister) (apimgmtv3.ClusterSpec, error) {
-	if spec.RancherKubernetesEngineConfig == nil || spec.RancherKubernetesEngineConfig.CloudProvider.VsphereCloudProvider == nil {
+	if spec.RangerKubernetesEngineConfig == nil || spec.RangerKubernetesEngineConfig.CloudProvider.VsphereCloudProvider == nil {
 		return spec, nil
 	}
 	if secretRef == "" {
-		if spec.RancherKubernetesEngineConfig.CloudProvider.VsphereCloudProvider.Global.Password != "" {
+		if spec.RangerKubernetesEngineConfig.CloudProvider.VsphereCloudProvider.Global.Password != "" {
 			logrus.Warnf("[secretmigrator] secrets for %s %s are not finished migrating", objType, objName)
 		}
 		return spec, nil
@@ -115,18 +115,18 @@ func AssembleVsphereGlobalCredential(secretRef, objType, objName string, spec ap
 		return spec, err
 	}
 	specCopy := spec.DeepCopy()
-	specCopy.RancherKubernetesEngineConfig.CloudProvider.VsphereCloudProvider.Global.Password = string(vsphereSecret.Data[SecretKey])
+	specCopy.RangerKubernetesEngineConfig.CloudProvider.VsphereCloudProvider.Global.Password = string(vsphereSecret.Data[SecretKey])
 	return *specCopy, nil
 }
 
 // AssembleVsphereVirtualCenterCredential looks up the vsphere virtualcenter Secret and inserts the keys into the cloud provider config on the Cluster spec.
 // It returns a new copy of the spec without modifying the original. The Cluster is never updated.
 func AssembleVsphereVirtualCenterCredential(secretRef, objType, objName string, spec apimgmtv3.ClusterSpec, secretLister v1.SecretLister) (apimgmtv3.ClusterSpec, error) {
-	if spec.RancherKubernetesEngineConfig == nil || spec.RancherKubernetesEngineConfig.CloudProvider.VsphereCloudProvider == nil {
+	if spec.RangerKubernetesEngineConfig == nil || spec.RangerKubernetesEngineConfig.CloudProvider.VsphereCloudProvider == nil {
 		return spec, nil
 	}
 	if secretRef == "" {
-		for _, v := range spec.RancherKubernetesEngineConfig.CloudProvider.VsphereCloudProvider.VirtualCenter {
+		for _, v := range spec.RangerKubernetesEngineConfig.CloudProvider.VsphereCloudProvider.VirtualCenter {
 			if v.Password != "" {
 				logrus.Warnf("[secretmigrator] secrets for %s %s are not finished migrating", objType, objName)
 				break
@@ -141,9 +141,9 @@ func AssembleVsphereVirtualCenterCredential(secretRef, objType, objName string, 
 	}
 	specCopy := spec.DeepCopy()
 	for k, v := range vcenterSecret.Data {
-		vCenter := specCopy.RancherKubernetesEngineConfig.CloudProvider.VsphereCloudProvider.VirtualCenter[k]
+		vCenter := specCopy.RangerKubernetesEngineConfig.CloudProvider.VsphereCloudProvider.VirtualCenter[k]
 		vCenter.Password = string(v)
-		specCopy.RancherKubernetesEngineConfig.CloudProvider.VsphereCloudProvider.VirtualCenter[k] = vCenter
+		specCopy.RangerKubernetesEngineConfig.CloudProvider.VsphereCloudProvider.VirtualCenter[k] = vCenter
 	}
 	return *specCopy, nil
 }
@@ -151,11 +151,11 @@ func AssembleVsphereVirtualCenterCredential(secretRef, objType, objName string, 
 // AssembleOpenStackCredential looks up the OpenStack Secret and inserts the keys into the cloud provider config on the Cluster spec.
 // It returns a new copy of the spec without modifying the original. The Cluster is never updated.
 func AssembleOpenStackCredential(secretRef, objType, objName string, spec apimgmtv3.ClusterSpec, secretLister v1.SecretLister) (apimgmtv3.ClusterSpec, error) {
-	if spec.RancherKubernetesEngineConfig == nil || spec.RancherKubernetesEngineConfig.CloudProvider.OpenstackCloudProvider == nil {
+	if spec.RangerKubernetesEngineConfig == nil || spec.RangerKubernetesEngineConfig.CloudProvider.OpenstackCloudProvider == nil {
 		return spec, nil
 	}
 	if secretRef == "" {
-		if spec.RancherKubernetesEngineConfig.CloudProvider.OpenstackCloudProvider.Global.Password != "" {
+		if spec.RangerKubernetesEngineConfig.CloudProvider.OpenstackCloudProvider.Global.Password != "" {
 			logrus.Warnf("[secretmigrator] secrets for %s %s are not finished migrating", objType, objName)
 		}
 		return spec, nil
@@ -166,18 +166,18 @@ func AssembleOpenStackCredential(secretRef, objType, objName string, spec apimgm
 		return spec, err
 	}
 	specCopy := spec.DeepCopy()
-	specCopy.RancherKubernetesEngineConfig.CloudProvider.OpenstackCloudProvider.Global.Password = string(openStackSecret.Data[SecretKey])
+	specCopy.RangerKubernetesEngineConfig.CloudProvider.OpenstackCloudProvider.Global.Password = string(openStackSecret.Data[SecretKey])
 	return *specCopy, nil
 }
 
 // AssembleAADClientSecretCredential looks up the AAD client secret Secret and inserts the keys into the cloud provider config on the Cluster spec.
 // It returns a new copy of the spec without modifying the original. The Cluster is never updated.
 func AssembleAADClientSecretCredential(secretRef, objType, objName string, spec apimgmtv3.ClusterSpec, secretLister v1.SecretLister) (apimgmtv3.ClusterSpec, error) {
-	if spec.RancherKubernetesEngineConfig == nil || spec.RancherKubernetesEngineConfig.CloudProvider.AzureCloudProvider == nil {
+	if spec.RangerKubernetesEngineConfig == nil || spec.RangerKubernetesEngineConfig.CloudProvider.AzureCloudProvider == nil {
 		return spec, nil
 	}
 	if secretRef == "" {
-		if spec.RancherKubernetesEngineConfig.CloudProvider.AzureCloudProvider.AADClientSecret != "" {
+		if spec.RangerKubernetesEngineConfig.CloudProvider.AzureCloudProvider.AADClientSecret != "" {
 			logrus.Warnf("[secretmigrator] secrets for %s %s are not finished migrating", objType, objName)
 		}
 		return spec, nil
@@ -188,18 +188,18 @@ func AssembleAADClientSecretCredential(secretRef, objType, objName string, spec 
 		return spec, err
 	}
 	specCopy := spec.DeepCopy()
-	specCopy.RancherKubernetesEngineConfig.CloudProvider.AzureCloudProvider.AADClientSecret = string(aadClientSecret.Data[SecretKey])
+	specCopy.RangerKubernetesEngineConfig.CloudProvider.AzureCloudProvider.AADClientSecret = string(aadClientSecret.Data[SecretKey])
 	return *specCopy, nil
 }
 
 // AssembleAADCertCredential looks up the AAD client cert password Secret and inserts the keys into the cloud provider config on the Cluster spec.
 // It returns a new copy of the spec without modifying the original. The Cluster is never updated.
 func AssembleAADCertCredential(secretRef, objType, objName string, spec apimgmtv3.ClusterSpec, secretLister v1.SecretLister) (apimgmtv3.ClusterSpec, error) {
-	if spec.RancherKubernetesEngineConfig == nil || spec.RancherKubernetesEngineConfig.CloudProvider.AzureCloudProvider == nil {
+	if spec.RangerKubernetesEngineConfig == nil || spec.RangerKubernetesEngineConfig.CloudProvider.AzureCloudProvider == nil {
 		return spec, nil
 	}
 	if secretRef == "" {
-		if spec.RancherKubernetesEngineConfig.CloudProvider.AzureCloudProvider.AADClientCertPassword != "" {
+		if spec.RangerKubernetesEngineConfig.CloudProvider.AzureCloudProvider.AADClientCertPassword != "" {
 			logrus.Warnf("[secretmigrator] secrets for %s %s are not finished migrating", objType, objName)
 		}
 		return spec, nil
@@ -209,18 +209,18 @@ func AssembleAADCertCredential(secretRef, objType, objName string, spec apimgmtv
 		return spec, err
 	}
 	specCopy := spec.DeepCopy()
-	specCopy.RancherKubernetesEngineConfig.CloudProvider.AzureCloudProvider.AADClientCertPassword = string(aadCertSecret.Data[SecretKey])
+	specCopy.RangerKubernetesEngineConfig.CloudProvider.AzureCloudProvider.AADClientCertPassword = string(aadCertSecret.Data[SecretKey])
 	return *specCopy, nil
 }
 
 // AssembleACIAPICUserKeyCredential looks up the aci apic user key Secret and inserts the keys into the AciNetworkProvider on the Cluster spec.
 // It returns a new copy of the spec without modifying the original. The Cluster is never updated.
 func AssembleACIAPICUserKeyCredential(secretRef, objType, objName string, spec apimgmtv3.ClusterSpec, secretLister v1.SecretLister) (apimgmtv3.ClusterSpec, error) {
-	if spec.RancherKubernetesEngineConfig == nil || spec.RancherKubernetesEngineConfig.Network.AciNetworkProvider == nil {
+	if spec.RangerKubernetesEngineConfig == nil || spec.RangerKubernetesEngineConfig.Network.AciNetworkProvider == nil {
 		return spec, nil
 	}
 	if secretRef == "" {
-		if spec.RancherKubernetesEngineConfig.Network.AciNetworkProvider.ApicUserKey != "" {
+		if spec.RangerKubernetesEngineConfig.Network.AciNetworkProvider.ApicUserKey != "" {
 			logrus.Warnf("[secretmigrator] secrets for %s %s are not finished migrating", objType, objName)
 		}
 		return spec, nil
@@ -231,18 +231,18 @@ func AssembleACIAPICUserKeyCredential(secretRef, objType, objName string, spec a
 		return spec, err
 	}
 	specCopy := spec.DeepCopy()
-	specCopy.RancherKubernetesEngineConfig.Network.AciNetworkProvider.ApicUserKey = string(aciUserKeySecret.Data[SecretKey])
+	specCopy.RangerKubernetesEngineConfig.Network.AciNetworkProvider.ApicUserKey = string(aciUserKeySecret.Data[SecretKey])
 	return *specCopy, nil
 }
 
 // AssembleACITokenCredential looks up the aci token Secret and inserts the keys into the AciNetworkProvider on the Cluster spec.
 // It returns a new copy of the spec without modifying the original. The Cluster is never updated.
 func AssembleACITokenCredential(secretRef, objType, objName string, spec apimgmtv3.ClusterSpec, secretLister v1.SecretLister) (apimgmtv3.ClusterSpec, error) {
-	if spec.RancherKubernetesEngineConfig == nil || spec.RancherKubernetesEngineConfig.Network.AciNetworkProvider == nil {
+	if spec.RangerKubernetesEngineConfig == nil || spec.RangerKubernetesEngineConfig.Network.AciNetworkProvider == nil {
 		return spec, nil
 	}
 	if secretRef == "" {
-		if spec.RancherKubernetesEngineConfig.Network.AciNetworkProvider.Token != "" {
+		if spec.RangerKubernetesEngineConfig.Network.AciNetworkProvider.Token != "" {
 			logrus.Warnf("[secretmigrator] secrets for %s %s are not finished migrating", objType, objName)
 		}
 		return spec, nil
@@ -253,18 +253,18 @@ func AssembleACITokenCredential(secretRef, objType, objName string, spec apimgmt
 		return spec, err
 	}
 	specCopy := spec.DeepCopy()
-	specCopy.RancherKubernetesEngineConfig.Network.AciNetworkProvider.Token = string(aciTokenSecret.Data[SecretKey])
+	specCopy.RangerKubernetesEngineConfig.Network.AciNetworkProvider.Token = string(aciTokenSecret.Data[SecretKey])
 	return *specCopy, nil
 }
 
 // AssembleACIKafkaClientKeyCredential looks up the aci kafka client key Secret and inserts the keys into the AciNetworkProvider on the Cluster spec.
 // It returns a new copy of the spec without modifying the original. The Cluster is never updated.
 func AssembleACIKafkaClientKeyCredential(secretRef, objType, objName string, spec apimgmtv3.ClusterSpec, secretLister v1.SecretLister) (apimgmtv3.ClusterSpec, error) {
-	if spec.RancherKubernetesEngineConfig == nil || spec.RancherKubernetesEngineConfig.Network.AciNetworkProvider == nil {
+	if spec.RangerKubernetesEngineConfig == nil || spec.RangerKubernetesEngineConfig.Network.AciNetworkProvider == nil {
 		return spec, nil
 	}
 	if secretRef == "" {
-		if spec.RancherKubernetesEngineConfig.Network.AciNetworkProvider.KafkaClientKey != "" {
+		if spec.RangerKubernetesEngineConfig.Network.AciNetworkProvider.KafkaClientKey != "" {
 			logrus.Warnf("[secretmigrator] secrets for %s %s are not finished migrating", objType, objName)
 		}
 		return spec, nil
@@ -275,7 +275,7 @@ func AssembleACIKafkaClientKeyCredential(secretRef, objType, objName string, spe
 		return spec, err
 	}
 	specCopy := spec.DeepCopy()
-	specCopy.RancherKubernetesEngineConfig.Network.AciNetworkProvider.KafkaClientKey = string(aciKafkaClientKeySecret.Data[SecretKey])
+	specCopy.RangerKubernetesEngineConfig.Network.AciNetworkProvider.KafkaClientKey = string(aciKafkaClientKeySecret.Data[SecretKey])
 	return *specCopy, nil
 }
 
@@ -283,13 +283,13 @@ func AssembleACIKafkaClientKeyCredential(secretRef, objType, objName string, spe
 // inserts it back into the cluster spec.
 // It returns a new copy of the spec without modifying the original. The Cluster is never updated.
 func AssembleSecretsEncryptionProvidersSecretCredential(secretRef, objType, objName string, spec apimgmtv3.ClusterSpec, secretLister v1.SecretLister) (apimgmtv3.ClusterSpec, error) {
-	if spec.RancherKubernetesEngineConfig == nil ||
-		spec.RancherKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig == nil ||
-		spec.RancherKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig.CustomConfig == nil {
+	if spec.RangerKubernetesEngineConfig == nil ||
+		spec.RangerKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig == nil ||
+		spec.RangerKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig.CustomConfig == nil {
 		return spec, nil
 	}
 	if secretRef == "" {
-		if spec.RancherKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig.CustomConfig.Resources != nil {
+		if spec.RangerKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig.CustomConfig.Resources != nil {
 			logrus.Warnf("[secretmigrator] secrets for %s %s are not finished migrating", objType, objName)
 		}
 		return spec, nil
@@ -303,18 +303,18 @@ func AssembleSecretsEncryptionProvidersSecretCredential(secretRef, objType, objN
 	if err != nil {
 		return spec, err
 	}
-	spec.RancherKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig.CustomConfig.Resources = resource
+	spec.RangerKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig.CustomConfig.Resources = resource
 	return spec, nil
 }
 
 // AssembleBastionHostSSHKeyCredential looks up bastion host ssh key and inserts it back into the cluster spec.
 // It returns a new copy of the spec without modifying the original. The Cluster is never updated.
 func AssembleBastionHostSSHKeyCredential(secretRef, objType, objName string, spec apimgmtv3.ClusterSpec, secretLister v1.SecretLister) (apimgmtv3.ClusterSpec, error) {
-	if spec.RancherKubernetesEngineConfig == nil {
+	if spec.RangerKubernetesEngineConfig == nil {
 		return spec, nil
 	}
 	if secretRef == "" {
-		if spec.RancherKubernetesEngineConfig.BastionHost.SSHKey != "" {
+		if spec.RangerKubernetesEngineConfig.BastionHost.SSHKey != "" {
 			logrus.Warnf("[secretmigrator] secrets for %s %s are not finished migrating", objType, objName)
 		}
 		return spec, nil
@@ -323,18 +323,18 @@ func AssembleBastionHostSSHKeyCredential(secretRef, objType, objName string, spe
 	if err != nil {
 		return spec, err
 	}
-	spec.RancherKubernetesEngineConfig.BastionHost.SSHKey = string(bastionHostSSHKeySecret.Data[SecretKey])
+	spec.RangerKubernetesEngineConfig.BastionHost.SSHKey = string(bastionHostSSHKeySecret.Data[SecretKey])
 	return spec, nil
 }
 
 // AssembleKubeletExtraEnvCredential looks up the AWS_SECRET_ACCESS_KEY extraEnv for the kubelet if it exists.
 // It returns a new copy of the spec without modifying the original. The Cluster is never updated.
 func AssembleKubeletExtraEnvCredential(secretRef, objType, objName string, spec apimgmtv3.ClusterSpec, secretLister v1.SecretLister) (apimgmtv3.ClusterSpec, error) {
-	if spec.RancherKubernetesEngineConfig == nil {
+	if spec.RangerKubernetesEngineConfig == nil {
 		return spec, nil
 	}
 	if secretRef == "" {
-		for _, e := range spec.RancherKubernetesEngineConfig.Services.Kubelet.ExtraEnv {
+		for _, e := range spec.RangerKubernetesEngineConfig.Services.Kubelet.ExtraEnv {
 			if strings.Contains(e, "AWS_SECRET_ACCESS_KEY") {
 				logrus.Warnf("[secretmigrator] secrets for %s %s are not finished migrating", objType, objName)
 				break
@@ -347,19 +347,19 @@ func AssembleKubeletExtraEnvCredential(secretRef, objType, objName string, spec 
 		return spec, err
 	}
 	env := "AWS_SECRET_ACCESS_KEY=" + string(kubeletExtraEnvSecret.Data[SecretKey])
-	spec.RancherKubernetesEngineConfig.Services.Kubelet.ExtraEnv = append(spec.RancherKubernetesEngineConfig.Services.Kubelet.ExtraEnv, env)
+	spec.RangerKubernetesEngineConfig.Services.Kubelet.ExtraEnv = append(spec.RangerKubernetesEngineConfig.Services.Kubelet.ExtraEnv, env)
 	return spec, nil
 }
 
 // AssemblePrivateRegistryECRCredential looks up Private Registry's ECR credential auth info, if it exists.
 // It returns a new copy of the spec without modifying the original. The Cluster is never updated.
 func AssemblePrivateRegistryECRCredential(secretRef, objType, objName string, spec apimgmtv3.ClusterSpec, secretLister v1.SecretLister) (apimgmtv3.ClusterSpec, error) {
-	if spec.RancherKubernetesEngineConfig == nil ||
-		len(spec.RancherKubernetesEngineConfig.PrivateRegistries) == 0 {
+	if spec.RangerKubernetesEngineConfig == nil ||
+		len(spec.RangerKubernetesEngineConfig.PrivateRegistries) == 0 {
 		return spec, nil
 	}
 	if secretRef == "" {
-		for _, r := range spec.RancherKubernetesEngineConfig.PrivateRegistries {
+		for _, r := range spec.RangerKubernetesEngineConfig.PrivateRegistries {
 			if ecr := r.ECRCredentialPlugin; ecr != nil && (ecr.AwsSecretAccessKey != "" || ecr.AwsSessionToken != "") {
 				logrus.Warnf("[secretmigrator] secrets for %s %s are not finished migrating", objType, objName)
 				break
@@ -382,15 +382,15 @@ func AssemblePrivateRegistryECRCredential(secretRef, objType, objName string, sp
 		return spec, err
 	}
 
-	for i, reg := range spec.RancherKubernetesEngineConfig.PrivateRegistries {
+	for i, reg := range spec.RangerKubernetesEngineConfig.PrivateRegistries {
 		if ecrData, ok := registries[reg.URL]; ok {
 			var ecr rketypes.ECRCredentialPlugin
 			err := json.Unmarshal([]byte(ecrData), &ecr)
 			if err != nil {
 				return spec, err
 			}
-			spec.RancherKubernetesEngineConfig.PrivateRegistries[i].ECRCredentialPlugin.AwsSecretAccessKey = ecr.AwsSecretAccessKey
-			spec.RancherKubernetesEngineConfig.PrivateRegistries[i].ECRCredentialPlugin.AwsSessionToken = ecr.AwsSessionToken
+			spec.RangerKubernetesEngineConfig.PrivateRegistries[i].ECRCredentialPlugin.AwsSecretAccessKey = ecr.AwsSecretAccessKey
+			spec.RangerKubernetesEngineConfig.PrivateRegistries[i].ECRCredentialPlugin.AwsSessionToken = ecr.AwsSessionToken
 		}
 	}
 

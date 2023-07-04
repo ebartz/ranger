@@ -18,7 +18,7 @@ from .common import delete_node
 import pytest
 import time
 
-# Skipping all the tests from this module because Multi-Cluster Apps have been deprecated as of Rancher v2.5.0
+# Skipping all the tests from this module because Multi-Cluster Apps have been deprecated as of Ranger v2.5.0
 pytest.skip(allow_module_level=True)
 
 project = {}
@@ -33,7 +33,7 @@ project_detail = {"c0_id": None, "c1_id": None, "c2_id": None,
 
 global_client = {"cluster_count": False}
 PROJECT_ROLE = ["project-member"]
-CATALOG_URL = "https://github.com/rancher/integration-test-charts.git"
+CATALOG_URL = "https://github.com/ranger/integration-test-charts.git"
 BRANCH = "validation-tests"
 CATALOG_NAME = random_test_name("test-catalog")
 WORDPRESS_TEMPLATE_VID_738 = \

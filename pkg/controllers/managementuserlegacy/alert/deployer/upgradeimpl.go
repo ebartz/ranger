@@ -6,20 +6,20 @@ import (
 	"strings"
 	"time"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v33 "github.com/rancher/rancher/pkg/apis/project.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v33 "github.com/ranger/ranger/pkg/apis/project.cattle.io/v3"
 
-	"github.com/rancher/norman/controller"
-	"github.com/rancher/rancher/pkg/catalog/manager"
-	alertutil "github.com/rancher/rancher/pkg/controllers/managementuserlegacy/alert/common"
-	"github.com/rancher/rancher/pkg/controllers/managementuserlegacy/helm/common"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	projectv3 "github.com/rancher/rancher/pkg/generated/norman/project.cattle.io/v3"
-	monitorutil "github.com/rancher/rancher/pkg/monitoring"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/ref"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/norman/controller"
+	"github.com/ranger/ranger/pkg/catalog/manager"
+	alertutil "github.com/ranger/ranger/pkg/controllers/managementuserlegacy/alert/common"
+	"github.com/ranger/ranger/pkg/controllers/managementuserlegacy/helm/common"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	projectv3 "github.com/ranger/ranger/pkg/generated/norman/project.cattle.io/v3"
+	monitorutil "github.com/ranger/ranger/pkg/monitoring"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/ref"
+	"github.com/ranger/ranger/pkg/types/config"
 
 	"github.com/pkg/errors"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -83,13 +83,13 @@ func (l *AlertService) Init(cluster *config.UserContext) {
 }
 
 func (l *AlertService) Version() (string, error) {
-	return fmt.Sprintf("%s-%s", monitorutil.RancherMonitoringTemplateName, initVersion), nil
+	return fmt.Sprintf("%s-%s", monitorutil.RangerMonitoringTemplateName, initVersion), nil
 }
 
 func (l *AlertService) Upgrade(currentVersion string) (string, error) {
-	template, err := l.templateLister.Get(namespace.GlobalNamespace, monitorutil.RancherMonitoringTemplateName)
+	template, err := l.templateLister.Get(namespace.GlobalNamespace, monitorutil.RangerMonitoringTemplateName)
 	if err != nil {
-		return "", fmt.Errorf("get template %s:%s failed, %v", namespace.GlobalNamespace, monitorutil.RancherMonitoringTemplateName, err)
+		return "", fmt.Errorf("get template %s:%s failed, %v", namespace.GlobalNamespace, monitorutil.RangerMonitoringTemplateName, err)
 	}
 
 	templateVersion, err := l.catalogManager.LatestAvailableTemplateVersion(template, l.clusterName)
@@ -107,7 +107,7 @@ func (l *AlertService) Upgrade(currentVersion string) (string, error) {
 
 	appName, _ := monitorutil.ClusterAlertManagerInfo()
 	//migrate legacy
-	if !strings.Contains(currentVersion, monitorutil.RancherMonitoringTemplateName) {
+	if !strings.Contains(currentVersion, monitorutil.RangerMonitoringTemplateName) {
 		if err := l.migrateLegacyClusterAlert(); err != nil {
 			return "", err
 		}

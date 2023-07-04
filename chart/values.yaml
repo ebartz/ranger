@@ -6,44 +6,44 @@ additionalTrustedCAs: false
 antiAffinity: preferred
 topologyKey: kubernetes.io/hostname
 
-# Audit Logs https://rancher.com/docs/rancher/v2.x/en/installation/api-auditing/
-# The audit log is piped to the console of the rancher-audit-log container in the rancher pod.
-# https://rancher.com/docs/rancher/v2.x/en/installation/api-auditing/
+# Audit Logs https://ranger.com/docs/ranger/v2.x/en/installation/api-auditing/
+# The audit log is piped to the console of the ranger-audit-log container in the ranger pod.
+# https://ranger.com/docs/ranger/v2.x/en/installation/api-auditing/
 # destination stream to sidecar container console or hostPath volume
 # level: Verbosity of logs, 0 to 3. 0 is off 3 is a lot.
 auditLog:
   destination: sidecar
-  hostPath: /var/log/rancher/audit/
+  hostPath: /var/log/ranger/audit/
   level: 0
   maxAge: 1
   maxBackup: 1
   maxSize: 100
 
-  # Image for collecting rancher audit logs.
-  # Important: update pkg/image/export/resolve.go when this default image is changed, so that it's reflected accordingly in rancher-images.txt generated for air-gapped setups.
+  # Image for collecting ranger audit logs.
+  # Important: update pkg/image/export/resolve.go when this default image is changed, so that it's reflected accordingly in ranger-images.txt generated for air-gapped setups.
   image:
-    repository: "rancher/mirrored-bci-micro"
+    repository: "ranger/mirrored-bci-micro"
     tag: 15.4.14.3
     # Override imagePullPolicy image
     # options: Always, Never, IfNotPresent
     pullPolicy: "IfNotPresent"
 
-# As of Rancher v2.5.0 this flag is deprecated and must be set to 'true' in order for Rancher to start
+# As of Ranger v2.5.0 this flag is deprecated and must be set to 'true' in order for Ranger to start
 addLocal: "true"
 
-# Add debug flag to Rancher server
+# Add debug flag to Ranger server
 debug: false
 
-# When starting Rancher for the first time, bootstrap the admin as restricted-admin
+# When starting Ranger for the first time, bootstrap the admin as restricted-admin
 restrictedAdmin: false
 
-# Extra environment variables passed to the rancher pods.
+# Extra environment variables passed to the ranger pods.
 # extraEnv:
 # - name: CATTLE_TLS_MIN_VERSION
 #   value: "1.0"
 
-# Fully qualified name to reach your Rancher server
-# hostname: rancher.my.org
+# Fully qualified name to reach your Ranger server
+# hostname: ranger.my.org
 
 ## Optional array of imagePullSecrets containing private registry credentials
 ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
@@ -68,9 +68,9 @@ ingress:
   #   more_set_input_headers "X-Forwarded-Host: {{ .Values.hostname }}";
 
   tls:
-    # options: rancher, letsEncrypt, secret
-    source: rancher
-    secretName: tls-rancher-ingress
+    # options: ranger, letsEncrypt, secret
+    source: ranger
+    secretName: tls-ranger-ingress
 
 ### service ###
 # Override to use NodePort or LoadBalancer service type - default is ClusterIP
@@ -88,34 +88,34 @@ letsEncrypt:
     # options: traefik, nginx
     class: ""
 # If you are using certs signed by a private CA set to 'true' and set the 'tls-ca'
-# in the 'rancher-system' namespace. See the README.md for details
+# in the 'ranger-system' namespace. See the README.md for details
 privateCA: false
 
-# http[s] proxy server passed into rancher server.
+# http[s] proxy server passed into ranger server.
 # proxy: http://<username>@<password>:<url>:<port>
 
 # comma separated list of domains or ip addresses that will not use the proxy
 noProxy: 127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.svc,.cluster.local
 
-# Override rancher image location for Air Gap installs
-rancherImage: rancher/rancher
-# rancher/rancher image tag. https://hub.docker.com/r/rancher/rancher/tags/
+# Override ranger image location for Air Gap installs
+rangerImage: ranger/ranger
+# ranger/ranger image tag. https://hub.docker.com/r/ranger/ranger/tags/
 # Defaults to .Chart.appVersion
-# rancherImageTag: v2.0.7
+# rangerImageTag: v2.0.7
 
-# Override imagePullPolicy for rancher server images
+# Override imagePullPolicy for ranger server images
 # options: Always, Never, IfNotPresent
 # Defaults to IfNotPresent
-# rancherImagePullPolicy: <pullPolicy>
+# rangerImagePullPolicy: <pullPolicy>
 
-# Number of Rancher server replicas. Setting to negative number will dynamically between 0 and the abs(replicas) based on available nodes.
+# Number of Ranger server replicas. Setting to negative number will dynamically between 0 and the abs(replicas) based on available nodes.
 # of available nodes in the cluster
 replicas: 3
 
 # Set priorityClassName to avoid eviction
-priorityClassName: rancher-critical
+priorityClassName: ranger-critical
 
-# Set pod resource requests/limits for Rancher.
+# Set pod resource requests/limits for Ranger.
 resources: {}
 
 #
@@ -134,7 +134,7 @@ useBundledSystemChart: false
 certmanager:
   version: ""
 
-# Rancher custom logos persistence
+# Ranger custom logos persistence
 customLogos:
   enabled: false
   volumeSubpaths:
@@ -150,7 +150,7 @@ customLogos:
   accessMode: ReadWriteOnce
   size: 1Gi
 
-# Rancher post-delete hook
+# Ranger post-delete hook
 postDelete:
   enabled: true
   image:
@@ -159,7 +159,7 @@ postDelete:
   namespaceList:
     - cattle-fleet-system
     - cattle-system
-    - rancher-operator-system
+    - ranger-operator-system
   # Number of seconds to wait for an app to be uninstalled
   timeout: 120
   # by default, the job will fail if it fail to uninstall any of the apps

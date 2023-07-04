@@ -1,5 +1,5 @@
 /*
-Copyright 2023 Rancher Labs, Inc.
+Copyright 2023 Ranger Labs, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,13 +22,13 @@ import (
 	"context"
 	"time"
 
-	v1alpha1 "github.com/rancher/fleet/pkg/apis/fleet.cattle.io/v1alpha1"
-	"github.com/rancher/lasso/pkg/client"
-	"github.com/rancher/lasso/pkg/controller"
-	"github.com/rancher/wrangler/pkg/apply"
-	"github.com/rancher/wrangler/pkg/condition"
-	"github.com/rancher/wrangler/pkg/generic"
-	"github.com/rancher/wrangler/pkg/kv"
+	v1alpha1 "github.com/ranger/fleet/pkg/apis/fleet.cattle.io/v1alpha1"
+	"github.com/ranger/lasso/pkg/client"
+	"github.com/ranger/lasso/pkg/controller"
+	"github.com/ranger/wrangler/pkg/apply"
+	"github.com/ranger/wrangler/pkg/condition"
+	"github.com/ranger/wrangler/pkg/generic"
+	"github.com/ranger/wrangler/pkg/kv"
 	"k8s.io/apimachinery/pkg/api/equality"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

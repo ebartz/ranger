@@ -8,16 +8,16 @@ if (job_name.contains('/')) {
 }
 
 def deleteContainer = "${job_name}${BUILD_NUMBER}_delete"
-def deletePytestOptions = "-k test_delete_rancher_server"
+def deletePytestOptions = "-k test_delete_ranger_server"
 def deleteResultsOut = "delete-results.xml"
 def testsDir = "tests/v3_api/"
-def imageName = "rancher-validation-${job_name}${env.BUILD_NUMBER}"
+def imageName = "ranger-validation-${job_name}${env.BUILD_NUMBER}"
 def envFile = ".env"
 def RANCHER_DEPLOYED = false
 
 // RANCHER_VERSION resolution is first via Jenkins Build Parameter RANCHER_VERSION fed in from console,
 // then from $DOCKER_TRIGGER_TAG which is sourced from the Docker Hub Jenkins plugin webhook.
-def rancher_version() {
+def ranger_version() {
   try { if ('' != RANCHER_VERSION) { return RANCHER_VERSION } }
   catch (MissingPropertyException e) {}
 
@@ -44,16 +44,16 @@ def via_webhook() {
 
 // Filter out Docker Hub tags like 'latest', 'master', 'enterprise'.
 // Just want things like v1.2*
-def rancher_version = rancher_version()
-def String rancher_version_regex = "^v[\\d]\\.[\\d]\\.[\\d][\\-rc\\d]+\$"
+def ranger_version = ranger_version()
+def String ranger_version_regex = "^v[\\d]\\.[\\d]\\.[\\d][\\-rc\\d]+\$"
 
-if ( true == via_webhook() && (!(rancher_version ==~ rancher_version_regex)) ) {
-  println("Received RANCHER_VERSION \'${rancher_version}\' via webhook which does not match regex \'${rancher_version_regex}\'.")
+if ( true == via_webhook() && (!(ranger_version ==~ ranger_version_regex)) ) {
+  println("Received RANCHER_VERSION \'${ranger_version}\' via webhook which does not match regex \'${ranger_version_regex}\'.")
   println("** This will **not** result in a pipeline run.")
   currentBuild.result = lastBuildResult()
 } else {
   def branch = "v2.1"
-  if (rancher_version.startsWith("v2.2") || rancher_version == "master" ) {
+  if (ranger_version.startsWith("v2.2") || ranger_version == "master" ) {
     branch = "release/v2.6"
   }
   node {
@@ -83,11 +83,11 @@ if ( true == via_webhook() && (!(rancher_version ==~ rancher_version_regex)) ) {
                 sh "./tests/v3_api/scripts/build.sh"
               }
 
-              stage('Deploy Rancher server') {
+              stage('Deploy Ranger server') {
                 sh "docker run --name ${job_name}${BUILD_NUMBER} -t --env-file .env ${imageName} /bin/bash " +
-                  "-c \'export RANCHER_SERVER_VERSION=${rancher_version} && pytest -v -s --junit-xml=setup.xml -k test_deploy_rancher_server tests/v3_api/\'"
-                sh "docker cp ${job_name}${BUILD_NUMBER}:/src/rancher-validation/tests/v3_api/rancher_env.config ."
-                load "rancher_env.config"
+                  "-c \'export RANCHER_SERVER_VERSION=${ranger_version} && pytest -v -s --junit-xml=setup.xml -k test_deploy_ranger_server tests/v3_api/\'"
+                sh "docker cp ${job_name}${BUILD_NUMBER}:/src/ranger-validation/tests/v3_api/ranger_env.config ."
+                load "ranger_env.config"
                 RANCHER_DEPLOYED = true
               }
             } catch (err) {
@@ -100,20 +100,20 @@ if ( true == via_webhook() && (!(rancher_version ==~ rancher_version_regex)) ) {
             stage('Run provisioning tests') {
               params = [ string(name: 'CATTLE_TEST_URL', value: "${CATTLE_TEST_URL}"), string(name: 'USER_TOKEN', value: "${USER_TOKEN}"), string(name: 'ADMIN_TOKEN', value: "${ADMIN_TOKEN}"), string(name: 'BRANCH', value: branch) ]
 
-              jobs["custom"] = { build job: 'rancher-v3_test_custom_cluster', parameters: params}
-              jobs["do"] = { build job: 'rancher-v3_test_do_cluster', parameters: params }
-              jobs["ec2"] = { build job: 'rancher-v3_test_ec2_cluster', parameters: params }
-              jobs["az"] = { build job: 'rancher-v3_test_az_cluster', parameters: params }
+              jobs["custom"] = { build job: 'ranger-v3_test_custom_cluster', parameters: params}
+              jobs["do"] = { build job: 'ranger-v3_test_do_cluster', parameters: params }
+              jobs["ec2"] = { build job: 'ranger-v3_test_ec2_cluster', parameters: params }
+              jobs["az"] = { build job: 'ranger-v3_test_az_cluster', parameters: params }
 
               parallel jobs
             }
           } catch(err) {
             echo "Error: " + err
           } finally {
-            stage('Delete Rancher Server') {
+            stage('Delete Ranger Server') {
               try {
                 if (RANCHER_DELETE_SERVER.toLowerCase() == "true" && RANCHER_DEPLOYED) {
-                  echo "Sleeping for ${RANCHER_DELETE_DELAY} hours before deleting Rancher server"
+                  echo "Sleeping for ${RANCHER_DELETE_DELAY} hours before deleting Ranger server"
                   sleep(time: RANCHER_DELETE_DELAY.toInteger(), unit: "HOURS")
                   sh "docker run --name ${deleteContainer} -t --env-file ${envFile} " +
                   "${imageName} /bin/bash -c \'export CATTLE_TEST_URL=${CATTLE_TEST_URL} && " +
@@ -122,7 +122,7 @@ if ( true == via_webhook() && (!(rancher_version ==~ rancher_version_regex)) ) {
                   "${deletePytestOptions} ${testsDir}\'"
                 }
                 else {
-                  echo "Rancher server not deployed, skipping delete."
+                  echo "Ranger server not deployed, skipping delete."
                 }
               } catch(err) {
                 echo "Error: " + err
@@ -131,7 +131,7 @@ if ( true == via_webhook() && (!(rancher_version ==~ rancher_version_regex)) ) {
             }
 
             stage('Test Report') {
-              sh "docker cp ${job_name}${BUILD_NUMBER}:/src/rancher-validation/setup.xml ."
+              sh "docker cp ${job_name}${BUILD_NUMBER}:/src/ranger-validation/setup.xml ."
               step([$class: 'JUnitResultArchiver', testResults: '**/setup.xml'])
             }
 

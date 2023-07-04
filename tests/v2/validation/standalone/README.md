@@ -6,11 +6,11 @@ In your config file, set the following:
 ```yaml
 corralPackages:
   corralPackageImages:
-    <nameOfPackage1>: <public corral image to deploy "ghcr.io/rancherlabs/corral/$pkg:latest>
+    <nameOfPackage1>: <public corral image to deploy "ghcr.io/rangerlabs/corral/$pkg:latest>
     ...
   hasDebug: <bool, default=false>
   hasCleanup: <bool, default=true>
-  hasCustomRepo: <string, suggeseted=https://github.com/rancherlabs/corral-packages.git>
+  hasCustomRepo: <string, suggeseted=https://github.com/rangerlabs/corral-packages.git>
 
 corralConfigs:
   corralConfigUser: <string, default="jenkauto">

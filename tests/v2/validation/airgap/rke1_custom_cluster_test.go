@@ -3,17 +3,17 @@ package airgap
 import (
 	"testing"
 
-	"github.com/rancher/rancher/tests/framework/clients/corral"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters/bundledclusters"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters/kubernetesversions"
-	registryExtension "github.com/rancher/rancher/tests/framework/extensions/registries"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
-	"github.com/rancher/rancher/tests/v2/validation/pipeline/rancherha/corralha"
-	provisioning "github.com/rancher/rancher/tests/v2/validation/provisioning"
-	"github.com/rancher/rancher/tests/v2/validation/registries"
+	"github.com/ranger/ranger/tests/framework/clients/corral"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters/bundledclusters"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters/kubernetesversions"
+	registryExtension "github.com/ranger/ranger/tests/framework/extensions/registries"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/v2/validation/pipeline/rangerha/corralha"
+	provisioning "github.com/ranger/ranger/tests/v2/validation/provisioning"
+	"github.com/ranger/ranger/tests/v2/validation/registries"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -22,7 +22,7 @@ import (
 
 type AirGapRKE1CustomClusterTestSuite struct {
 	suite.Suite
-	client             *rancher.Client
+	client             *ranger.Client
 	session            *session.Session
 	kubernetesVersions []string
 	cnis               []string
@@ -43,8 +43,8 @@ func (a *AirGapRKE1CustomClusterTestSuite) SetupSuite() {
 	clustersConfig := new(provisioning.Config)
 	config.LoadConfig(provisioning.ConfigurationFileKey, clustersConfig)
 
-	corralRancherHA := new(corralha.CorralRancherHA)
-	config.LoadConfig(corralha.CorralRancherHAConfigConfigurationFileKey, corralRancherHA)
+	corralRangerHA := new(corralha.CorralRangerHA)
+	config.LoadConfig(corralha.CorralRangerHAConfigConfigurationFileKey, corralRangerHA)
 
 	registriesConfig := new(registries.Registries)
 	config.LoadConfig(registries.RegistriesConfigKey, registriesConfig)
@@ -53,7 +53,7 @@ func (a *AirGapRKE1CustomClusterTestSuite) SetupSuite() {
 	a.cnis = clustersConfig.CNIs
 	a.advancedOptions = clustersConfig.AdvancedOptions
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(a.T(), err)
 
 	a.client = client
@@ -69,15 +69,15 @@ func (a *AirGapRKE1CustomClusterTestSuite) SetupSuite() {
 	a.corralImage = corralPackage.CorralPackageImages[corralPackageAirgapCustomClusterName]
 	a.corralAutoCleanup = corralPackage.HasCleanup
 
-	_, corralExist := listOfCorrals[corralRancherHA.Name]
+	_, corralExist := listOfCorrals[corralRangerHA.Name]
 	if corralExist {
-		bastionIP, err := corral.GetCorralEnvVar(corralRancherHA.Name, corralRegistryIP)
+		bastionIP, err := corral.GetCorralEnvVar(corralRangerHA.Name, corralRegistryIP)
 		require.NoError(a.T(), err)
 
 		err = corral.UpdateCorralConfig(corralBastionIP, bastionIP)
 		require.NoError(a.T(), err)
 
-		registryFQDN, err := corral.GetCorralEnvVar(corralRancherHA.Name, corralRegistryFQDN)
+		registryFQDN, err := corral.GetCorralEnvVar(corralRangerHA.Name, corralRegistryFQDN)
 		require.NoError(a.T(), err)
 		logrus.Infof("registry fqdn is %s", registryFQDN)
 		a.registryFQDN = registryFQDN

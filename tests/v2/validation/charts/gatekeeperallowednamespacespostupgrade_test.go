@@ -3,9 +3,9 @@ package charts
 import (
 	"strings"
 
-	settings "github.com/rancher/rancher/pkg/settings"
-	namespaces "github.com/rancher/rancher/tests/framework/extensions/namespaces"
-	"github.com/rancher/rancher/tests/framework/pkg/environmentflag"
+	settings "github.com/ranger/ranger/pkg/settings"
+	namespaces "github.com/ranger/ranger/tests/framework/extensions/namespaces"
+	"github.com/ranger/ranger/tests/framework/pkg/environmentflag"
 	"github.com/stretchr/testify/require"
 )
 

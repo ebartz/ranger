@@ -4,19 +4,19 @@ package chart
 import (
 	"fmt"
 
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/settings"
-	corev1 "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/settings"
+	corev1 "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
 )
 
 const (
-	// PriorityClassKey is the name of the helm value used for setting the name of the priority class on pods deployed by rancher and feature charts.
+	// PriorityClassKey is the name of the helm value used for setting the name of the priority class on pods deployed by ranger and feature charts.
 	PriorityClassKey = "priorityClassName"
 )
 
 // Manager is an interface used by the handler to install and uninstall charts.
 // If the interface is changed, regenerate the mock with the below command (run from project root):
-// mockgen --build_flags=--mod=mod -destination=pkg/controllers/dashboard/chart/fake/manager.go -package=fake github.com/rancher/rancher/pkg/controllers/dashboard/chart Manager
+// mockgen --build_flags=--mod=mod -destination=pkg/controllers/dashboard/chart/fake/manager.go -package=fake github.com/ranger/ranger/pkg/controllers/dashboard/chart Manager
 type Manager interface {
 	// Ensure ensures that the chart is installed into the given namespace with the given version configuration and values.
 	Ensure(namespace, name, minVersion, exactVersion string, values map[string]interface{}, forceAdopt bool, installImageOverride string) error
@@ -40,16 +40,16 @@ type Definition struct {
 	RemoveNamespace     bool
 }
 
-// RancherConfigGetter is used to get Rancher chart configuration information from the rancher config map
-type RancherConfigGetter struct {
+// RangerConfigGetter is used to get Ranger chart configuration information from the ranger config map
+type RangerConfigGetter struct {
 	ConfigCache corev1.ConfigMapCache
 }
 
-// GetPriorityClassName attempts to retrieve the priority class for rancher pods and feature charts as set via helm values.
-func (r *RancherConfigGetter) GetPriorityClassName() (string, error) {
+// GetPriorityClassName attempts to retrieve the priority class for ranger pods and feature charts as set via helm values.
+func (r *RangerConfigGetter) GetPriorityClassName() (string, error) {
 	configMap, err := r.ConfigCache.Get(namespace.System, settings.ConfigMapName.Get())
 	if err != nil {
-		return "", fmt.Errorf("failed to get rancher config: %w", err)
+		return "", fmt.Errorf("failed to get ranger config: %w", err)
 	}
 	priorityClassName, ok := configMap.Data[PriorityClassKey]
 	if !ok {

@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/rancher/rancher/pkg/capr"
-	capicontrollers "github.com/rancher/rancher/pkg/generated/controllers/cluster.x-k8s.io/v1beta1"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/settings"
-	v1wa "github.com/rancher/wrangler/pkg/generated/controllers/apps/v1"
-	v1w "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
+	"github.com/ranger/ranger/pkg/capr"
+	capicontrollers "github.com/ranger/ranger/pkg/generated/controllers/cluster.x-k8s.io/v1beta1"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/settings"
+	v1wa "github.com/ranger/wrangler/pkg/generated/controllers/apps/v1"
+	v1w "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	v1apps "k8s.io/api/apps/v1"
@@ -226,13 +226,13 @@ func getMachineCacheMock(namespace, os string) *machineCacheMock {
 
 func getDeploymentCacheMock() *deploymentCacheMock {
 	mockDeploymentCache := new(deploymentCacheMock)
-	mockDeploymentCache.On("Get", namespace.System, "rancher").Return(&v1apps.Deployment{
+	mockDeploymentCache.On("Get", namespace.System, "ranger").Return(&v1apps.Deployment{
 		Spec: v1apps.DeploymentSpec{
 			Template: v1.PodTemplateSpec{
 				Spec: v1.PodSpec{
 					Containers: []v1.Container{
 						{
-							Name: "rancher",
+							Name: "ranger",
 							Ports: []v1.ContainerPort{
 								{
 									HostPort: 8080,

@@ -4,70 +4,70 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/rancher/norman/store/crd"
-	"github.com/rancher/norman/store/proxy"
-	"github.com/rancher/norman/store/subtype"
-	"github.com/rancher/norman/store/transform"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/rancher/pkg/api/norman/customization/alert"
-	"github.com/rancher/rancher/pkg/api/norman/customization/app"
-	"github.com/rancher/rancher/pkg/api/norman/customization/authn"
-	"github.com/rancher/rancher/pkg/api/norman/customization/catalog"
-	ccluster "github.com/rancher/rancher/pkg/api/norman/customization/cluster"
-	"github.com/rancher/rancher/pkg/api/norman/customization/clustertemplate"
-	"github.com/rancher/rancher/pkg/api/norman/customization/cred"
-	"github.com/rancher/rancher/pkg/api/norman/customization/etcdbackup"
-	"github.com/rancher/rancher/pkg/api/norman/customization/feature"
-	"github.com/rancher/rancher/pkg/api/norman/customization/globaldns"
-	"github.com/rancher/rancher/pkg/api/norman/customization/globalrole"
-	"github.com/rancher/rancher/pkg/api/norman/customization/globalrolebinding"
-	"github.com/rancher/rancher/pkg/api/norman/customization/kontainerdriver"
-	"github.com/rancher/rancher/pkg/api/norman/customization/monitor"
-	"github.com/rancher/rancher/pkg/api/norman/customization/multiclusterapp"
-	"github.com/rancher/rancher/pkg/api/norman/customization/namespacedresource"
-	"github.com/rancher/rancher/pkg/api/norman/customization/node"
-	"github.com/rancher/rancher/pkg/api/norman/customization/nodepool"
-	"github.com/rancher/rancher/pkg/api/norman/customization/nodetemplate"
-	psptBinding "github.com/rancher/rancher/pkg/api/norman/customization/podsecuritypolicybinding"
-	"github.com/rancher/rancher/pkg/api/norman/customization/podsecuritypolicytemplate"
-	projectaction "github.com/rancher/rancher/pkg/api/norman/customization/project"
-	"github.com/rancher/rancher/pkg/api/norman/customization/roletemplate"
-	"github.com/rancher/rancher/pkg/api/norman/customization/roletemplatebinding"
-	"github.com/rancher/rancher/pkg/api/norman/customization/secret"
-	"github.com/rancher/rancher/pkg/api/norman/customization/setting"
-	alertStore "github.com/rancher/rancher/pkg/api/norman/store/alert"
-	appStore "github.com/rancher/rancher/pkg/api/norman/store/app"
-	catalogStore "github.com/rancher/rancher/pkg/api/norman/store/catalog"
-	"github.com/rancher/rancher/pkg/api/norman/store/cert"
-	"github.com/rancher/rancher/pkg/api/norman/store/cluster"
-	clustertemplatestore "github.com/rancher/rancher/pkg/api/norman/store/clustertemplate"
-	featStore "github.com/rancher/rancher/pkg/api/norman/store/feature"
-	globaldnsAPIStore "github.com/rancher/rancher/pkg/api/norman/store/globaldns"
-	globalRoleStore "github.com/rancher/rancher/pkg/api/norman/store/globalrole"
-	grbstore "github.com/rancher/rancher/pkg/api/norman/store/globalrolebindings"
-	nodeStore "github.com/rancher/rancher/pkg/api/norman/store/node"
-	nodeTemplateStore "github.com/rancher/rancher/pkg/api/norman/store/nodetemplate"
-	"github.com/rancher/rancher/pkg/api/norman/store/noopwatching"
-	passwordStore "github.com/rancher/rancher/pkg/api/norman/store/password"
-	"github.com/rancher/rancher/pkg/api/norman/store/preference"
-	rtStore "github.com/rancher/rancher/pkg/api/norman/store/roletemplate"
-	"github.com/rancher/rancher/pkg/api/norman/store/scoped"
-	settingstore "github.com/rancher/rancher/pkg/api/norman/store/setting"
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/pkg/auth/api"
-	authapi "github.com/rancher/rancher/pkg/auth/api"
-	"github.com/rancher/rancher/pkg/auth/requests"
-	"github.com/rancher/rancher/pkg/auth/tokens"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	projectclient "github.com/rancher/rancher/pkg/client/generated/project/v3"
-	"github.com/rancher/rancher/pkg/clustermanager"
-	"github.com/rancher/rancher/pkg/clusterrouter"
-	md "github.com/rancher/rancher/pkg/controllers/management/kontainerdrivermetadata"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/nodeconfig"
-	managementschema "github.com/rancher/rancher/pkg/schemas/management.cattle.io/v3"
-	projectschema "github.com/rancher/rancher/pkg/schemas/project.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/norman/store/crd"
+	"github.com/ranger/norman/store/proxy"
+	"github.com/ranger/norman/store/subtype"
+	"github.com/ranger/norman/store/transform"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/ranger/pkg/api/norman/customization/alert"
+	"github.com/ranger/ranger/pkg/api/norman/customization/app"
+	"github.com/ranger/ranger/pkg/api/norman/customization/authn"
+	"github.com/ranger/ranger/pkg/api/norman/customization/catalog"
+	ccluster "github.com/ranger/ranger/pkg/api/norman/customization/cluster"
+	"github.com/ranger/ranger/pkg/api/norman/customization/clustertemplate"
+	"github.com/ranger/ranger/pkg/api/norman/customization/cred"
+	"github.com/ranger/ranger/pkg/api/norman/customization/etcdbackup"
+	"github.com/ranger/ranger/pkg/api/norman/customization/feature"
+	"github.com/ranger/ranger/pkg/api/norman/customization/globaldns"
+	"github.com/ranger/ranger/pkg/api/norman/customization/globalrole"
+	"github.com/ranger/ranger/pkg/api/norman/customization/globalrolebinding"
+	"github.com/ranger/ranger/pkg/api/norman/customization/kontainerdriver"
+	"github.com/ranger/ranger/pkg/api/norman/customization/monitor"
+	"github.com/ranger/ranger/pkg/api/norman/customization/multiclusterapp"
+	"github.com/ranger/ranger/pkg/api/norman/customization/namespacedresource"
+	"github.com/ranger/ranger/pkg/api/norman/customization/node"
+	"github.com/ranger/ranger/pkg/api/norman/customization/nodepool"
+	"github.com/ranger/ranger/pkg/api/norman/customization/nodetemplate"
+	psptBinding "github.com/ranger/ranger/pkg/api/norman/customization/podsecuritypolicybinding"
+	"github.com/ranger/ranger/pkg/api/norman/customization/podsecuritypolicytemplate"
+	projectaction "github.com/ranger/ranger/pkg/api/norman/customization/project"
+	"github.com/ranger/ranger/pkg/api/norman/customization/roletemplate"
+	"github.com/ranger/ranger/pkg/api/norman/customization/roletemplatebinding"
+	"github.com/ranger/ranger/pkg/api/norman/customization/secret"
+	"github.com/ranger/ranger/pkg/api/norman/customization/setting"
+	alertStore "github.com/ranger/ranger/pkg/api/norman/store/alert"
+	appStore "github.com/ranger/ranger/pkg/api/norman/store/app"
+	catalogStore "github.com/ranger/ranger/pkg/api/norman/store/catalog"
+	"github.com/ranger/ranger/pkg/api/norman/store/cert"
+	"github.com/ranger/ranger/pkg/api/norman/store/cluster"
+	clustertemplatestore "github.com/ranger/ranger/pkg/api/norman/store/clustertemplate"
+	featStore "github.com/ranger/ranger/pkg/api/norman/store/feature"
+	globaldnsAPIStore "github.com/ranger/ranger/pkg/api/norman/store/globaldns"
+	globalRoleStore "github.com/ranger/ranger/pkg/api/norman/store/globalrole"
+	grbstore "github.com/ranger/ranger/pkg/api/norman/store/globalrolebindings"
+	nodeStore "github.com/ranger/ranger/pkg/api/norman/store/node"
+	nodeTemplateStore "github.com/ranger/ranger/pkg/api/norman/store/nodetemplate"
+	"github.com/ranger/ranger/pkg/api/norman/store/noopwatching"
+	passwordStore "github.com/ranger/ranger/pkg/api/norman/store/password"
+	"github.com/ranger/ranger/pkg/api/norman/store/preference"
+	rtStore "github.com/ranger/ranger/pkg/api/norman/store/roletemplate"
+	"github.com/ranger/ranger/pkg/api/norman/store/scoped"
+	settingstore "github.com/ranger/ranger/pkg/api/norman/store/setting"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/pkg/auth/api"
+	authapi "github.com/ranger/ranger/pkg/auth/api"
+	"github.com/ranger/ranger/pkg/auth/requests"
+	"github.com/ranger/ranger/pkg/auth/tokens"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	projectclient "github.com/ranger/ranger/pkg/client/generated/project/v3"
+	"github.com/ranger/ranger/pkg/clustermanager"
+	"github.com/ranger/ranger/pkg/clusterrouter"
+	md "github.com/ranger/ranger/pkg/controllers/management/kontainerdrivermetadata"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/nodeconfig"
+	managementschema "github.com/ranger/ranger/pkg/schemas/management.cattle.io/v3"
+	projectschema "github.com/ranger/ranger/pkg/schemas/project.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
 )
 
 func Setup(ctx context.Context, apiContext *config.ScaledContext, clusterManager *clustermanager.Manager,
@@ -139,7 +139,7 @@ func Setup(ctx context.Context, apiContext *config.ScaledContext, clusterManager
 		client.TemplateContentType,
 		client.GlobalDnsType,
 		client.GlobalDnsProviderType,
-		client.RancherUserNotificationType,
+		client.RangerUserNotificationType,
 	)
 
 	factory.BatchCreateCRDs(ctx, config.ManagementStorageContext, scheme.Scheme, schemas, &projectschema.Version,
@@ -173,7 +173,7 @@ func Setup(ctx context.Context, apiContext *config.ScaledContext, clusterManager
 	ClusterTemplates(schemas, apiContext)
 	SystemImages(schemas, apiContext)
 	EtcdBackups(schemas, apiContext)
-	RancherUserNotifications(schemas, apiContext)
+	RangerUserNotifications(schemas, apiContext)
 
 	Templates(ctx, schemas, apiContext)
 	TemplateVersion(ctx, schemas, apiContext)
@@ -801,6 +801,6 @@ func EtcdBackups(schemas *types.Schemas, management *config.ScaledContext) {
 	schema.Formatter = etcdbackup.Formatter
 }
 
-func RancherUserNotifications(schemas *types.Schemas, management *config.ScaledContext) {
-	schemas.Schema(&managementschema.Version, client.RancherUserNotificationType)
+func RangerUserNotifications(schemas *types.Schemas, management *config.ScaledContext) {
+	schemas.Schema(&managementschema.Version, client.RangerUserNotificationType)
 }

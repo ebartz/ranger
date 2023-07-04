@@ -4,11 +4,11 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/rancher/norman/api/access"
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	managementv3 "github.com/rancher/rancher/pkg/client/generated/management/v3"
+	"github.com/ranger/norman/api/access"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	managementv3 "github.com/ranger/ranger/pkg/client/generated/management/v3"
 )
 
 func Wrap(store types.Store) types.Store {

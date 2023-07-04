@@ -3,9 +3,9 @@ package schema
 import (
 	"net/http"
 
-	"github.com/rancher/norman/types"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/schemas/factory"
+	"github.com/ranger/norman/types"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/schemas/factory"
 )
 
 var (

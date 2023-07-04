@@ -36,7 +36,7 @@ services:
                - longhorn-system
                - cattle-neuvector-system
                - cattle-monitoring-system
-               - rancher-alerting-drivers
+               - ranger-alerting-drivers
                - cis-operator-system
                - cattle-csp-adapter-system
                - cattle-externalip-system

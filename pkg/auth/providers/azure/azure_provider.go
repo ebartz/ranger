@@ -1,4 +1,4 @@
-// Package azure provides functions and types to register and use Azure AD as the auth provider in Rancher.
+// Package azure provides functions and types to register and use Azure AD as the auth provider in Ranger.
 package azure
 
 import (
@@ -10,19 +10,19 @@ import (
 	lru "github.com/hashicorp/golang-lru"
 	"github.com/mitchellh/mapstructure"
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/auth/providers/azure/clients"
-	"github.com/rancher/rancher/pkg/auth/providers/common"
-	"github.com/rancher/rancher/pkg/auth/tokens"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	publicclient "github.com/rancher/rancher/pkg/client/generated/management/v3public"
-	corev1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/user"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/auth/providers/azure/clients"
+	"github.com/ranger/ranger/pkg/auth/providers/common"
+	"github.com/ranger/ranger/pkg/auth/tokens"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	publicclient "github.com/ranger/ranger/pkg/client/generated/management/v3public"
+	corev1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/user"
 	"github.com/sirupsen/logrus"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -405,7 +405,7 @@ func formAzureRedirectURL(config map[string]interface{}) string {
 				"%s?client_id=%s&redirect_uri=%s&response_type=code&scope=openid",
 				ac.AuthEndpoint,
 				ac.ApplicationID,
-				ac.RancherURL,
+				ac.RangerURL,
 			)
 		}
 	} else {
@@ -416,7 +416,7 @@ func formAzureRedirectURL(config map[string]interface{}) string {
 		"%s?client_id=%s&redirect_uri=%s&resource=%s&scope=openid",
 		config["authEndpoint"],
 		config["applicationId"],
-		config["rancherUrl"],
+		config["rangerUrl"],
 		config["graphEndpoint"],
 	)
 }
@@ -496,7 +496,7 @@ func (ap *Provider) GetUserExtraAttributes(userPrincipal v3.Principal) map[strin
 	return extras
 }
 
-// IsDisabledProvider checks if the Azure AD auth provider is currently disabled in Rancher.
+// IsDisabledProvider checks if the Azure AD auth provider is currently disabled in Ranger.
 func (ap *Provider) IsDisabledProvider() (bool, error) {
 	azureConfig, err := ap.GetAzureConfigK8s()
 	if err != nil {

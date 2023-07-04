@@ -19,7 +19,7 @@ user_token = {"user_c1_p1_owner": {"user": None, "token": None},
 CATALOG_NAME = random_test_name("test-catalog")
 PROJECT_CATALOG = random_test_name("test-pj")
 CLUSTER_CATALOG = random_test_name("test-cl")
-CATALOG_URL = "https://github.com/rancher/integration-test-charts.git"
+CATALOG_URL = "https://github.com/ranger/integration-test-charts.git"
 BRANCH = "validation-tests"
 MYSQL_EXTERNALID_131 = create_catalog_external_id(CATALOG_NAME,
                                                   "mysql", "1.3.1")
@@ -34,7 +34,7 @@ WORDPRESS_EXTID = create_catalog_external_id(CATALOG_NAME,
 def cluster_and_client(cluster_id, mgmt_client):
     cluster = mgmt_client.by_id_cluster(cluster_id)
     url = cluster.links.self + '/schemas'
-    client = rancher.Client(url=url,
+    client = ranger.Client(url=url,
                             verify=False,
                             token=mgmt_client.token)
     return cluster, client
@@ -92,7 +92,7 @@ def test_tiller():
                        )
 
     p = admin_client.reload(p)
-    proj_client = rancher.Client(url=p.links.self +
+    proj_client = ranger.Client(url=p.links.self +
                                  '/schemas', verify=False,
                                  token=USER_TOKEN)
     # need a cluster scoped client to create a namespace

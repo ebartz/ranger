@@ -15,7 +15,7 @@ const (
 	KeyCloakConfigFieldLabels              = "labels"
 	KeyCloakConfigFieldName                = "name"
 	KeyCloakConfigFieldOwnerReferences     = "ownerReferences"
-	KeyCloakConfigFieldRancherAPIHost      = "rancherApiHost"
+	KeyCloakConfigFieldRangerAPIHost      = "rangerApiHost"
 	KeyCloakConfigFieldRemoved             = "removed"
 	KeyCloakConfigFieldSpCert              = "spCert"
 	KeyCloakConfigFieldSpKey               = "spKey"
@@ -39,7 +39,7 @@ type KeyCloakConfig struct {
 	Labels              map[string]string `json:"labels,omitempty" yaml:"labels,omitempty"`
 	Name                string            `json:"name,omitempty" yaml:"name,omitempty"`
 	OwnerReferences     []OwnerReference  `json:"ownerReferences,omitempty" yaml:"ownerReferences,omitempty"`
-	RancherAPIHost      string            `json:"rancherApiHost,omitempty" yaml:"rancherApiHost,omitempty"`
+	RangerAPIHost      string            `json:"rangerApiHost,omitempty" yaml:"rangerApiHost,omitempty"`
 	Removed             string            `json:"removed,omitempty" yaml:"removed,omitempty"`
 	SpCert              string            `json:"spCert,omitempty" yaml:"spCert,omitempty"`
 	SpKey               string            `json:"spKey,omitempty" yaml:"spKey,omitempty"`

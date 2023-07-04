@@ -278,7 +278,7 @@ def validate_access_control_set_access_mode(access_mode):
         allowed_principal_ids.append(principal_lookup(group, token))
     allowed_principal_ids.append(principal_lookup(admin_user, token))
 
-    # Add users and groups in allowed list to access rancher-server
+    # Add users and groups in allowed list to access ranger-server
     add_users_to_site_access(token, access_mode, allowed_principal_ids)
 
     for user in auth_setup_data["allowed_users"]:
@@ -297,7 +297,7 @@ def validate_access_control_set_access_mode(access_mode):
             login(user, PASSWORD,
                   expected_status=setup["permission_denied_code"])
 
-    # Add users and groups from dis allowed list to access rancher-server
+    # Add users and groups from dis allowed list to access ranger-server
 
     for user in auth_setup_data["dis_allowed_users"]:
         allowed_principal_ids.append(principal_lookup(user, token))
@@ -322,7 +322,7 @@ def validate_access_control_set_access_mode(access_mode):
         for user in auth_setup_data[group]:
             login(user, PASSWORD)
 
-    # Remove users and groups from allowed list to access rancher-server
+    # Remove users and groups from allowed list to access ranger-server
     allowed_principal_ids = [principal_lookup(admin_user, token)]
 
     for user in auth_setup_data["dis_allowed_users"]:
@@ -361,7 +361,7 @@ def validate_add_users_and_groups_to_cluster_or_project(
     token = login(admin_user, PASSWORD)
     allowed_principal_ids = [principal_lookup(admin_user, token)]
 
-    # Add users and groups in allowed list to access rancher-server
+    # Add users and groups in allowed list to access ranger-server
     add_users_to_site_access(token, access_mode, allowed_principal_ids)
 
     if add_users_to_cluster:
@@ -436,7 +436,7 @@ def validate_access_control_disable_and_enable_auth(access_mode):
         allowed_principal_ids.append(principal_lookup(user, admin_token))
     allowed_principal_ids.append(principal_lookup(admin_user, admin_token))
 
-    # Add users in allowed list to access rancher-server
+    # Add users in allowed list to access ranger-server
     add_users_to_site_access(admin_token, access_mode, allowed_principal_ids)
 
     for user in auth_setup_data["allowed_users"]:
@@ -478,7 +478,7 @@ def validate_access_control_disable_and_enable_nestedgroups(access_mode):
 
     allowed_principal_ids.append(principal_lookup(admin_user, token))
 
-    # Add users in allowed list to access rancher-server
+    # Add users in allowed list to access ranger-server
     add_users_to_site_access(token, access_mode, allowed_principal_ids)
 
     for group in auth_setup_data["allowed_nestedgroups"]:
@@ -506,7 +506,7 @@ def validate_access_control_disable_and_enable_nestedgroups(access_mode):
             allowed_principal_ids.append(principal_lookup(group, token))
         allowed_principal_ids.append(principal_lookup(admin_user, token))
 
-        # Add users in allowed list to access rancher-server
+        # Add users in allowed list to access ranger-server
         add_users_to_site_access(token, access_mode, allowed_principal_ids)
 
         for group in auth_setup_data["allowed_nestedgroups"]:
@@ -762,7 +762,7 @@ def delete_existing_users_in_project(client, project):
 def create_project_client(request):
 
     '''
-    This method enables auth on the Rancher server setup. Two clusters are
+    This method enables auth on the Ranger server setup. Two clusters are
     required in the setup. If two clusters are not present, it will create
     the clusters.
     '''

@@ -295,7 +295,7 @@ def test_secret_creation_kubectl(admin_mc, admin_cc, remove_resource):
     remove_resource(sec)
     assert sec is not None
 
-    # now get this through rancher api as namespacedCertificate
+    # now get this through ranger api as namespacedCertificate
     cert_id = namespace_name+':'+name
     proj_client = user_project_client(admin_mc, project)
     cert = proj_client.by_id_namespaced_certificate(cert_id)
@@ -331,7 +331,7 @@ def test_malformed_secret_parse(admin_mc, admin_cc, remove_resource):
     remove_resource(sec)
     assert sec is not None
 
-    # now get this through rancher api as namespacedCertificate
+    # now get this through ranger api as namespacedCertificate
     cert_id = namespace_name+':'+name
     proj_client = user_project_client(admin_mc, project)
     cert = proj_client.by_id_namespaced_certificate(cert_id)

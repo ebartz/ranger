@@ -7,19 +7,19 @@ import (
 	"testing"
 	"time"
 
-	"github.com/rancher/norman/types"
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/ingresses"
-	kubeingress "github.com/rancher/rancher/tests/framework/extensions/kubeapi/ingresses"
-	"github.com/rancher/rancher/tests/framework/extensions/projects"
-	"github.com/rancher/rancher/tests/framework/extensions/services"
-	"github.com/rancher/rancher/tests/framework/extensions/workloads"
-	"github.com/rancher/rancher/tests/framework/pkg/namegenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/ingresses"
+	kubeingress "github.com/ranger/ranger/tests/framework/extensions/kubeapi/ingresses"
+	"github.com/ranger/ranger/tests/framework/extensions/projects"
+	"github.com/ranger/ranger/tests/framework/extensions/services"
+	"github.com/ranger/ranger/tests/framework/extensions/workloads"
+	"github.com/ranger/ranger/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	appv1 "k8s.io/api/apps/v1"
@@ -44,7 +44,7 @@ const (
 	secretAsVolumeName = "secret-as-volume"
 
 	containerName  = "test1"
-	containerImage = "ranchertest/mytestcontainer"
+	containerImage = "rangertest/mytestcontainer"
 
 	servicePortNumber = 80
 	servicePortName   = "port"
@@ -56,7 +56,7 @@ func getSteveID(namespaceName, resourceName string) string {
 	return fmt.Sprintf(namespaceName + "/" + resourceName)
 }
 
-func getProject(client *rancher.Client, clusterName, projectName string) (project *management.Project, err error) {
+func getProject(client *ranger.Client, clusterName, projectName string) (project *management.Project, err error) {
 	clusterID, err := clusters.GetClusterIDByName(client, clusterName)
 	if err != nil {
 		return
@@ -165,7 +165,7 @@ func newPodTemplateWithSecretEnvironmentVariable(secretName string) corev1.PodTe
 }
 
 // waitUntilIngressIsAccessible waits until the ingress is accessible
-func waitUntilIngressIsAccessible(client *rancher.Client, hostname string) (bool, error) {
+func waitUntilIngressIsAccessible(client *ranger.Client, hostname string) (bool, error) {
 	err := kubewait.Poll(500*time.Millisecond, 2*time.Minute, func() (done bool, err error) {
 		isIngressAccessible, err := ingresses.AccessIngressExternally(client, hostname, false)
 		if err != nil {
@@ -183,9 +183,9 @@ func waitUntilIngressIsAccessible(client *rancher.Client, hostname string) (bool
 }
 
 // waitUntilIngressHostnameUpdates is a private function to wait until the ingress hostname updates
-func waitUntilIngressHostnameUpdates(client *rancher.Client, clusterID, namespace, ingressName string) error {
+func waitUntilIngressHostnameUpdates(client *ranger.Client, clusterID, namespace, ingressName string) error {
 	timeout := int64(60 * 5)
-	adminClient, err := rancher.NewClient(client.RancherConfig.AdminToken, client.Session)
+	adminClient, err := ranger.NewClient(client.RangerConfig.AdminToken, client.Session)
 	if err != nil {
 		return err
 	}
@@ -245,7 +245,7 @@ func checkPrefix(name string, prefix string) bool {
 }
 
 // validateDaemonset checks daemonset available number is equal to the number of workers in the cluster
-func validateDaemonset(t *testing.T, client *rancher.Client, clusterID, namespaceName, daemonsetName string) {
+func validateDaemonset(t *testing.T, client *ranger.Client, clusterID, namespaceName, daemonsetName string) {
 	t.Helper()
 
 	workerNodesCollection, err := client.Management.Node.List(&types.ListOpts{

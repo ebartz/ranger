@@ -1,7 +1,7 @@
 package resources
 
 import (
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
 )
 
 // CreateNodePool is a helper function that creates a node pool.

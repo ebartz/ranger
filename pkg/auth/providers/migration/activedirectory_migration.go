@@ -7,10 +7,10 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/auth/providers"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/auth/providers"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -37,8 +37,8 @@ type adMigration struct {
 	tokenIndexer cache.Indexer
 }
 
-// MigrateActiveDirectoryDNToGUID will go through all Rancher users and check to see if the principalID
-// is an LDAP distinguished name, which was the way we used to map Rancher users to their LDAP entries.
+// MigrateActiveDirectoryDNToGUID will go through all Ranger users and check to see if the principalID
+// is an LDAP distinguished name, which was the way we used to map Ranger users to their LDAP entries.
 // If a principalID is based on DN, this will update the user's principalID along with the tokens,
 // CRTBs, and PRTBs to use a principalID that is the objectGUID for the user.
 func MigrateActiveDirectoryDNToGUID(ctx context.Context, management *config.ManagementContext) {

@@ -6,10 +6,10 @@ import (
 	"errors"
 	"strconv"
 
-	v1 "github.com/rancher/rancher/pkg/apis/catalog.cattle.io/v1"
+	v1 "github.com/ranger/ranger/pkg/apis/catalog.cattle.io/v1"
 
-	"github.com/rancher/wrangler/pkg/data"
-	"github.com/rancher/wrangler/pkg/yaml"
+	"github.com/ranger/wrangler/pkg/data"
+	"github.com/ranger/wrangler/pkg/yaml"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/meta"
 	meta2 "k8s.io/apimachinery/pkg/api/meta"

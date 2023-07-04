@@ -1,17 +1,17 @@
 package harvester
 
 import (
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	"github.com/rancher/rancher/tests/framework/extensions/cloudcredentials"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/extensions/cloudcredentials"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
 )
 
 const harvesterCloudCredNameBase = "harvesterCloudCredential"
 
-// CreateHarvesterCloudCredentials is a helper function that takes the rancher Client as a parameter and creates
+// CreateHarvesterCloudCredentials is a helper function that takes the ranger Client as a parameter and creates
 // a harvester cloud credential, and returns the CloudCredential response
-func CreateHarvesterCloudCredentials(rancherClient *rancher.Client) (*cloudcredentials.CloudCredential, error) {
+func CreateHarvesterCloudCredentials(rangerClient *ranger.Client) (*cloudcredentials.CloudCredential, error) {
 	var harvesterCredentialConfig cloudcredentials.HarvesterCredentialConfig
 	config.LoadConfig(cloudcredentials.HarvesterCredentialConfigurationFileKey, &harvesterCredentialConfig)
 
@@ -21,7 +21,7 @@ func CreateHarvesterCloudCredentials(rancherClient *rancher.Client) (*cloudcrede
 	}
 
 	resp := &cloudcredentials.CloudCredential{}
-	err := rancherClient.Management.APIBaseClient.Ops.DoCreate(management.CloudCredentialType, cloudCredential, resp)
+	err := rangerClient.Management.APIBaseClient.Ops.DoCreate(management.CloudCredentialType, cloudCredential, resp)
 	if err != nil {
 		return nil, err
 	}

@@ -1,4 +1,4 @@
-git+https://github.com/rancher/client-python.git@master#egg=client-python
+git+https://github.com/ranger/client-python.git@master#egg=client-python
 boto3==1.21.33
 cryptography==39.0.1
 flake8==3.5.0

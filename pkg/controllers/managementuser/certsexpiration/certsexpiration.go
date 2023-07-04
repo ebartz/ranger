@@ -6,20 +6,20 @@ import (
 	"reflect"
 	"strings"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 
-	rketypes "github.com/rancher/rke/types"
+	rketypes "github.com/ranger/rke/types"
 
-	"github.com/rancher/rancher/pkg/controllers/management/clusterprovisioner"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/kontainer-engine/cluster"
-	"github.com/rancher/rancher/pkg/rkecerts"
-	"github.com/rancher/rancher/pkg/types/config"
-	rkecluster "github.com/rancher/rke/cluster"
-	"github.com/rancher/rke/hosts"
-	"github.com/rancher/rke/pki"
-	"github.com/rancher/rke/services"
+	"github.com/ranger/ranger/pkg/controllers/management/clusterprovisioner"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/kontainer-engine/cluster"
+	"github.com/ranger/ranger/pkg/rkecerts"
+	"github.com/ranger/ranger/pkg/types/config"
+	rkecluster "github.com/ranger/rke/cluster"
+	"github.com/ranger/rke/hosts"
+	"github.com/ranger/rke/pki"
+	"github.com/ranger/rke/services"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -44,8 +44,8 @@ func Register(ctx context.Context, userContext *config.UserContext) {
 	clusters.AddHandler(ctx, "certs-expiration-deferred", func(key string, obj *v32.Cluster) (runtime.Object, error) {
 		if obj != nil &&
 			obj.Name == userContext.ClusterName &&
-			obj.Spec.RancherKubernetesEngineConfig != nil &&
-			obj.Status.AppliedSpec.RancherKubernetesEngineConfig != nil {
+			obj.Spec.RangerKubernetesEngineConfig != nil &&
+			obj.Status.AppliedSpec.RangerKubernetesEngineConfig != nil {
 			return obj, starter()
 		}
 		return obj, nil
@@ -69,10 +69,10 @@ func (c Controller) sync(key string, cluster *v3.Cluster) (runtime.Object, error
 		return cluster, nil
 	}
 
-	if cluster.Spec.RancherKubernetesEngineConfig == nil {
+	if cluster.Spec.RangerKubernetesEngineConfig == nil {
 		return cluster, nil
 	}
-	if cluster.Status.AppliedSpec.RancherKubernetesEngineConfig == nil {
+	if cluster.Status.AppliedSpec.RangerKubernetesEngineConfig == nil {
 		return cluster, nil
 	}
 	certsExpInfo := map[string]v32.CertExpiration{}
@@ -94,7 +94,7 @@ func (c Controller) sync(key string, cluster *v3.Cluster) (runtime.Object, error
 		certsExpInfo[certName] = info
 	}
 	logrus.Debugf("Checking and deleting unused certificates for cluster %s", cluster.Name)
-	deleteUnusedCerts(certsExpInfo, cluster.Status.AppliedSpec.RancherKubernetesEngineConfig)
+	deleteUnusedCerts(certsExpInfo, cluster.Status.AppliedSpec.RangerKubernetesEngineConfig)
 	if !reflect.DeepEqual(cluster.Status.CertificatesExpiration, certsExpInfo) {
 		toUpdate := cluster.DeepCopy()
 		toUpdate.Status.CertificatesExpiration = certsExpInfo
@@ -162,20 +162,20 @@ func (c Controller) getCertsFromUserCluster() (map[string]pki.CertificatePKI, er
 }
 
 // deleteUnusedCerts removes unused certs and cleans up kubelet certs when GenerateServingCertificate is disabled
-func deleteUnusedCerts(certsExpInfo map[string]v32.CertExpiration, rancherKubernetesEngineConfig *rketypes.RancherKubernetesEngineConfig) {
+func deleteUnusedCerts(certsExpInfo map[string]v32.CertExpiration, rangerKubernetesEngineConfig *rketypes.RangerKubernetesEngineConfig) {
 	unusedCerts := make(map[string]bool)
 	for k := range certsExpInfo {
 		if strings.HasPrefix(k, pki.EtcdCertName) || strings.HasPrefix(k, pki.KubeletCertName) {
 			unusedCerts[k] = true
 		}
 	}
-	etcdHosts := hosts.NodesToHosts(rancherKubernetesEngineConfig.Nodes, services.ETCDRole)
-	allHosts := hosts.NodesToHosts(rancherKubernetesEngineConfig.Nodes, "")
+	etcdHosts := hosts.NodesToHosts(rangerKubernetesEngineConfig.Nodes, services.ETCDRole)
+	allHosts := hosts.NodesToHosts(rangerKubernetesEngineConfig.Nodes, "")
 	for _, host := range etcdHosts {
 		etcdName := pki.GetCrtNameForHost(host, pki.EtcdCertName)
 		delete(unusedCerts, etcdName)
 	}
-	if pki.IsKubeletGenerateServingCertificateEnabledinConfig(rancherKubernetesEngineConfig) {
+	if pki.IsKubeletGenerateServingCertificateEnabledinConfig(rangerKubernetesEngineConfig) {
 		for _, host := range allHosts {
 			kubeletName := pki.GetCrtNameForHost(host, pki.KubeletCertName)
 			delete(unusedCerts, kubeletName)

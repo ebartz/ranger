@@ -3,7 +3,7 @@ package vsphere
 import (
 	"testing"
 
-	"github.com/rancher/rancher/pkg/capr"
+	"github.com/ranger/ranger/pkg/capr"
 	"github.com/stretchr/testify/assert"
 )
 

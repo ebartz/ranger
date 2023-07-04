@@ -3,7 +3,7 @@ package resourcequotas
 import (
 	"fmt"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -18,7 +18,7 @@ var ResourceQuotaGroupVersionResource = schema.GroupVersionResource{
 }
 
 // GetResourceQuotaByName is a helper function that returns the resource quota by name in a specific cluster.
-func GetResourceQuotaByName(client *rancher.Client, clusterID, name string) (*corev1.ResourceQuota, error) {
+func GetResourceQuotaByName(client *ranger.Client, clusterID, name string) (*corev1.ResourceQuota, error) {
 	resourceQuotaList, err := ListResourceQuotas(client, clusterID, "", metav1.ListOptions{})
 	if err != nil {
 		return nil, err

@@ -5,15 +5,15 @@ import (
 	"fmt"
 	"strings"
 
-	v33 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v32 "github.com/rancher/rancher/pkg/apis/project.cattle.io/v3"
+	v33 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/project.cattle.io/v3"
 
-	"github.com/rancher/norman/types/convert"
-	util "github.com/rancher/rancher/pkg/controllers/managementagent/workload"
-	corev1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	pv3 "github.com/rancher/rancher/pkg/generated/norman/project.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/norman/types/convert"
+	util "github.com/ranger/ranger/pkg/controllers/managementagent/workload"
+	corev1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	pv3 "github.com/ranger/ranger/pkg/generated/norman/project.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -67,8 +67,8 @@ func (s *AppStateCalculator) sync(key string, obj *util.Workload) error {
 		app, err := s.appLister.Get(projectNS, label)
 		if err != nil {
 			if errors.IsNotFound(err) {
-				// If Rancher is unaware of an app, we should ignore tracking its state
-				// A non-existent app is likely managed by another Rancher (e.g. Hosted Rancher)
+				// If Ranger is unaware of an app, we should ignore tracking its state
+				// A non-existent app is likely managed by another Ranger (e.g. Hosted Ranger)
 				return nil
 			}
 			if !errors.IsNotFound(err) {

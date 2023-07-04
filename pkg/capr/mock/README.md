@@ -18,12 +18,12 @@ export PATH=$PATH:/root/go/bin
 They were generated through the following commands:
 
 ```
-mockgen --build_flags=--mod=mod -package mockrkecontrollers -destination ./pkg/capr/mock/mockrkecontrollers/mock_rkecontrollers.go github.com/rancher/rancher/pkg/generated/controllers/rke.cattle.io/v1 RKEBootstrapClient,RKEBootstrapCache,RKEControlPlaneController,ETCDSnapshotCache
-mockgen --build_flags=--mod=mod -package mockcorecontrollers -destination ./pkg/capr/mock/mockcorecontrollers/mock_corecontrollers.go github.com/rancher/wrangler/pkg/generated/controllers/core/v1 SecretClient,SecretCache,ConfigMapCache
-mockgen --build_flags=--mod=mod -package mockmgmtcontrollers -destination ./pkg/capr/mock/mockmgmtcontrollers/mock_mgmtcontrollers.go github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3 ClusterRegistrationTokenCache,ClusterCache
-mockgen --build_flags=--mod=mod -package mockcapicontrollers -destination ./pkg/capr/mock/mockcapicontrollers/mock_capicontrollers.go github.com/rancher/rancher/pkg/generated/controllers/cluster.x-k8s.io/v1beta1 MachineClient,MachineCache,ClusterClient,ClusterCache
-mockgen --build_flags=--mod=mod -package mockranchercontrollers -destination ./pkg/capr/mock/mockranchercontrollers/mock_ranchercontrollers.go github.com/rancher/rancher/pkg/generated/controllers/provisioning.cattle.io/v1 ClusterCache
-mockgen --build_flags=--mod=mod -package mockfleetcontrollers -destination ./pkg/capr/mock/mockfleetcontrollers/mock_fleetcontrollers.go github.com/rancher/rancher/pkg/generated/controllers/fleet.cattle.io/v1alpha1 BundleController
+mockgen --build_flags=--mod=mod -package mockrkecontrollers -destination ./pkg/capr/mock/mockrkecontrollers/mock_rkecontrollers.go github.com/ranger/ranger/pkg/generated/controllers/rke.cattle.io/v1 RKEBootstrapClient,RKEBootstrapCache,RKEControlPlaneController,ETCDSnapshotCache
+mockgen --build_flags=--mod=mod -package mockcorecontrollers -destination ./pkg/capr/mock/mockcorecontrollers/mock_corecontrollers.go github.com/ranger/wrangler/pkg/generated/controllers/core/v1 SecretClient,SecretCache,ConfigMapCache
+mockgen --build_flags=--mod=mod -package mockmgmtcontrollers -destination ./pkg/capr/mock/mockmgmtcontrollers/mock_mgmtcontrollers.go github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3 ClusterRegistrationTokenCache,ClusterCache
+mockgen --build_flags=--mod=mod -package mockcapicontrollers -destination ./pkg/capr/mock/mockcapicontrollers/mock_capicontrollers.go github.com/ranger/ranger/pkg/generated/controllers/cluster.x-k8s.io/v1beta1 MachineClient,MachineCache,ClusterClient,ClusterCache
+mockgen --build_flags=--mod=mod -package mockrangercontrollers -destination ./pkg/capr/mock/mockrangercontrollers/mock_rangercontrollers.go github.com/ranger/ranger/pkg/generated/controllers/provisioning.cattle.io/v1 ClusterCache
+mockgen --build_flags=--mod=mod -package mockfleetcontrollers -destination ./pkg/capr/mock/mockfleetcontrollers/mock_fleetcontrollers.go github.com/ranger/ranger/pkg/generated/controllers/fleet.cattle.io/v1alpha1 BundleController
 ```
 
 Eventually, when Wrangler is updated to generate mock clients, we should use that instead of generating our own mock clients/controllers/caches.

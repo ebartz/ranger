@@ -101,8 +101,8 @@ const (
     ]
   }
 }`
-	// FleetAgentAffinity is hardcoded in the rancher/fleet repo in the agent manifest
-	// https://github.com/rancher/fleet/blob/90e33140906ba5d4931b4e1dee588854cbb300b1/pkg/agent/manifest.go#L178-L195
+	// FleetAgentAffinity is hardcoded in the ranger/fleet repo in the agent manifest
+	// https://github.com/ranger/fleet/blob/90e33140906ba5d4931b4e1dee588854cbb300b1/pkg/agent/manifest.go#L178-L195
 	FleetAgentAffinity = `{
   "nodeAffinity": {
     "preferredDuringSchedulingIgnoredDuringExecution": [

@@ -35,7 +35,7 @@ tests:
       path: spec.template.spec.containers[0].env
       content:
         name: CATTLE_PEER_SERVICE
-        value: RELEASE-NAME-rancher
+        value: RELEASE-NAME-ranger
   - contains:
       path: spec.template.spec.containers[0].env
       content:
@@ -49,7 +49,7 @@ tests:
       - name: CATTLE_NAMESPACE
         value: NAMESPACE
       - name: CATTLE_PEER_SERVICE
-        value: RELEASE-NAME-rancher
+        value: RELEASE-NAME-ranger
 - it: should default imagePullPolicy to IfNotPresent
   asserts:
   - equal:
@@ -57,7 +57,7 @@ tests:
       value: IfNotPresent
 - it: should override imagePullPolicy to Always
   set:
-    rancherImagePullPolicy: Always
+    rangerImagePullPolicy: Always
   asserts:
   - equal:
       path: spec.template.spec.containers[0].imagePullPolicy
@@ -70,26 +70,26 @@ tests:
   asserts:
   - equal:
       path: spec.template.spec.containers[1].image
-      value: rancher/mirrored-bci-micro:15.4.14.3
+      value: ranger/mirrored-bci-micro:15.4.14.3
 - it: should override auditLog.image.repository value when auditLog.destination is sidecar and auditLog.level > 0 and both auditLog.image.repository and auditLog.image.tag are set
   set:
     auditLog:
       destination: sidecar
       level: 1
       image:
-        repository: my.private.repo:5000/rancher/busybox
+        repository: my.private.repo:5000/ranger/busybox
         tag: 1.0.1
   asserts:
   - equal:
       path: spec.template.spec.containers[1].image
-      value: my.private.repo:5000/rancher/busybox:1.0.1
+      value: my.private.repo:5000/ranger/busybox:1.0.1
 - it: deprecated busyboxImage should override auditLog.image.repository image when auditLog.destination is sidecar and auditLog.level > 0 and auditLog.image.repository  and busyboxImage are set
   set:
     auditLog:
       destination: sidecar
       level: 1
       image:
-        repository: my.private.repo:5000/rancher/busybox
+        repository: my.private.repo:5000/ranger/busybox
         tag : 1.0.1
     busyboxImage: busybox
   asserts:
@@ -126,7 +126,7 @@ tests:
   - notContains:
       path: spec.template.spec.containers[0].args
       content: "--no-cacerts"
-- it: should not have command arg "--no-cacerts" when using default (rancher) ingress TLS
+- it: should not have command arg "--no-cacerts" when using default (ranger) ingress TLS
   set:
     tls: "ingress"
   asserts:
@@ -167,7 +167,7 @@ tests:
       content:
         name: custom-logos
         persistentVolumeClaim:
-          claimName: RELEASE-NAME-rancher-custom-logos
+          claimName: RELEASE-NAME-ranger-custom-logos
 - it: should create custom-logos volume customLogos.enabled and customLogos.volumeKind=persistentVolumeClaim using customLogos.volumeName
   set:
     customLogos.enabled: true
@@ -213,13 +213,13 @@ tests:
   - contains:
       path: spec.template.spec.containers[0].volumeMounts
       content:
-        mountPath: /usr/share/rancher/ui/assets/images/logos
+        mountPath: /usr/share/ranger/ui/assets/images/logos
         name: custom-logos
         subPath: ember
   - contains:
       path: spec.template.spec.containers[0].volumeMounts
       content:
-        mountPath: /usr/share/rancher/ui-dashboard/dashboard/_nuxt/assets/images/pl
+        mountPath: /usr/share/ranger/ui-dashboard/dashboard/_nuxt/assets/images/pl
         name: custom-logos
         subPath: vue
 - it: should mount custom-logos volume with default subpaths if customLogos.enabled and customLogos.volumeKind=persistentVolumeClaim and customLogos.volumeSubpaths.* blank 
@@ -232,13 +232,13 @@ tests:
   - contains:
       path: spec.template.spec.containers[0].volumeMounts
       content:
-        mountPath: /usr/share/rancher/ui/assets/images/logos
+        mountPath: /usr/share/ranger/ui/assets/images/logos
         name: custom-logos
         subPath: ember
   - contains:
       path: spec.template.spec.containers[0].volumeMounts
       content:
-        mountPath: /usr/share/rancher/ui-dashboard/dashboard/_nuxt/assets/images/pl
+        mountPath: /usr/share/ranger/ui-dashboard/dashboard/_nuxt/assets/images/pl
         name: custom-logos
         subPath: vue
 - it: should mount custom-logos volume with specified subpaths if customLogos.enabled and customLogos.volumeKind=persistentVolumeClaim
@@ -251,13 +251,13 @@ tests:
   - contains:
       path: spec.template.spec.containers[0].volumeMounts
       content:
-        mountPath: /usr/share/rancher/ui/assets/images/logos
+        mountPath: /usr/share/ranger/ui/assets/images/logos
         name: custom-logos
         subPath: test_ember
   - contains:
       path: spec.template.spec.containers[0].volumeMounts
       content:
-        mountPath: /usr/share/rancher/ui-dashboard/dashboard/_nuxt/assets/images/pl
+        mountPath: /usr/share/ranger/ui-dashboard/dashboard/_nuxt/assets/images/pl
         name: custom-logos
         subPath: test_vue
 - it: should mount custom-logos volume with default subpaths if customLogos.enabled and customLogos.volumeKind=persistentVolumeClaim and customLogos.volumeName
@@ -269,13 +269,13 @@ tests:
   - contains:
       path: spec.template.spec.containers[0].volumeMounts
       content:
-        mountPath: /usr/share/rancher/ui/assets/images/logos
+        mountPath: /usr/share/ranger/ui/assets/images/logos
         name: custom-logos
         subPath: ember
   - contains:
       path: spec.template.spec.containers[0].volumeMounts
       content:
-        mountPath: /usr/share/rancher/ui-dashboard/dashboard/_nuxt/assets/images/pl
+        mountPath: /usr/share/ranger/ui-dashboard/dashboard/_nuxt/assets/images/pl
         name: custom-logos
         subPath: vue
 - it: should mount custom-logos volume with default subpaths if customLogos.enabled and customLogos.volumeKind=persistentVolumeClaim and customLogos.volumeName and customLogos.volumeSubpaths.* blank 
@@ -289,13 +289,13 @@ tests:
   - contains:
       path: spec.template.spec.containers[0].volumeMounts
       content:
-        mountPath: /usr/share/rancher/ui/assets/images/logos
+        mountPath: /usr/share/ranger/ui/assets/images/logos
         name: custom-logos
         subPath: ember
   - contains:
       path: spec.template.spec.containers[0].volumeMounts
       content:
-        mountPath: /usr/share/rancher/ui-dashboard/dashboard/_nuxt/assets/images/pl
+        mountPath: /usr/share/ranger/ui-dashboard/dashboard/_nuxt/assets/images/pl
         name: custom-logos
         subPath: vue
 - it: should mount custom-logos volume with specified subpaths if customLogos.enabled and customLogos.volumeKind=persistentVolumeClaim and customLogos.volumeName
@@ -309,13 +309,13 @@ tests:
   - contains:
       path: spec.template.spec.containers[0].volumeMounts
       content:
-        mountPath: /usr/share/rancher/ui/assets/images/logos
+        mountPath: /usr/share/ranger/ui/assets/images/logos
         name: custom-logos
         subPath: test_ember
   - contains:
       path: spec.template.spec.containers[0].volumeMounts
       content:
-        mountPath: /usr/share/rancher/ui-dashboard/dashboard/_nuxt/assets/images/pl
+        mountPath: /usr/share/ranger/ui-dashboard/dashboard/_nuxt/assets/images/pl
         name: custom-logos
         subPath: test_vue
 - it: should not mount custom-logos volume if customLogos.enabled and customLogos.volumeKind=configMap but no customLogos.volumeName
@@ -344,11 +344,11 @@ tests:
   asserts:
     - isNullOrEmpty:
         path: spec.template.spec.priorityClassName
-- it: should default priorityClassName="rancher-critical"
+- it: should default priorityClassName="ranger-critical"
   asserts:
     - equal:
         path: spec.template.spec.priorityClassName
-        value: "rancher-critical"
+        value: "ranger-critical"
 - it: should default livenessProbe initialDelaySeconds to 60
   asserts:
     - equal:

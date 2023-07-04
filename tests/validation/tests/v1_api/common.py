@@ -2,15 +2,15 @@ from ..common import *  # NOQA
 import pprint
 import json
 import yaml
-import rancher
+import ranger
 
-TEST_IMAGE_V1 = os.environ.get('RANCHER_TEST_IMAGE_V1', "ranchertest/mytestcontainer")
+TEST_IMAGE_V1 = os.environ.get('RANCHER_TEST_IMAGE_V1', "rangertest/mytestcontainer")
 
 
 def get_admin_client_v1():
     url = CATTLE_TEST_URL + "/v1"
     # in fact, we get the cluster client for the local cluster
-    return rancher.Client(url=url, token=ADMIN_TOKEN, verify=False)
+    return ranger.Client(url=url, token=ADMIN_TOKEN, verify=False)
 
 
 def get_cluster_client_for_token_v1(cluster_id=None, token=None):
@@ -21,7 +21,7 @@ def get_cluster_client_for_token_v1(cluster_id=None, token=None):
         token = USER_TOKEN
 
     url = CATTLE_TEST_URL + "/k8s/clusters/" + cluster_id + "/v1/schemas"
-    return rancher.Client(url=url, token=token, verify=False)
+    return ranger.Client(url=url, token=token, verify=False)
 
 
 def get_cluster_by_name(client, cluster_name):

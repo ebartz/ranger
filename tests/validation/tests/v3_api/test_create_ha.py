@@ -11,25 +11,25 @@ from .test_rke_cluster_provisioning import AZURE_CLIENT_ID, AZURE_CLIENT_SECRET,
 from packaging import version
 
 # RANCHER_HA_KUBECONFIG and RANCHER_HA_HOSTNAME are provided
-# when installing Rancher into a k3s setup
+# when installing Ranger into a k3s setup
 RANCHER_HA_KUBECONFIG = os.environ.get("RANCHER_HA_KUBECONFIG")
 RANCHER_HA_HARDENED = ast.literal_eval(os.environ.get("RANCHER_HA_HARDENED", "False"))
 RANCHER_PSP_ENABLED = ast.literal_eval(os.environ.get("RANCHER_PSP_ENABLED", "True"))
 RANCHER_HA_HOSTNAME = os.environ.get(
-    "RANCHER_HA_HOSTNAME", RANCHER_HOSTNAME_PREFIX + ".qa.rancher.space")
-resource_prefix = RANCHER_HA_HOSTNAME.split(".qa.rancher.space")[0]
+    "RANCHER_HA_HOSTNAME", RANCHER_HOSTNAME_PREFIX + ".qa.ranger.space")
+resource_prefix = RANCHER_HA_HOSTNAME.split(".qa.ranger.space")[0]
 RANCHER_SERVER_URL = "https://" + RANCHER_HA_HOSTNAME
 
 RANCHER_CHART_VERSION = os.environ.get("RANCHER_CHART_VERSION")
 RANCHER_HELM_EXTRA_SETTINGS = os.environ.get("RANCHER_HELM_EXTRA_SETTINGS")
 RANCHER_IMAGE_TAG = os.environ.get("RANCHER_IMAGE_TAG")
 RANCHER_HELM_REPO = os.environ.get("RANCHER_HELM_REPO", "latest")
-RANCHER_HELM_URL = os.environ.get("RANCHER_HELM_URL", "https://releases.rancher.com/server-charts/")
+RANCHER_HELM_URL = os.environ.get("RANCHER_HELM_URL", "https://releases.ranger.com/server-charts/")
 RANCHER_LETSENCRYPT_EMAIL = os.environ.get("RANCHER_LETSENCRYPT_EMAIL")
 # Here is the list of cert types for HA install
-# [rancher-self-signed, byo-valid, byo-self-signed, letsencrypt]
+# [ranger-self-signed, byo-valid, byo-self-signed, letsencrypt]
 RANCHER_HA_CERT_OPTION = os.environ.get("RANCHER_HA_CERT_OPTION",
-                                        "rancher-self-signed")
+                                        "ranger-self-signed")
 RANCHER_VALID_TLS_CERT = os.environ.get("RANCHER_VALID_TLS_CERT")
 RANCHER_VALID_TLS_KEY = os.environ.get("RANCHER_VALID_TLS_KEY")
 RANCHER_BYO_TLS_CERT = os.environ.get("RANCHER_BYO_TLS_CERT")
@@ -45,9 +45,9 @@ kubeconfig_path = DATA_SUBDIR + "/kube_config_cluster-ha-filled.yml"
 export_cmd = "export KUBECONFIG=" + kubeconfig_path
 
 
-def test_remove_rancher_ha():
-    assert CATTLE_TEST_URL.endswith(".qa.rancher.space"), \
-        "the CATTLE_TEST_URL need to end with .qa.rancher.space"
+def test_remove_ranger_ha():
+    assert CATTLE_TEST_URL.endswith(".qa.ranger.space"), \
+        "the CATTLE_TEST_URL need to end with .qa.ranger.space"
     if not check_if_ok(CATTLE_TEST_URL):
         print("skip deleting clusters within the setup")
     else:
@@ -64,11 +64,11 @@ def test_remove_rancher_ha():
             delete_cluster(client, cluster)
 
     resource_prefix = \
-        CATTLE_TEST_URL.split(".qa.rancher.space")[0].split("//")[1]
+        CATTLE_TEST_URL.split(".qa.ranger.space")[0].split("//")[1]
     delete_resource_in_AWS_by_prefix(resource_prefix)
 
 
-def test_install_rancher_ha(precheck_certificate_options):
+def test_install_ranger_ha(precheck_certificate_options):
     cm_install = True
     extra_settings = []
     profile = 'rke-cis-1.5'
@@ -154,8 +154,8 @@ def test_install_rancher_ha(precheck_certificate_options):
     if cm_install:
         install_cert_manager()
     add_repo_create_namespace()
-    # Here we use helm to install the Rancher chart
-    install_rancher(extra_settings=extra_settings)
+    # Here we use helm to install the Ranger chart
+    install_ranger(extra_settings=extra_settings)
     set_route53_with_ingress()
     wait_for_status_code(url=RANCHER_SERVER_URL + "/v3", expected_code=401)
     auth_url = \
@@ -164,7 +164,7 @@ def test_install_rancher_ha(precheck_certificate_options):
     admin_client = set_url_and_password(RANCHER_SERVER_URL)
     cluster = get_cluster_by_name(admin_client, "local")
     validate_cluster_state(admin_client, cluster, False)
-    print("Local HA Rancher cluster created successfully! "
+    print("Local HA Ranger cluster created successfully! "
           "Access the UI via:\n{}".format(RANCHER_SERVER_URL))
     if RANCHER_ADD_CUSTOM_CLUSTER.upper() == "TRUE":
         print("creating an custom cluster")
@@ -182,12 +182,12 @@ def create_custom_cluster(admin_client):
             5, random_test_name(resource_prefix + "-custom"))
     node_roles = [["controlplane"], ["etcd"],
                   ["worker"], ["worker"], ["worker"]]
-    client = rancher.Client(url=RANCHER_SERVER_URL + "/v3",
+    client = ranger.Client(url=RANCHER_SERVER_URL + "/v3",
                             token=user_token, verify=False)
     cluster = client.create_cluster(
         name=random_name(),
-        driver="rancherKubernetesEngine",
-        rancherKubernetesEngineConfig=rke_config)
+        driver="rangerKubernetesEngine",
+        rangerKubernetesEngineConfig=rke_config)
     assert cluster.state == "provisioning"
     i = 0
     for aws_node in aws_nodes:
@@ -199,10 +199,10 @@ def create_custom_cluster(admin_client):
     validate_cluster(client, cluster, userToken=user_token)
 
 
-def test_upgrade_rancher_ha(precheck_upgrade_options):
+def test_upgrade_ranger_ha(precheck_upgrade_options):
     write_kubeconfig()
     add_repo_create_namespace()
-    install_rancher(upgrade=True)
+    install_ranger(upgrade=True)
 
 
 def create_resources_eks():
@@ -327,7 +327,7 @@ def set_route53_with_ingress():
 
 
 def add_repo_create_namespace(repo=RANCHER_HELM_REPO, url=RANCHER_HELM_URL):
-    repo_name = "rancher-" + repo
+    repo_name = "ranger-" + repo
     repo_url = url + repo
 
     run_command_with_stderr("helm_v3 repo add " + repo_name + " " + repo_url)
@@ -336,43 +336,43 @@ def add_repo_create_namespace(repo=RANCHER_HELM_REPO, url=RANCHER_HELM_URL):
                             "kubectl create namespace cattle-system")
 
 
-def install_rancher(type=RANCHER_HA_CERT_OPTION, repo=RANCHER_HELM_REPO,
+def install_ranger(type=RANCHER_HA_CERT_OPTION, repo=RANCHER_HELM_REPO,
                     upgrade=False, extra_settings=None):
     operation = "install"
 
     if upgrade:
         operation = "upgrade"
 
-    helm_rancher_cmd = \
-        export_cmd + " && helm_v3 " + operation + " rancher " + \
-        "rancher-" + repo + "/rancher " + \
+    helm_ranger_cmd = \
+        export_cmd + " && helm_v3 " + operation + " ranger " + \
+        "ranger-" + repo + "/ranger " + \
         "--version " + RANCHER_CHART_VERSION + " " + \
         "--namespace cattle-system " + \
         "--set hostname=" + RANCHER_HA_HOSTNAME
 
     if version.parse(RANCHER_CHART_VERSION) > version.parse("2.7.1"):
-        helm_rancher_cmd = helm_rancher_cmd + " --set global.cattle.psp.enabled=" + str(RANCHER_PSP_ENABLED).lower()
+        helm_ranger_cmd = helm_ranger_cmd + " --set global.cattle.psp.enabled=" + str(RANCHER_PSP_ENABLED).lower()
 
     if type == 'letsencrypt':
-        helm_rancher_cmd = \
-            helm_rancher_cmd + \
+        helm_ranger_cmd = \
+            helm_ranger_cmd + \
             " --set ingress.tls.source=letsEncrypt " + \
             "--set letsEncrypt.email=" + \
             RANCHER_LETSENCRYPT_EMAIL
     elif type == 'byo-self-signed':
-        helm_rancher_cmd = \
-            helm_rancher_cmd + \
+        helm_ranger_cmd = \
+            helm_ranger_cmd + \
             " --set ingress.tls.source=secret " + \
             "--set privateCA=true"
     elif type == 'byo-valid':
-        helm_rancher_cmd = \
-            helm_rancher_cmd + \
+        helm_ranger_cmd = \
+            helm_ranger_cmd + \
             " --set ingress.tls.source=secret"
 
     if RANCHER_IMAGE_TAG != "" and RANCHER_IMAGE_TAG is not None:
-        helm_rancher_cmd = \
-            helm_rancher_cmd + \
-            " --set rancherImageTag=" + RANCHER_IMAGE_TAG
+        helm_ranger_cmd = \
+            helm_ranger_cmd + \
+            " --set rangerImageTag=" + RANCHER_IMAGE_TAG
 
     if operation == "install":
         if type == "byo-self-signed":
@@ -385,16 +385,16 @@ def install_rancher(type=RANCHER_HA_CERT_OPTION, repo=RANCHER_HELM_REPO,
 
     if extra_settings:
         for setting in extra_settings:
-            helm_rancher_cmd = helm_rancher_cmd + " " + setting
+            helm_ranger_cmd = helm_ranger_cmd + " " + setting
 
-    run_command_with_stderr(helm_rancher_cmd)
+    run_command_with_stderr(helm_ranger_cmd)
     time.sleep(120)
 
     # set trace logging
-    set_trace_cmd = "kubectl -n cattle-system get pods -l app=rancher " + \
+    set_trace_cmd = "kubectl -n cattle-system get pods -l app=ranger " + \
         "--no-headers -o custom-columns=name:.metadata.name | " + \
-        "while read rancherpod; do kubectl -n cattle-system " + \
-        "exec $rancherpod -c rancher -- loglevel --set trace; done"
+        "while read rangerpod; do kubectl -n cattle-system " + \
+        "exec $rangerpod -c ranger -- loglevel --set trace; done"
     run_command_with_stderr(set_trace_cmd)
 
 
@@ -413,7 +413,7 @@ def create_tls_secrets(valid_cert):
         write_encoded_certs(ca_path, RANCHER_PRIVATE_CA_CERT)
 
     tls_command = export_cmd + " && kubectl -n cattle-system " \
-                               "create secret tls tls-rancher-ingress " \
+                               "create secret tls tls-ranger-ingress " \
                                "--cert=" + cert_path + " --key=" + key_path
     ca_command = export_cmd + " && kubectl -n cattle-system " \
                               "create secret generic tls-ca " \
@@ -437,13 +437,13 @@ def write_kubeconfig():
     file.close()
 
 
-def set_url_and_password(rancher_url, server_url=None, version=""):
-    admin_token = set_url_password_token(rancher_url, server_url, version=version)
-    admin_client = rancher.Client(url=rancher_url + "/v3",
+def set_url_and_password(ranger_url, server_url=None, version=""):
+    admin_token = set_url_password_token(ranger_url, server_url, version=version)
+    admin_client = ranger.Client(url=ranger_url + "/v3",
                                   token=admin_token, verify=False)
-    auth_url = rancher_url + "/v3-public/localproviders/local?action=login"
+    auth_url = ranger_url + "/v3-public/localproviders/local?action=login"
     user, user_token = create_user(admin_client, auth_url)
-    env_details = "env.CATTLE_TEST_URL='" + rancher_url + "'\n"
+    env_details = "env.CATTLE_TEST_URL='" + ranger_url + "'\n"
     env_details += "env.ADMIN_TOKEN='" + admin_token + "'\n"
     env_details += "env.USER_TOKEN='" + user_token + "'\n"
     create_config_file(env_details)

@@ -3,7 +3,7 @@ package pipeline
 import (
 	"os"
 
-	"github.com/rancher/rancher/tests/v2/validation/upgrade"
+	"github.com/ranger/ranger/tests/v2/validation/upgrade"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 )
@@ -60,20 +60,20 @@ const ClustersConfigKey = "clusters"
 
 // Clusters is a struct that contains cluster types.
 type Clusters struct {
-	RKE1Clusters   RancherClusters `yaml:"rke1"`
-	RKE2Clusters   RancherClusters `yaml:"rke2"`
-	K3sClusters    RancherClusters `yaml:"k3s"`
+	RKE1Clusters   RangerClusters `yaml:"rke1"`
+	RKE2Clusters   RangerClusters `yaml:"rke2"`
+	K3sClusters    RangerClusters `yaml:"k3s"`
 	HostedClusters []HostedCluster `yaml:"hosted"`
 }
 
-// RancherClusters is a struct that contains slice of custom and node providers as ProviderCluster type.
-type RancherClusters struct {
-	CustomClusters       []RancherCluster `yaml:"custom"`
-	NodeProviderClusters []RancherCluster `yaml:"nodeProvider"`
+// RangerClusters is a struct that contains slice of custom and node providers as ProviderCluster type.
+type RangerClusters struct {
+	CustomClusters       []RangerCluster `yaml:"custom"`
+	NodeProviderClusters []RangerCluster `yaml:"nodeProvider"`
 }
 
-// RancherCluster is a struct that contains related information about the downstream cluster that's going to be created and upgraded.
-type RancherCluster struct {
+// RangerCluster is a struct that contains related information about the downstream cluster that's going to be created and upgraded.
+type RangerCluster struct {
 	Provider                   string           `yaml:"provider"`
 	KubernetesVersion          string           `yaml:"kubernetesVersion"`
 	KubernetesVersionToUpgrade string           `yaml:"kubernetesVersionToUpgrade"`

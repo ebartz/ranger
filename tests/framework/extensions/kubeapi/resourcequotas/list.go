@@ -3,8 +3,8 @@ package resourcequotas
 import (
 	"context"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -15,7 +15,7 @@ type ResourceQuotaList struct {
 }
 
 // ListResourceQuotas is a helper function that uses the dynamic client to list resource quotas in a cluster with its list options.
-func ListResourceQuotas(client *rancher.Client, clusterID string, namespace string, listOpts metav1.ListOptions) (*ResourceQuotaList, error) {
+func ListResourceQuotas(client *ranger.Client, clusterID string, namespace string, listOpts metav1.ListOptions) (*ResourceQuotaList, error) {
 	resourceQuotaList := new(ResourceQuotaList)
 
 	dynamicClient, err := client.GetDownStreamClusterClient(clusterID)

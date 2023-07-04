@@ -3,9 +3,9 @@ This file contains tests for service discovery.
 This file also has rbac tests based on different roles
 Test requirement:
 Below Env variables need to set
-CATTLE_TEST_URL - url to rancher server
-ADMIN_TOKEN - Admin token from rancher
-USER_TOKEN - User token from rancher
+CATTLE_TEST_URL - url to ranger server
+ADMIN_TOKEN - Admin token from ranger
+USER_TOKEN - User token from ranger
 RANCHER_CLUSTER_NAME - Cluster name to run test on
 RANCHER_TEST_RBAC - Boolean (Optional), To run role based tests.
 """
@@ -415,7 +415,7 @@ def test_dns_record_type_selector():
 def test_rbac_service_discovery_create(role):
     """
     Creates dns record and validates it for different roles passed in parameter
-    @param role: User role in rancher eg. project owner, project member etc
+    @param role: User role in ranger eg. project owner, project member etc
     """
     token = rbac_get_user_token_by_role(role)
     project = rbac_get_project()
@@ -443,7 +443,7 @@ def test_rbac_service_discovery_create(role):
 def test_rbac_service_discovery_edit(role):
     """
     Creates dns record with cluster owner role and edit it with different roles
-    @param role: User role in rancher eg. project owner, project member etc
+    @param role: User role in ranger eg. project owner, project member etc
     """
     c_owner_token = rbac_get_user_token_by_role(CLUSTER_OWNER)
     token = rbac_get_user_token_by_role(role)
@@ -485,7 +485,7 @@ def test_rbac_service_discovery_edit(role):
 def test_rbac_service_discovery_delete(role):
     """
     Creates dns record with cluster owner and delete with different roles.
-    @param role: User role in rancher eg. project owner, project member etc
+    @param role: User role in ranger eg. project owner, project member etc
     """
     c_owner_token = rbac_get_user_token_by_role(CLUSTER_OWNER)
     token = rbac_get_user_token_by_role(role)

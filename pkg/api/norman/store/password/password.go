@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	"github.com/rancher/rancher/pkg/namespace"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	"github.com/ranger/ranger/pkg/namespace"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -20,7 +20,7 @@ func GetValueForPasswordField(name string, secrets v1.SecretInterface) (string, 
 		return value, fmt.Errorf("not a secret reference %s", name)
 	}
 	if split[0] != namespace.GlobalNamespace {
-		return value, fmt.Errorf("not rancher referenced secret %s", name)
+		return value, fmt.Errorf("not ranger referenced secret %s", name)
 	}
 	secret, err := secrets.Controller().Lister().Get(namespace.GlobalNamespace, split[1])
 	if err != nil && errors.IsNotFound(err) {

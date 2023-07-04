@@ -1,7 +1,7 @@
 package client
 
 import (
-	"github.com/rancher/norman/types"
+	"github.com/ranger/norman/types"
 )
 
 const (
@@ -12,7 +12,7 @@ const (
 	ComposeConfigFieldLabels               = "labels"
 	ComposeConfigFieldName                 = "name"
 	ComposeConfigFieldOwnerReferences      = "ownerReferences"
-	ComposeConfigFieldRancherCompose       = "rancherCompose"
+	ComposeConfigFieldRangerCompose       = "rangerCompose"
 	ComposeConfigFieldRemoved              = "removed"
 	ComposeConfigFieldState                = "state"
 	ComposeConfigFieldStatus               = "status"
@@ -29,7 +29,7 @@ type ComposeConfig struct {
 	Labels               map[string]string `json:"labels,omitempty" yaml:"labels,omitempty"`
 	Name                 string            `json:"name,omitempty" yaml:"name,omitempty"`
 	OwnerReferences      []OwnerReference  `json:"ownerReferences,omitempty" yaml:"ownerReferences,omitempty"`
-	RancherCompose       string            `json:"rancherCompose,omitempty" yaml:"rancherCompose,omitempty"`
+	RangerCompose       string            `json:"rangerCompose,omitempty" yaml:"rangerCompose,omitempty"`
 	Removed              string            `json:"removed,omitempty" yaml:"removed,omitempty"`
 	State                string            `json:"state,omitempty" yaml:"state,omitempty"`
 	Status               *ComposeStatus    `json:"status,omitempty" yaml:"status,omitempty"`

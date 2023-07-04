@@ -3,8 +3,8 @@ package deployments
 import (
 	"context"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
 	appv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -15,7 +15,7 @@ type DeploymentList struct {
 }
 
 // ListDeployments is a helper function that uses the dynamic client to list deployments on a namespace for a specific cluster with its list options.
-func ListDeployments(client *rancher.Client, clusterID, namespace string, listOpts metav1.ListOptions) (*DeploymentList, error) {
+func ListDeployments(client *ranger.Client, clusterID, namespace string, listOpts metav1.ListOptions) (*DeploymentList, error) {
 	deploymentList := new(DeploymentList)
 
 	dynamicClient, err := client.GetDownStreamClusterClient(clusterID)

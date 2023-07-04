@@ -8,21 +8,21 @@ import (
 	"strings"
 	"time"
 
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/capr"
-	"github.com/rancher/rancher/pkg/capr/installer"
-	"github.com/rancher/rancher/pkg/controllers/capr/etcdmgmt"
-	capicontrollers "github.com/rancher/rancher/pkg/generated/controllers/cluster.x-k8s.io/v1beta1"
-	rkecontroller "github.com/rancher/rancher/pkg/generated/controllers/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/serviceaccounttoken"
-	"github.com/rancher/rancher/pkg/tls"
-	"github.com/rancher/rancher/pkg/wrangler"
-	appcontrollers "github.com/rancher/wrangler/pkg/generated/controllers/apps/v1"
-	corecontrollers "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
-	"github.com/rancher/wrangler/pkg/generic"
-	"github.com/rancher/wrangler/pkg/name"
-	"github.com/rancher/wrangler/pkg/relatedresource"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/capr"
+	"github.com/ranger/ranger/pkg/capr/installer"
+	"github.com/ranger/ranger/pkg/controllers/capr/etcdmgmt"
+	capicontrollers "github.com/ranger/ranger/pkg/generated/controllers/cluster.x-k8s.io/v1beta1"
+	rkecontroller "github.com/ranger/ranger/pkg/generated/controllers/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/serviceaccounttoken"
+	"github.com/ranger/ranger/pkg/tls"
+	"github.com/ranger/ranger/pkg/wrangler"
+	appcontrollers "github.com/ranger/wrangler/pkg/generated/controllers/apps/v1"
+	corecontrollers "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
+	"github.com/ranger/wrangler/pkg/generic"
+	"github.com/ranger/wrangler/pkg/name"
+	"github.com/ranger/wrangler/pkg/relatedresource"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
@@ -124,7 +124,7 @@ func (h *handler) getBootstrapSecret(namespace, name string, envVars []corev1.En
 	}
 	hash := sha256.Sum256(secret.Data["token"])
 
-	hasHostPort, err := h.rancherDeploymentHasHostPort()
+	hasHostPort, err := h.rangerDeploymentHasHostPort()
 	if err != nil {
 		return nil, err
 	}
@@ -343,8 +343,8 @@ func (h *handler) GeneratingHandler(bootstrap *rkev1.RKEBootstrap, status rkev1.
 	return result, status, nil
 }
 
-func (h *handler) rancherDeploymentHasHostPort() (bool, error) {
-	deployment, err := h.deploymentCache.Get(namespace.System, "rancher")
+func (h *handler) rangerDeploymentHasHostPort() (bool, error) {
+	deployment, err := h.deploymentCache.Get(namespace.System, "ranger")
 	if err != nil {
 		if apierrors.IsNotFound(err) {
 			return false, nil
@@ -354,7 +354,7 @@ func (h *handler) rancherDeploymentHasHostPort() (bool, error) {
 
 	for _, container := range deployment.Spec.Template.Spec.Containers {
 		for _, port := range container.Ports {
-			if container.Name == "rancher" && port.HostPort != 0 {
+			if container.Name == "ranger" && port.HostPort != 0 {
 				return true, nil
 			}
 		}

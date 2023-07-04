@@ -1,8 +1,8 @@
 package provisioning
 
 import (
-	provisionClientV1 "github.com/rancher/rancher/pkg/generated/clientset/versioned/typed/provisioning.cattle.io/v1"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
+	provisionClientV1 "github.com/ranger/ranger/pkg/generated/clientset/versioned/typed/provisioning.cattle.io/v1"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
 	"k8s.io/client-go/rest"
 )
 

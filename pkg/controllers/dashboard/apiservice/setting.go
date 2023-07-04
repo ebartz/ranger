@@ -3,14 +3,14 @@ package apiservice
 import (
 	"fmt"
 
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/features"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/settings"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/features"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/settings"
 	corev1 "k8s.io/api/core/v1"
 )
 
-const RancherServiceName = "rancher"
+const RangerServiceName = "ranger"
 
 func (h *handler) SetupInternalServerURL(key string, setting *v3.Setting) (*v3.Setting, error) {
 	if key != settings.ServerURL.Name {
@@ -39,7 +39,7 @@ func (h *handler) SetupInternalServerURL(key string, setting *v3.Setting) (*v3.S
 }
 
 func (h *handler) getClusterIP() (string, error) {
-	serviceName := RancherServiceName
+	serviceName := RangerServiceName
 	if features.MCMAgent.Enabled() {
 		serviceName = "cattle-cluster-agent"
 	}
@@ -57,7 +57,7 @@ func (h *handler) getInternalServerAndURL() (string, string, error) {
 	serverURL := settings.ServerURL.Get()
 	ca := settings.CACerts.Get()
 
-	tlsSecret, err := h.secretsCache.Get(namespace.System, "tls-rancher-internal-ca")
+	tlsSecret, err := h.secretsCache.Get(namespace.System, "tls-ranger-internal-ca")
 	if err != nil {
 		return "", "", err
 	}
@@ -69,9 +69,9 @@ func (h *handler) getInternalServerAndURL() (string, string, error) {
 			clusterIPService = true
 		}
 	} else {
-		if dp, err := h.deploymentCache.Get(namespace.System, RancherServiceName); err == nil && dp.Spec.Replicas != nil && *dp.Spec.Replicas != 0 {
+		if dp, err := h.deploymentCache.Get(namespace.System, RangerServiceName); err == nil && dp.Spec.Replicas != nil && *dp.Spec.Replicas != 0 {
 			clusterIPService = true
-		} else if _, err := h.daemonSetCache.Get(namespace.System, RancherServiceName); err == nil {
+		} else if _, err := h.daemonSetCache.Get(namespace.System, RangerServiceName); err == nil {
 			clusterIPService = true
 		}
 	}

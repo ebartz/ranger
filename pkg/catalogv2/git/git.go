@@ -18,7 +18,7 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/wrangler/pkg/randomtoken"
+	"github.com/ranger/wrangler/pkg/randomtoken"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/agent"
@@ -438,7 +438,7 @@ func formatGitURL(endpoint, branch string) string {
 			repo := strings.TrimSuffix(pathParts[2], ".git")
 			return fmt.Sprintf("https://api.github.com/repos/%s/%s/commits/%s", org, repo, branch)
 		}
-	case "git.rancher.io":
+	case "git.ranger.io":
 		repo := strings.TrimSuffix(pathParts[1], ".git")
 		u.Path = fmt.Sprintf("/repos/%s/commits/%s", repo, branch)
 		return u.String()

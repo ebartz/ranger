@@ -48,7 +48,7 @@ def test_dep_creation_kubectl(admin_mc, admin_cc, remove_resource):
     remove_resource(dep)
     assert dep is not None
 
-    # now get this through rancher api as namespacedCertificate
+    # now get this through ranger api as namespacedCertificate
     p_client = user_project_client(admin_mc, project)
     d = p_client.list_workload(name=name, namespace=namespace_name).data[0]
     assert d is not None

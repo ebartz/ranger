@@ -9,14 +9,14 @@ import (
 	"strconv"
 	"strings"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	authsettings "github.com/rancher/rancher/pkg/auth/settings"
-	fleetconst "github.com/rancher/rancher/pkg/fleet"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	authsettings "github.com/ranger/ranger/pkg/auth/settings"
+	fleetconst "github.com/ranger/ranger/pkg/fleet"
 	"github.com/sirupsen/logrus"
 	v1 "k8s.io/api/core/v1"
 )
 
-const RancherVersionDev = "2.7.99"
+const RangerVersionDev = "2.7.99"
 
 var (
 	releasePattern = regexp.MustCompile("^v[0-9]")
@@ -43,13 +43,13 @@ var (
 		"calico-system",
 		"tigera-operator",
 		"cattle-impersonation-system",
-		"rancher-operator-system",
+		"ranger-operator-system",
 		"cattle-csp-adapter-system",
 		"calico-apiserver",
 		"cattle-elemental-system",
 	}
 
-	AgentImage                          = NewSetting("agent-image", "rancher/rancher-agent:v2.7-head")
+	AgentImage                          = NewSetting("agent-image", "ranger/ranger-agent:v2.7-head")
 	AgentRolloutTimeout                 = NewSetting("agent-rollout-timeout", "300s")
 	AgentRolloutWait                    = NewSetting("agent-rollout-wait", "true")
 	AuthImage                           = NewSetting("auth-image", v32.ToolsSystemImages.AuthSystemImages.KubeAPIAuth)
@@ -57,12 +57,12 @@ var (
 	AuthorizationDenyCacheTTLSeconds    = NewSetting("authorization-deny-cache-ttl-seconds", "10")
 	AzureGroupCacheSize                 = NewSetting("azure-group-cache-size", "10000")
 	CACerts                             = NewSetting("cacerts", "")
-	CLIURLDarwin                        = NewSetting("cli-url-darwin", "https://releases.rancher.com/cli/v1.0.0-alpha8/rancher-darwin-amd64-v1.0.0-alpha8.tar.gz")
-	CLIURLLinux                         = NewSetting("cli-url-linux", "https://releases.rancher.com/cli/v1.0.0-alpha8/rancher-linux-amd64-v1.0.0-alpha8.tar.gz")
-	CLIURLWindows                       = NewSetting("cli-url-windows", "https://releases.rancher.com/cli/v1.0.0-alpha8/rancher-windows-386-v1.0.0-alpha8.zip")
+	CLIURLDarwin                        = NewSetting("cli-url-darwin", "https://releases.ranger.com/cli/v1.0.0-alpha8/ranger-darwin-amd64-v1.0.0-alpha8.tar.gz")
+	CLIURLLinux                         = NewSetting("cli-url-linux", "https://releases.ranger.com/cli/v1.0.0-alpha8/ranger-linux-amd64-v1.0.0-alpha8.tar.gz")
+	CLIURLWindows                       = NewSetting("cli-url-windows", "https://releases.ranger.com/cli/v1.0.0-alpha8/ranger-windows-386-v1.0.0-alpha8.zip")
 	ClusterControllerStartCount         = NewSetting("cluster-controller-start-count", "50")
-	EngineInstallURL                    = NewSetting("engine-install-url", "https://releases.rancher.com/install-docker/24.0.sh")
-	EngineISOURL                        = NewSetting("engine-iso-url", "https://releases.rancher.com/os/latest/rancheros-vmware.iso")
+	EngineInstallURL                    = NewSetting("engine-install-url", "https://releases.ranger.com/install-docker/24.0.sh")
+	EngineISOURL                        = NewSetting("engine-iso-url", "https://releases.ranger.com/os/latest/rangeros-vmware.iso")
 	EngineNewestVersion                 = NewSetting("engine-newest-version", "v17.12.0")
 	EngineSupportedRange                = NewSetting("engine-supported-range", "~v1.11.2 || ~v1.12.0 || ~v1.13.0 || ~v17.03.0 || ~v17.06.0 || ~v17.09.0 || ~v18.06.0 || ~v18.09.0 || ~v19.03.0 || ~v20.10.0 || ~v23.0.0 || ~v24.0.0 ")
 	FirstLogin                          = NewSetting("first-login", "true")
@@ -86,19 +86,19 @@ var (
 	Namespace                           = NewSetting("namespace", os.Getenv("CATTLE_NAMESPACE"))
 	PasswordMinLength                   = NewSetting("password-min-length", "12")
 	PeerServices                        = NewSetting("peer-service", os.Getenv("CATTLE_PEER_SERVICE"))
-	RDNSServerBaseURL                   = NewSetting("rdns-base-url", "https://api.lb.rancher.cloud/v1")
+	RDNSServerBaseURL                   = NewSetting("rdns-base-url", "https://api.lb.ranger.cloud/v1")
 	RkeVersion                          = NewSetting("rke-version", "")
 	RkeMetadataConfig                   = NewSetting("rke-metadata-config", getMetadataConfig())
-	ServerImage                         = NewSetting("server-image", "rancher/rancher")
+	ServerImage                         = NewSetting("server-image", "ranger/ranger")
 	ServerURL                           = NewSetting("server-url", "")
 	ServerVersion                       = NewSetting("server-version", "dev")
 	SystemAgentVersion                  = NewSetting("system-agent-version", "")
 	WinsAgentVersion                    = NewSetting("wins-agent-version", "")
 	CSIProxyAgentVersion                = NewSetting("csi-proxy-agent-version", "")
 	CSIProxyAgentURL                    = NewSetting("csi-proxy-agent-url", "https://acs-mirror.azureedge.net/csi-proxy/%[1]s/binaries/csi-proxy-%[1]s.tar.gz")
-	SystemAgentInstallScript            = NewSetting("system-agent-install-script", "https://raw.githubusercontent.com/rancher/system-agent/v0.3.3/install.sh")
-	WinsAgentInstallScript              = NewSetting("wins-agent-install-script", "https://raw.githubusercontent.com/rancher/wins/v0.4.11/install.ps1")
-	SystemAgentInstallerImage           = NewSetting("system-agent-installer-image", "rancher/system-agent-installer-")
+	SystemAgentInstallScript            = NewSetting("system-agent-install-script", "https://raw.githubusercontent.com/ranger/system-agent/v0.3.3/install.sh")
+	WinsAgentInstallScript              = NewSetting("wins-agent-install-script", "https://raw.githubusercontent.com/ranger/wins/v0.4.11/install.ps1")
+	SystemAgentInstallerImage           = NewSetting("system-agent-installer-image", "ranger/system-agent-installer-")
 	SystemAgentUpgradeImage             = NewSetting("system-agent-upgrade-image", "")
 	WinsAgentUpgradeImage               = NewSetting("wins-agent-upgrade-image", "")
 	SystemNamespaces                    = NewSetting("system-namespaces", strings.Join(systemNamespaces, ","))
@@ -106,7 +106,7 @@ var (
 	TelemetryOpt                        = NewSetting("telemetry-opt", "")
 	TLSMinVersion                       = NewSetting("tls-min-version", "1.2")
 	TLSCiphers                          = NewSetting("tls-ciphers", "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305")
-	WhitelistDomain                     = NewSetting("whitelist-domain", "forums.rancher.com")
+	WhitelistDomain                     = NewSetting("whitelist-domain", "forums.ranger.com")
 	WhitelistEnvironmentVars            = NewSetting("whitelist-envvars", "HTTP_PROXY,HTTPS_PROXY,NO_PROXY")
 	AuthUserInfoResyncCron              = NewSetting("auth-user-info-resync-cron", "0 0 * * *")
 	APIUIVersion                        = NewSetting("api-ui-version", "1.1.10")              // Please update the CATTLE_API_UI_VERSION in package/Dockerfile when updating the version here.
@@ -118,7 +118,7 @@ var (
 	PartnerChartDefaultBranch           = NewSetting("partner-chart-default-branch", "main")
 	RKE2ChartDefaultBranch              = NewSetting("rke2-chart-default-branch", "main")
 	FleetDefaultWorkspaceName           = NewSetting("fleet-default-workspace-name", fleetconst.ClustersDefaultNamespace) // fleetWorkspaceName to assign to clusters with none
-	ShellImage                          = NewSetting("shell-image", "rancher/shell:v0.1.20")
+	ShellImage                          = NewSetting("shell-image", "ranger/shell:v0.1.20")
 	IgnoreNodeName                      = NewSetting("ignore-node-name", "") // nodes to ignore when syncing v1.node to v3.node
 	NoDefaultAdmin                      = NewSetting("no-default-admin", "")
 	RestrictedDefaultAdmin              = NewSetting("restricted-default-admin", "false") // When bootstrapping the admin for the first time, give them the global role restricted-admin
@@ -127,7 +127,7 @@ var (
 	EKSUpstreamRefresh                  = NewSetting("eks-refresh", "300")
 	GKEUpstreamRefresh                  = NewSetting("gke-refresh", "300")
 	HideLocalCluster                    = NewSetting("hide-local-cluster", "false")
-	MachineProvisionImage               = NewSetting("machine-provision-image", "rancher/machine:v0.15.0-rancher100")
+	MachineProvisionImage               = NewSetting("machine-provision-image", "ranger/machine:v0.15.0-ranger100")
 	SystemFeatureChartRefreshSeconds    = NewSetting("system-feature-chart-refresh-seconds", "21600")
 	ClusterAgentDefaultAffinity         = NewSetting("cluster-agent-default-affinity", ClusterAgentAffinity)
 	FleetAgentDefaultAffinity           = NewSetting("fleet-agent-default-affinity", FleetAgentAffinity)
@@ -144,14 +144,14 @@ var (
 	// AuthUserSessionTTLMinutes represents the time to live for tokens used for login sessions in minutes.
 	AuthUserSessionTTLMinutes = NewSetting("auth-user-session-ttl-minutes", "960") // 16 hours
 
-	// ConfigMapName name of the configmap that stores rancher configuration information.
-	ConfigMapName = NewSetting("config-map-name", "rancher-config")
+	// ConfigMapName name of the configmap that stores ranger configuration information.
+	ConfigMapName = NewSetting("config-map-name", "ranger-config")
 
 	// CSPAdapterMinVersion is used to determine if an existing installation of the CSP adapter should be upgraded to a new version
 	// has no effect if the csp adapter is not installed.
 	CSPAdapterMinVersion = NewSetting("csp-adapter-min-version", "")
 
-	// FleetMinVersion is the minimum version of the fleet chart that rancher will install.
+	// FleetMinVersion is the minimum version of the fleet chart that ranger will install.
 	FleetMinVersion = NewSetting("fleet-min-version", "")
 
 	// KubeconfigDefaultTokenTTLMinutes is the default time to live applied to kubeconfigs created for users.
@@ -159,7 +159,7 @@ var (
 	KubeconfigDefaultTokenTTLMinutes = NewSetting("kubeconfig-default-token-ttl-minutes", "0") // 0 TTL = never expire
 
 	// KubeconfigGenerateToken determines whether the UI will return a generate token with kubeconfigs.
-	// If set to false the kubeconfig will contain a command to login to Rancher.
+	// If set to false the kubeconfig will contain a command to login to Ranger.
 	KubeconfigGenerateToken = NewSetting("kubeconfig-generate-token", "true")
 
 	// KubeconfigTokenTTLMinutes currently is used to set the TTL for kubeconfigs created through the CLI.
@@ -169,13 +169,13 @@ var (
 	// Deprecated: On removal use kubeconfig-default-ttl-minutes for all kubeconfigs.
 	KubeconfigTokenTTLMinutes = NewSetting("kubeconfig-token-ttl-minutes", "960") // 16 hours
 
-	// RancherWebhookMinVersion is the minimum version of the webhook that Rancher will install.
+	// RangerWebhookMinVersion is the minimum version of the webhook that Ranger will install.
 	//
 	// Deprecated.
-	RancherWebhookMinVersion = NewSetting("rancher-webhook-min-version", "")
+	RangerWebhookMinVersion = NewSetting("ranger-webhook-min-version", "")
 
-	// RancherWebhookVersion is the exact version of the webhook that Rancher will install.
-	RancherWebhookVersion = NewSetting("rancher-webhook-version", "")
+	// RangerWebhookVersion is the exact version of the webhook that Ranger will install.
+	RangerWebhookVersion = NewSetting("ranger-webhook-version", "")
 
 	// SystemDefaultRegistry is the default contrainer registry used for images.
 	// The environmental variable "CATTLE_BASE_REGISTRY" controls the default value of this setting.
@@ -195,14 +195,14 @@ var (
 	// UICustomLinks Key(display text), value(url) for user customisable links to display in homepage and support pages.
 	UICustomLinks = NewSetting("ui-custom-links", "")
 
-	// UIDashboardPath path within Rancher Manager where the dashboard files are found.
-	UIDashboardPath = NewSetting("ui-dashboard-path", "/usr/share/rancher/ui-dashboard")
+	// UIDashboardPath path within Ranger Manager where the dashboard files are found.
+	UIDashboardPath = NewSetting("ui-dashboard-path", "/usr/share/ranger/ui-dashboard")
 
-	// UIDashboardIndex depends on ui-offline-preferred, use this version of the dashboard instead of the one contained in Rancher Manager.
-	UIDashboardIndex = NewSetting("ui-dashboard-index", "https://releases.rancher.com/dashboard/latest/index.html")
+	// UIDashboardIndex depends on ui-offline-preferred, use this version of the dashboard instead of the one contained in Ranger Manager.
+	UIDashboardIndex = NewSetting("ui-dashboard-index", "https://releases.ranger.com/dashboard/latest/index.html")
 
 	// UIDashboardHarvesterLegacyPlugin depending on ui-offline-preferred and if a Harvester Cluster does not contain it's own Harvester plugin, use this version of the plugin instead.
-	UIDashboardHarvesterLegacyPlugin = NewSetting("ui-dashboard-harvester-legacy-plugin", "https://releases.rancher.com/harvester-ui/plugin/harvester-1.0.3-head/harvester-1.0.3-head.umd.min.js")
+	UIDashboardHarvesterLegacyPlugin = NewSetting("ui-dashboard-harvester-legacy-plugin", "https://releases.ranger.com/harvester-ui/plugin/harvester-1.0.3-head/harvester-1.0.3-head.umd.min.js")
 
 	// UIDefaultLanding the default page users land on after login.
 	UIDefaultLanding = NewSetting("ui-default-landing", "vue")
@@ -213,8 +213,8 @@ var (
 	// UIFeedBackForm Ember UI specific.
 	UIFeedBackForm = NewSetting("ui-feedback-form", "")
 
-	// UIIndex depends on ui-offline-preferred, use this version of the old ember UI instead of the one contained in Rancher Manager.
-	UIIndex = NewSetting("ui-index", "https://releases.rancher.com/ui/latest2/index.html")
+	// UIIndex depends on ui-offline-preferred, use this version of the old ember UI instead of the one contained in Ranger Manager.
+	UIIndex = NewSetting("ui-index", "https://releases.ranger.com/ui/latest2/index.html")
 
 	// UIIssues use a url address to send new 'File an Issue' reports instead of sending users to the Github issues page.
 	// Deprecated in favour of UICustomLinks = NewSetting("ui-custom-links", {}).
@@ -230,14 +230,14 @@ var (
 	// The `dynamic` option will use remote assets for `-head` builds, otherwise the local assets for production builds.
 	UIOfflinePreferred = NewSetting("ui-offline-preferred", "dynamic")
 
-	// UIPath path within Rancher Manager where the old ember UI files are found.
-	UIPath = NewSetting("ui-path", "/usr/share/rancher/ui")
+	// UIPath path within Ranger Manager where the old ember UI files are found.
+	UIPath = NewSetting("ui-path", "/usr/share/ranger/ui")
 
 	// UIPerformance experimental settings for UI functionality to improve the UX with large numbers of resources.
 	UIPerformance = NewSetting("ui-performance", "")
 
 	// UIPL the vendor/company name.
-	UIPL = NewSetting("ui-pl", "rancher")
+	UIPL = NewSetting("ui-pl", "ranger")
 
 	// UIPreferred Ensure that the new Dashboard is the default UI.
 	UIPreferred = NewSetting("ui-preferred", "vue")
@@ -247,7 +247,7 @@ var (
 	SkipHostedClusterChartInstallation = NewSetting("skip-hosted-cluster-chart-installation", os.Getenv("CATTLE_SKIP_HOSTED_CLUSTER_CHART_INSTALLATION"))
 )
 
-// FullShellImage returns the full private registry name of the rancher shell image.
+// FullShellImage returns the full private registry name of the ranger shell image.
 func FullShellImage() string {
 	return PrefixPrivateRegistry(ShellImage.Get())
 }
@@ -261,7 +261,7 @@ func PrefixPrivateRegistry(image string) string {
 	return private + "/" + image
 }
 
-// IsRelease returns true if the running server is a released version of rancher.
+// IsRelease returns true if the running server is a released version of ranger.
 func IsRelease() bool {
 	return !strings.Contains(ServerVersion.Get(), "head") && releasePattern.MatchString(ServerVersion.Get())
 }
@@ -372,7 +372,7 @@ func NewSetting(name, def string) Setting {
 	return s
 }
 
-// GetEnvKey will return the given string formatted as a rancher environmental variable.
+// GetEnvKey will return the given string formatted as a ranger environmental variable.
 func GetEnvKey(key string) string {
 	return "CATTLE_" + strings.ToUpper(strings.Replace(key, "-", "_", -1))
 }
@@ -380,7 +380,7 @@ func GetEnvKey(key string) string {
 func getMetadataConfig() string {
 	branch := KDMBranch.Get()
 	data := map[string]interface{}{
-		"url":                      fmt.Sprintf("https://releases.rancher.com/kontainer-driver-metadata/%s/data.json", branch),
+		"url":                      fmt.Sprintf("https://releases.ranger.com/kontainer-driver-metadata/%s/data.json", branch),
 		"refresh-interval-minutes": "1440",
 	}
 	ans, err := json.Marshal(data)
@@ -424,13 +424,13 @@ func DefaultAgentSettingsAsEnvVars() []v1.EnvVar {
 	return envVars
 }
 
-// GetRancherVersion will return a the stored server version without the 'v' prefix.
-func GetRancherVersion() string {
-	rancherVersion := ServerVersion.Get()
-	if strings.HasPrefix(rancherVersion, "dev") || strings.HasPrefix(rancherVersion, "master") || strings.HasSuffix(rancherVersion, "-head") {
-		return RancherVersionDev
+// GetRangerVersion will return a the stored server version without the 'v' prefix.
+func GetRangerVersion() string {
+	rangerVersion := ServerVersion.Get()
+	if strings.HasPrefix(rangerVersion, "dev") || strings.HasPrefix(rangerVersion, "master") || strings.HasSuffix(rangerVersion, "-head") {
+		return RangerVersionDev
 	}
-	return strings.TrimPrefix(rancherVersion, "v")
+	return strings.TrimPrefix(rangerVersion, "v")
 }
 
 // IterateWhitelistedEnvVars iterates over the environment variables whitelisted

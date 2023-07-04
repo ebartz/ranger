@@ -4,10 +4,10 @@ import (
 	"errors"
 	"testing"
 
-	provv1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	"github.com/rancher/wrangler/pkg/condition"
-	"github.com/rancher/wrangler/pkg/generic"
-	"github.com/rancher/wrangler/pkg/genericcondition"
+	provv1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	"github.com/ranger/wrangler/pkg/condition"
+	"github.com/ranger/wrangler/pkg/generic"
+	"github.com/ranger/wrangler/pkg/genericcondition"
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -443,7 +443,7 @@ func TestGeneratingHandler(t *testing.T) {
 			if tt.obj != nil {
 				status = tt.obj.Status
 			}
-			objs, generatedStatus, err := h.OnRancherClusterChange(tt.obj, status)
+			objs, generatedStatus, err := h.OnRangerClusterChange(tt.obj, status)
 			assert.Equal(t, tt.expected, objs)
 			assert.Equal(t, tt.expectedStatus, generatedStatus)
 			if tt.expectedErr != nil {

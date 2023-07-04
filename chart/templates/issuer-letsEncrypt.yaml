@@ -12,9 +12,9 @@ apiVersion: cert-manager.io/v1
     {{- end }}
 kind: Issuer
 metadata:
-  name: {{ template "rancher.fullname" . }}
+  name: {{ template "ranger.fullname" . }}
   labels:
-{{ include "rancher.labels" . | indent 4 }}
+{{ include "ranger.labels" . | indent 4 }}
 spec:
   acme:
     {{- if eq .Values.letsEncrypt.environment "production" }}

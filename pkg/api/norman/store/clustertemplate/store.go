@@ -6,21 +6,21 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/api/access"
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/norman/types/values"
-	"github.com/rancher/rancher/pkg/api/norman/customization/clustertemplate"
-	managementv3 "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	"github.com/rancher/rancher/pkg/controllers/management/rbac"
-	"github.com/rancher/rancher/pkg/controllers/management/secretmigrator"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/ref"
-	mgmtSchema "github.com/rancher/rancher/pkg/schemas/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
-	rketypes "github.com/rancher/rke/types"
+	"github.com/ranger/norman/api/access"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/norman/types/values"
+	"github.com/ranger/ranger/pkg/api/norman/customization/clustertemplate"
+	managementv3 "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	"github.com/ranger/ranger/pkg/controllers/management/rbac"
+	"github.com/ranger/ranger/pkg/controllers/management/secretmigrator"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/ref"
+	mgmtSchema "github.com/ranger/ranger/pkg/schemas/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
+	rketypes "github.com/ranger/rke/types"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -591,7 +591,7 @@ func (p *Store) checkKubernetesVersionFormat(apiContext *types.APIContext, data 
 	if !found || clusterConfig == nil {
 		return httperror.NewAPIError(httperror.MissingRequired, "ClusterTemplateRevision field ClusterConfig is required")
 	}
-	k8sVersionReq := values.GetValueN(data, managementv3.ClusterTemplateRevisionFieldClusterConfig, "rancherKubernetesEngineConfig", "kubernetesVersion")
+	k8sVersionReq := values.GetValueN(data, managementv3.ClusterTemplateRevisionFieldClusterConfig, "rangerKubernetesEngineConfig", "kubernetesVersion")
 	if k8sVersionReq == nil {
 		return nil
 	}
@@ -601,7 +601,7 @@ func (p *Store) checkKubernetesVersionFormat(apiContext *types.APIContext, data 
 		return err
 	}
 	if genericPatch {
-		// ensure a question is added for "rancherKubernetesEngineConfig.kubernetesVersion"
+		// ensure a question is added for "rangerKubernetesEngineConfig.kubernetesVersion"
 		templateQuestions, ok := data[managementv3.ClusterTemplateRevisionFieldQuestions]
 		if !ok {
 			return httperror.NewAPIError(httperror.MissingRequired, fmt.Sprintf("ClusterTemplateRevision must have a Question set for %v", clustertemplate.RKEConfigK8sVersion))
@@ -777,12 +777,12 @@ func (p *Store) migrateSecrets(data map[string]interface{}, currentReg, currentS
 	if err != nil {
 		return secrets{}, err
 	}
-	values.PutValue(data, encodedRkeConfig, "clusterConfig", "rancherKubernetesEngineConfig")
+	values.PutValue(data, encodedRkeConfig, "clusterConfig", "rangerKubernetesEngineConfig")
 	return s, nil
 }
 
-func getRkeConfig(data map[string]interface{}) (*rketypes.RancherKubernetesEngineConfig, error) {
-	rkeConfig := values.GetValueN(data, managementv3.ClusterTemplateRevisionFieldClusterConfig, "rancherKubernetesEngineConfig")
+func getRkeConfig(data map[string]interface{}) (*rketypes.RangerKubernetesEngineConfig, error) {
+	rkeConfig := values.GetValueN(data, managementv3.ClusterTemplateRevisionFieldClusterConfig, "rangerKubernetesEngineConfig")
 	if rkeConfig == nil {
 		return nil, nil
 	}
@@ -790,7 +790,7 @@ func getRkeConfig(data map[string]interface{}) (*rketypes.RancherKubernetesEngin
 	if err != nil {
 		return nil, errors.Wrapf(err, "error marshaling rkeConfig")
 	}
-	var spec *rketypes.RancherKubernetesEngineConfig
+	var spec *rketypes.RangerKubernetesEngineConfig
 	if err := json.Unmarshal([]byte(config), &spec); err != nil {
 		return nil, errors.Wrapf(err, "error reading rkeConfig")
 	}

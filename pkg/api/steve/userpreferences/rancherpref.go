@@ -1,12 +1,12 @@
 package userpreferences
 
 import (
-	"github.com/rancher/apiserver/pkg/store/empty"
-	"github.com/rancher/apiserver/pkg/types"
-	"github.com/rancher/steve/pkg/attributes"
-	"github.com/rancher/steve/pkg/stores/proxy"
-	"github.com/rancher/wrangler/pkg/data/convert"
-	"github.com/rancher/wrangler/pkg/schemas/validation"
+	"github.com/ranger/apiserver/pkg/store/empty"
+	"github.com/ranger/apiserver/pkg/types"
+	"github.com/ranger/steve/pkg/attributes"
+	"github.com/ranger/steve/pkg/stores/proxy"
+	"github.com/ranger/wrangler/pkg/data/convert"
+	"github.com/ranger/wrangler/pkg/schemas/validation"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -14,21 +14,21 @@ import (
 )
 
 var (
-	rancherSchema = "management.cattle.io.preference"
+	rangerSchema = "management.cattle.io.preference"
 )
 
-type rancherPrefStore struct {
+type rangerPrefStore struct {
 	empty.Store
 	cg proxy.ClientGetter
 }
 
-func (e *rancherPrefStore) getClient(apiOp *types.APIRequest) (dynamic.ResourceInterface, error) {
+func (e *rangerPrefStore) getClient(apiOp *types.APIRequest) (dynamic.ResourceInterface, error) {
 	user, ok := getUser(apiOp)
 	if !ok {
 		return nil, validation.Unauthorized
 	}
 	u := user.GetName()
-	cmSchema := apiOp.Schemas.LookupSchema(rancherSchema)
+	cmSchema := apiOp.Schemas.LookupSchema(rangerSchema)
 	if cmSchema == nil {
 		return nil, validation.NotFound
 	}
@@ -36,7 +36,7 @@ func (e *rancherPrefStore) getClient(apiOp *types.APIRequest) (dynamic.ResourceI
 	return e.cg.AdminClient(apiOp, cmSchema, u, nil)
 }
 
-func (e *rancherPrefStore) ByID(apiOp *types.APIRequest, schema *types.APISchema, id string) (types.APIObject, error) {
+func (e *rangerPrefStore) ByID(apiOp *types.APIRequest, schema *types.APISchema, id string) (types.APIObject, error) {
 	u, ok := getUser(apiOp)
 	if !ok {
 		return types.APIObject{}, validation.Unauthorized
@@ -67,7 +67,7 @@ func (e *rancherPrefStore) ByID(apiOp *types.APIRequest, schema *types.APISchema
 	return result, nil
 }
 
-func (e *rancherPrefStore) List(apiOp *types.APIRequest, schema *types.APISchema) (types.APIObjectList, error) {
+func (e *rangerPrefStore) List(apiOp *types.APIRequest, schema *types.APISchema) (types.APIObjectList, error) {
 	obj, err := e.ByID(apiOp, schema, "")
 	if err != nil {
 		return types.APIObjectList{}, err
@@ -79,7 +79,7 @@ func (e *rancherPrefStore) List(apiOp *types.APIRequest, schema *types.APISchema
 	}, nil
 }
 
-func (e *rancherPrefStore) createNamespace(apiOp *types.APIRequest, ns string) error {
+func (e *rangerPrefStore) createNamespace(apiOp *types.APIRequest, ns string) error {
 	client, err := e.cg.AdminClient(apiOp, apiOp.Schemas.LookupSchema("namespace"), "", nil)
 	if err != nil {
 		return err
@@ -98,7 +98,7 @@ func (e *rancherPrefStore) createNamespace(apiOp *types.APIRequest, ns string) e
 	return err
 }
 
-func (e *rancherPrefStore) Update(apiOp *types.APIRequest, schema *types.APISchema, data types.APIObject, id string) (types.APIObject, error) {
+func (e *rangerPrefStore) Update(apiOp *types.APIRequest, schema *types.APISchema, data types.APIObject, id string) (types.APIObject, error) {
 	client, err := e.getClient(apiOp)
 	if err != nil {
 		return types.APIObject{}, err
@@ -109,7 +109,7 @@ func (e *rancherPrefStore) Update(apiOp *types.APIRequest, schema *types.APISche
 		return types.APIObject{}, validation.Unauthorized
 	}
 
-	gvk := attributes.GVK(apiOp.Schemas.LookupSchema(rancherSchema))
+	gvk := attributes.GVK(apiOp.Schemas.LookupSchema(rangerSchema))
 
 	newValues := map[string]string{}
 	for k, v := range data.Data().Map("data") {
@@ -166,7 +166,7 @@ func (e *rancherPrefStore) Update(apiOp *types.APIRequest, schema *types.APISche
 	return e.ByID(apiOp, schema, "")
 }
 
-func (e *rancherPrefStore) Delete(apiOp *types.APIRequest, schema *types.APISchema, id string) (types.APIObject, error) {
+func (e *rangerPrefStore) Delete(apiOp *types.APIRequest, schema *types.APISchema, id string) (types.APIObject, error) {
 	client, err := e.getClient(apiOp)
 	if err != nil {
 		return types.APIObject{}, err

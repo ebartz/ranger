@@ -5,12 +5,12 @@ import (
 	"strings"
 
 	lru "github.com/hashicorp/golang-lru"
-	"github.com/rancher/norman/api/access"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/values"
-	"github.com/rancher/rancher/pkg/controllers/managementagent/workload"
-	"github.com/rancher/rancher/pkg/ref"
-	schema "github.com/rancher/rancher/pkg/schemas/project.cattle.io/v3"
+	"github.com/ranger/norman/api/access"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/values"
+	"github.com/ranger/ranger/pkg/controllers/managementagent/workload"
+	"github.com/ranger/ranger/pkg/ref"
+	schema "github.com/ranger/ranger/pkg/schemas/project.cattle.io/v3"
 	"github.com/sirupsen/logrus"
 )
 

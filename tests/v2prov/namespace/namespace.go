@@ -1,7 +1,7 @@
 package namespace
 
 import (
-	"github.com/rancher/rancher/tests/v2prov/clients"
+	"github.com/ranger/ranger/tests/v2prov/clients"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

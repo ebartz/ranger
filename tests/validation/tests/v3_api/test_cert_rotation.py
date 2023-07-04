@@ -8,7 +8,7 @@ from .common import get_client_for_token
 from .common import get_user_client_and_cluster
 from .common import validate_cluster_state
 from .common import get_etcd_nodes
-from rancher import ApiError
+from ranger import ApiError
 
 
 # Globals

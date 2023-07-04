@@ -5,19 +5,19 @@ import (
 	"fmt"
 	"testing"
 
-	kubeProvisioning "github.com/rancher/rancher/tests/framework/clients/provisioning"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters/kubernetesversions"
-	"github.com/rancher/rancher/tests/framework/extensions/defaults"
-	"github.com/rancher/rancher/tests/framework/extensions/machinepools"
-	"github.com/rancher/rancher/tests/framework/extensions/workloads/pods"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
-	namegen "github.com/rancher/rancher/tests/framework/pkg/namegenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
-	"github.com/rancher/rancher/tests/v2/validation/provisioning"
+	kubeProvisioning "github.com/ranger/ranger/tests/framework/clients/provisioning"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters/kubernetesversions"
+	"github.com/ranger/ranger/tests/framework/extensions/defaults"
+	"github.com/ranger/ranger/tests/framework/extensions/machinepools"
+	"github.com/ranger/ranger/tests/framework/extensions/workloads/pods"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
+	namegen "github.com/ranger/ranger/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
+	"github.com/ranger/ranger/tests/v2/validation/provisioning"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -28,7 +28,7 @@ import (
 type KdmChecksTestSuite struct {
 	suite.Suite
 	session                *session.Session
-	client                 *rancher.Client
+	client                 *ranger.Client
 	ns                     string
 	rke2kubernetesVersions []string
 	cnis                   []string
@@ -56,7 +56,7 @@ func (k *KdmChecksTestSuite) SetupSuite() {
 	k.providers = clustersConfig.Providers
 	k.nodesAndRoles = clustersConfig.NodesAndRoles
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(k.T(), err)
 
 	k.client = client
@@ -65,10 +65,10 @@ func (k *KdmChecksTestSuite) SetupSuite() {
 func (k *KdmChecksTestSuite) TestRKE2K8sVersions() {
 	logrus.Infof("checking for valid k8s versions..")
 	require.GreaterOrEqual(k.T(), len(k.rke2kubernetesVersions), 1)
-	// fetching all available k8s versions from rancher
+	// fetching all available k8s versions from ranger
 	releasedK8sVersions, _ := kubernetesversions.ListRKE2AllVersions(k.client)
 	logrus.Info("expected k8s versions : ", k.rke2kubernetesVersions)
-	logrus.Info("k8s versions available on rancher server : ", releasedK8sVersions)
+	logrus.Info("k8s versions available on ranger server : ", releasedK8sVersions)
 	for _, expectedK8sVersion := range k.rke2kubernetesVersions {
 		require.Contains(k.T(), releasedK8sVersions, expectedK8sVersion)
 	}
@@ -123,7 +123,7 @@ func (k *KdmChecksTestSuite) TestProvisioningSingleNodeRKE2Clusters() {
 	k.checkClustersReady(client, kubeProvisioningClient, clusterResps, clusterNames, k8sVersions)
 }
 
-func (k *KdmChecksTestSuite) checkClustersReady(client *rancher.Client, kubeProvisioningClient *kubeProvisioning.Client, clusterResps []*v1.SteveAPIObject, clusterNames []string, k8sVersions []string) {
+func (k *KdmChecksTestSuite) checkClustersReady(client *ranger.Client, kubeProvisioningClient *kubeProvisioning.Client, clusterResps []*v1.SteveAPIObject, clusterNames []string, k8sVersions []string) {
 	for i, clusterResp := range clusterResps {
 		logrus.Info("waiting for cluster ", clusterResp.Name, " with k8s version ", k.rke2kubernetesVersions[i], " to be up..")
 		result, err := kubeProvisioningClient.Clusters(k.ns).Watch(context.TODO(), metav1.ListOptions{

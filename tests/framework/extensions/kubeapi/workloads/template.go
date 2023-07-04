@@ -4,15 +4,15 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/kubeapi/secrets"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/kubeapi/secrets"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // NewImagePullSecret is a contructor that creates an image pull secret for a pod template i.e. corev1.PodTemplateSpec
-func NewImagePullSecret(client *rancher.Client, clusterName, namespace string) (*corev1.LocalObjectReference, error) {
+func NewImagePullSecret(client *ranger.Client, clusterName, namespace string) (*corev1.LocalObjectReference, error) {
 	k8sClient, err := client.GetDownStreamClusterClient(clusterName)
 	if err != nil {
 		return nil, err

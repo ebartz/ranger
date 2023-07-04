@@ -49,7 +49,7 @@ def get_gke_version_credentials(multiple_versions=False):
         data_test = {
             "credentials": credentialdata,
             "zone": "us-central1-f",
-            "projectId": "rancher-qa"
+            "projectId": "ranger-qa"
         }
         headers = {"Content-Type": "application/json",
                    "Accept": "application/json",
@@ -97,7 +97,7 @@ def get_gke_config(name, version, credential_data):
             "zone": "us-central1-f",
             "clusterIpv4Cidr": " ",
             "credential": credential_data,
-            "projectId": "rancher-qa",
+            "projectId": "ranger-qa",
 
         },
         "name": name,

@@ -3,8 +3,8 @@ package clusterconfigcopier
 import (
 	"context"
 
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
 	"k8s.io/apimachinery/pkg/runtime"
 )
 

@@ -3,10 +3,10 @@ package namespace
 import (
 	"strings"
 
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/rancher/pkg/clustermanager"
-	"github.com/rancher/rancher/pkg/resourcelink"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/ranger/pkg/clustermanager"
+	"github.com/ranger/ranger/pkg/resourcelink"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	printers2 "k8s.io/cli-runtime/pkg/printers"

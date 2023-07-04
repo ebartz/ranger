@@ -1,17 +1,17 @@
 package google
 
 import (
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	"github.com/rancher/rancher/tests/framework/extensions/cloudcredentials"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/extensions/cloudcredentials"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
 )
 
 const googleCloudCredNameBase = "googleCloudCredNameBase"
 
-// CreateGoogleCloudCredentials is a helper function that takes the rancher Client as a parameter and creates
+// CreateGoogleCloudCredentials is a helper function that takes the ranger Client as a parameter and creates
 // a Google cloud credential, and returns the CloudCredential response
-func CreateGoogleCloudCredentials(rancherClient *rancher.Client) (*cloudcredentials.CloudCredential, error) {
+func CreateGoogleCloudCredentials(rangerClient *ranger.Client) (*cloudcredentials.CloudCredential, error) {
 	var googleCredentialConfig cloudcredentials.GoogleCredentialConfig
 	config.LoadConfig(cloudcredentials.GoogleCredentialConfigurationFileKey, &googleCredentialConfig)
 
@@ -21,7 +21,7 @@ func CreateGoogleCloudCredentials(rancherClient *rancher.Client) (*cloudcredenti
 	}
 
 	resp := &cloudcredentials.CloudCredential{}
-	err := rancherClient.Management.APIBaseClient.Ops.DoCreate(management.CloudCredentialType, cloudCredential, resp)
+	err := rangerClient.Management.APIBaseClient.Ops.DoCreate(management.CloudCredentialType, cloudCredential, resp)
 	if err != nil {
 		return nil, err
 	}

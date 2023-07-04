@@ -6,17 +6,17 @@ import (
 	"os"
 	"strings"
 
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/controllers/dashboard/chart"
-	controllerv3 "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3"
-	controllerprojectv3 "github.com/rancher/rancher/pkg/generated/controllers/project.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/project"
-	"github.com/rancher/rancher/pkg/ref"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/wrangler"
-	v1 "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
-	"github.com/rancher/wrangler/pkg/kv"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/controllers/dashboard/chart"
+	controllerv3 "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3"
+	controllerprojectv3 "github.com/ranger/ranger/pkg/generated/controllers/project.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/project"
+	"github.com/ranger/ranger/pkg/ref"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/wrangler"
+	v1 "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
+	"github.com/ranger/wrangler/pkg/kv"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -27,34 +27,34 @@ import (
 var (
 	AksCrdChart = chart.Definition{
 		ReleaseNamespace: "cattle-system",
-		ChartName:        "rancher-aks-operator-crd",
+		ChartName:        "ranger-aks-operator-crd",
 	}
 	AksChart = chart.Definition{
 		ReleaseNamespace: "cattle-system",
-		ChartName:        "rancher-aks-operator",
+		ChartName:        "ranger-aks-operator",
 	}
 	EksCrdChart = chart.Definition{
 		ReleaseNamespace: "cattle-system",
-		ChartName:        "rancher-eks-operator-crd",
+		ChartName:        "ranger-eks-operator-crd",
 	}
 	EksChart = chart.Definition{
 		ReleaseNamespace: "cattle-system",
-		ChartName:        "rancher-eks-operator",
+		ChartName:        "ranger-eks-operator",
 	}
 	GkeCrdChart = chart.Definition{
 		ReleaseNamespace: "cattle-system",
-		ChartName:        "rancher-gke-operator-crd",
+		ChartName:        "ranger-gke-operator-crd",
 	}
 	GkeChart = chart.Definition{
 		ReleaseNamespace: "cattle-system",
-		ChartName:        "rancher-gke-operator",
+		ChartName:        "ranger-gke-operator",
 	}
 )
 
 var (
 	localCluster = "local"
 
-	legacyOperatorAppNameFormat = "rancher-%s-operator"
+	legacyOperatorAppNameFormat = "ranger-%s-operator"
 )
 
 type handler struct {
@@ -63,7 +63,7 @@ type handler struct {
 	apps         controllerprojectv3.AppController
 	projectCache controllerv3.ProjectCache
 	secretsCache v1.SecretCache
-	chartsConfig chart.RancherConfigGetter
+	chartsConfig chart.RangerConfigGetter
 }
 
 func Register(ctx context.Context, wContext *wrangler.Context) {
@@ -73,7 +73,7 @@ func Register(ctx context.Context, wContext *wrangler.Context) {
 		projectCache: wContext.Mgmt.Project().Cache(),
 		secretsCache: wContext.Core.Secret().Cache(),
 		appCache:     wContext.Project.App().Cache(),
-		chartsConfig: chart.RancherConfigGetter{ConfigCache: wContext.Core.ConfigMap().Cache()},
+		chartsConfig: chart.RangerConfigGetter{ConfigCache: wContext.Core.ConfigMap().Cache()},
 	}
 
 	wContext.Mgmt.Cluster().OnChange(ctx, "cluster-provisioning-operator", h.onClusterChange)
@@ -140,7 +140,7 @@ func (h handler) onClusterChange(key string, cluster *v3.Cluster) (*v3.Cluster, 
 	// add priority class value
 	if priorityClassName, err := h.chartsConfig.GetPriorityClassName(); err != nil {
 		if !apierror.IsNotFound(err) {
-			logrus.Warnf("Failed to get rancher priorityClassName for %q: %v", toInstallChart.ChartName, err)
+			logrus.Warnf("Failed to get ranger priorityClassName for %q: %v", toInstallChart.ChartName, err)
 		}
 	} else {
 		chartValues[chart.PriorityClassKey] = priorityClassName
@@ -159,7 +159,7 @@ func (h handler) onSecretChange(key string, obj *corev1.Secret) (*corev1.Secret,
 	if obj == nil {
 		ns, name := kv.Split(key, "/")
 		if ns == namespace.System {
-			// the name will follow the format sh.helm.release.v1.rancher-eks-operator-crd.v1
+			// the name will follow the format sh.helm.release.v1.ranger-eks-operator-crd.v1
 			parts := strings.Split(name, ".")
 			if len(parts) == 6 {
 				releaseName := parts[4]

@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/features"
-	managementv3 "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/features"
+	managementv3 "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3"
 	"github.com/sirupsen/logrus"
 )
 
@@ -49,7 +49,7 @@ func getEffectiveValue(obj *v3.Feature) bool {
 func ReconcileFeatures(obj *v3.Feature, newVal bool) error {
 	feature := features.GetFeatureByName(obj.Name)
 
-	// possible feature watch renamed, or no longer used by rancher
+	// possible feature watch renamed, or no longer used by ranger
 	if feature == nil {
 		return nil
 	}
@@ -59,7 +59,7 @@ func ReconcileFeatures(obj *v3.Feature, newVal bool) error {
 	}
 
 	if !feature.Dynamic() {
-		return fmt.Errorf("feature flag [%s] value has changed, rancher must be restarted", obj.Name)
+		return fmt.Errorf("feature flag [%s] value has changed, ranger must be restarted", obj.Name)
 	}
 
 	feature.Set(newVal)

@@ -1,5 +1,5 @@
 /*
-Copyright 2023 Rancher Labs, Inc.
+Copyright 2023 Ranger Labs, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,15 +19,15 @@ limitations under the License.
 package fake
 
 import (
-	clientset "github.com/rancher/rancher/pkg/generated/clientset/versioned"
-	catalogv1 "github.com/rancher/rancher/pkg/generated/clientset/versioned/typed/catalog.cattle.io/v1"
-	fakecatalogv1 "github.com/rancher/rancher/pkg/generated/clientset/versioned/typed/catalog.cattle.io/v1/fake"
-	provisioningv1 "github.com/rancher/rancher/pkg/generated/clientset/versioned/typed/provisioning.cattle.io/v1"
-	fakeprovisioningv1 "github.com/rancher/rancher/pkg/generated/clientset/versioned/typed/provisioning.cattle.io/v1/fake"
-	rkev1 "github.com/rancher/rancher/pkg/generated/clientset/versioned/typed/rke.cattle.io/v1"
-	fakerkev1 "github.com/rancher/rancher/pkg/generated/clientset/versioned/typed/rke.cattle.io/v1/fake"
-	upgradev1 "github.com/rancher/rancher/pkg/generated/clientset/versioned/typed/upgrade.cattle.io/v1"
-	fakeupgradev1 "github.com/rancher/rancher/pkg/generated/clientset/versioned/typed/upgrade.cattle.io/v1/fake"
+	clientset "github.com/ranger/ranger/pkg/generated/clientset/versioned"
+	catalogv1 "github.com/ranger/ranger/pkg/generated/clientset/versioned/typed/catalog.cattle.io/v1"
+	fakecatalogv1 "github.com/ranger/ranger/pkg/generated/clientset/versioned/typed/catalog.cattle.io/v1/fake"
+	provisioningv1 "github.com/ranger/ranger/pkg/generated/clientset/versioned/typed/provisioning.cattle.io/v1"
+	fakeprovisioningv1 "github.com/ranger/ranger/pkg/generated/clientset/versioned/typed/provisioning.cattle.io/v1/fake"
+	rkev1 "github.com/ranger/ranger/pkg/generated/clientset/versioned/typed/rke.cattle.io/v1"
+	fakerkev1 "github.com/ranger/ranger/pkg/generated/clientset/versioned/typed/rke.cattle.io/v1/fake"
+	upgradev1 "github.com/ranger/ranger/pkg/generated/clientset/versioned/typed/upgrade.cattle.io/v1"
+	fakeupgradev1 "github.com/ranger/ranger/pkg/generated/clientset/versioned/typed/upgrade.cattle.io/v1/fake"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/discovery"

@@ -11,18 +11,18 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	provisioningv1api "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/capr"
-	"github.com/rancher/rancher/pkg/controllers/capr/machineprovision"
-	"github.com/rancher/rancher/tests/v2prov/clients"
-	"github.com/rancher/rancher/tests/v2prov/defaults"
-	"github.com/rancher/rancher/tests/v2prov/namespace"
-	"github.com/rancher/rancher/tests/v2prov/nodeconfig"
-	"github.com/rancher/rancher/tests/v2prov/registry"
-	"github.com/rancher/rancher/tests/v2prov/wait"
-	"github.com/rancher/wrangler/pkg/condition"
+	"github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	provisioningv1api "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/capr"
+	"github.com/ranger/ranger/pkg/controllers/capr/machineprovision"
+	"github.com/ranger/ranger/tests/v2prov/clients"
+	"github.com/ranger/ranger/tests/v2prov/defaults"
+	"github.com/ranger/ranger/tests/v2prov/namespace"
+	"github.com/ranger/ranger/tests/v2prov/nodeconfig"
+	"github.com/ranger/ranger/tests/v2prov/registry"
+	"github.com/ranger/ranger/tests/v2prov/wait"
+	"github.com/ranger/wrangler/pkg/condition"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -511,7 +511,7 @@ func populatePodLogs(clients *clients.Clients, runtime, podNamespace, podName st
 	}
 
 	if runtime == capr.RuntimeRKE2 {
-		kubeletLogs, newErr := getPodFileContents(podNamespace, podName, fmt.Sprintf("/var/lib/rancher/rke2/agent/logs/kubelet.log"))
+		kubeletLogs, newErr := getPodFileContents(podNamespace, podName, fmt.Sprintf("/var/lib/ranger/rke2/agent/logs/kubelet.log"))
 		if newErr != nil {
 			logrus.Errorf("error while retrieving pod kubelet logs: %v", newErr)
 		} else {

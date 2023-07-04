@@ -9,9 +9,9 @@ import (
 	"time"
 
 	v1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
-	"github.com/rancher/norman/controller"
-	"github.com/rancher/norman/objectclient"
-	v11 "github.com/rancher/rancher/pkg/generated/norman/monitoring.coreos.com/v1"
+	"github.com/ranger/norman/controller"
+	"github.com/ranger/norman/objectclient"
+	v11 "github.com/ranger/ranger/pkg/generated/norman/monitoring.coreos.com/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/watch"

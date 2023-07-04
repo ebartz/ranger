@@ -7,10 +7,10 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/rancher/norman/api/writer"
-	"github.com/rancher/norman/types"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	managementschema "github.com/rancher/rancher/pkg/schemas/management.cattle.io/v3"
+	"github.com/ranger/norman/api/writer"
+	"github.com/ranger/norman/types"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	managementschema "github.com/ranger/ranger/pkg/schemas/management.cattle.io/v3"
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -38,9 +38,9 @@ func TestConfigureTest(t *testing.T) {
 				"tenantId":          "tenant123",
 				"applicationId":     "app123",
 				"applicationSecret": "secret123",
-				"rancherUrl":        "https://myrancher.com",
+				"rangerUrl":        "https://myranger.com",
 			},
-			expectedRedirectURL: "https://login.microsoftonline.com/tenant123/oauth2/v2.0/authorize?client_id=app123&redirect_uri=https://myrancher.com&response_type=code&scope=openid",
+			expectedRedirectURL: "https://login.microsoftonline.com/tenant123/oauth2/v2.0/authorize?client_id=app123&redirect_uri=https://myranger.com&response_type=code&scope=openid",
 		},
 		{
 			name: "attempt to initially setup Azure AD with deprecated Azure AD Graph",
@@ -55,9 +55,9 @@ func TestConfigureTest(t *testing.T) {
 				"tenantId":          "tenant123",
 				"applicationId":     "app123",
 				"applicationSecret": "secret123",
-				"rancherUrl":        "https://myrancher.com",
+				"rangerUrl":        "https://myranger.com",
 			},
-			expectedRedirectURL: "https://login.microsoftonline.com/tenant123/oauth2/authorize?client_id=app123&redirect_uri=https://myrancher.com&response_type=code&scope=openid",
+			expectedRedirectURL: "https://login.microsoftonline.com/tenant123/oauth2/authorize?client_id=app123&redirect_uri=https://myranger.com&response_type=code&scope=openid",
 		},
 		{
 			name: "editing an existing setup of Azure AD",
@@ -74,9 +74,9 @@ func TestConfigureTest(t *testing.T) {
 				"tenantId":          "tenant123",
 				"applicationId":     "app123",
 				"applicationSecret": "secret123",
-				"rancherUrl":        "https://myrancher.com",
+				"rangerUrl":        "https://myranger.com",
 			},
-			expectedRedirectURL: "https://login.microsoftonline.com/tenant123/oauth2/v2.0/authorize?client_id=app123&redirect_uri=https://myrancher.com&response_type=code&scope=openid",
+			expectedRedirectURL: "https://login.microsoftonline.com/tenant123/oauth2/v2.0/authorize?client_id=app123&redirect_uri=https://myranger.com&response_type=code&scope=openid",
 		},
 		{
 			name: "editing an existing setup of Azure AD without annotation",
@@ -90,9 +90,9 @@ func TestConfigureTest(t *testing.T) {
 				"tenantId":          "tenant123",
 				"applicationId":     "app123",
 				"applicationSecret": "secret123",
-				"rancherUrl":        "https://myrancher.com",
+				"rangerUrl":        "https://myranger.com",
 			},
-			expectedRedirectURL: "https://login.microsoftonline.com/tenant123/oauth2/authorize?client_id=app123&redirect_uri=https://myrancher.com&resource=https://graph.windows.net/&scope=openid",
+			expectedRedirectURL: "https://login.microsoftonline.com/tenant123/oauth2/authorize?client_id=app123&redirect_uri=https://myranger.com&resource=https://graph.windows.net/&scope=openid",
 		},
 	}
 
@@ -159,9 +159,9 @@ func TestTransformToAuthProvider(t *testing.T) {
 				"tenantId":          "tenant123",
 				"applicationId":     "app123",
 				"applicationSecret": "secret123",
-				"rancherUrl":        "https://myrancher.com",
+				"rangerUrl":        "https://myranger.com",
 			},
-			expectedRedirectUrl: "https://login.microsoftonline.com/tenant123/oauth2/v2.0/authorize?client_id=app123&redirect_uri=https://myrancher.com&response_type=code&scope=openid",
+			expectedRedirectUrl: "https://login.microsoftonline.com/tenant123/oauth2/v2.0/authorize?client_id=app123&redirect_uri=https://myranger.com&response_type=code&scope=openid",
 		},
 		{
 			name: "redirect URL for Azure AD Graph",
@@ -175,9 +175,9 @@ func TestTransformToAuthProvider(t *testing.T) {
 				"tenantId":          "tenant123",
 				"applicationId":     "app123",
 				"applicationSecret": "secret123",
-				"rancherUrl":        "https://myrancher.com",
+				"rangerUrl":        "https://myranger.com",
 			},
-			expectedRedirectUrl: "https://login.microsoftonline.com/tenant123/oauth2/authorize?client_id=app123&redirect_uri=https://myrancher.com&resource=https://graph.windows.net/&scope=openid",
+			expectedRedirectUrl: "https://login.microsoftonline.com/tenant123/oauth2/authorize?client_id=app123&redirect_uri=https://myranger.com&resource=https://graph.windows.net/&scope=openid",
 		},
 		{
 			name: "redirect URL for disabled auth provider with annotation",
@@ -195,9 +195,9 @@ func TestTransformToAuthProvider(t *testing.T) {
 				"tenantId":          "tenant123",
 				"applicationId":     "app123",
 				"applicationSecret": "secret123",
-				"rancherUrl":        "https://myrancher.com",
+				"rangerUrl":        "https://myranger.com",
 			},
-			expectedRedirectUrl: "https://login.microsoftonline.com/tenant123/oauth2/v2.0/authorize?client_id=app123&redirect_uri=https://myrancher.com&response_type=code&scope=openid",
+			expectedRedirectUrl: "https://login.microsoftonline.com/tenant123/oauth2/v2.0/authorize?client_id=app123&redirect_uri=https://myranger.com&response_type=code&scope=openid",
 		},
 		{
 			name: "redirect URL for disabled auth provider without annotation",
@@ -211,9 +211,9 @@ func TestTransformToAuthProvider(t *testing.T) {
 				"tenantId":          "tenant123",
 				"applicationId":     "app123",
 				"applicationSecret": "secret123",
-				"rancherUrl":        "https://myrancher.com",
+				"rangerUrl":        "https://myranger.com",
 			},
-			expectedRedirectUrl: "https://login.microsoftonline.com/tenant123/oauth2/authorize?client_id=app123&redirect_uri=https://myrancher.com&response_type=code&scope=openid",
+			expectedRedirectUrl: "https://login.microsoftonline.com/tenant123/oauth2/authorize?client_id=app123&redirect_uri=https://myranger.com&response_type=code&scope=openid",
 		},
 	}
 
@@ -239,7 +239,7 @@ func TestMigrateNewFlowAnnotation(t *testing.T) {
 		annotationExpected bool
 	}{
 		{
-			name: "new setup on Rancher v2.6.7+ after an upgrade from previous version",
+			name: "new setup on Ranger v2.6.7+ after an upgrade from previous version",
 			current: &v3.AzureADConfig{
 				AuthConfig: v3.AuthConfig{
 					Enabled: false,
@@ -250,7 +250,7 @@ func TestMigrateNewFlowAnnotation(t *testing.T) {
 			annotationExpected: true,
 		},
 		{
-			name: "new setup on Rancher v2.6.7+",
+			name: "new setup on Ranger v2.6.7+",
 			current: &v3.AzureADConfig{
 				AuthConfig: v3.AuthConfig{
 					Enabled: false,

@@ -8,23 +8,23 @@ import (
 	"strconv"
 	"strings"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 
-	rketypes "github.com/rancher/rke/types"
+	rketypes "github.com/ranger/rke/types"
 
 	errorsutil "github.com/pkg/errors"
-	normantypes "github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	client "github.com/rancher/rancher/pkg/client/generated/project/v3"
-	"github.com/rancher/rancher/pkg/controllers/management/clusterprovisioner"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/kontainer-engine/service"
-	"github.com/rancher/rancher/pkg/kontainer-engine/types"
-	managementschema "github.com/rancher/rancher/pkg/schemas/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rke/cloudprovider/aws"
-	"github.com/rancher/rke/cloudprovider/azure"
+	normantypes "github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	client "github.com/ranger/ranger/pkg/client/generated/project/v3"
+	"github.com/ranger/ranger/pkg/controllers/management/clusterprovisioner"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/kontainer-engine/service"
+	"github.com/ranger/ranger/pkg/kontainer-engine/types"
+	managementschema "github.com/ranger/ranger/pkg/schemas/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/rke/cloudprovider/aws"
+	"github.com/ranger/rke/cloudprovider/azure"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"
@@ -73,14 +73,14 @@ func (c *controller) capsSync(key string, cluster *v3.Cluster) (runtime.Object, 
 	}
 	capabilities := v32.Capabilities{}
 
-	if cluster.Spec.RancherKubernetesEngineConfig != nil {
+	if cluster.Spec.RangerKubernetesEngineConfig != nil {
 		capabilities.NodePortRange = DefaultNodePortRange
 		// taint support capability is set in provisioner and update cluster is called, so we should retain the capability here
 		if cluster.Status.Capabilities.TaintSupport != nil && *cluster.Status.Capabilities.TaintSupport {
 			supportsTaints := true
 			capabilities.TaintSupport = &supportsTaints
 		}
-		if capabilities, err = c.RKECapabilities(capabilities, *cluster.Spec.RancherKubernetesEngineConfig, cluster.Name); err != nil {
+		if capabilities, err = c.RKECapabilities(capabilities, *cluster.Spec.RangerKubernetesEngineConfig, cluster.Name); err != nil {
 			return nil, err
 		}
 	} else if cluster.Spec.GenericEngineConfig != nil {
@@ -195,7 +195,7 @@ func (c *controller) parseResourceInterface(key string, annoValue string) (inter
 	}
 }
 
-func (c *controller) RKECapabilities(capabilities v32.Capabilities, rkeConfig rketypes.RancherKubernetesEngineConfig, clusterName string) (v32.Capabilities, error) {
+func (c *controller) RKECapabilities(capabilities v32.Capabilities, rkeConfig rketypes.RangerKubernetesEngineConfig, clusterName string) (v32.Capabilities, error) {
 	switch rkeConfig.CloudProvider.Name {
 	case aws.AWSCloudProviderName:
 		capabilities.LoadBalancerCapabilities = c.L4Capability(true, ElasticLoadBalancer, []string{"TCP"}, true)

@@ -1,10 +1,10 @@
 package auth
 
 import (
-	"github.com/rancher/rancher/pkg/auth/providerrefresh"
-	"github.com/rancher/rancher/pkg/auth/providers/azure"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/ranger/pkg/auth/providerrefresh"
+	"github.com/ranger/ranger/pkg/auth/providers/azure"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
 	"k8s.io/apimachinery/pkg/runtime"
 )
 

@@ -20,12 +20,12 @@ services:
   etcd:
     image: quay.io/coreos/etcd:latest
   kube-api:
-    image: {{ k8_rancher_image }}
+    image: {{ k8_ranger_image }}
   kube-controller:
-    image: {{ k8_rancher_image }}
+    image: {{ k8_ranger_image }}
   scheduler:
-    image: {{ k8_rancher_image }}
+    image: {{ k8_ranger_image }}
   kubelet:
-    image: {{ k8_rancher_image }}
+    image: {{ k8_ranger_image }}
   kubeproxy:
-    image: {{ k8_rancher_image }}
+    image: {{ k8_ranger_image }}

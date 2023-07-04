@@ -7,8 +7,8 @@ import (
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	helmlib "github.com/rancher/rancher/pkg/helm"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	helmlib "github.com/ranger/ranger/pkg/helm"
 )
 
 const (
@@ -89,7 +89,7 @@ func GetCatalogChartPath(catalog *v3.Catalog, bundledMode bool) (string, error) 
 		switch catalog.Name {
 		case "helm3-library", "library", "system-library":
 			return filepath.Join(helmlib.InternalCatalog, catalog.Name), nil
-		case "rancher-charts", "rancher-partner-charts", "rancher-rke2-charts":
+		case "ranger-charts", "ranger-partner-charts", "ranger-rke2-charts":
 			return filepath.Join(helmlib.InternalCatalog, "v2", catalog.Name), nil
 		default:
 			return "", fmt.Errorf("cannot find bundled catalog chart path for catalog %s", catalog.Name)

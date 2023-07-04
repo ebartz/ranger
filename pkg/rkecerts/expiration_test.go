@@ -7,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 
-	rkeCluster "github.com/rancher/rke/cluster"
-	"github.com/rancher/rke/pki"
+	rkeCluster "github.com/ranger/rke/cluster"
+	"github.com/ranger/rke/pki"
 	v1 "k8s.io/api/core/v1"
 )
 

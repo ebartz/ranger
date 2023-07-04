@@ -152,9 +152,9 @@ func TestMinMaxToConstraintStr(t *testing.T) {
 	}
 }
 
-func TestCompareRancherVersionToConstraint(t *testing.T) {
+func TestCompareRangerVersionToConstraint(t *testing.T) {
 	testCases := []struct {
-		rancherVersion string
+		rangerVersion string
 		constraintStr  string
 		expected       bool
 		isErr          bool
@@ -177,12 +177,12 @@ func TestCompareRancherVersionToConstraint(t *testing.T) {
 		// Assert error
 		{"", "", false, true},
 		{"2.5.8", "", false, true},
-		// Assert Rancher version 2.6.99 is changed to 2.6.98 to handle edge case when compared against 2.6.99-0
+		// Assert Ranger version 2.6.99 is changed to 2.6.98 to handle edge case when compared against 2.6.99-0
 		{"2.6.99", "2.5.99 - 2.6.99-0", true, false},
 	}
 	assert := assertlib.New(t)
 	for _, tc := range testCases {
-		actual, err := compareRancherVersionToConstraint(tc.rancherVersion, tc.constraintStr)
+		actual, err := compareRangerVersionToConstraint(tc.rangerVersion, tc.constraintStr)
 		if err != nil {
 			if tc.isErr {
 				assert.Error(err)

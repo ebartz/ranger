@@ -5,21 +5,21 @@ import (
 	"fmt"
 	"strings"
 
-	v32 "github.com/rancher/rancher/pkg/apis/project.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/project.cattle.io/v3"
 
-	"github.com/rancher/norman/types/convert"
-	passwordutil "github.com/rancher/rancher/pkg/api/norman/store/password"
-	"github.com/rancher/rancher/pkg/catalog/manager"
-	cutils "github.com/rancher/rancher/pkg/catalog/utils"
-	"github.com/rancher/rancher/pkg/controllers/management/rbac"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	pv3 "github.com/rancher/rancher/pkg/generated/norman/project.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/project"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/user"
+	"github.com/ranger/norman/types/convert"
+	passwordutil "github.com/ranger/ranger/pkg/api/norman/store/password"
+	"github.com/ranger/ranger/pkg/catalog/manager"
+	cutils "github.com/ranger/ranger/pkg/catalog/utils"
+	"github.com/ranger/ranger/pkg/controllers/management/rbac"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	pv3 "github.com/ranger/ranger/pkg/generated/norman/project.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/project"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/user"
 	"github.com/sirupsen/logrus"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
@@ -33,7 +33,7 @@ const (
 	GlobaldnsProviderCatalogLauncher = "mgmt-global-dns-provider-catalog-launcher"
 	cattleCreatorIDAnnotationKey     = "field.cattle.io/creatorId"
 	localClusterName                 = "local"
-	templateName                     = "rancher-external-dns"
+	templateName                     = "ranger-external-dns"
 )
 
 type ProviderCatalogLauncher struct {
@@ -76,7 +76,7 @@ func (n *ProviderCatalogLauncher) sync(key string, obj *v3.GlobalDnsProvider) (r
 	}
 
 	if err := rbac.CreateRoleAndRoleBinding(rbac.GlobalDNSProviderResource, v3.GlobalDnsProviderGroupVersionKind.Kind, obj.Name, namespace.GlobalNamespace,
-		rbac.RancherManagementAPIVersion, creatorID, []string{rbac.RancherManagementAPIGroup},
+		rbac.RangerManagementAPIVersion, creatorID, []string{rbac.RangerManagementAPIGroup},
 		obj.UID, obj.Spec.Members, n.managementContext); err != nil {
 		return nil, err
 	}
@@ -98,7 +98,7 @@ func (n *ProviderCatalogLauncher) sync(key string, obj *v3.GlobalDnsProvider) (r
 }
 
 func (n *ProviderCatalogLauncher) handleRoute53Provider(obj *v3.GlobalDnsProvider) (runtime.Object, error) {
-	rancherInstallUUID := settings.InstallUUID.Get()
+	rangerInstallUUID := settings.InstallUUID.Get()
 	//create external-dns route53 provider
 
 	secretKey := obj.Spec.Route53ProviderConfig.SecretKey
@@ -116,7 +116,7 @@ func (n *ProviderCatalogLauncher) handleRoute53Provider(obj *v3.GlobalDnsProvide
 		"aws.zoneType":        obj.Spec.Route53ProviderConfig.ZoneType,
 		"aws.accessKey":       obj.Spec.Route53ProviderConfig.AccessKey,
 		"aws.secretKey":       secretKey,
-		"txtOwnerId":          rancherInstallUUID + "_" + obj.Name,
+		"txtOwnerId":          rangerInstallUUID + "_" + obj.Name,
 		"rbac.create":         "true",
 		"policy":              "sync",
 		"aws.credentialsPath": obj.Spec.Route53ProviderConfig.CredentialsPath,
@@ -136,7 +136,7 @@ func (n *ProviderCatalogLauncher) handleRoute53Provider(obj *v3.GlobalDnsProvide
 }
 
 func (n *ProviderCatalogLauncher) handleCloudflareProvider(obj *v3.GlobalDnsProvider) (runtime.Object, error) {
-	rancherInstallUUID := settings.InstallUUID.Get()
+	rangerInstallUUID := settings.InstallUUID.Get()
 
 	isProxy := "true"
 	if obj.Spec.CloudflareProviderConfig.ProxySetting != nil {
@@ -158,7 +158,7 @@ func (n *ProviderCatalogLauncher) handleCloudflareProvider(obj *v3.GlobalDnsProv
 		"provider":           "cloudflare",
 		"cloudflare.apiKey":  secretAPIKey,
 		"cloudflare.email":   obj.Spec.CloudflareProviderConfig.APIEmail,
-		"txtOwnerId":         rancherInstallUUID + "_" + obj.Name,
+		"txtOwnerId":         rangerInstallUUID + "_" + obj.Name,
 		"rbac.create":        "true",
 		"policy":             "sync",
 		"cloudflare.proxied": isProxy,
@@ -177,7 +177,7 @@ func (n *ProviderCatalogLauncher) handleCloudflareProvider(obj *v3.GlobalDnsProv
 }
 
 func (n *ProviderCatalogLauncher) handleAlidnsProvider(obj *v3.GlobalDnsProvider) (runtime.Object, error) {
-	rancherInstallUUID := settings.InstallUUID.Get()
+	rangerInstallUUID := settings.InstallUUID.Get()
 
 	secretKey := obj.Spec.AlidnsProviderConfig.SecretKey
 	//read the secret if found
@@ -195,7 +195,7 @@ func (n *ProviderCatalogLauncher) handleAlidnsProvider(obj *v3.GlobalDnsProvider
 		"alibabacloud.zoneType":  "public",
 		"alibabacloud.accessKey": obj.Spec.AlidnsProviderConfig.AccessKey,
 		"alibabacloud.secretKey": secretKey,
-		"txtOwnerId":             rancherInstallUUID + "_" + obj.Name,
+		"txtOwnerId":             rangerInstallUUID + "_" + obj.Name,
 		"rbac.create":            "true",
 		"policy":                 "sync",
 	}
@@ -333,11 +333,11 @@ func (n *ProviderCatalogLauncher) getSystemProjectID() (string, error) {
 }
 
 func (n *ProviderCatalogLauncher) getExternalDNSCatalogID(clusterName string) (string, error) {
-	templateVersionID := n.getRancherExternalDNSTemplateID()
+	templateVersionID := n.getRangerExternalDNSTemplateID()
 	return n.catalogManager.GetSystemAppCatalogID(templateVersionID, clusterName)
 }
 
-func (n *ProviderCatalogLauncher) getRancherExternalDNSTemplateID() string {
+func (n *ProviderCatalogLauncher) getRangerExternalDNSTemplateID() string {
 	return fmt.Sprintf("%s-%s", cutils.SystemLibraryName, templateName)
 }
 

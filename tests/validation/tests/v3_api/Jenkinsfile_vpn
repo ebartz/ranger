@@ -3,7 +3,7 @@
 // Optional: AWS_SSH_PEM_KEY, AWS_SSH_KEY_NAME, DEBUG
 
 node {
-  def rootPath = "/src/rancher-validation/"
+  def rootPath = "/src/ranger-validation/"
   def job_name = "${JOB_NAME}"
   if (job_name.contains('/')) { 
     job_names = job_name.split('/')
@@ -13,7 +13,7 @@ node {
 
   def setupResultsOut = "setup-results.xml"
   def testResultsOut = "results.xml"
-  def imageName = "rancher-validation-${job_name}${env.BUILD_NUMBER}"
+  def imageName = "ranger-validation-${job_name}${env.BUILD_NUMBER}"
   def testsDir = "tests/v3_api/"
 
   def branch = "release/v2.6"

@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
 	"github.com/sirupsen/logrus"
 )
 

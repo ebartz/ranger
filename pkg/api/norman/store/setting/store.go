@@ -5,13 +5,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/store/transform"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/norman/types/slice"
-	"github.com/rancher/rancher/pkg/api/norman/customization/setting"
-	"github.com/rancher/rancher/pkg/settings"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/store/transform"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/norman/types/slice"
+	"github.com/ranger/ranger/pkg/api/norman/customization/setting"
+	"github.com/ranger/ranger/pkg/settings"
 )
 
 type Store struct {

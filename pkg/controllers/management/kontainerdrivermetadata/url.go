@@ -7,11 +7,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/rancher/pkg/git"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rke/types/kdm"
-	"github.com/rancher/wrangler/pkg/randomtoken"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/ranger/pkg/git"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/rke/types/kdm"
+	"github.com/ranger/wrangler/pkg/randomtoken"
 	"github.com/sirupsen/logrus"
 )
 

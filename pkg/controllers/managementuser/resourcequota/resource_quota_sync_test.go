@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 
 	"github.com/stretchr/testify/assert"
 	corev1 "k8s.io/api/core/v1"

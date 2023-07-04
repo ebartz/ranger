@@ -4,12 +4,12 @@ import (
 	"reflect"
 	"strings"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 
 	"github.com/pkg/errors"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	nodehelper "github.com/rancher/rancher/pkg/node"
-	"github.com/rancher/rancher/pkg/taints"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	nodehelper "github.com/ranger/ranger/pkg/node"
+	"github.com/ranger/ranger/pkg/taints"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"

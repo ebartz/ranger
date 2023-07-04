@@ -4,11 +4,11 @@ import (
 	"testing"
 	"time"
 
-	v1 "github.com/rancher/rancher/pkg/apis/catalog.cattle.io/v1"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/clients/rancher/catalog"
-	stevev1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
+	v1 "github.com/ranger/ranger/pkg/apis/catalog.cattle.io/v1"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/clients/ranger/catalog"
+	stevev1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -18,12 +18,12 @@ import (
 
 const (
 	HTTPClusterRepoName = "test-http-cluster-repo"
-	LatestHTTPRepoURL   = "https://releases.rancher.com/server-charts/latest"
-	StableHTTPRepoURL   = "https://releases.rancher.com/server-charts/stable"
+	LatestHTTPRepoURL   = "https://releases.ranger.com/server-charts/latest"
+	StableHTTPRepoURL   = "https://releases.ranger.com/server-charts/stable"
 
 	GitClusterRepoName      = "test-git-cluster-repo"
-	RancherChartsGitRepoURL = "https://git.rancher.io/charts"
-	RKE2ChartsGitRepoURL    = "https://git.rancher.io/rke2-charts"
+	RangerChartsGitRepoURL = "https://git.ranger.io/charts"
+	RKE2ChartsGitRepoURL    = "https://git.ranger.io/rke2-charts"
 )
 
 var (
@@ -33,7 +33,7 @@ var (
 
 type ClusterRepoTestSuite struct {
 	suite.Suite
-	client  *rancher.Client
+	client  *ranger.Client
 	session *session.Session
 }
 
@@ -45,7 +45,7 @@ func (c *ClusterRepoTestSuite) SetupSuite() {
 	testSession := session.NewSession()
 	c.session = testSession
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(c.T(), err)
 	c.client = client
 }
@@ -79,7 +79,7 @@ func (c *ClusterRepoTestSuite) TestHTTPRepo() {
 func (c *ClusterRepoTestSuite) TestGitRepo() {
 	c.testClusterRepo(ClusterRepoParams{
 		Name: GitClusterRepoName,
-		URL1: RancherChartsGitRepoURL,
+		URL1: RangerChartsGitRepoURL,
 		URL2: RKE2ChartsGitRepoURL,
 		Type: Git,
 	})

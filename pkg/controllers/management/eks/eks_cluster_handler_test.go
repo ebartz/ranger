@@ -1,12 +1,12 @@
 package eks
 
 import (
-	"github.com/rancher/rancher/pkg/capr"
+	"github.com/ranger/ranger/pkg/capr"
 	"reflect"
 	"testing"
 
 	"github.com/Azure/go-autorest/autorest/to"
-	"github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 )
 
 const (

@@ -2,18 +2,18 @@ import platform
 import pytest
 import sys
 import requests
-from rancher import ApiError
+from ranger import ApiError
 
 from .conftest import wait_for_condition, wait_until, random_str, \
                     wait_for, BASE_URL
 
-NEW_DRIVER_URL = "https://github.com/rancher/kontainer-engine-driver-" \
+NEW_DRIVER_URL = "https://github.com/ranger/kontainer-engine-driver-" \
                  "example/releases/download/v0.2.2/kontainer-engine-" \
                  "driver-example-" + sys.platform + "-amd64"
-NEW_DRIVER_ARM64_URL = "https://github.com/rancher/kontainer-engine-driver-" \
+NEW_DRIVER_ARM64_URL = "https://github.com/ranger/kontainer-engine-driver-" \
                        "example/releases/download/v0.2.2/kontainer-engine-" \
                        "driver-example-" + sys.platform + "-arm64"
-DRIVER_AMD64_URL = "https://github.com/rancher/" \
+DRIVER_AMD64_URL = "https://github.com/ranger/" \
                    "kontainer-engine-driver-example/" \
                    "releases/download/v0.2.1/kontainer-engine-driver-example-"\
                    + sys.platform
@@ -109,7 +109,7 @@ def test_kontainer_driver_lifecycle(admin_mc, list_remove_resource):
     assert e.value.error.status == 405
 
     # cleanup local cluster, note this depends on a force delete of the cluster
-    # within rancher since this cluster is not a "true" cluster
+    # within ranger since this cluster is not a "true" cluster
 
     def cluster_steady_state(clus):
         clus = admin_mc.client.reload(clus)
@@ -276,16 +276,16 @@ def test_update_duplicate_driver_conflict(admin_mc, wait_remove_resource):
 def test_kontainer_driver_links(admin_mc):
     client = admin_mc.client
     lister = client.list_kontainerDriver()
-    assert 'rancher-images' in lister.links
-    assert 'rancher-windows-images' in lister.links
+    assert 'ranger-images' in lister.links
+    assert 'ranger-windows-images' in lister.links
     token = 'Bearer '+client.token
-    url = BASE_URL + "/kontainerdrivers/rancher-images"
+    url = BASE_URL + "/kontainerdrivers/ranger-images"
     images = get_images(url, token)
     assert "hyperkube" in images
     assert "rke-tools" in images
     assert "kubelet-pause" not in images
     # test windows link
-    url = BASE_URL + "/kontainerdrivers/rancher-windows-images"
+    url = BASE_URL + "/kontainerdrivers/ranger-windows-images"
     images = get_images(url, token)
     assert "hyperkube" in images
     assert "rke-tools" in images
@@ -302,13 +302,13 @@ def get_images(url, token):
     assert len(content) > 0
     test = {}
     for line in content:
-        if "rancher/hyperkube" in str(line):
+        if "ranger/hyperkube" in str(line):
             test["hyperkube"] = True
-        elif "rancher/rke-tools" in str(line):
+        elif "ranger/rke-tools" in str(line):
             test["rke-tools"] = True
-        elif "rancher/kubelet-pause" in str(line):
+        elif "ranger/kubelet-pause" in str(line):
             test["kubelet-pause"] = True
-        elif "rancher/mirrored-pause" in str(line):
+        elif "ranger/mirrored-pause" in str(line):
             test["mirrored-pause"] = True
     return test
 
@@ -364,7 +364,7 @@ def test_user_update_settings(admin_mc):
     assert new_k8s_version["value"] == user_value
 
     # user updates invalid value
-    user_value = "v1.15.4-rancher13"
+    user_value = "v1.15.4-ranger13"
     try:
         updated_version = admin_mc.client.update_by_id_setting(
                             id='k8s-version', value=user_value)

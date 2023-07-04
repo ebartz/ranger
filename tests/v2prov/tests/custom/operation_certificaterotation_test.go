@@ -1,13 +1,13 @@
 package custom
 
 import (
-	"github.com/rancher/rancher/tests/v2prov/operations"
+	"github.com/ranger/ranger/tests/v2prov/operations"
 	"testing"
 
-	provisioningv1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	"github.com/rancher/rancher/tests/v2prov/clients"
-	"github.com/rancher/rancher/tests/v2prov/cluster"
-	"github.com/rancher/rancher/tests/v2prov/systemdnode"
+	provisioningv1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	"github.com/ranger/ranger/tests/v2prov/clients"
+	"github.com/ranger/ranger/tests/v2prov/cluster"
+	"github.com/ranger/ranger/tests/v2prov/systemdnode"
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

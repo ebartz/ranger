@@ -1,7 +1,7 @@
 package monitor
 
 import (
-	"github.com/rancher/norman/types"
+	"github.com/ranger/norman/types"
 )
 
 const (

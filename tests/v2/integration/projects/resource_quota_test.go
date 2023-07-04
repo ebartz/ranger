@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	"github.com/rancher/rancher/tests/framework/extensions/defaults"
-	"github.com/rancher/rancher/tests/framework/extensions/kubeapi/resourcequotas"
-	"github.com/rancher/rancher/tests/framework/extensions/namespaces"
-	steveResourceQuotas "github.com/rancher/rancher/tests/framework/extensions/resourcequotas"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/extensions/defaults"
+	"github.com/ranger/ranger/tests/framework/extensions/kubeapi/resourcequotas"
+	"github.com/ranger/ranger/tests/framework/extensions/namespaces"
+	steveResourceQuotas "github.com/ranger/ranger/tests/framework/extensions/resourcequotas"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
 	"github.com/stretchr/testify/suite"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -28,7 +28,7 @@ const (
 
 type ResourceQuotaSuite struct {
 	suite.Suite
-	client  *rancher.Client
+	client  *ranger.Client
 	session *session.Session
 }
 
@@ -40,7 +40,7 @@ func (s *ResourceQuotaSuite) SetupSuite() {
 	testSession := session.NewSession()
 	s.session = testSession
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	s.Require().NoError(err)
 	s.client = client
 }
@@ -159,7 +159,7 @@ func (s *ResourceQuotaSuite) TestRemoveQuotaFromProjectWithNamespacePropagation(
 	client, err := s.client.WithSession(subSession)
 	s.Require().NoError(err)
 
-	dynamicClient, err := client.GetRancherDynamicClient()
+	dynamicClient, err := client.GetRangerDynamicClient()
 	s.Require().NoError(err)
 
 	projectLimit := &management.ResourceQuotaLimit{

@@ -1,8 +1,8 @@
 package cluster
 
 import (
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
 )
 
 const ByCloudCredential = "byCloudCredential"

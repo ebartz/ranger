@@ -8,17 +8,17 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/pkg/errors"
-	util "github.com/rancher/rancher/pkg/cluster"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/settings"
-	rketypes "github.com/rancher/rke/types"
-	img "github.com/rancher/rke/types/image"
+	util "github.com/ranger/ranger/pkg/cluster"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/settings"
+	rketypes "github.com/ranger/rke/types"
+	img "github.com/ranger/rke/types/image"
 )
 
-// ExportConfig provides parameters you can define to configure image exporting for Rancher components
+// ExportConfig provides parameters you can define to configure image exporting for Ranger components
 type ExportConfig struct {
-	RancherVersion   string
+	RangerVersion   string
 	OsType           OSType
 	ChartsPath       string
 	SystemChartsPath string
@@ -34,8 +34,8 @@ const (
 const imageListDelimiter = "\n"
 
 var osTypeImageListName = map[OSType]string{
-	Windows: "windows-rancher-images",
-	Linux:   "rancher-images",
+	Windows: "windows-ranger-images",
+	Linux:   "ranger-images",
 }
 
 func Resolve(image string) string {
@@ -48,9 +48,9 @@ func ResolveWithCluster(image string, cluster *v3.Cluster) string {
 	}
 	reg := util.GetPrivateRegistryURL(cluster)
 	if reg != "" && !strings.HasPrefix(image, reg) {
-		// Images from Dockerhub Library repo, we add rancher prefix when using private registry
+		// Images from Dockerhub Library repo, we add ranger prefix when using private registry
 		if !strings.Contains(image, "/") {
-			image = "rancher/" + image
+			image = "ranger/" + image
 		}
 		return path.Join(reg, image)
 	}
@@ -81,8 +81,8 @@ func GetImages(exportConfig ExportConfig, externalImages map[string][]string, im
 
 	setRequirementImages(exportConfig.OsType, imagesSet)
 
-	// set rancher images from args
-	setImages("rancher", imagesFromArgs, imagesSet)
+	// set ranger images from args
+	setImages("ranger", imagesFromArgs, imagesSet)
 
 	for source, sourceImages := range externalImages {
 		setImages(source, sourceImages, imagesSet)
@@ -95,11 +95,11 @@ func GetImages(exportConfig ExportConfig, externalImages map[string][]string, im
 	return imagesList, imagesAndSourcesList, nil
 }
 
-func AddImagesToImageListConfigMap(cm *v1.ConfigMap, rancherVersion, systemChartsPath string) error {
+func AddImagesToImageListConfigMap(cm *v1.ConfigMap, rangerVersion, systemChartsPath string) error {
 	exportConfig := ExportConfig{
 		SystemChartsPath: systemChartsPath,
 		OsType:           Windows,
-		RancherVersion:   rancherVersion,
+		RangerVersion:   rangerVersion,
 	}
 	windowsImages, _, err := GetImages(exportConfig, nil, []string{}, nil)
 	if err != nil {
@@ -133,8 +133,8 @@ func setRequirementImages(osType OSType, imagesSet map[string]map[string]struct{
 	case Linux:
 		addSourceToImage(imagesSet, settings.ShellImage.Get(), coreLabel)
 		addSourceToImage(imagesSet, settings.MachineProvisionImage.Get(), coreLabel)
-		addSourceToImage(imagesSet, "rancher/mirrored-bci-busybox:15.4.11.2", coreLabel)
-		addSourceToImage(imagesSet, "rancher/mirrored-bci-micro:15.4.14.3", coreLabel)
+		addSourceToImage(imagesSet, "ranger/mirrored-bci-busybox:15.4.11.2", coreLabel)
+		addSourceToImage(imagesSet, "ranger/mirrored-bci-micro:15.4.14.3", coreLabel)
 	}
 }
 

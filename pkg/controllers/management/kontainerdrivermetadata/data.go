@@ -12,15 +12,15 @@ import (
 
 	"github.com/blang/semver"
 	mVersion "github.com/mcuadros/go-version"
-	"github.com/rancher/norman/types/convert"
-	setting2 "github.com/rancher/rancher/pkg/api/norman/store/setting"
-	"github.com/rancher/rancher/pkg/channelserver"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/settings"
-	rketypes "github.com/rancher/rke/types"
-	"github.com/rancher/rke/types/kdm"
-	"github.com/rancher/rke/util"
+	"github.com/ranger/norman/types/convert"
+	setting2 "github.com/ranger/ranger/pkg/api/norman/store/setting"
+	"github.com/ranger/ranger/pkg/channelserver"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/settings"
+	rketypes "github.com/ranger/rke/types"
+	"github.com/ranger/rke/types/kdm"
+	"github.com/ranger/rke/util"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -35,7 +35,7 @@ const (
 
 const (
 	APIVersion           = "management.cattle.io/v3"
-	DataJSONLocation     = "/var/lib/rancher-data/driver-metadata/data.json"
+	DataJSONLocation     = "/var/lib/ranger-data/driver-metadata/data.json"
 	sendRKELabel         = "io.cattle.rke_store"
 	svcOptionLinuxKey    = "service-option-linux-key"
 	svcOptionWindowsKey  = "service-option-windows-key"
@@ -53,7 +53,7 @@ var userUpdateSettingMap = map[string]settings.Setting{
 	settings.KubernetesVersionsDeprecated.Name: settings.KubernetesVersionsDeprecated,
 }
 
-var rancherUpdateSettingMap = map[string]settings.Setting{
+var rangerUpdateSettingMap = map[string]settings.Setting{
 	settings.KubernetesVersion.Name:                 settings.KubernetesVersion,
 	settings.KubernetesVersionsCurrent.Name:         settings.KubernetesVersionsCurrent,
 	settings.KubernetesVersionsDeprecated.Name:      settings.KubernetesVersionsDeprecated,
@@ -83,7 +83,7 @@ func (md *MetadataController) createOrUpdateMetadata(data kdm.Data) error {
 		return err
 	}
 	if err := md.saveSystemImages(data.K8sVersionRKESystemImages, data.K8sVersionedTemplates,
-		data.K8sVersionInfo, data.K8sVersionServiceOptions, data.K8sVersionWindowsServiceOptions, data.RancherDefaultK8sVersions); err != nil {
+		data.K8sVersionInfo, data.K8sVersionServiceOptions, data.K8sVersionWindowsServiceOptions, data.RangerDefaultK8sVersions); err != nil {
 		return err
 	}
 	if err := md.saveAllServiceOptions(data.K8sVersionServiceOptions, data.K8sVersionWindowsServiceOptions,
@@ -102,7 +102,7 @@ func (md *MetadataController) createOrUpdateMetadataFromLocal() error {
 		return err
 	}
 	if err := md.saveSystemImages(driverData.K8sVersionRKESystemImages, driverData.K8sVersionedTemplates,
-		driverData.K8sVersionInfo, driverData.K8sVersionServiceOptions, driverData.K8sVersionWindowsServiceOptions, driverData.RancherDefaultK8sVersions); err != nil {
+		driverData.K8sVersionInfo, driverData.K8sVersionServiceOptions, driverData.K8sVersionWindowsServiceOptions, driverData.RangerDefaultK8sVersions); err != nil {
 		return err
 	}
 	if err := md.saveAllServiceOptions(driverData.K8sVersionServiceOptions, driverData.K8sVersionWindowsServiceOptions, nil, nil); err != nil {
@@ -122,17 +122,17 @@ func (md *MetadataController) saveSystemImages(K8sVersionRKESystemImages map[str
 	DefaultK8sVersions map[string]string) error {
 	maxVersionForMajorK8sVersion := map[string]string{}
 	deprecatedMap := map[string]bool{}
-	rancherVersion := settings.GetRancherVersion()
+	rangerVersion := settings.GetRangerVersion()
 	var maxIgnore []string
 	for k8sVersion, systemImages := range K8sVersionRKESystemImages {
-		rancherVersionInfo, minorOk := K8sVersionInfo[k8sVersion]
-		if minorOk && toIgnoreForAllK8s(rancherVersionInfo, rancherVersion) {
+		rangerVersionInfo, minorOk := K8sVersionInfo[k8sVersion]
+		if minorOk && toIgnoreForAllK8s(rangerVersionInfo, rangerVersion) {
 			deprecatedMap[k8sVersion] = true
 			continue
 		}
 		majorVersion := util.GetTagMajorVersion(k8sVersion)
 		majorVersionInfo, majorOk := K8sVersionInfo[majorVersion]
-		if majorOk && toIgnoreForAllK8s(majorVersionInfo, rancherVersion) {
+		if majorOk && toIgnoreForAllK8s(majorVersionInfo, rangerVersion) {
 			deprecatedMap[k8sVersion] = true
 			continue
 		}
@@ -143,11 +143,11 @@ func (md *MetadataController) saveSystemImages(K8sVersionRKESystemImages map[str
 		if err := md.createOrUpdateSystemImageCRD(k8sVersion, systemImages, labelsMap); err != nil {
 			return err
 		}
-		if minorOk && toIgnoreForK8sCurrent(rancherVersionInfo, rancherVersion) {
+		if minorOk && toIgnoreForK8sCurrent(rangerVersionInfo, rangerVersion) {
 			maxIgnore = append(maxIgnore, k8sVersion)
 			continue
 		}
-		if majorOk && toIgnoreForK8sCurrent(majorVersionInfo, rancherVersion) {
+		if majorOk && toIgnoreForK8sCurrent(majorVersionInfo, rangerVersion) {
 			maxIgnore = append(maxIgnore, k8sVersion)
 			continue
 		}
@@ -157,22 +157,22 @@ func (md *MetadataController) saveSystemImages(K8sVersionRKESystemImages map[str
 	}
 	logrus.Debugf("driverMetadata deprecated %v max incompatible versions %v", deprecatedMap, maxIgnore)
 
-	return md.updateSettings(maxVersionForMajorK8sVersion, rancherVersion, ServiceOptions, DefaultK8sVersions, deprecatedMap)
+	return md.updateSettings(maxVersionForMajorK8sVersion, rangerVersion, ServiceOptions, DefaultK8sVersions, deprecatedMap)
 }
 
-func toIgnoreForAllK8s(rancherVersionInfo rketypes.K8sVersionInfo, rancherVersion string) bool {
-	if rancherVersionInfo.DeprecateRancherVersion != "" && mVersion.Compare(rancherVersion, rancherVersionInfo.DeprecateRancherVersion, ">=") {
+func toIgnoreForAllK8s(rangerVersionInfo rketypes.K8sVersionInfo, rangerVersion string) bool {
+	if rangerVersionInfo.DeprecateRangerVersion != "" && mVersion.Compare(rangerVersion, rangerVersionInfo.DeprecateRangerVersion, ">=") {
 		return true
 	}
-	if rancherVersionInfo.MinRancherVersion != "" && mVersion.Compare(rancherVersion, rancherVersionInfo.MinRancherVersion, "<") {
+	if rangerVersionInfo.MinRangerVersion != "" && mVersion.Compare(rangerVersion, rangerVersionInfo.MinRangerVersion, "<") {
 		// only respect min versions, even if max is present - we need to support upgraded clusters
 		return true
 	}
 	return false
 }
 
-func toIgnoreForK8sCurrent(majorVersionInfo rketypes.K8sVersionInfo, rancherVersion string) bool {
-	if majorVersionInfo.MaxRancherVersion != "" && mVersion.Compare(rancherVersion, majorVersionInfo.MaxRancherVersion, ">") {
+func toIgnoreForK8sCurrent(majorVersionInfo rketypes.K8sVersionInfo, rangerVersion string) bool {
+	if majorVersionInfo.MaxRangerVersion != "" && mVersion.Compare(rangerVersion, majorVersionInfo.MaxRangerVersion, ">") {
 		// include in K8sVersionCurrent only if less then max version
 		return true
 	}
@@ -447,7 +447,7 @@ func getWindowsName(str string) string {
 	return fmt.Sprintf("w%s", str)
 }
 
-func (md *MetadataController) updateSettings(maxVersionForMajorK8sVersion map[string]string, rancherVersion string,
+func (md *MetadataController) updateSettings(maxVersionForMajorK8sVersion map[string]string, rangerVersion string,
 	K8sVersionServiceOptions map[string]rketypes.KubernetesServicesOptions, DefaultK8sVersions map[string]string,
 	deprecated map[string]bool) error {
 
@@ -456,7 +456,7 @@ func (md *MetadataController) updateSettings(maxVersionForMajorK8sVersion map[st
 		return err
 	}
 
-	updateSettings, err := toUpdate(maxVersionForMajorK8sVersion, deprecated, DefaultK8sVersions, rancherVersion, K8sVersionServiceOptions)
+	updateSettings, err := toUpdate(maxVersionForMajorK8sVersion, deprecated, DefaultK8sVersions, rangerVersion, K8sVersionServiceOptions)
 	if err != nil {
 		return err
 	}
@@ -479,7 +479,7 @@ func (md *MetadataController) updateSettings(maxVersionForMajorK8sVersion map[st
 			userDeprecated = deprecated
 		}
 
-		userUpdateSettings, err := toUpdate(userMaxVersionForMajorK8sVersion, userDeprecated, DefaultK8sVersions, rancherVersion, K8sVersionServiceOptions)
+		userUpdateSettings, err := toUpdate(userMaxVersionForMajorK8sVersion, userDeprecated, DefaultK8sVersions, rangerVersion, K8sVersionServiceOptions)
 		if err != nil {
 			return err
 		}
@@ -523,7 +523,7 @@ func (md *MetadataController) getUserSettings() (map[string]string, bool, error)
 }
 
 func toUpdate(maxVersionForMajorK8sVersion map[string]string, deprecated map[string]bool,
-	defaultK8sVersions map[string]string, rancherVersion string, k8sVersionServiceOptions map[string]rketypes.KubernetesServicesOptions) (map[string]string, error) {
+	defaultK8sVersions map[string]string, rangerVersion string, k8sVersionServiceOptions map[string]rketypes.KubernetesServicesOptions) (map[string]string, error) {
 
 	var k8sVersionsCurrent []string
 	var maxVersions []string
@@ -539,7 +539,7 @@ func toUpdate(maxVersionForMajorK8sVersion map[string]string, deprecated map[str
 	sort.Strings(k8sVersionsCurrent)
 	sort.Strings(maxVersions)
 
-	defaultK8sVersion, err := getDefaultK8sVersion(defaultK8sVersions, k8sVersionsCurrent, rancherVersion)
+	defaultK8sVersion, err := getDefaultK8sVersion(defaultK8sVersions, k8sVersionsCurrent, rangerVersion)
 	if err != nil {
 		return nil, err
 	}
@@ -574,8 +574,8 @@ func toUpdate(maxVersionForMajorK8sVersion map[string]string, deprecated map[str
 	uiSupported := fmt.Sprintf(">=%s.x <=%s.x", minVersion, maxVersion)
 	uiDefaultRange := fmt.Sprintf("<=%s.x", maxVersion)
 
-	rke2DefaultVersion := channelserver.GetDefaultByRuntimeAndServerVersion(context.TODO(), "rke2", rancherVersion)
-	k3sDefaultVersion := channelserver.GetDefaultByRuntimeAndServerVersion(context.TODO(), "k3s", rancherVersion)
+	rke2DefaultVersion := channelserver.GetDefaultByRuntimeAndServerVersion(context.TODO(), "rke2", rangerVersion)
+	k3sDefaultVersion := channelserver.GetDefaultByRuntimeAndServerVersion(context.TODO(), "k3s", rangerVersion)
 
 	return map[string]string{
 		settings.KubernetesVersionsCurrent.Name:         strings.Join(k8sVersionsCurrent, ","),
@@ -591,7 +591,7 @@ func toUpdate(maxVersionForMajorK8sVersion map[string]string, deprecated map[str
 }
 
 func (md *MetadataController) updateSettingFromFields(updateField map[string]string, skip map[string]string) error {
-	for key, setting := range rancherUpdateSettingMap {
+	for key, setting := range rangerUpdateSettingMap {
 		if _, ok := skip[key]; ok {
 			continue
 		}
@@ -638,8 +638,8 @@ func getUserSettings(userSettings map[string]string, defaultK8sVersions map[stri
 	return userMaxVersionForMajorK8sVersion, userDeprecated, nil
 }
 
-func getDefaultK8sVersion(rancherDefaultK8sVersions map[string]string, k8sCurrVersions []string, rancherVersion string) (string, error) {
-	defaultK8sVersion, ok := rancherDefaultK8sVersions["user"]
+func getDefaultK8sVersion(rangerDefaultK8sVersions map[string]string, k8sCurrVersions []string, rangerVersion string) (string, error) {
+	defaultK8sVersion, ok := rangerDefaultK8sVersions["user"]
 	if ok && defaultK8sVersion != "" {
 		found := false
 		for _, k8sVersion := range k8sCurrVersions {
@@ -654,9 +654,9 @@ func getDefaultK8sVersion(rancherDefaultK8sVersions map[string]string, k8sCurrVe
 		return defaultK8sVersion, nil
 	}
 
-	defaultK8sVersionRange, ok := rancherDefaultK8sVersions[rancherVersion]
+	defaultK8sVersionRange, ok := rangerDefaultK8sVersions[rangerVersion]
 	if !ok || defaultK8sVersionRange == "" {
-		defaultK8sVersionRange = rancherDefaultK8sVersions["default"]
+		defaultK8sVersionRange = rangerDefaultK8sVersions["default"]
 	}
 	// get matching default k8s from k8s curr
 	toMatch := util.GetTagMajorVersion(defaultK8sVersionRange)

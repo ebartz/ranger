@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/rancher/norman/api/access"
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	v3client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/norman/api/access"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	v3client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
 )
 
 type Validator struct {

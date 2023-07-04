@@ -7,7 +7,7 @@ import time
 
 from subprocess import CalledProcessError
 
-from rancher import ApiError
+from ranger import ApiError
 
 from .test_auth import enable_ad, load_setup_data
 from .common import add_role_to_user
@@ -51,7 +51,7 @@ from .common import requests
 from .common import run_command as run_command_common
 from .common import ADMIN_TOKEN
 from .common import USER_TOKEN
-from .common import validate_all_workload_image_from_rancher
+from .common import validate_all_workload_image_from_ranger
 from .common import validate_app_deletion
 from .common import wait_for_condition
 from .common import wait_for_pod_to_running
@@ -63,13 +63,13 @@ from .test_monitoring import C_MONITORING_ANSWERS
 ISTIO_PATH = os.path.join(
     os.path.dirname(os.path.realpath(__file__)), "resource/istio")
 ISTIO_CRD_PATH = os.path.join(ISTIO_PATH, "crds")
-ISTIO_TEMPLATE_ID = "cattle-global-data:system-library-rancher-istio"
+ISTIO_TEMPLATE_ID = "cattle-global-data:system-library-ranger-istio"
 ISTIO_VERSION = os.environ.get('RANCHER_ISTIO_VERSION', "")
 ISTIO_INGRESSGATEWAY_NODEPORT = os.environ.get(
     'RANCHER_ISTIO_INGRESSGATEWAY_NODEPORT', 31380)
 ISTIO_BOOKINFO_QUERY_RESULT = "<title>Simple Bookstore App</title>"
 ISTIO_EXTERNAL_ID = "catalog://?catalog=system-library" \
-                    "&template=rancher-istio&version="
+                    "&template=ranger-istio&version="
 
 DEFAULT_ANSWERS = {
     "enableCRDs": "true",
@@ -89,21 +89,21 @@ namespace = {"app_client": None, "app_ns": None, "gateway_url": None,
 crd_test_data = [
     ("policy.authentication.istio.io", "authenticationpolicy.yaml"),
     # ("adapter.config.istio.io", "adapter.yaml"),
-    # ABOVE FAILS in current state: Rancher v2.3.5
+    # ABOVE FAILS in current state: Ranger v2.3.5
     # ("attributemanifest.config.istio.io", "attributemanifest.yaml"),
-    # ABOVE FAILS in current state: Rancher v2.3.5
+    # ABOVE FAILS in current state: Ranger v2.3.5
     ("handler.config.istio.io", "handler.yaml"),
     # ("httpapispecbinding.config.istio.io", "httpapispecbinding.yaml"),
-    # ABOVE FAILS in current state: Rancher v2.3.5
+    # ABOVE FAILS in current state: Ranger v2.3.5
     # ("httpapispec.config.istio.io", "httpapispec.yaml"),
-    # ABOVE FAILS in current state: Rancher v2.3.5
+    # ABOVE FAILS in current state: Ranger v2.3.5
     # ("instance.config.istio.io", "instance.yaml"),
-    # ABOVE FAILS in current state: Rancher v2.3.5
+    # ABOVE FAILS in current state: Ranger v2.3.5
     ("quotaspecbinding.config.istio.io", "quotaspecbinding.yaml"),
     ("quotaspec.config.istio.io", "quotaspec.yaml"),
     ("rule.config.istio.io", "rule.yaml"),
     # ("template.config.istio.io", "template.yaml"),
-    # ABOVE FAILS in current state: Rancher v2.3.5
+    # ABOVE FAILS in current state: Ranger v2.3.5
     ("destinationrule.networking.istio.io", "destinationrule.yaml"),
     ("envoyfilter.networking.istio.io", "envoyfilter.yaml"),
     ("gateway.networking.istio.io", "gateway.yaml"),
@@ -115,15 +115,15 @@ crd_test_data = [
     ("servicerole.rbac.istio.io", "servicerole.yaml"),
     ("authorizationpolicy.security.istio.io", "authorizationpolicy.yaml"),
     # ("certificate.certmanager.k8s.io", "certificate.yaml"),
-    # ABOVE FAILS in current state: Rancher v2.3.5
+    # ABOVE FAILS in current state: Ranger v2.3.5
     # ("challenge.certmanager.k8s.io", "challenge.yaml"),
-    # ABOVE FAILS in current state: Rancher v2.3.5
+    # ABOVE FAILS in current state: Ranger v2.3.5
     # ("clusterissuer.certmanager.k8s.io", "clusterissuer.yaml"),
-    # ABOVE FAILS in current state: Rancher v2.3.5
+    # ABOVE FAILS in current state: Ranger v2.3.5
     # ("issuer.certmanager.k8s.io", "issuer.yaml"),
-    # ABOVE FAILS in current state: Rancher v2.3.5
+    # ABOVE FAILS in current state: Ranger v2.3.5
     # ("order.certmanager.k8s.io", "order.yaml"),
-    # ABOVE FAILS in current state: Rancher v2.3.5
+    # ABOVE FAILS in current state: Ranger v2.3.5
 ]
 
 
@@ -140,7 +140,7 @@ def test_istio_resources():
 
 def test_istio_deployment_options():
     file_path = ISTIO_PATH + '/nginx-custom-sidecar.yaml'
-    expected_image = "rancher/istio-proxyv2:1.4.3"
+    expected_image = "ranger/istio-proxyv2:1.4.3"
     p_client = namespace["app_client"]
     ns = namespace["app_ns"]
 
@@ -184,7 +184,7 @@ def test_istio_custom_answers(skipif_unsupported_istio_version,
     expected_daemonsets = ["istio-nodeagent"]
     expected_job_list = ["istio-onefive-migration" if int(namespace["istio_version"].split(".")[1]) >= 5 else None]
 
-    validate_all_workload_image_from_rancher(
+    validate_all_workload_image_from_ranger(
         get_system_client(USER_TOKEN), namespace["system_ns"],
         ignore_pod_count=True, deployment_list=expected_deployments,
         daemonset_list=expected_daemonsets, job_list=expected_job_list)
@@ -200,7 +200,7 @@ def test_istio_certmanager_enables(skipif_unsupported_istio_version,
         "istio-pilot", "istio-policy", "istio-sidecar-injector",
         "istio-telemetry", "istio-tracing", "kiali"
     ]
-    validate_all_workload_image_from_rancher(
+    validate_all_workload_image_from_ranger(
         get_system_client(USER_TOKEN), namespace["system_ns"],
         ignore_pod_count=True, deployment_list=expected_deployments)
 
@@ -975,7 +975,7 @@ def create_project_client(request):
     if ISTIO_VERSION != "":
         istio_version = ISTIO_VERSION
     ISTIO_EXTERNAL_ID += istio_version
-    answers = {"global.rancher.clusterId": p.clusterId}
+    answers = {"global.ranger.clusterId": p.clusterId}
     DEFAULT_ANSWERS.update(answers)
 
     monitoring_answers = copy.deepcopy(C_MONITORING_ANSWERS)

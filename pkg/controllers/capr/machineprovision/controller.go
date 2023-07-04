@@ -8,28 +8,28 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rancher/lasso/pkg/dynamic"
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/capr"
-	"github.com/rancher/rancher/pkg/controllers/management/drivers/nodedriver"
-	"github.com/rancher/rancher/pkg/controllers/management/node"
-	capicontrollers "github.com/rancher/rancher/pkg/generated/controllers/cluster.x-k8s.io/v1beta1"
-	mgmtcontrollers "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3"
-	ranchercontrollers "github.com/rancher/rancher/pkg/generated/controllers/provisioning.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/provisioningv2/kubeconfig"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/wrangler"
-	"github.com/rancher/wrangler/pkg/apply"
-	"github.com/rancher/wrangler/pkg/condition"
-	"github.com/rancher/wrangler/pkg/data"
-	"github.com/rancher/wrangler/pkg/data/convert"
-	batchcontrollers "github.com/rancher/wrangler/pkg/generated/controllers/batch/v1"
-	corecontrollers "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
-	"github.com/rancher/wrangler/pkg/generic"
-	"github.com/rancher/wrangler/pkg/genericcondition"
-	"github.com/rancher/wrangler/pkg/name"
-	"github.com/rancher/wrangler/pkg/summary"
+	"github.com/ranger/lasso/pkg/dynamic"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/capr"
+	"github.com/ranger/ranger/pkg/controllers/management/drivers/nodedriver"
+	"github.com/ranger/ranger/pkg/controllers/management/node"
+	capicontrollers "github.com/ranger/ranger/pkg/generated/controllers/cluster.x-k8s.io/v1beta1"
+	mgmtcontrollers "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3"
+	rangercontrollers "github.com/ranger/ranger/pkg/generated/controllers/provisioning.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/provisioningv2/kubeconfig"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/wrangler"
+	"github.com/ranger/wrangler/pkg/apply"
+	"github.com/ranger/wrangler/pkg/condition"
+	"github.com/ranger/wrangler/pkg/data"
+	"github.com/ranger/wrangler/pkg/data/convert"
+	batchcontrollers "github.com/ranger/wrangler/pkg/generated/controllers/batch/v1"
+	corecontrollers "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
+	"github.com/ranger/wrangler/pkg/generic"
+	"github.com/ranger/wrangler/pkg/genericcondition"
+	"github.com/ranger/wrangler/pkg/name"
+	"github.com/ranger/wrangler/pkg/summary"
 	"github.com/sirupsen/logrus"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -98,7 +98,7 @@ type handler struct {
 	namespaces          corecontrollers.NamespaceCache
 	nodeDriverCache     mgmtcontrollers.NodeDriverCache
 	dynamic             *dynamic.Controller
-	rancherClusterCache ranchercontrollers.ClusterCache
+	rangerClusterCache rangercontrollers.ClusterCache
 	kubeconfigManager   *kubeconfig.Manager
 }
 
@@ -121,7 +121,7 @@ func Register(ctx context.Context, clients *wrangler.Context, kubeconfigManager 
 		nodeDriverCache:     clients.Mgmt.NodeDriver().Cache(),
 		namespaces:          clients.Core.Namespace().Cache(),
 		dynamic:             clients.Dynamic,
-		rancherClusterCache: clients.Provisioning.Cluster().Cache(),
+		rangerClusterCache: clients.Provisioning.Cluster().Cache(),
 		kubeconfigManager:   kubeconfigManager,
 	}
 
@@ -408,7 +408,7 @@ func (h *handler) OnRemove(key string, obj runtime.Object) (runtime.Object, erro
 		return h.doRemove(infra)
 	}
 
-	cluster, err := h.rancherClusterCache.Get(infra.meta.GetNamespace(), clusterName)
+	cluster, err := h.rangerClusterCache.Get(infra.meta.GetNamespace(), clusterName)
 	if err != nil && !apierrors.IsNotFound(err) {
 		return obj, err
 	}

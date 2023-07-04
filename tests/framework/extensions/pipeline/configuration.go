@@ -1,20 +1,20 @@
 package pipeline
 
 import (
-	"github.com/rancher/rancher/tests/framework/clients/ec2"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters/aks"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters/eks"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters/gke"
-	"github.com/rancher/rancher/tests/framework/extensions/machinepools"
-	"github.com/rancher/rancher/tests/framework/extensions/rke1/nodetemplates"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
-	"github.com/rancher/rancher/tests/v2/validation/provisioning"
+	"github.com/ranger/ranger/tests/framework/clients/ec2"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters/aks"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters/eks"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters/gke"
+	"github.com/ranger/ranger/tests/framework/extensions/machinepools"
+	"github.com/ranger/ranger/tests/framework/extensions/rke1/nodetemplates"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
+	"github.com/ranger/ranger/tests/v2/validation/provisioning"
 	"github.com/sirupsen/logrus"
 )
 
-// UpdateRancherDownstreamClusterFields is function that updates the cattle config's providers, node providers,
+// UpdateRangerDownstreamClusterFields is function that updates the cattle config's providers, node providers,
 // ssh user and image fields depending on the provider and cluster types.
-func UpdateRancherDownstreamClusterFields(cluster *RancherCluster, isCustom, isRKE1 bool) {
+func UpdateRangerDownstreamClusterFields(cluster *RangerCluster, isCustom, isRKE1 bool) {
 	UpdateProviderField(cluster.Provider, isCustom)
 
 	if isRKE1 {

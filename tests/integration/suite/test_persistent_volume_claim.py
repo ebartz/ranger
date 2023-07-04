@@ -1,7 +1,7 @@
 import pytest
 import kubernetes
 from .conftest import random_str, kubernetes_api_client
-from rancher import ApiError
+from ranger import ApiError
 
 
 def test_cannot_create_azure_no_accountstoragetype(admin_pc, admin_cc,
@@ -10,7 +10,7 @@ def test_cannot_create_azure_no_accountstoragetype(admin_pc, admin_cc,
     storageaccounttype fields fails to create
     """
     client = admin_pc.client
-    # using k8s_client is required since rancher client will automatically
+    # using k8s_client is required since ranger client will automatically
     # set default if sc has no storageaccounttype/skuName
     k8s_client = kubernetes_api_client(admin_mc.client, admin_cc.cluster.id)
     storage_client = kubernetes.client.StorageV1Api(api_client=k8s_client)

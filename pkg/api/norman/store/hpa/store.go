@@ -3,9 +3,9 @@ package hpa
 import (
 	"time"
 
-	"github.com/rancher/norman/store/transform"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/values"
+	"github.com/ranger/norman/store/transform"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/values"
 )
 
 const (

@@ -3,8 +3,8 @@ package daemonsets
 import (
 	"context"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
 	appv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -15,7 +15,7 @@ type DaemonSetList struct {
 }
 
 // ListDaemonsets is a helper function that uses the dynamic client to list daemonsets in a cluster with its list options.
-func ListDaemonsets(client *rancher.Client, clusterID, namespace string, listOpts metav1.ListOptions) (*DaemonSetList, error) {
+func ListDaemonsets(client *ranger.Client, clusterID, namespace string, listOpts metav1.ListOptions) (*DaemonSetList, error) {
 	daemonsetList := new(DaemonSetList)
 
 	dynamicClient, err := client.GetDownStreamClusterClient(clusterID)

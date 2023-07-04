@@ -4,10 +4,10 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/rancher/norman/types"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/util/wait"
 )
@@ -23,7 +23,7 @@ const (
 
 // IsNodeReady is a helper method that will loop and check if the node is ready in the RKE1 cluster.
 // It will return an error if the node is not ready after set amount of time.
-func IsNodeReady(client *rancher.Client, ClusterID string) error {
+func IsNodeReady(client *ranger.Client, ClusterID string) error {
 	err := wait.Poll(500*time.Millisecond, 30*time.Minute, func() (bool, error) {
 		nodes, err := client.Management.Node.ListAll(&types.ListOpts{
 			Filters: map[string]interface{}{
@@ -51,7 +51,7 @@ func IsNodeReady(client *rancher.Client, ClusterID string) error {
 	return err
 }
 
-func IsRKE1EtcdNodeReplaced(client *rancher.Client, etcdNodeToDelete management.Node, clusterResp *management.Cluster, numOfEtcdNodesBeforeDeletion int) (bool, error) {
+func IsRKE1EtcdNodeReplaced(client *ranger.Client, etcdNodeToDelete management.Node, clusterResp *management.Cluster, numOfEtcdNodesBeforeDeletion int) (bool, error) {
 	numOfEtcdNodesAfterDeletion := 0
 
 	err := wait.Poll(PollInterval, PollTimeout, func() (done bool, err error) {
@@ -81,7 +81,7 @@ func IsRKE1EtcdNodeReplaced(client *rancher.Client, etcdNodeToDelete management.
 	return numOfEtcdNodesBeforeDeletion == numOfEtcdNodesAfterDeletion, err
 }
 
-func IsRKE2K3SEtcdNodeReplaced(client *rancher.Client, query url.Values, clusterName string, etcdNodeToDelete v1.SteveAPIObject, numOfEtcdNodesBeforeDeletion int) (bool, error) {
+func IsRKE2K3SEtcdNodeReplaced(client *ranger.Client, query url.Values, clusterName string, etcdNodeToDelete v1.SteveAPIObject, numOfEtcdNodesBeforeDeletion int) (bool, error) {
 	numOfEtcdNodesAfterDeletion := 0
 
 	err := wait.Poll(PollInterval, PollTimeout, func() (done bool, err error) {

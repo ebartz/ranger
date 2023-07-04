@@ -9,16 +9,16 @@ import (
 
 	ldapv3 "github.com/go-ldap/ldap/v3"
 	"github.com/mitchellh/mapstructure"
-	"github.com/rancher/norman/types"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/auth/providers/common"
-	"github.com/rancher/rancher/pkg/auth/providers/common/ldap"
-	"github.com/rancher/rancher/pkg/auth/tokens"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	corev1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/user"
+	"github.com/ranger/norman/types"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/auth/providers/common"
+	"github.com/ranger/ranger/pkg/auth/providers/common/ldap"
+	"github.com/ranger/ranger/pkg/auth/tokens"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	corev1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/user"
 	"github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -389,7 +389,7 @@ func (p *ldapProvider) GetUserExtraAttributes(userPrincipal v3.Principal) map[st
 	return extras
 }
 
-// IsDisabledProvider checks if the LDAP auth provider is currently disabled in Rancher.
+// IsDisabledProvider checks if the LDAP auth provider is currently disabled in Ranger.
 func (p *ldapProvider) IsDisabledProvider() (bool, error) {
 	ldapConfig, _, err := p.getLDAPConfig()
 	if err != nil {

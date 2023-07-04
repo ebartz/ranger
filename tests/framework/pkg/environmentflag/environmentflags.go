@@ -14,6 +14,6 @@ const (
 	GatekeeperAllowedNamespaces
 	UpgradeAllClusters
 	UseExistingRegistries
-	InstallRancher
+	InstallRanger
 	environmentFlagLastItem // This is used to determine the number of items in the enum
 )

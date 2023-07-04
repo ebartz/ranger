@@ -3,12 +3,12 @@ package catalog
 import (
 	"net/http"
 
-	"github.com/rancher/apiserver/pkg/types"
-	catalogtypes "github.com/rancher/rancher/pkg/api/steve/catalog/types"
-	catalog "github.com/rancher/rancher/pkg/apis/catalog.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/catalogv2/helmop"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/wrangler/pkg/schemas/validation"
+	"github.com/ranger/apiserver/pkg/types"
+	catalogtypes "github.com/ranger/ranger/pkg/api/steve/catalog/types"
+	catalog "github.com/ranger/ranger/pkg/apis/catalog.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/catalogv2/helmop"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/wrangler/pkg/schemas/validation"
 	"k8s.io/apimachinery/pkg/runtime"
 	schema2 "k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apiserver/pkg/endpoints/request"
@@ -19,7 +19,7 @@ type operation struct {
 	// ops is the Operation struct which contains functions
 	// related to helm such as helm install, helm uninstall etc.
 	ops *helmop.Operations
-	// imageOveride is the location of the rancher shell image which is used
+	// imageOveride is the location of the ranger shell image which is used
 	// for running helm commands such as install, upgrade and uninstall.
 	imageOverride string
 }
@@ -40,8 +40,8 @@ func newOperation(
 }
 
 // ServeHTTP calls corresponding Operation functions based on the type of the api request.
-// It uses the rancher apiserver package to parse the request and know the type of it.
-// The types are documented in the rancher apiserver package. After parsing, it then
+// It uses the ranger apiserver package to parse the request and know the type of it.
+// The types are documented in the ranger apiserver package. After parsing, it then
 // checks if the request is authorised by checking the user field in the request.
 //
 // For example, if the api request is for installing a chart, then it will call the

@@ -6,13 +6,13 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	kd "github.com/rancher/rancher/pkg/controllers/management/kontainerdrivermetadata"
-	"github.com/rancher/rancher/pkg/controllers/management/secretmigrator/assemblers"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/librke"
-	nodeserver "github.com/rancher/rancher/pkg/rkenodeconfigserver"
-	rkeservices "github.com/rancher/rke/services"
-	rketypes "github.com/rancher/rke/types"
+	kd "github.com/ranger/ranger/pkg/controllers/management/kontainerdrivermetadata"
+	"github.com/ranger/ranger/pkg/controllers/management/secretmigrator/assemblers"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/librke"
+	nodeserver "github.com/ranger/ranger/pkg/rkenodeconfigserver"
+	rkeservices "github.com/ranger/rke/services"
+	rketypes "github.com/ranger/rke/types"
 	"github.com/sirupsen/logrus"
 )
 
@@ -21,7 +21,7 @@ func (uh *upgradeHandler) nonWorkerPlan(node *v3.Node, cluster *v3.Cluster) (*rk
 	if err != nil {
 		return nil, err
 	}
-	rkeConfig := appliedSpec.RancherKubernetesEngineConfig.DeepCopy()
+	rkeConfig := appliedSpec.RangerKubernetesEngineConfig.DeepCopy()
 	rkeConfig.Nodes = []rketypes.RKEConfigNode{
 		*node.Status.NodeConfig,
 	}
@@ -86,7 +86,7 @@ func (uh *upgradeHandler) workerPlan(node *v3.Node, cluster *v3.Cluster) (*rkety
 		return nil, err
 	}
 
-	rkeConfig := appliedSpec.RancherKubernetesEngineConfig.DeepCopy()
+	rkeConfig := appliedSpec.RangerKubernetesEngineConfig.DeepCopy()
 	nodeserver.FilterHostForSpec(rkeConfig, node)
 
 	logrus.Debugf("The number of nodes sent to the plan: %v", len(rkeConfig.Nodes))

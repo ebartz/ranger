@@ -4,10 +4,10 @@ import (
 	"context"
 	"time"
 
-	"github.com/rancher/norman/controller"
-	"github.com/rancher/norman/objectclient"
-	"github.com/rancher/norman/resource"
-	"github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/norman/controller"
+	"github.com/ranger/norman/objectclient"
+	"github.com/ranger/norman/resource"
+	"github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -19,99 +19,99 @@ import (
 )
 
 var (
-	RancherUserNotificationGroupVersionKind = schema.GroupVersionKind{
+	RangerUserNotificationGroupVersionKind = schema.GroupVersionKind{
 		Version: Version,
 		Group:   GroupName,
-		Kind:    "RancherUserNotification",
+		Kind:    "RangerUserNotification",
 	}
-	RancherUserNotificationResource = metav1.APIResource{
-		Name:         "rancherusernotifications",
-		SingularName: "rancherusernotification",
+	RangerUserNotificationResource = metav1.APIResource{
+		Name:         "rangerusernotifications",
+		SingularName: "rangerusernotification",
 		Namespaced:   false,
-		Kind:         RancherUserNotificationGroupVersionKind.Kind,
+		Kind:         RangerUserNotificationGroupVersionKind.Kind,
 	}
 
-	RancherUserNotificationGroupVersionResource = schema.GroupVersionResource{
+	RangerUserNotificationGroupVersionResource = schema.GroupVersionResource{
 		Group:    GroupName,
 		Version:  Version,
-		Resource: "rancherusernotifications",
+		Resource: "rangerusernotifications",
 	}
 )
 
 func init() {
-	resource.Put(RancherUserNotificationGroupVersionResource)
+	resource.Put(RangerUserNotificationGroupVersionResource)
 }
 
-// Deprecated: use v3.RancherUserNotification instead
-type RancherUserNotification = v3.RancherUserNotification
+// Deprecated: use v3.RangerUserNotification instead
+type RangerUserNotification = v3.RangerUserNotification
 
-func NewRancherUserNotification(namespace, name string, obj v3.RancherUserNotification) *v3.RancherUserNotification {
-	obj.APIVersion, obj.Kind = RancherUserNotificationGroupVersionKind.ToAPIVersionAndKind()
+func NewRangerUserNotification(namespace, name string, obj v3.RangerUserNotification) *v3.RangerUserNotification {
+	obj.APIVersion, obj.Kind = RangerUserNotificationGroupVersionKind.ToAPIVersionAndKind()
 	obj.Name = name
 	obj.Namespace = namespace
 	return &obj
 }
 
-type RancherUserNotificationHandlerFunc func(key string, obj *v3.RancherUserNotification) (runtime.Object, error)
+type RangerUserNotificationHandlerFunc func(key string, obj *v3.RangerUserNotification) (runtime.Object, error)
 
-type RancherUserNotificationChangeHandlerFunc func(obj *v3.RancherUserNotification) (runtime.Object, error)
+type RangerUserNotificationChangeHandlerFunc func(obj *v3.RangerUserNotification) (runtime.Object, error)
 
-type RancherUserNotificationLister interface {
-	List(namespace string, selector labels.Selector) (ret []*v3.RancherUserNotification, err error)
-	Get(namespace, name string) (*v3.RancherUserNotification, error)
+type RangerUserNotificationLister interface {
+	List(namespace string, selector labels.Selector) (ret []*v3.RangerUserNotification, err error)
+	Get(namespace, name string) (*v3.RangerUserNotification, error)
 }
 
-type RancherUserNotificationController interface {
+type RangerUserNotificationController interface {
 	Generic() controller.GenericController
 	Informer() cache.SharedIndexInformer
-	Lister() RancherUserNotificationLister
-	AddHandler(ctx context.Context, name string, handler RancherUserNotificationHandlerFunc)
-	AddFeatureHandler(ctx context.Context, enabled func() bool, name string, sync RancherUserNotificationHandlerFunc)
-	AddClusterScopedHandler(ctx context.Context, name, clusterName string, handler RancherUserNotificationHandlerFunc)
-	AddClusterScopedFeatureHandler(ctx context.Context, enabled func() bool, name, clusterName string, handler RancherUserNotificationHandlerFunc)
+	Lister() RangerUserNotificationLister
+	AddHandler(ctx context.Context, name string, handler RangerUserNotificationHandlerFunc)
+	AddFeatureHandler(ctx context.Context, enabled func() bool, name string, sync RangerUserNotificationHandlerFunc)
+	AddClusterScopedHandler(ctx context.Context, name, clusterName string, handler RangerUserNotificationHandlerFunc)
+	AddClusterScopedFeatureHandler(ctx context.Context, enabled func() bool, name, clusterName string, handler RangerUserNotificationHandlerFunc)
 	Enqueue(namespace, name string)
 	EnqueueAfter(namespace, name string, after time.Duration)
 }
 
-type RancherUserNotificationInterface interface {
+type RangerUserNotificationInterface interface {
 	ObjectClient() *objectclient.ObjectClient
-	Create(*v3.RancherUserNotification) (*v3.RancherUserNotification, error)
-	GetNamespaced(namespace, name string, opts metav1.GetOptions) (*v3.RancherUserNotification, error)
-	Get(name string, opts metav1.GetOptions) (*v3.RancherUserNotification, error)
-	Update(*v3.RancherUserNotification) (*v3.RancherUserNotification, error)
+	Create(*v3.RangerUserNotification) (*v3.RangerUserNotification, error)
+	GetNamespaced(namespace, name string, opts metav1.GetOptions) (*v3.RangerUserNotification, error)
+	Get(name string, opts metav1.GetOptions) (*v3.RangerUserNotification, error)
+	Update(*v3.RangerUserNotification) (*v3.RangerUserNotification, error)
 	Delete(name string, options *metav1.DeleteOptions) error
 	DeleteNamespaced(namespace, name string, options *metav1.DeleteOptions) error
-	List(opts metav1.ListOptions) (*v3.RancherUserNotificationList, error)
-	ListNamespaced(namespace string, opts metav1.ListOptions) (*v3.RancherUserNotificationList, error)
+	List(opts metav1.ListOptions) (*v3.RangerUserNotificationList, error)
+	ListNamespaced(namespace string, opts metav1.ListOptions) (*v3.RangerUserNotificationList, error)
 	Watch(opts metav1.ListOptions) (watch.Interface, error)
 	DeleteCollection(deleteOpts *metav1.DeleteOptions, listOpts metav1.ListOptions) error
-	Controller() RancherUserNotificationController
-	AddHandler(ctx context.Context, name string, sync RancherUserNotificationHandlerFunc)
-	AddFeatureHandler(ctx context.Context, enabled func() bool, name string, sync RancherUserNotificationHandlerFunc)
-	AddLifecycle(ctx context.Context, name string, lifecycle RancherUserNotificationLifecycle)
-	AddFeatureLifecycle(ctx context.Context, enabled func() bool, name string, lifecycle RancherUserNotificationLifecycle)
-	AddClusterScopedHandler(ctx context.Context, name, clusterName string, sync RancherUserNotificationHandlerFunc)
-	AddClusterScopedFeatureHandler(ctx context.Context, enabled func() bool, name, clusterName string, sync RancherUserNotificationHandlerFunc)
-	AddClusterScopedLifecycle(ctx context.Context, name, clusterName string, lifecycle RancherUserNotificationLifecycle)
-	AddClusterScopedFeatureLifecycle(ctx context.Context, enabled func() bool, name, clusterName string, lifecycle RancherUserNotificationLifecycle)
+	Controller() RangerUserNotificationController
+	AddHandler(ctx context.Context, name string, sync RangerUserNotificationHandlerFunc)
+	AddFeatureHandler(ctx context.Context, enabled func() bool, name string, sync RangerUserNotificationHandlerFunc)
+	AddLifecycle(ctx context.Context, name string, lifecycle RangerUserNotificationLifecycle)
+	AddFeatureLifecycle(ctx context.Context, enabled func() bool, name string, lifecycle RangerUserNotificationLifecycle)
+	AddClusterScopedHandler(ctx context.Context, name, clusterName string, sync RangerUserNotificationHandlerFunc)
+	AddClusterScopedFeatureHandler(ctx context.Context, enabled func() bool, name, clusterName string, sync RangerUserNotificationHandlerFunc)
+	AddClusterScopedLifecycle(ctx context.Context, name, clusterName string, lifecycle RangerUserNotificationLifecycle)
+	AddClusterScopedFeatureLifecycle(ctx context.Context, enabled func() bool, name, clusterName string, lifecycle RangerUserNotificationLifecycle)
 }
 
-type rancherUserNotificationLister struct {
+type rangerUserNotificationLister struct {
 	ns         string
-	controller *rancherUserNotificationController
+	controller *rangerUserNotificationController
 }
 
-func (l *rancherUserNotificationLister) List(namespace string, selector labels.Selector) (ret []*v3.RancherUserNotification, err error) {
+func (l *rangerUserNotificationLister) List(namespace string, selector labels.Selector) (ret []*v3.RangerUserNotification, err error) {
 	if namespace == "" {
 		namespace = l.ns
 	}
 	err = cache.ListAllByNamespace(l.controller.Informer().GetIndexer(), namespace, selector, func(obj interface{}) {
-		ret = append(ret, obj.(*v3.RancherUserNotification))
+		ret = append(ret, obj.(*v3.RangerUserNotification))
 	})
 	return
 }
 
-func (l *rancherUserNotificationLister) Get(namespace, name string) (*v3.RancherUserNotification, error) {
+func (l *rangerUserNotificationLister) Get(namespace, name string) (*v3.RangerUserNotification, error) {
 	var key string
 	if namespace != "" {
 		key = namespace + "/" + name
@@ -124,34 +124,34 @@ func (l *rancherUserNotificationLister) Get(namespace, name string) (*v3.Rancher
 	}
 	if !exists {
 		return nil, errors.NewNotFound(schema.GroupResource{
-			Group:    RancherUserNotificationGroupVersionKind.Group,
-			Resource: RancherUserNotificationGroupVersionResource.Resource,
+			Group:    RangerUserNotificationGroupVersionKind.Group,
+			Resource: RangerUserNotificationGroupVersionResource.Resource,
 		}, key)
 	}
-	return obj.(*v3.RancherUserNotification), nil
+	return obj.(*v3.RangerUserNotification), nil
 }
 
-type rancherUserNotificationController struct {
+type rangerUserNotificationController struct {
 	ns string
 	controller.GenericController
 }
 
-func (c *rancherUserNotificationController) Generic() controller.GenericController {
+func (c *rangerUserNotificationController) Generic() controller.GenericController {
 	return c.GenericController
 }
 
-func (c *rancherUserNotificationController) Lister() RancherUserNotificationLister {
-	return &rancherUserNotificationLister{
+func (c *rangerUserNotificationController) Lister() RangerUserNotificationLister {
+	return &rangerUserNotificationLister{
 		ns:         c.ns,
 		controller: c,
 	}
 }
 
-func (c *rancherUserNotificationController) AddHandler(ctx context.Context, name string, handler RancherUserNotificationHandlerFunc) {
+func (c *rangerUserNotificationController) AddHandler(ctx context.Context, name string, handler RangerUserNotificationHandlerFunc) {
 	c.GenericController.AddHandler(ctx, name, func(key string, obj interface{}) (interface{}, error) {
 		if obj == nil {
 			return handler(key, nil)
-		} else if v, ok := obj.(*v3.RancherUserNotification); ok {
+		} else if v, ok := obj.(*v3.RangerUserNotification); ok {
 			return handler(key, v)
 		} else {
 			return nil, nil
@@ -159,13 +159,13 @@ func (c *rancherUserNotificationController) AddHandler(ctx context.Context, name
 	})
 }
 
-func (c *rancherUserNotificationController) AddFeatureHandler(ctx context.Context, enabled func() bool, name string, handler RancherUserNotificationHandlerFunc) {
+func (c *rangerUserNotificationController) AddFeatureHandler(ctx context.Context, enabled func() bool, name string, handler RangerUserNotificationHandlerFunc) {
 	c.GenericController.AddHandler(ctx, name, func(key string, obj interface{}) (interface{}, error) {
 		if !enabled() {
 			return nil, nil
 		} else if obj == nil {
 			return handler(key, nil)
-		} else if v, ok := obj.(*v3.RancherUserNotification); ok {
+		} else if v, ok := obj.(*v3.RangerUserNotification); ok {
 			return handler(key, v)
 		} else {
 			return nil, nil
@@ -173,11 +173,11 @@ func (c *rancherUserNotificationController) AddFeatureHandler(ctx context.Contex
 	})
 }
 
-func (c *rancherUserNotificationController) AddClusterScopedHandler(ctx context.Context, name, cluster string, handler RancherUserNotificationHandlerFunc) {
+func (c *rangerUserNotificationController) AddClusterScopedHandler(ctx context.Context, name, cluster string, handler RangerUserNotificationHandlerFunc) {
 	c.GenericController.AddHandler(ctx, name, func(key string, obj interface{}) (interface{}, error) {
 		if obj == nil {
 			return handler(key, nil)
-		} else if v, ok := obj.(*v3.RancherUserNotification); ok && controller.ObjectInCluster(cluster, obj) {
+		} else if v, ok := obj.(*v3.RangerUserNotification); ok && controller.ObjectInCluster(cluster, obj) {
 			return handler(key, v)
 		} else {
 			return nil, nil
@@ -185,13 +185,13 @@ func (c *rancherUserNotificationController) AddClusterScopedHandler(ctx context.
 	})
 }
 
-func (c *rancherUserNotificationController) AddClusterScopedFeatureHandler(ctx context.Context, enabled func() bool, name, cluster string, handler RancherUserNotificationHandlerFunc) {
+func (c *rangerUserNotificationController) AddClusterScopedFeatureHandler(ctx context.Context, enabled func() bool, name, cluster string, handler RangerUserNotificationHandlerFunc) {
 	c.GenericController.AddHandler(ctx, name, func(key string, obj interface{}) (interface{}, error) {
 		if !enabled() {
 			return nil, nil
 		} else if obj == nil {
 			return handler(key, nil)
-		} else if v, ok := obj.(*v3.RancherUserNotification); ok && controller.ObjectInCluster(cluster, obj) {
+		} else if v, ok := obj.(*v3.RangerUserNotification); ok && controller.ObjectInCluster(cluster, obj) {
 			return handler(key, v)
 		} else {
 			return nil, nil
@@ -199,127 +199,127 @@ func (c *rancherUserNotificationController) AddClusterScopedFeatureHandler(ctx c
 	})
 }
 
-type rancherUserNotificationFactory struct {
+type rangerUserNotificationFactory struct {
 }
 
-func (c rancherUserNotificationFactory) Object() runtime.Object {
-	return &v3.RancherUserNotification{}
+func (c rangerUserNotificationFactory) Object() runtime.Object {
+	return &v3.RangerUserNotification{}
 }
 
-func (c rancherUserNotificationFactory) List() runtime.Object {
-	return &v3.RancherUserNotificationList{}
+func (c rangerUserNotificationFactory) List() runtime.Object {
+	return &v3.RangerUserNotificationList{}
 }
 
-func (s *rancherUserNotificationClient) Controller() RancherUserNotificationController {
-	genericController := controller.NewGenericController(s.ns, RancherUserNotificationGroupVersionKind.Kind+"Controller",
-		s.client.controllerFactory.ForResourceKind(RancherUserNotificationGroupVersionResource, RancherUserNotificationGroupVersionKind.Kind, false))
+func (s *rangerUserNotificationClient) Controller() RangerUserNotificationController {
+	genericController := controller.NewGenericController(s.ns, RangerUserNotificationGroupVersionKind.Kind+"Controller",
+		s.client.controllerFactory.ForResourceKind(RangerUserNotificationGroupVersionResource, RangerUserNotificationGroupVersionKind.Kind, false))
 
-	return &rancherUserNotificationController{
+	return &rangerUserNotificationController{
 		ns:                s.ns,
 		GenericController: genericController,
 	}
 }
 
-type rancherUserNotificationClient struct {
+type rangerUserNotificationClient struct {
 	client       *Client
 	ns           string
 	objectClient *objectclient.ObjectClient
-	controller   RancherUserNotificationController
+	controller   RangerUserNotificationController
 }
 
-func (s *rancherUserNotificationClient) ObjectClient() *objectclient.ObjectClient {
+func (s *rangerUserNotificationClient) ObjectClient() *objectclient.ObjectClient {
 	return s.objectClient
 }
 
-func (s *rancherUserNotificationClient) Create(o *v3.RancherUserNotification) (*v3.RancherUserNotification, error) {
+func (s *rangerUserNotificationClient) Create(o *v3.RangerUserNotification) (*v3.RangerUserNotification, error) {
 	obj, err := s.objectClient.Create(o)
-	return obj.(*v3.RancherUserNotification), err
+	return obj.(*v3.RangerUserNotification), err
 }
 
-func (s *rancherUserNotificationClient) Get(name string, opts metav1.GetOptions) (*v3.RancherUserNotification, error) {
+func (s *rangerUserNotificationClient) Get(name string, opts metav1.GetOptions) (*v3.RangerUserNotification, error) {
 	obj, err := s.objectClient.Get(name, opts)
-	return obj.(*v3.RancherUserNotification), err
+	return obj.(*v3.RangerUserNotification), err
 }
 
-func (s *rancherUserNotificationClient) GetNamespaced(namespace, name string, opts metav1.GetOptions) (*v3.RancherUserNotification, error) {
+func (s *rangerUserNotificationClient) GetNamespaced(namespace, name string, opts metav1.GetOptions) (*v3.RangerUserNotification, error) {
 	obj, err := s.objectClient.GetNamespaced(namespace, name, opts)
-	return obj.(*v3.RancherUserNotification), err
+	return obj.(*v3.RangerUserNotification), err
 }
 
-func (s *rancherUserNotificationClient) Update(o *v3.RancherUserNotification) (*v3.RancherUserNotification, error) {
+func (s *rangerUserNotificationClient) Update(o *v3.RangerUserNotification) (*v3.RangerUserNotification, error) {
 	obj, err := s.objectClient.Update(o.Name, o)
-	return obj.(*v3.RancherUserNotification), err
+	return obj.(*v3.RangerUserNotification), err
 }
 
-func (s *rancherUserNotificationClient) UpdateStatus(o *v3.RancherUserNotification) (*v3.RancherUserNotification, error) {
+func (s *rangerUserNotificationClient) UpdateStatus(o *v3.RangerUserNotification) (*v3.RangerUserNotification, error) {
 	obj, err := s.objectClient.UpdateStatus(o.Name, o)
-	return obj.(*v3.RancherUserNotification), err
+	return obj.(*v3.RangerUserNotification), err
 }
 
-func (s *rancherUserNotificationClient) Delete(name string, options *metav1.DeleteOptions) error {
+func (s *rangerUserNotificationClient) Delete(name string, options *metav1.DeleteOptions) error {
 	return s.objectClient.Delete(name, options)
 }
 
-func (s *rancherUserNotificationClient) DeleteNamespaced(namespace, name string, options *metav1.DeleteOptions) error {
+func (s *rangerUserNotificationClient) DeleteNamespaced(namespace, name string, options *metav1.DeleteOptions) error {
 	return s.objectClient.DeleteNamespaced(namespace, name, options)
 }
 
-func (s *rancherUserNotificationClient) List(opts metav1.ListOptions) (*v3.RancherUserNotificationList, error) {
+func (s *rangerUserNotificationClient) List(opts metav1.ListOptions) (*v3.RangerUserNotificationList, error) {
 	obj, err := s.objectClient.List(opts)
-	return obj.(*v3.RancherUserNotificationList), err
+	return obj.(*v3.RangerUserNotificationList), err
 }
 
-func (s *rancherUserNotificationClient) ListNamespaced(namespace string, opts metav1.ListOptions) (*v3.RancherUserNotificationList, error) {
+func (s *rangerUserNotificationClient) ListNamespaced(namespace string, opts metav1.ListOptions) (*v3.RangerUserNotificationList, error) {
 	obj, err := s.objectClient.ListNamespaced(namespace, opts)
-	return obj.(*v3.RancherUserNotificationList), err
+	return obj.(*v3.RangerUserNotificationList), err
 }
 
-func (s *rancherUserNotificationClient) Watch(opts metav1.ListOptions) (watch.Interface, error) {
+func (s *rangerUserNotificationClient) Watch(opts metav1.ListOptions) (watch.Interface, error) {
 	return s.objectClient.Watch(opts)
 }
 
 // Patch applies the patch and returns the patched deployment.
-func (s *rancherUserNotificationClient) Patch(o *v3.RancherUserNotification, patchType types.PatchType, data []byte, subresources ...string) (*v3.RancherUserNotification, error) {
+func (s *rangerUserNotificationClient) Patch(o *v3.RangerUserNotification, patchType types.PatchType, data []byte, subresources ...string) (*v3.RangerUserNotification, error) {
 	obj, err := s.objectClient.Patch(o.Name, o, patchType, data, subresources...)
-	return obj.(*v3.RancherUserNotification), err
+	return obj.(*v3.RangerUserNotification), err
 }
 
-func (s *rancherUserNotificationClient) DeleteCollection(deleteOpts *metav1.DeleteOptions, listOpts metav1.ListOptions) error {
+func (s *rangerUserNotificationClient) DeleteCollection(deleteOpts *metav1.DeleteOptions, listOpts metav1.ListOptions) error {
 	return s.objectClient.DeleteCollection(deleteOpts, listOpts)
 }
 
-func (s *rancherUserNotificationClient) AddHandler(ctx context.Context, name string, sync RancherUserNotificationHandlerFunc) {
+func (s *rangerUserNotificationClient) AddHandler(ctx context.Context, name string, sync RangerUserNotificationHandlerFunc) {
 	s.Controller().AddHandler(ctx, name, sync)
 }
 
-func (s *rancherUserNotificationClient) AddFeatureHandler(ctx context.Context, enabled func() bool, name string, sync RancherUserNotificationHandlerFunc) {
+func (s *rangerUserNotificationClient) AddFeatureHandler(ctx context.Context, enabled func() bool, name string, sync RangerUserNotificationHandlerFunc) {
 	s.Controller().AddFeatureHandler(ctx, enabled, name, sync)
 }
 
-func (s *rancherUserNotificationClient) AddLifecycle(ctx context.Context, name string, lifecycle RancherUserNotificationLifecycle) {
-	sync := NewRancherUserNotificationLifecycleAdapter(name, false, s, lifecycle)
+func (s *rangerUserNotificationClient) AddLifecycle(ctx context.Context, name string, lifecycle RangerUserNotificationLifecycle) {
+	sync := NewRangerUserNotificationLifecycleAdapter(name, false, s, lifecycle)
 	s.Controller().AddHandler(ctx, name, sync)
 }
 
-func (s *rancherUserNotificationClient) AddFeatureLifecycle(ctx context.Context, enabled func() bool, name string, lifecycle RancherUserNotificationLifecycle) {
-	sync := NewRancherUserNotificationLifecycleAdapter(name, false, s, lifecycle)
+func (s *rangerUserNotificationClient) AddFeatureLifecycle(ctx context.Context, enabled func() bool, name string, lifecycle RangerUserNotificationLifecycle) {
+	sync := NewRangerUserNotificationLifecycleAdapter(name, false, s, lifecycle)
 	s.Controller().AddFeatureHandler(ctx, enabled, name, sync)
 }
 
-func (s *rancherUserNotificationClient) AddClusterScopedHandler(ctx context.Context, name, clusterName string, sync RancherUserNotificationHandlerFunc) {
+func (s *rangerUserNotificationClient) AddClusterScopedHandler(ctx context.Context, name, clusterName string, sync RangerUserNotificationHandlerFunc) {
 	s.Controller().AddClusterScopedHandler(ctx, name, clusterName, sync)
 }
 
-func (s *rancherUserNotificationClient) AddClusterScopedFeatureHandler(ctx context.Context, enabled func() bool, name, clusterName string, sync RancherUserNotificationHandlerFunc) {
+func (s *rangerUserNotificationClient) AddClusterScopedFeatureHandler(ctx context.Context, enabled func() bool, name, clusterName string, sync RangerUserNotificationHandlerFunc) {
 	s.Controller().AddClusterScopedFeatureHandler(ctx, enabled, name, clusterName, sync)
 }
 
-func (s *rancherUserNotificationClient) AddClusterScopedLifecycle(ctx context.Context, name, clusterName string, lifecycle RancherUserNotificationLifecycle) {
-	sync := NewRancherUserNotificationLifecycleAdapter(name+"_"+clusterName, true, s, lifecycle)
+func (s *rangerUserNotificationClient) AddClusterScopedLifecycle(ctx context.Context, name, clusterName string, lifecycle RangerUserNotificationLifecycle) {
+	sync := NewRangerUserNotificationLifecycleAdapter(name+"_"+clusterName, true, s, lifecycle)
 	s.Controller().AddClusterScopedHandler(ctx, name, clusterName, sync)
 }
 
-func (s *rancherUserNotificationClient) AddClusterScopedFeatureLifecycle(ctx context.Context, enabled func() bool, name, clusterName string, lifecycle RancherUserNotificationLifecycle) {
-	sync := NewRancherUserNotificationLifecycleAdapter(name+"_"+clusterName, true, s, lifecycle)
+func (s *rangerUserNotificationClient) AddClusterScopedFeatureLifecycle(ctx context.Context, enabled func() bool, name, clusterName string, lifecycle RangerUserNotificationLifecycle) {
+	sync := NewRangerUserNotificationLifecycleAdapter(name+"_"+clusterName, true, s, lifecycle)
 	s.Controller().AddClusterScopedFeatureHandler(ctx, enabled, name, clusterName, sync)
 }

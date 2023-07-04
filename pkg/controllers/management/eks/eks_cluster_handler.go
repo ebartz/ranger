@@ -13,20 +13,20 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/eks"
-	"github.com/rancher/eks-operator/controller"
-	eksv1 "github.com/rancher/eks-operator/pkg/apis/eks.cattle.io/v1"
-	apimgmtv3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/controllers/management/clusteroperator"
-	"github.com/rancher/rancher/pkg/controllers/management/clusterupstreamrefresher"
-	"github.com/rancher/rancher/pkg/controllers/management/rbac"
-	"github.com/rancher/rancher/pkg/controllers/management/secretmigrator"
-	"github.com/rancher/rancher/pkg/dialer"
-	mgmtv3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/systemaccount"
-	"github.com/rancher/rancher/pkg/types/config"
-	typesDialer "github.com/rancher/rancher/pkg/types/config/dialer"
-	"github.com/rancher/rancher/pkg/wrangler"
+	"github.com/ranger/eks-operator/controller"
+	eksv1 "github.com/ranger/eks-operator/pkg/apis/eks.cattle.io/v1"
+	apimgmtv3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/controllers/management/clusteroperator"
+	"github.com/ranger/ranger/pkg/controllers/management/clusterupstreamrefresher"
+	"github.com/ranger/ranger/pkg/controllers/management/rbac"
+	"github.com/ranger/ranger/pkg/controllers/management/secretmigrator"
+	"github.com/ranger/ranger/pkg/dialer"
+	mgmtv3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/systemaccount"
+	"github.com/ranger/ranger/pkg/types/config"
+	typesDialer "github.com/ranger/ranger/pkg/types/config/dialer"
+	"github.com/ranger/ranger/pkg/wrangler"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/api/errors"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -41,8 +41,8 @@ import (
 const (
 	eksAPIGroup         = "eks.cattle.io"
 	eksV1               = "eks.cattle.io/v1"
-	eksOperatorTemplate = "system-library-rancher-eks-operator"
-	eksOperator         = "rancher-eks-operator"
+	eksOperatorTemplate = "system-library-ranger-eks-operator"
+	eksOperator         = "ranger-eks-operator"
 	eksShortName        = "EKS"
 	enqueueTime         = time.Second * 5
 	importedAnno        = "eks.cattle.io/imported"
@@ -189,7 +189,7 @@ func (e *eksOperatorController) onClusterChange(key string, cluster *mgmtv3.Clus
 
 		// cluster must have at least one managed nodegroup. It is possible for a cluster
 		// agent to be deployed without one, but having a managed nodegroup makes it easy
-		// for rancher to validate its ability to do so.
+		// for ranger to validate its ability to do so.
 		addNgMessage := "Cluster must have at least one managed nodegroup."
 		noNodeGroupsOnSpec := len(cluster.Spec.EKSConfig.NodeGroups) == 0
 		noNodeGroupsOnUpstreamSpec := len(cluster.Status.EKSStatus.UpstreamSpec.NodeGroups) == 0
@@ -245,7 +245,7 @@ func (e *eksOperatorController) onClusterChange(key string, cluster *mgmtv3.Clus
 		}
 
 		if cluster.Status.EKSStatus.PrivateRequiresTunnel == nil && !*cluster.Status.EKSStatus.UpstreamSpec.PublicAccess {
-			// In this case, the API endpoint is private and it has not been determined if Rancher must tunnel to communicate with it.
+			// In this case, the API endpoint is private and it has not been determined if Ranger must tunnel to communicate with it.
 			// Check to see if we can still use the public API endpoint even though
 			// the cluster has private-only access
 			serviceToken, mustTunnel, err := e.generateSATokenWithPublicAPI(cluster)
@@ -276,7 +276,7 @@ func (e *eksOperatorController) onClusterChange(key string, cluster *mgmtv3.Clus
 			if err != nil {
 				var statusErr error
 				if err == dialer.ErrAgentDisconnected {
-					// In this case, the API endpoint is private and rancher is waiting for the import cluster command to be run.
+					// In this case, the API endpoint is private and ranger is waiting for the import cluster command to be run.
 					cluster, statusErr = e.SetUnknown(cluster, apimgmtv3.ClusterConditionWaiting, "waiting for cluster agent to be deployed")
 					if statusErr == nil {
 						e.ClusterEnqueueAfter(cluster.Name, enqueueTime)
@@ -467,7 +467,7 @@ func buildEKSCCCreateObject(cluster *mgmtv3.Cluster) (*unstructured.Unstructured
 			OwnerReferences: []v1.OwnerReference{
 				{
 					Kind:       cluster.Kind,
-					APIVersion: rbac.RancherManagementAPIVersion,
+					APIVersion: rbac.RangerManagementAPIVersion,
 					Name:       cluster.Name,
 					UID:        cluster.UID,
 				},
@@ -500,14 +500,14 @@ func (e *eksOperatorController) recordAppliedSpec(cluster *mgmtv3.Cluster) (*mgm
 
 // generateSATokenWithPublicAPI tries to get a service account token from the cluster using the public API endpoint.
 // This function is called if the cluster has only privateEndpoint enabled and not publicly available.
-// If Rancher is able to communicate with the cluster through its API endpoint even though it is private, then this function will retrieve
+// If Ranger is able to communicate with the cluster through its API endpoint even though it is private, then this function will retrieve
 // a service account token and the *bool returned will refer to a false value (doesn't have to tunnel).
 //
-// If the Rancher server cannot connect to the cluster's API endpoint, then one of the two errors below will happen.
-// In this case, we know that Rancher must use the cluster agent tunnel for communication. This function will return an empty service account token,
+// If the Ranger server cannot connect to the cluster's API endpoint, then one of the two errors below will happen.
+// In this case, we know that Ranger must use the cluster agent tunnel for communication. This function will return an empty service account token,
 // and the *bool return value will refer to a true value (must tunnel).
 //
-// If an error different from the two below occur, then the *bool return value will be nil, indicating that Rancher was not able to determine if
+// If an error different from the two below occur, then the *bool return value will be nil, indicating that Ranger was not able to determine if
 // tunneling is required to communicate with the cluster.
 func (e *eksOperatorController) generateSATokenWithPublicAPI(cluster *mgmtv3.Cluster) (string, *bool, error) {
 	restConfig, err := e.getRestConfig(cluster, (&net.Dialer{
@@ -528,7 +528,7 @@ func (e *eksOperatorController) generateSATokenWithPublicAPI(cluster *mgmtv3.Clu
 		}
 
 		// In the existence of a proxy, it may be the case that the following error occurs,
-		// in which case rancher should use the tunnel connection to communicate with the cluster.
+		// in which case ranger should use the tunnel connection to communicate with the cluster.
 		var urlError *url.Error
 		if stderrors.As(err, &urlError) && urlError.Timeout() {
 			return "", requiresTunnel, nil

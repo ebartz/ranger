@@ -6,24 +6,24 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/ec2"
-	rancherEc2 "github.com/rancher/rancher/tests/framework/clients/ec2"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/pkg/nodes"
+	rangerEc2 "github.com/ranger/ranger/tests/framework/clients/ec2"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/pkg/nodes"
 )
 
 const (
-	nodeBaseName = "rancher-automation"
+	nodeBaseName = "ranger-automation"
 )
 
 // CreateNodes creates `quantityPerPool[n]` number of ec2 instances
-func CreateNodes(client *rancher.Client, rolesPerPool []string, quantityPerPool []int32) (ec2Nodes []*nodes.Node, err error) {
+func CreateNodes(client *ranger.Client, rolesPerPool []string, quantityPerPool []int32) (ec2Nodes []*nodes.Node, err error) {
 	ec2Client, err := client.GetEC2Client()
 	if err != nil {
 		return nil, err
 	}
 
 	runningReservations := []*ec2.Reservation{}
-	reservationConfigs := []*rancherEc2.AWSEC2Config{}
+	reservationConfigs := []*rangerEc2.AWSEC2Config{}
 	// provisioning instances in reverse order to allow windows instances time to become ready
 	for i := len(quantityPerPool) - 1; i >= 0; i-- {
 		config := MatchRoleToConfig(rolesPerPool[i], ec2Client.ClientConfig.AWSEC2Config)
@@ -143,7 +143,7 @@ func CreateNodes(client *rancher.Client, rolesPerPool []string, quantityPerPool 
 }
 
 // MatchRoleToConfig matches the role of nodesAndRoles to the ec2Config that allows this role.
-func MatchRoleToConfig(poolRole string, ec2Configs []rancherEc2.AWSEC2Config) *rancherEc2.AWSEC2Config {
+func MatchRoleToConfig(poolRole string, ec2Configs []rangerEc2.AWSEC2Config) *rangerEc2.AWSEC2Config {
 	for _, config := range ec2Configs {
 		hasMatch := false
 		for _, configRole := range config.Roles {
@@ -159,7 +159,7 @@ func MatchRoleToConfig(poolRole string, ec2Configs []rancherEc2.AWSEC2Config) *r
 }
 
 // DeleteNodes terminates ec2 instances that have been created.
-func DeleteNodes(client *rancher.Client, nodes []*nodes.Node) error {
+func DeleteNodes(client *ranger.Client, nodes []*nodes.Node) error {
 	ec2Client, err := client.GetEC2Client()
 	if err != nil {
 		return err

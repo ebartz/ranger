@@ -13,8 +13,8 @@ NUMBER_OF_INSTANCES = int(os.environ.get("RANCHER_AIRGAP_INSTANCE_COUNT", "1"))
 
 PROXY_HOST_NAME = random_test_name(HOST_NAME)
 RANCHER_PROXY_INTERNAL_HOSTNAME = \
-    PROXY_HOST_NAME + "-internal.qa.rancher.space"
-RANCHER_PROXY_HOSTNAME = PROXY_HOST_NAME + ".qa.rancher.space"
+    PROXY_HOST_NAME + "-internal.qa.ranger.space"
+RANCHER_PROXY_HOSTNAME = PROXY_HOST_NAME + ".qa.ranger.space"
 
 RESOURCE_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                             'resource')
@@ -135,10 +135,10 @@ def prepare_airgap_proxy_node(bastion_node, number_of_nodes):
     return ag_nodes
 
 
-def deploy_proxy_rancher(bastion_node):
+def deploy_proxy_ranger(bastion_node):
     ag_node = prepare_airgap_proxy_node(bastion_node, 1)[0]
     proxy_url = bastion_node.host_name + ":" + RANCHER_PROXY_PORT
-    deploy_rancher_command = \
+    deploy_ranger_command = \
         'sudo docker run -d --privileged --restart=unless-stopped ' \
         '-p 80:80 -p 443:443 ' \
         '-e HTTP_PROXY={} ' \
@@ -146,14 +146,14 @@ def deploy_proxy_rancher(bastion_node):
         '-e NO_PROXY="localhost,127.0.0.1,0.0.0.0,10.0.0.0/8,' \
         'cattle-system.svc,{}" ' \
         '-e CATTLE_BOOTSTRAP_PASSWORD=\\\"{}\\\" ' \
-        'rancher/rancher:{} --trace'.format(
+        'ranger/ranger:{} --trace'.format(
             proxy_url, proxy_url, RANCHER_CIDR_OVERRIDE,
             ADMIN_PASSWORD, RANCHER_SERVER_VERSION)
 
     deploy_result = run_command_on_proxy_node(bastion_node, ag_node,
-                                              deploy_rancher_command,
+                                              deploy_ranger_command,
                                               log_out=True)
-    assert "Downloaded newer image for rancher/rancher:{}".format(
+    assert "Downloaded newer image for ranger/ranger:{}".format(
         RANCHER_SERVER_VERSION) in deploy_result[1]
     return ag_node
 
@@ -257,19 +257,19 @@ def create_nlb_and_add_targets(aws_nodes):
     return public_dns
 
 
-def test_deploy_proxied_rancher():
+def test_deploy_proxied_ranger():
     proxy_node = deploy_proxy_server()
-    proxy_rancher_node = deploy_proxy_rancher(proxy_node)
-    public_dns = create_nlb_and_add_targets([proxy_rancher_node])
+    proxy_ranger_node = deploy_proxy_ranger(proxy_node)
+    public_dns = create_nlb_and_add_targets([proxy_ranger_node])
     print(
         "\nConnect to bastion node with:\nssh -i {}.pem {}@{}\n"
-        "Connect to rancher node by connecting to bastion, then run:\n"
-        "ssh -i {}.pem {}@{}\n\nOpen the Rancher UI with: https://{}\n"
+        "Connect to ranger node by connecting to bastion, then run:\n"
+        "ssh -i {}.pem {}@{}\n\nOpen the Ranger UI with: https://{}\n"
         "".format(
             proxy_node.ssh_key_name, AWS_USER,
             proxy_node.host_name,
             proxy_node.ssh_key_name, AWS_USER,
-            proxy_rancher_node.private_ip_address,
+            proxy_ranger_node.private_ip_address,
             public_dns))
 
 
@@ -292,4 +292,4 @@ def test_deploy_proxy_nodes():
 
     results = register_cluster_nodes(bastion_node, ag_nodes)
     for result in results:
-        assert "Downloaded newer image for rancher/rancher-agent" in result[1]
+        assert "Downloaded newer image for ranger/ranger-agent" in result[1]

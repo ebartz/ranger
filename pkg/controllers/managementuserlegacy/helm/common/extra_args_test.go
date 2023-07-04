@@ -3,9 +3,9 @@ package common
 import (
 	"testing"
 
-	v32 "github.com/rancher/rancher/pkg/apis/project.cattle.io/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/project.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/settings"
+	v32 "github.com/ranger/ranger/pkg/apis/project.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/project.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/settings"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -29,7 +29,7 @@ func Test_injectDefaultRegistry(t *testing.T) {
 		{
 			app: &v3.App{
 				Spec: v32.AppSpec{
-					ExternalID: "catalog://?catalog=system-library&template=rancher-external-dns&version=0.1.0",
+					ExternalID: "catalog://?catalog=system-library&template=ranger-external-dns&version=0.1.0",
 				},
 			},
 			want: true,

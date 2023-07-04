@@ -1,7 +1,7 @@
 package nodetemplates
 
 import (
-	"github.com/rancher/norman/types"
+	"github.com/ranger/norman/types"
 )
 
 // NodeTemplate is the main struct needed to create a node template for an RKE1 cluster

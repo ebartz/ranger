@@ -1,63 +1,63 @@
 package v3
 
 import (
-	"github.com/rancher/norman/lifecycle"
-	"github.com/rancher/norman/resource"
-	"github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/norman/lifecycle"
+	"github.com/ranger/norman/resource"
+	"github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
-type RancherUserNotificationLifecycle interface {
-	Create(obj *v3.RancherUserNotification) (runtime.Object, error)
-	Remove(obj *v3.RancherUserNotification) (runtime.Object, error)
-	Updated(obj *v3.RancherUserNotification) (runtime.Object, error)
+type RangerUserNotificationLifecycle interface {
+	Create(obj *v3.RangerUserNotification) (runtime.Object, error)
+	Remove(obj *v3.RangerUserNotification) (runtime.Object, error)
+	Updated(obj *v3.RangerUserNotification) (runtime.Object, error)
 }
 
-type rancherUserNotificationLifecycleAdapter struct {
-	lifecycle RancherUserNotificationLifecycle
+type rangerUserNotificationLifecycleAdapter struct {
+	lifecycle RangerUserNotificationLifecycle
 }
 
-func (w *rancherUserNotificationLifecycleAdapter) HasCreate() bool {
+func (w *rangerUserNotificationLifecycleAdapter) HasCreate() bool {
 	o, ok := w.lifecycle.(lifecycle.ObjectLifecycleCondition)
 	return !ok || o.HasCreate()
 }
 
-func (w *rancherUserNotificationLifecycleAdapter) HasFinalize() bool {
+func (w *rangerUserNotificationLifecycleAdapter) HasFinalize() bool {
 	o, ok := w.lifecycle.(lifecycle.ObjectLifecycleCondition)
 	return !ok || o.HasFinalize()
 }
 
-func (w *rancherUserNotificationLifecycleAdapter) Create(obj runtime.Object) (runtime.Object, error) {
-	o, err := w.lifecycle.Create(obj.(*v3.RancherUserNotification))
+func (w *rangerUserNotificationLifecycleAdapter) Create(obj runtime.Object) (runtime.Object, error) {
+	o, err := w.lifecycle.Create(obj.(*v3.RangerUserNotification))
 	if o == nil {
 		return nil, err
 	}
 	return o, err
 }
 
-func (w *rancherUserNotificationLifecycleAdapter) Finalize(obj runtime.Object) (runtime.Object, error) {
-	o, err := w.lifecycle.Remove(obj.(*v3.RancherUserNotification))
+func (w *rangerUserNotificationLifecycleAdapter) Finalize(obj runtime.Object) (runtime.Object, error) {
+	o, err := w.lifecycle.Remove(obj.(*v3.RangerUserNotification))
 	if o == nil {
 		return nil, err
 	}
 	return o, err
 }
 
-func (w *rancherUserNotificationLifecycleAdapter) Updated(obj runtime.Object) (runtime.Object, error) {
-	o, err := w.lifecycle.Updated(obj.(*v3.RancherUserNotification))
+func (w *rangerUserNotificationLifecycleAdapter) Updated(obj runtime.Object) (runtime.Object, error) {
+	o, err := w.lifecycle.Updated(obj.(*v3.RangerUserNotification))
 	if o == nil {
 		return nil, err
 	}
 	return o, err
 }
 
-func NewRancherUserNotificationLifecycleAdapter(name string, clusterScoped bool, client RancherUserNotificationInterface, l RancherUserNotificationLifecycle) RancherUserNotificationHandlerFunc {
+func NewRangerUserNotificationLifecycleAdapter(name string, clusterScoped bool, client RangerUserNotificationInterface, l RangerUserNotificationLifecycle) RangerUserNotificationHandlerFunc {
 	if clusterScoped {
-		resource.PutClusterScoped(RancherUserNotificationGroupVersionResource)
+		resource.PutClusterScoped(RangerUserNotificationGroupVersionResource)
 	}
-	adapter := &rancherUserNotificationLifecycleAdapter{lifecycle: l}
+	adapter := &rangerUserNotificationLifecycleAdapter{lifecycle: l}
 	syncFn := lifecycle.NewObjectLifecycleAdapter(name, clusterScoped, adapter, client.ObjectClient())
-	return func(key string, obj *v3.RancherUserNotification) (runtime.Object, error) {
+	return func(key string, obj *v3.RangerUserNotification) (runtime.Object, error) {
 		newObj, err := syncFn(key, obj)
 		if o, ok := newObj.(runtime.Object); ok {
 			return o, err

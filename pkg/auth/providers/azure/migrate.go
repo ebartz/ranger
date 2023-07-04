@@ -1,10 +1,10 @@
 package azure
 
 import (
-	"github.com/rancher/norman/httperror"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/auth/api/secrets"
-	"github.com/rancher/rancher/pkg/auth/providers/azure/clients"
+	"github.com/ranger/norman/httperror"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/auth/api/secrets"
+	"github.com/ranger/ranger/pkg/auth/providers/azure/clients"
 	"github.com/sirupsen/logrus"
 )
 

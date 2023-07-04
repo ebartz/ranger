@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1/plan"
+	"github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1/plan"
 )
 
 const idempotentActionScript = `
@@ -18,7 +18,7 @@ hashedCmd=$3
 cmd=$4
 shift 4
 
-dataRoot="/var/lib/rancher/capr/idempotence/$key/$hashedCmd"
+dataRoot="/var/lib/ranger/capr/idempotence/$key/$hashedCmd"
 hashFile="$dataRoot/hash"
 attemptFile="$dataRoot/attempt"
 
@@ -36,7 +36,7 @@ fi
 `
 
 const (
-	idempotentActionScriptPath = "/var/lib/rancher/capr/idempotence/idempotent.sh"
+	idempotentActionScriptPath = "/var/lib/ranger/capr/idempotence/idempotent.sh"
 )
 
 var idempotentScriptFile = plan.File{
@@ -47,7 +47,7 @@ var idempotentScriptFile = plan.File{
 }
 
 // idempotentInstruction generates an idempotent action instruction that will execute the given command + args exactly once.
-// It works by running a script that writes the given "value" to a file at /var/lib/rancher/idempotence/<identifier>/<hashedCommand>,
+// It works by running a script that writes the given "value" to a file at /var/lib/ranger/idempotence/<identifier>/<hashedCommand>,
 // and checks this file to determine if it needs to run the instruction again. Notably, `identifier` must be a valid relative path.
 func idempotentInstruction(identifier, value, command string, args []string, env []string) plan.OneTimeInstruction {
 	hashedCommand := PlanHash([]byte(command))

@@ -12,7 +12,7 @@ environment:
 
 steps:
 - name: provisioning-tests-pr
-  image: rancher/dapper:v0.5.8
+  image: ranger/dapper:v0.5.8
   commands:
   - dapper provisioning-tests
   privileged: true
@@ -23,7 +23,7 @@ steps:
     event:
     - pull_request
 - name: provisioning-tests-push
-  image: rancher/dapper:v0.5.8
+  image: ranger/dapper:v0.5.8
   commands:
   - dapper provisioning-tests
   privileged: true
@@ -32,7 +32,7 @@ steps:
     path: /var/run/docker.sock
   when:
     instance:
-      - drone-publish.rancher.io
+      - drone-publish.ranger.io
     ref:
       include:
         - "refs/heads/master"
@@ -64,7 +64,7 @@ environment:
 
 steps:
 - name: provisioning-tests-pr
-  image: rancher/dapper:v0.5.8
+  image: ranger/dapper:v0.5.8
   commands:
   - dapper provisioning-tests
   privileged: true
@@ -75,7 +75,7 @@ steps:
     event:
     - pull_request
 - name: provisioning-tests-push
-  image: rancher/dapper:v0.5.8
+  image: ranger/dapper:v0.5.8
   commands:
   - dapper provisioning-tests
   privileged: true
@@ -84,7 +84,7 @@ steps:
     path: /var/run/docker.sock
   when:
     instance:
-      - drone-publish.rancher.io
+      - drone-publish.ranger.io
     ref:
       include:
         - "refs/heads/master"
@@ -116,7 +116,7 @@ environment:
 
 steps:
   - name: provisioning-operations-tests-pr
-    image: rancher/dapper:v0.5.8
+    image: ranger/dapper:v0.5.8
     commands:
       - dapper provisioning-tests
     privileged: true
@@ -127,7 +127,7 @@ steps:
       event:
         - pull_request
   - name: provisioning-operations-tests-push
-    image: rancher/dapper:v0.5.8
+    image: ranger/dapper:v0.5.8
     commands:
       - dapper provisioning-tests
     privileged: true
@@ -136,7 +136,7 @@ steps:
         path: /var/run/docker.sock
     when:
       instance:
-        - drone-publish.rancher.io
+        - drone-publish.ranger.io
       ref:
         include:
           - "refs/heads/master"
@@ -168,7 +168,7 @@ environment:
 
 steps:
   - name: provisioning-operations-tests-pr
-    image: rancher/dapper:v0.5.8
+    image: ranger/dapper:v0.5.8
     commands:
       - dapper provisioning-tests
     privileged: true
@@ -179,7 +179,7 @@ steps:
       event:
         - pull_request
   - name: provisioning-operations-tests-push
-    image: rancher/dapper:v0.5.8
+    image: ranger/dapper:v0.5.8
     commands:
       - dapper provisioning-tests
     privileged: true
@@ -188,7 +188,7 @@ steps:
         path: /var/run/docker.sock
     when:
       instance:
-        - drone-publish.rancher.io
+        - drone-publish.ranger.io
       ref:
         include:
           - "refs/heads/master"
@@ -216,7 +216,7 @@ platform:
 
 steps:
 - name: build-pr
-  image: rancher/dapper:v0.5.8
+  image: ranger/dapper:v0.5.8
   commands:
   - dapper ci
   privileged: true
@@ -228,7 +228,7 @@ steps:
     - pull_request
 
 - name: build-push-tag
-  image: rancher/dapper:v0.5.8
+  image: ranger/dapper:v0.5.8
   commands:
   - dapper ci
   privileged: true
@@ -237,7 +237,7 @@ steps:
     path: /var/run/docker.sock
   when:
     instance:
-      - drone-publish.rancher.io
+      - drone-publish.ranger.io
     ref:
       include:
         - "refs/heads/master"
@@ -248,7 +248,7 @@ steps:
     - tag
 
 - name: fossa-amd64
-  image: rancher/dapper:v0.5.8
+  image: ranger/dapper:v0.5.8
   failure: ignore
   environment:
     FOSSA_API_KEY:
@@ -260,7 +260,7 @@ steps:
       path: /var/run/docker.sock
   when:
     instance:
-      - drone-publish.rancher.io
+      - drone-publish.ranger.io
     ref:
       include:
         - "refs/heads/master"
@@ -271,12 +271,12 @@ steps:
       - tag
 
 - name: stage-binaries
-  image: rancher/dapper:v0.5.8
+  image: ranger/dapper:v0.5.8
   commands:
   - "cp -r ./bin/* ./package/"
   when:
     instance:
-      - drone-publish.rancher.io
+      - drone-publish.ranger.io
     ref:
       include:
         - "refs/heads/master"
@@ -299,7 +299,7 @@ steps:
     tag: ${DRONE_BRANCH/release\//}-${DRONE_COMMIT}-linux-amd64
     password:
       from_secret: docker_password
-    repo: rancher/rancher
+    repo: ranger/ranger
     username:
       from_secret: docker_username
   when:
@@ -324,7 +324,7 @@ steps:
     tag: ${DRONE_BRANCH/release\//}-${DRONE_COMMIT}-linux-amd64
     password:
       from_secret: docker_password
-    repo: rancher/system-agent-installer-rancher
+    repo: ranger/system-agent-installer-ranger
     username:
       from_secret: docker_username
   when:
@@ -349,7 +349,7 @@ steps:
     tag: ${DRONE_BRANCH/release\//}-${DRONE_COMMIT}-linux-amd64
     password:
       from_secret: docker_password
-    repo: rancher/rancher-agent
+    repo: ranger/ranger-agent
     username:
       from_secret: docker_username
   when:
@@ -372,7 +372,7 @@ steps:
     dockerfile: package/Dockerfile
     password:
       from_secret: docker_password
-    repo: rancher/rancher
+    repo: ranger/ranger
     tag: "${DRONE_TAG}-linux-amd64"
     username:
       from_secret: docker_username
@@ -393,7 +393,7 @@ steps:
     dockerfile: package/Dockerfile.installer
     password:
       from_secret: docker_password
-    repo: rancher/system-agent-installer-rancher
+    repo: ranger/system-agent-installer-ranger
     tag: "${DRONE_TAG}-linux-amd64"
     username:
       from_secret: docker_username
@@ -414,7 +414,7 @@ steps:
     dockerfile: package/Dockerfile.agent
     password:
       from_secret: docker_password
-    repo: rancher/rancher-agent
+    repo: ranger/ranger-agent
     tag: "${DRONE_TAG}-linux-amd64"
     username:
       from_secret: docker_username
@@ -430,10 +430,10 @@ steps:
     checksum:
     - sha256
     files:
-    - "bin/rancher-*"
+    - "bin/ranger-*"
     prerelease: true
     title: "Pre-release ${DRONE_TAG}"
-    note: ./bin/rancher-components.txt
+    note: ./bin/ranger-components.txt
     overwrite: true
   when:
     event:
@@ -450,7 +450,7 @@ steps:
     checksum:
     - sha256
     files:
-    - "bin/rancher-*"
+    - "bin/ranger-*"
   when:
     event:
     - tag
@@ -461,7 +461,7 @@ steps:
       - "refs/tags/*-*"
 
 - name: check-release-images-exists
-  image: rancher/dapper:v0.5.8
+  image: ranger/dapper:v0.5.8
   failure: ignore
   commands:
   - dapper check-release-images-exist
@@ -471,7 +471,7 @@ steps:
     path: /var/run/docker.sock
   when:
     instance:
-      - drone-publish.rancher.io
+      - drone-publish.ranger.io
     ref:
       include:
         - "refs/tags/v*"
@@ -497,7 +497,7 @@ platform:
 
 steps:
 - name: build-pr
-  image: rancher/dapper:v0.5.8
+  image: ranger/dapper:v0.5.8
   commands:
   - dapper ci
   privileged: true
@@ -509,7 +509,7 @@ steps:
     - pull_request
 
 - name: build-push-tag
-  image: rancher/dapper:v0.5.8
+  image: ranger/dapper:v0.5.8
   commands:
   - dapper ci
   privileged: true
@@ -518,7 +518,7 @@ steps:
     path: /var/run/docker.sock
   when:
     instance:
-      - drone-publish.rancher.io
+      - drone-publish.ranger.io
     ref:
       include:
         - "refs/heads/master"
@@ -529,12 +529,12 @@ steps:
     - tag
 
 - name: stage-binaries
-  image: rancher/dapper:v0.5.8
+  image: ranger/dapper:v0.5.8
   commands:
   - "cp -r ./bin/* ./package/"
   when:
     instance:
-      - drone-publish.rancher.io
+      - drone-publish.ranger.io
     ref:
       include:
         - "refs/heads/master"
@@ -557,7 +557,7 @@ steps:
     tag: ${DRONE_BRANCH/release\//}-${DRONE_COMMIT}-linux-arm64
     password:
       from_secret: docker_password
-    repo: rancher/rancher
+    repo: ranger/ranger
     username:
       from_secret: docker_username
   when:
@@ -582,7 +582,7 @@ steps:
     tag: ${DRONE_BRANCH/release\//}-${DRONE_COMMIT}-linux-arm64
     password:
       from_secret: docker_password
-    repo: rancher/system-agent-installer-rancher
+    repo: ranger/system-agent-installer-ranger
     username:
       from_secret: docker_username
   when:
@@ -607,7 +607,7 @@ steps:
     tag: ${DRONE_BRANCH/release\//}-${DRONE_COMMIT}-linux-arm64
     password:
       from_secret: docker_password
-    repo: rancher/rancher-agent
+    repo: ranger/ranger-agent
     username:
       from_secret: docker_username
   when:
@@ -630,7 +630,7 @@ steps:
     dockerfile: package/Dockerfile
     password:
       from_secret: docker_password
-    repo: rancher/rancher
+    repo: ranger/ranger
     tag: "${DRONE_TAG}-linux-arm64"
     username:
       from_secret: docker_username
@@ -651,7 +651,7 @@ steps:
     dockerfile: package/Dockerfile.installer
     password:
       from_secret: docker_password
-    repo: rancher/system-agent-installer-rancher
+    repo: ranger/system-agent-installer-ranger
     tag: "${DRONE_TAG}-linux-arm64"
     username:
       from_secret: docker_username
@@ -672,7 +672,7 @@ steps:
     dockerfile: package/Dockerfile.agent
     password:
       from_secret: docker_password
-    repo: rancher/rancher-agent
+    repo: ranger/ranger-agent
     tag: "${DRONE_TAG}-linux-arm64"
     username:
       from_secret: docker_username
@@ -713,7 +713,7 @@ steps:
   - git checkout $DRONE_COMMIT -b origin/$DRONE_TARGET_BRANCH
 
 - name: build-pr
-  image: rancher/dapper:v0.5.8
+  image: ranger/dapper:v0.5.8
   failure: ignore
   commands:
   - dapper ci
@@ -726,7 +726,7 @@ steps:
     - pull_request
 
 - name: build-push-tag
-  image: rancher/dapper:v0.5.8
+  image: ranger/dapper:v0.5.8
   failure: ignore
   commands:
   - K3S_BUILDER=k3s_root dapper ci
@@ -736,7 +736,7 @@ steps:
     path: /var/run/docker.sock
   when:
     instance:
-      - drone-publish.rancher.io
+      - drone-publish.ranger.io
     ref:
       include:
         - "refs/heads/master"
@@ -747,13 +747,13 @@ steps:
     - tag
 
 - name: stage-binaries
-  image: rancher/dapper:v0.5.8
+  image: ranger/dapper:v0.5.8
   failure: ignore
   commands:
   - "cp -r ./bin/* ./package/"
   when:
     instance:
-      - drone-publish.rancher.io
+      - drone-publish.ranger.io
     ref:
       include:
         - "refs/heads/master"
@@ -764,7 +764,7 @@ steps:
     - tag
 
 - name: docker-publish-head
-  image: rancher/drone-images:docker-s390x
+  image: ranger/drone-images:docker-s390x
   failure: ignore
   volumes:
   - name: docker
@@ -780,7 +780,7 @@ steps:
     tag: ${DRONE_BRANCH/release\//}-${DRONE_COMMIT}-linux-s390x
     password:
       from_secret: docker_password
-    repo: rancher/rancher
+    repo: ranger/ranger
     username:
       from_secret: docker_username
   when:
@@ -792,7 +792,7 @@ steps:
     - push
 
 - name: docker-publish-head-installer
-  image: rancher/drone-images:docker-s390x
+  image: ranger/drone-images:docker-s390x
   failure: ignore
   volumes:
     - name: docker
@@ -809,7 +809,7 @@ steps:
     tag: ${DRONE_BRANCH/release\//}-${DRONE_COMMIT}-linux-s390x
     password:
       from_secret: docker_password
-    repo: rancher/system-agent-installer-rancher
+    repo: ranger/system-agent-installer-ranger
     username:
       from_secret: docker_username
   when:
@@ -821,7 +821,7 @@ steps:
     - push
 
 - name: docker-publish-head-agent
-  image: rancher/drone-images:docker-s390x
+  image: ranger/drone-images:docker-s390x
   failure: ignore
   volumes:
     - name: docker
@@ -838,7 +838,7 @@ steps:
     tag: ${DRONE_BRANCH/release\//}-${DRONE_COMMIT}-linux-s390x
     password:
       from_secret: docker_password
-    repo: rancher/rancher-agent
+    repo: ranger/ranger-agent
     username:
       from_secret: docker_username
   when:
@@ -850,7 +850,7 @@ steps:
     - push
 
 - name: docker-publish
-  image: rancher/drone-images:docker-s390x
+  image: ranger/drone-images:docker-s390x
   failure: ignore
   volumes:
     - name: docker
@@ -865,7 +865,7 @@ steps:
     dockerfile: package/Dockerfile
     password:
       from_secret: docker_password
-    repo: rancher/rancher
+    repo: ranger/ranger
     tag: "${DRONE_TAG}-linux-s390x"
     username:
       from_secret: docker_username
@@ -874,7 +874,7 @@ steps:
     - tag
 
 - name: docker-publish-installer
-  image: rancher/drone-images:docker-s390x
+  image: ranger/drone-images:docker-s390x
   failure: ignore
   volumes:
     - name: docker
@@ -890,7 +890,7 @@ steps:
     dockerfile: package/Dockerfile.installer
     password:
       from_secret: docker_password
-    repo: rancher/system-agent-installer-rancher
+    repo: ranger/system-agent-installer-ranger
     tag: "${DRONE_TAG}-linux-s390x"
     username:
       from_secret: docker_username
@@ -899,7 +899,7 @@ steps:
     - tag
 
 - name: docker-publish-agent
-  image: rancher/drone-images:docker-s390x
+  image: ranger/drone-images:docker-s390x
   failure: ignore
   volumes:
     - name: docker
@@ -915,7 +915,7 @@ steps:
     dockerfile: package/Dockerfile.agent
     password:
       from_secret: docker_password
-    repo: rancher/rancher-agent
+    repo: ranger/ranger-agent
     tag: "${DRONE_TAG}-linux-s390x"
     username:
       from_secret: docker_username
@@ -949,7 +949,7 @@ clone:
 steps:
   - name: build-pr
     pull: always
-    image: rancher/dapper:v0.5.8
+    image: ranger/dapper:v0.5.8
     commands:
       - dapper.exe -f Dockerfile-windows.dapper -d ci
     volumes:
@@ -961,7 +961,7 @@ steps:
 
   - name: build-push-tag
     pull: always
-    image: rancher/dapper:v0.5.8
+    image: ranger/dapper:v0.5.8
     commands:
       - dapper.exe -f Dockerfile-windows.dapper -d ci
     volumes:
@@ -969,7 +969,7 @@ steps:
         path: \\\\.\\pipe\\docker_engine
     when:
       instance:
-        - drone-publish.rancher.io
+        - drone-publish.ranger.io
       ref:
         include:
           - "refs/heads/master"
@@ -980,12 +980,12 @@ steps:
         - tag
 
   - name: stage-binaries
-    image: rancher/dapper:v0.5.8
+    image: ranger/dapper:v0.5.8
     commands:
       - "cp -r ./bin/* ./package/windows/"
     when:
       instance:
-        - drone-publish.rancher.io
+        - drone-publish.ranger.io
       ref:
         include:
           - "refs/heads/master"
@@ -1008,7 +1008,7 @@ steps:
       dockerfile: package/windows/Dockerfile.agent
       password:
         from_secret: docker_password
-      repo: rancher/rancher-agent
+      repo: ranger/ranger-agent
       tag: ${DRONE_BRANCH/release\//}-${DRONE_COMMIT}-windows-1809
       username:
         from_secret: docker_username
@@ -1036,7 +1036,7 @@ steps:
       dockerfile: package/windows/Dockerfile.agent
       password:
         from_secret: docker_password
-      repo: rancher/rancher-agent
+      repo: ranger/ranger-agent
       tag: "${DRONE_TAG}-windows-1809"
       username:
         from_secret: docker_username
@@ -1074,7 +1074,7 @@ clone:
 steps:
   - name: build-pr
     pull: always
-    image: rancher/dapper:v0.5.8
+    image: ranger/dapper:v0.5.8
     commands:
       - dapper.exe -f Dockerfile-windows.dapper -d ci
     volumes:
@@ -1086,7 +1086,7 @@ steps:
 
   - name: build-push-tag
     pull: always
-    image: rancher/dapper:v0.5.8
+    image: ranger/dapper:v0.5.8
     commands:
       - dapper.exe -f Dockerfile-windows.dapper -d ci
     volumes:
@@ -1094,7 +1094,7 @@ steps:
         path: \\\\.\\pipe\\docker_engine
     when:
       instance:
-        - drone-publish.rancher.io
+        - drone-publish.ranger.io
       ref:
         include:
           - "refs/heads/master"
@@ -1105,12 +1105,12 @@ steps:
         - tag
 
   - name: stage-binaries
-    image: rancher/dapper:v0.5.8
+    image: ranger/dapper:v0.5.8
     commands:
       - "cp -r ./bin/* ./package/windows/"
     when:
       instance:
-        - drone-publish.rancher.io
+        - drone-publish.ranger.io
       ref:
         include:
           - "refs/heads/master"
@@ -1121,7 +1121,7 @@ steps:
         - tag
 
   - name: docker-publish-head-agent
-    image: rancher/drone-images:docker-amd64-ltsc2022
+    image: ranger/drone-images:docker-amd64-ltsc2022
     settings:
       purge: false
       build_args:
@@ -1133,7 +1133,7 @@ steps:
       dockerfile: package/windows/Dockerfile.agent
       password:
         from_secret: docker_password
-      repo: rancher/rancher-agent
+      repo: ranger/ranger-agent
       tag: ${DRONE_BRANCH/release\//}-${DRONE_COMMIT}-windows-ltsc2022
       username:
         from_secret: docker_username
@@ -1149,7 +1149,7 @@ steps:
         - push
 
   - name: docker-publish-agent
-    image: rancher/drone-images:docker-amd64-ltsc2022
+    image: ranger/drone-images:docker-amd64-ltsc2022
     settings:
       purge: false
       build_args:
@@ -1161,7 +1161,7 @@ steps:
       dockerfile: package/windows/Dockerfile.agent
       password:
         from_secret: docker_password
-      repo: rancher/rancher-agent
+      repo: ranger/ranger-agent
       tag: "${DRONE_TAG}-windows-ltsc2022"
       username:
         from_secret: docker_username
@@ -1199,7 +1199,7 @@ steps:
   when:
     instance:
       include:
-      - drone-publish.rancher.io
+      - drone-publish.ranger.io
     ref:
       include:
         - "refs/heads/master"
@@ -1221,7 +1221,7 @@ steps:
   when:
     instance:
       include:
-      - drone-publish.rancher.io
+      - drone-publish.ranger.io
     ref:
       include:
         - "refs/heads/master"
@@ -1242,7 +1242,7 @@ steps:
   when:
     instance:
       include:
-      - drone-publish.rancher.io
+      - drone-publish.ranger.io
     ref:
       include:
         - "refs/heads/master"
@@ -1264,7 +1264,7 @@ steps:
   when:
     instance:
       include:
-      - drone-publish.rancher.io
+      - drone-publish.ranger.io
     ref:
       include:
         - "refs/heads/master"
@@ -1285,7 +1285,7 @@ steps:
   when:
     instance:
       include:
-      - drone-publish.rancher.io
+      - drone-publish.ranger.io
     ref:
       include:
         - "refs/heads/master"
@@ -1306,7 +1306,7 @@ steps:
   when:
     instance:
       include:
-      - drone-publish.rancher.io
+      - drone-publish.ranger.io
     ref:
       include:
         - "refs/heads/master"
@@ -1317,7 +1317,7 @@ steps:
     - tag
 
 - name: build-chart
-  image: rancher/dapper:v0.5.8
+  image: ranger/dapper:v0.5.8
   commands:
   - dapper chart/ci
   privileged: true
@@ -1326,7 +1326,7 @@ steps:
     path: /var/run/docker.sock
   when:
     instance:
-      - drone-publish.rancher.io
+      - drone-publish.ranger.io
     ref:
       include:
         - "refs/heads/master"
@@ -1343,7 +1343,7 @@ steps:
     - allUsers:READER
     cache_control: "public,no-cache,proxy-revalidate"
     source: bin/chart
-    target: releases.rancher.com/server-charts
+    target: releases.ranger.com/server-charts
     token:
       from_secret: google_auth_key
   when:
@@ -1376,14 +1376,14 @@ platform:
 
 steps:
 - name: docker-image-digests
-  image: rancher/drone-docker-image-digests:v0.0.12
+  image: ranger/drone-docker-image-digests:v0.0.12
   environment:
-    PLUGIN_GITHUB_REPOSITORY: "rancher/rancher"
+    PLUGIN_GITHUB_REPOSITORY: "ranger/ranger"
     PLUGIN_GITHUB_TOKEN:
       from_secret: github_token
     PLUGIN_GITHUB_TAG: "${DRONE_TAG}"
-    PLUGIN_INPUT_FILE: "rancher-images.txt"
-    PLUGIN_OUTPUT_FILE: "rancher-images-digests-linux-amd64.txt"
+    PLUGIN_INPUT_FILE: "ranger-images.txt"
+    PLUGIN_OUTPUT_FILE: "ranger-images-digests-linux-amd64.txt"
     PLUGIN_REGISTRY: "docker.io"
   volumes:
   - name: docker
@@ -1391,7 +1391,7 @@ steps:
   when:
     instance:
       include:
-      - drone-publish.rancher.io
+      - drone-publish.ranger.io
     event:
     - tag
 
@@ -1418,14 +1418,14 @@ platform:
 
 steps:
 - name: docker-image-digests
-  image: rancher/drone-docker-image-digests:v0.0.12
+  image: ranger/drone-docker-image-digests:v0.0.12
   environment:
-    PLUGIN_GITHUB_REPOSITORY: "rancher/rancher"
+    PLUGIN_GITHUB_REPOSITORY: "ranger/ranger"
     PLUGIN_GITHUB_TOKEN:
       from_secret: github_token
     PLUGIN_GITHUB_TAG: "${DRONE_TAG}"
-    PLUGIN_INPUT_FILE: "rancher-images.txt"
-    PLUGIN_OUTPUT_FILE: "rancher-images-digests-linux-arm64.txt"
+    PLUGIN_INPUT_FILE: "ranger-images.txt"
+    PLUGIN_OUTPUT_FILE: "ranger-images-digests-linux-arm64.txt"
     PLUGIN_REGISTRY: "docker.io"
   volumes:
   - name: docker
@@ -1433,7 +1433,7 @@ steps:
   when:
     instance:
       include:
-      - drone-publish.rancher.io
+      - drone-publish.ranger.io
     event:
     - tag
 
@@ -1475,15 +1475,15 @@ steps:
   - git checkout $DRONE_COMMIT -b origin/$DRONE_TARGET_BRANCH
 
 - name: docker-image-digests
-  image: rancher/drone-docker-image-digests:v0.0.13
+  image: ranger/drone-docker-image-digests:v0.0.13
   failure: ignore
   environment:
-    PLUGIN_GITHUB_REPOSITORY: "rancher/rancher"
+    PLUGIN_GITHUB_REPOSITORY: "ranger/ranger"
     PLUGIN_GITHUB_TOKEN:
       from_secret: github_token
     PLUGIN_GITHUB_TAG: "${DRONE_TAG}"
-    PLUGIN_INPUT_FILE: "rancher-images.txt"
-    PLUGIN_OUTPUT_FILE: "rancher-images-digests-linux-s390x.txt"
+    PLUGIN_INPUT_FILE: "ranger-images.txt"
+    PLUGIN_OUTPUT_FILE: "ranger-images-digests-linux-s390x.txt"
     PLUGIN_REGISTRY: "docker.io"
   volumes:
   - name: docker
@@ -1491,7 +1491,7 @@ steps:
   when:
     instance:
       include:
-      - drone-publish.rancher.io
+      - drone-publish.ranger.io
     event:
     - tag
 
@@ -1525,14 +1525,14 @@ clone:
 
 steps:
 - name: docker-image-digests
-  image: rancher/drone-docker-image-digests:v0.0.12
+  image: ranger/drone-docker-image-digests:v0.0.12
   environment:
-    PLUGIN_GITHUB_REPOSITORY: "rancher/rancher"
+    PLUGIN_GITHUB_REPOSITORY: "ranger/ranger"
     PLUGIN_GITHUB_TOKEN:
       from_secret: github_token
     PLUGIN_GITHUB_TAG: "${DRONE_TAG}"
-    PLUGIN_INPUT_FILE: "rancher-windows-images.txt"
-    PLUGIN_OUTPUT_FILE: "rancher-images-digests-windows-1809.txt"
+    PLUGIN_INPUT_FILE: "ranger-windows-images.txt"
+    PLUGIN_OUTPUT_FILE: "ranger-images-digests-windows-1809.txt"
     PLUGIN_REGISTRY: "docker.io"
   volumes:
     - name: docker_pipe
@@ -1540,7 +1540,7 @@ steps:
   when:
     instance:
       include:
-      - drone-publish.rancher.io
+      - drone-publish.ranger.io
     event:
     - tag
 
@@ -1575,14 +1575,14 @@ clone:
 
 steps:
 - name: docker-image-digests
-  image: rancher/drone-docker-image-digests:v0.0.12
+  image: ranger/drone-docker-image-digests:v0.0.12
   environment:
-    PLUGIN_GITHUB_REPOSITORY: "rancher/rancher"
+    PLUGIN_GITHUB_REPOSITORY: "ranger/ranger"
     PLUGIN_GITHUB_TOKEN:
       from_secret: github_token
     PLUGIN_GITHUB_TAG: "${DRONE_TAG}"
-    PLUGIN_INPUT_FILE: "rancher-windows-images.txt"
-    PLUGIN_OUTPUT_FILE: "rancher-images-digests-windows-ltsc2022.txt"
+    PLUGIN_INPUT_FILE: "ranger-windows-images.txt"
+    PLUGIN_OUTPUT_FILE: "ranger-images-digests-windows-ltsc2022.txt"
     PLUGIN_REGISTRY: "docker.io"
   volumes:
     - name: docker_pipe
@@ -1590,7 +1590,7 @@ steps:
   when:
     instance:
       include:
-      - drone-publish.rancher.io
+      - drone-publish.ranger.io
     event:
     - tag
 
@@ -1618,7 +1618,7 @@ platform:
 
 steps:
 - name: chart-promote
-  image: rancher/dapper:v0.5.8
+  image: ranger/dapper:v0.5.8
   commands:
   - dapper chart/copy
   volumes:
@@ -1637,7 +1637,7 @@ steps:
     - allUsers:READER
     cache_control: "public,no-cache,proxy-revalidate"
     source: bin/chart
-    target: releases.rancher.com/server-charts
+    target: releases.ranger.com/server-charts
     token:
       from_secret: google_auth_key
   when:
@@ -1667,7 +1667,7 @@ steps:
   image: quay.io/skopeo/stable:v1.1.1
   commands:
   - echo $${DOCKER_PASSWORD} | skopeo login docker.io --username $${DOCKER_USERNAME} --password-stdin
-  - skopeo copy docker://rancher/rancher:$${SOURCE_TAG} docker://rancher/rancher:$${DESTINATION_TAG} --all
+  - skopeo copy docker://ranger/ranger:$${SOURCE_TAG} docker://ranger/ranger:$${DESTINATION_TAG} --all
   settings:
     custom_dns: 1.1.1.1
   volumes:

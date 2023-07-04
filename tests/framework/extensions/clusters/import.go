@@ -5,17 +5,17 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/rancher/norman/types"
-	apisV1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	"github.com/rancher/rancher/tests/framework/clients/dynamic"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	ext_unstructured "github.com/rancher/rancher/tests/framework/extensions/unstructured"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
+	"github.com/ranger/norman/types"
+	apisV1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	"github.com/ranger/ranger/tests/framework/clients/dynamic"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	ext_unstructured "github.com/ranger/ranger/tests/framework/extensions/unstructured"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 
-	apisV3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	apisV3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 
 	rbacv1 "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -28,8 +28,8 @@ import (
 )
 
 const (
-	// rancherShellSettingID is the setting ID that used to grab rancher/shell image
-	rancherShellSettingID = "shell-image"
+	// rangerShellSettingID is the setting ID that used to grab ranger/shell image
+	rangerShellSettingID = "shell-image"
 	// kubeConfig is a basic kubeconfig that uses the pod's service account
 	kubeConfig = `
 apiVersion: v1
@@ -57,7 +57,7 @@ var (
 )
 
 // ImportCluster creates a job using the given rest config that applies the import yaml from the given management cluster.
-func ImportCluster(client *rancher.Client, cluster *apisV1.Cluster, rest *rest.Config) error {
+func ImportCluster(client *ranger.Client, cluster *apisV1.Cluster, rest *rest.Config) error {
 	// create a sub session to clean up after we apply the manifest
 	ts := client.Session.NewSession()
 	defer ts.Cleanup()
@@ -89,7 +89,7 @@ func ImportCluster(client *rancher.Client, cluster *apisV1.Cluster, rest *rest.C
 
 	sa := &corev1.ServiceAccount{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "rancher-installer",
+			Name: "ranger-installer",
 		},
 	}
 	_, err = downClient.Resource(corev1.SchemeGroupVersion.WithResource("serviceaccounts")).Namespace("kube-system").Create(context.TODO(), ext_unstructured.MustToUnstructured(sa), metav1.CreateOptions{})
@@ -99,7 +99,7 @@ func ImportCluster(client *rancher.Client, cluster *apisV1.Cluster, rest *rest.C
 
 	rb := &rbacv1.ClusterRoleBinding{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "rancher-install-cluster-admin",
+			Name: "ranger-install-cluster-admin",
 		},
 		Subjects: []rbacv1.Subject{
 			{
@@ -132,7 +132,7 @@ func ImportCluster(client *rancher.Client, cluster *apisV1.Cluster, rest *rest.C
 		return err
 	}
 
-	imageSetting, err := client.Management.Setting.ByID(rancherShellSettingID)
+	imageSetting, err := client.Management.Setting.ByID(rangerShellSettingID)
 	if err != nil {
 		return err
 	}
@@ -141,12 +141,12 @@ func ImportCluster(client *rancher.Client, cluster *apisV1.Cluster, rest *rest.C
 	var group int64
 	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "rancher-import",
+			Name: "ranger-import",
 		},
 		Spec: batchv1.JobSpec{
 			Template: corev1.PodTemplateSpec{
 				ObjectMeta: metav1.ObjectMeta{
-					Name: "rancher-import",
+					Name: "ranger-import",
 				},
 				Spec: corev1.PodSpec{
 					RestartPolicy:      "Never",
@@ -209,7 +209,7 @@ func ImportCluster(client *rancher.Client, cluster *apisV1.Cluster, rest *rest.C
 
 // IsClusterImported is a function to get a boolean value about if the cluster is imported or not.
 // For custom and imported clusters the node driver value is different than "imported".
-func IsClusterImported(client *rancher.Client, clusterID string) (isImported bool, err error) {
+func IsClusterImported(client *ranger.Client, clusterID string) (isImported bool, err error) {
 	cluster, err := client.Management.Cluster.ByID(clusterID)
 	if err != nil {
 		return

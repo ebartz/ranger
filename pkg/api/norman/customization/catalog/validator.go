@@ -6,9 +6,9 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/rancher/pkg/controllers/managementuserlegacy/helm/common"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/ranger/pkg/controllers/managementuserlegacy/helm/common"
 )
 
 var (

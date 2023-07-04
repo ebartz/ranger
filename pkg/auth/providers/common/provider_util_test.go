@@ -1,7 +1,7 @@
 package common_test
 
 import (
-	"github.com/rancher/rancher/pkg/auth/providers/common"
+	"github.com/ranger/ranger/pkg/auth/providers/common"
 	"testing"
 )
 

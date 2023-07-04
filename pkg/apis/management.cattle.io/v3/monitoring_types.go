@@ -3,8 +3,8 @@ package v3
 import (
 	"strings"
 
-	"github.com/rancher/norman/condition"
-	"github.com/rancher/norman/types"
+	"github.com/ranger/norman/condition"
+	"github.com/ranger/norman/types"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -77,7 +77,7 @@ func (p *ProjectMonitorGraph) ObjClusterName() string {
 type ClusterMonitorGraphSpec struct {
 	ClusterName         string `json:"clusterName" norman:"type=reference[cluster]"`
 	ResourceType        string `json:"resourceType,omitempty"  norman:"type=enum,options=node|cluster|etcd|apiserver|scheduler|controllermanager|fluentd|istiocluster|istioproject"`
-	DisplayResourceType string `json:"displayResourceType,omitempty" norman:"type=enum,options=node|cluster|etcd|kube-component|rancher-component"`
+	DisplayResourceType string `json:"displayResourceType,omitempty" norman:"type=enum,options=node|cluster|etcd|kube-component|ranger-component"`
 	CommonMonitorGraphSpec
 }
 

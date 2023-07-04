@@ -1,12 +1,12 @@
-# New rancher client for new API v1
+# New ranger client for new API v1
 Before we dive into the technical details, let's clarify a confusion here:
 
 Yes, the new API is v1, and the old API is v3.
 
-The new API is v1 because it is the beginning of Rancher's new API framework
-which is used for Rancher's new UI, i.e. the cluster explorer, to talk with the backend.
+The new API is v1 because it is the beginning of Ranger's new API framework
+which is used for Ranger's new UI, i.e. the cluster explorer, to talk with the backend.
 
-The support for the new v1 API is added to the [Rancher client module](https://github.com/rancher/client-python).
+The support for the new v1 API is added to the [Ranger client module](https://github.com/ranger/client-python).
 
 There are two levels of the client: admin client and cluster client.
 

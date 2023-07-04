@@ -4,20 +4,20 @@ import (
 	"context"
 	"time"
 
-	fleet "github.com/rancher/fleet/pkg/apis/fleet.cattle.io/v1alpha1"
-	apimgmtv3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	provv1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	mgmtcluster "github.com/rancher/rancher/pkg/cluster"
-	fleetconst "github.com/rancher/rancher/pkg/fleet"
-	fleetcontrollers "github.com/rancher/rancher/pkg/generated/controllers/fleet.cattle.io/v1alpha1"
-	v3 "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3"
-	rocontrollers "github.com/rancher/rancher/pkg/generated/controllers/provisioning.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/provisioningv2/image"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/wrangler"
-	"github.com/rancher/wrangler/pkg/apply"
-	"github.com/rancher/wrangler/pkg/generic"
-	"github.com/rancher/wrangler/pkg/yaml"
+	fleet "github.com/ranger/fleet/pkg/apis/fleet.cattle.io/v1alpha1"
+	apimgmtv3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	provv1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	mgmtcluster "github.com/ranger/ranger/pkg/cluster"
+	fleetconst "github.com/ranger/ranger/pkg/fleet"
+	fleetcontrollers "github.com/ranger/ranger/pkg/generated/controllers/fleet.cattle.io/v1alpha1"
+	v3 "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3"
+	rocontrollers "github.com/ranger/ranger/pkg/generated/controllers/provisioning.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/provisioningv2/image"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/wrangler"
+	"github.com/ranger/wrangler/pkg/apply"
+	"github.com/ranger/wrangler/pkg/generic"
+	"github.com/ranger/wrangler/pkg/yaml"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/validation"
@@ -33,7 +33,7 @@ type handler struct {
 
 // Register registers the fleetcluster controller, which is responsible for creating fleet cluster objects.
 // When fleet cluster objects are created, Fleet uses the object to deploy the fleet-agent into the cluster. Notably,
-// the fleetcluster operates on both provisioning and management clusters in Rancher, by way of transformation logic
+// the fleetcluster operates on both provisioning and management clusters in Ranger, by way of transformation logic
 // in the provisioningcluster rke2 controller (a clusters.provisioning.cattle.io/v1 object is generated for every
 // corresponding clusters.management.cattle.io/v3 object, if one does not already exist, and vice-versa)
 func Register(ctx context.Context, clients *wrangler.Context) {

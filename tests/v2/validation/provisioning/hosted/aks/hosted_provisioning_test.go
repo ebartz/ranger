@@ -3,23 +3,23 @@ package provisioning
 import (
 	"testing"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	"github.com/rancher/rancher/tests/framework/extensions/cloudcredentials"
-	"github.com/rancher/rancher/tests/framework/extensions/cloudcredentials/azure"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters/aks"
-	"github.com/rancher/rancher/tests/framework/extensions/defaults"
-	nodestat "github.com/rancher/rancher/tests/framework/extensions/nodes"
-	"github.com/rancher/rancher/tests/framework/extensions/pipeline"
-	"github.com/rancher/rancher/tests/framework/extensions/users"
-	password "github.com/rancher/rancher/tests/framework/extensions/users/passwordgenerator"
-	"github.com/rancher/rancher/tests/framework/extensions/workloads/pods"
-	"github.com/rancher/rancher/tests/framework/pkg/environmentflag"
-	namegen "github.com/rancher/rancher/tests/framework/pkg/namegenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
-	"github.com/rancher/rancher/tests/v2/validation/provisioning"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/extensions/cloudcredentials"
+	"github.com/ranger/ranger/tests/framework/extensions/cloudcredentials/azure"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters/aks"
+	"github.com/ranger/ranger/tests/framework/extensions/defaults"
+	nodestat "github.com/ranger/ranger/tests/framework/extensions/nodes"
+	"github.com/ranger/ranger/tests/framework/extensions/pipeline"
+	"github.com/ranger/ranger/tests/framework/extensions/users"
+	password "github.com/ranger/ranger/tests/framework/extensions/users/passwordgenerator"
+	"github.com/ranger/ranger/tests/framework/extensions/workloads/pods"
+	"github.com/ranger/ranger/tests/framework/pkg/environmentflag"
+	namegen "github.com/ranger/ranger/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
+	"github.com/ranger/ranger/tests/v2/validation/provisioning"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -28,9 +28,9 @@ import (
 
 type HostedAKSClusterProvisioningTestSuite struct {
 	suite.Suite
-	client             *rancher.Client
+	client             *ranger.Client
 	session            *session.Session
-	standardUserClient *rancher.Client
+	standardUserClient *ranger.Client
 	cluster            *management.Cluster
 }
 
@@ -42,7 +42,7 @@ func (h *HostedAKSClusterProvisioningTestSuite) SetupSuite() {
 	testSession := session.NewSession()
 	h.session = testSession
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(h.T(), err)
 
 	h.client = client
@@ -71,7 +71,7 @@ func (h *HostedAKSClusterProvisioningTestSuite) SetupSuite() {
 func (h *HostedAKSClusterProvisioningTestSuite) TestProvisioningHostedAKS() {
 	tests := []struct {
 		name   string
-		client *rancher.Client
+		client *ranger.Client
 	}{
 		{provisioning.AdminClientName.String(), h.client},
 		{provisioning.StandardClientName.String(), h.standardUserClient},
@@ -103,9 +103,9 @@ func (h *HostedAKSClusterProvisioningTestSuite) TestProvisioningHostedAKS() {
 	}
 }
 
-func (h *HostedAKSClusterProvisioningTestSuite) testProvisioningHostedAKSCluster(rancherClient *rancher.Client, cloudCredential *cloudcredentials.CloudCredential) (*management.Cluster, error) {
+func (h *HostedAKSClusterProvisioningTestSuite) testProvisioningHostedAKSCluster(rangerClient *ranger.Client, cloudCredential *cloudcredentials.CloudCredential) (*management.Cluster, error) {
 	clusterName := namegen.AppendRandomString("akshostcluster")
-	clusterResp, err := aks.CreateAKSHostedCluster(rancherClient, clusterName, cloudCredential.ID, false, false, false, false, map[string]string{})
+	clusterResp, err := aks.CreateAKSHostedCluster(rangerClient, clusterName, cloudCredential.ID, false, false, false, false, map[string]string{})
 	require.NoError(h.T(), err)
 
 	if h.client.Flags.GetValue(environmentflag.UpdateClusterName) {
@@ -125,31 +125,31 @@ func (h *HostedAKSClusterProvisioningTestSuite) testProvisioningHostedAKSCluster
 	require.NoError(h.T(), err)
 	assert.Equal(h.T(), clusterName, clusterResp.Name)
 
-	clusterToken, err := clusters.CheckServiceAccountTokenSecret(rancherClient, clusterName)
+	clusterToken, err := clusters.CheckServiceAccountTokenSecret(rangerClient, clusterName)
 	require.NoError(h.T(), err)
 	assert.NotEmpty(h.T(), clusterToken)
 
-	err = nodestat.IsNodeReady(rancherClient, clusterResp.ID)
+	err = nodestat.IsNodeReady(rangerClient, clusterResp.ID)
 	require.NoError(h.T(), err)
 
-	podResults, podErrors := pods.StatusPods(rancherClient, clusterResp.ID)
+	podResults, podErrors := pods.StatusPods(rangerClient, clusterResp.ID)
 	assert.NotEmpty(h.T(), podResults)
 	assert.Empty(h.T(), podErrors)
 
 	return clusterResp, nil
 }
 
-func (h *HostedAKSClusterProvisioningTestSuite) testScalingAKSNodePools(rancherClient *rancher.Client, cluster *management.Cluster, cloudCredential *cloudcredentials.CloudCredential) {
+func (h *HostedAKSClusterProvisioningTestSuite) testScalingAKSNodePools(rangerClient *ranger.Client, cluster *management.Cluster, cloudCredential *cloudcredentials.CloudCredential) {
 	if cluster == nil {
-		cluster, err := h.testProvisioningHostedAKSCluster(rancherClient, cloudCredential)
+		cluster, err := h.testProvisioningHostedAKSCluster(rangerClient, cloudCredential)
 		require.NoError(h.T(), err)
 
-		updatedCluster, err := ScalingAKSNodePools(rancherClient, cluster, cluster.Name, cloudCredential)
+		updatedCluster, err := ScalingAKSNodePools(rangerClient, cluster, cluster.Name, cloudCredential)
 		require.NoError(h.T(), err)
 		assert.Equal(h.T(), cluster.Name, updatedCluster.Name)
 
 	} else {
-		updatedCluster, err := ScalingAKSNodePools(rancherClient, cluster, cluster.Name, cloudCredential)
+		updatedCluster, err := ScalingAKSNodePools(rangerClient, cluster, cluster.Name, cloudCredential)
 		require.NoError(h.T(), err)
 		assert.Equal(h.T(), cluster.Name, updatedCluster.Name)
 	}

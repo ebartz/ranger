@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"reflect"
 
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	namespaceutil "github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/ref"
-	validate "github.com/rancher/rancher/pkg/resourcequota"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	namespaceutil "github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/ref"
+	validate "github.com/ranger/ranger/pkg/resourcequota"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -50,8 +50,8 @@ func (c *calculateLimitController) calculateProjectResourceQuota(projectID strin
 	project, err := c.projectLister.Get(projectNamespace, projectName)
 	if err != nil || project.Spec.ResourceQuota == nil {
 		if errors.IsNotFound(err) {
-			// If Rancher is unaware of a project, we should ignore trying to calculate the project resource quota
-			// A non-existent project is likely managed by another Rancher (e.g. Hosted Rancher)
+			// If Ranger is unaware of a project, we should ignore trying to calculate the project resource quota
+			// A non-existent project is likely managed by another Ranger (e.g. Hosted Ranger)
 			return nil
 		}
 		return err

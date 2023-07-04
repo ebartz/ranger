@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: rancher-config
-  labels: {{ include "rancher.labels" . | nindent 4 }}
+  name: ranger-config
+  labels: {{ include "ranger.labels" . | nindent 4 }}
 data:
   priorityClassName:  {{ .Values.priorityClassName }}

@@ -1,7 +1,7 @@
 package client
 
 import (
-	"github.com/rancher/norman/types"
+	"github.com/ranger/norman/types"
 )
 
 const (
@@ -72,7 +72,7 @@ const (
 	ClusterFieldOwnerReferences                                      = "ownerReferences"
 	ClusterFieldPrivateRegistrySecret                                = "privateRegistrySecret"
 	ClusterFieldProvider                                             = "provider"
-	ClusterFieldRancherKubernetesEngineConfig                        = "rancherKubernetesEngineConfig"
+	ClusterFieldRangerKubernetesEngineConfig                        = "rangerKubernetesEngineConfig"
 	ClusterFieldRemoved                                              = "removed"
 	ClusterFieldRequested                                            = "requested"
 	ClusterFieldRke2Config                                           = "rke2Config"
@@ -158,7 +158,7 @@ type Cluster struct {
 	OwnerReferences                                      []OwnerReference               `json:"ownerReferences,omitempty" yaml:"ownerReferences,omitempty"`
 	PrivateRegistrySecret                                string                         `json:"privateRegistrySecret,omitempty" yaml:"privateRegistrySecret,omitempty"`
 	Provider                                             string                         `json:"provider,omitempty" yaml:"provider,omitempty"`
-	RancherKubernetesEngineConfig                        *RancherKubernetesEngineConfig `json:"rancherKubernetesEngineConfig,omitempty" yaml:"rancherKubernetesEngineConfig,omitempty"`
+	RangerKubernetesEngineConfig                        *RangerKubernetesEngineConfig `json:"rangerKubernetesEngineConfig,omitempty" yaml:"rangerKubernetesEngineConfig,omitempty"`
 	Removed                                              string                         `json:"removed,omitempty" yaml:"removed,omitempty"`
 	Requested                                            map[string]string              `json:"requested,omitempty" yaml:"requested,omitempty"`
 	Rke2Config                                           *Rke2Config                    `json:"rke2Config,omitempty" yaml:"rke2Config,omitempty"`

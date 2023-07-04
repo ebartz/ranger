@@ -9,20 +9,20 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	cond "github.com/rancher/norman/condition"
-	apimgmtv3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	kd "github.com/rancher/rancher/pkg/controllers/management/kontainerdrivermetadata"
-	"github.com/rancher/rancher/pkg/controllers/management/secretmigrator/assemblers"
-	"github.com/rancher/rancher/pkg/controllers/managementagent/podresources"
-	"github.com/rancher/rancher/pkg/controllers/managementlegacy/compose/common"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/librke"
-	nodehelper "github.com/rancher/rancher/pkg/node"
-	"github.com/rancher/rancher/pkg/systemaccount"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/types/config/systemtokens"
-	rketypes "github.com/rancher/rke/types"
+	cond "github.com/ranger/norman/condition"
+	apimgmtv3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	kd "github.com/ranger/ranger/pkg/controllers/management/kontainerdrivermetadata"
+	"github.com/ranger/ranger/pkg/controllers/management/secretmigrator/assemblers"
+	"github.com/ranger/ranger/pkg/controllers/managementagent/podresources"
+	"github.com/ranger/ranger/pkg/controllers/managementlegacy/compose/common"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/librke"
+	nodehelper "github.com/ranger/ranger/pkg/node"
+	"github.com/ranger/ranger/pkg/systemaccount"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/types/config/systemtokens"
+	rketypes "github.com/ranger/rke/types"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -314,7 +314,7 @@ func (m *nodesSyncer) getNodePlan(node *apimgmtv3.Node) (rketypes.RKEConfigNodeP
 		return rketypes.RKEConfigNodePlan{}, err
 	}
 
-	if cluster.Status.Driver != apimgmtv3.ClusterDriverRKE || cluster.Status.AppliedSpec.RancherKubernetesEngineConfig == nil {
+	if cluster.Status.Driver != apimgmtv3.ClusterDriverRKE || cluster.Status.AppliedSpec.RangerKubernetesEngineConfig == nil {
 		return rketypes.RKEConfigNodePlan{}, nil
 	}
 
@@ -330,7 +330,7 @@ func (m *nodesSyncer) getNodePlan(node *apimgmtv3.Node) (rketypes.RKEConfigNodeP
 	hostAddress := node.Status.NodeConfig.Address
 	hostDockerInfo := dockerInfo[hostAddress]
 
-	svcOptions, err := m.getServiceOptions(cluster.Status.AppliedSpec.RancherKubernetesEngineConfig.Version, hostDockerInfo.OSType)
+	svcOptions, err := m.getServiceOptions(cluster.Status.AppliedSpec.RangerKubernetesEngineConfig.Version, hostDockerInfo.OSType)
 	if err != nil {
 		return rketypes.RKEConfigNodePlan{}, err
 	}
@@ -339,7 +339,7 @@ func (m *nodesSyncer) getNodePlan(node *apimgmtv3.Node) (rketypes.RKEConfigNodeP
 	if err != nil {
 		return rketypes.RKEConfigNodePlan{}, err
 	}
-	plan, err := librke.New().GeneratePlan(context.Background(), appliedSpec.RancherKubernetesEngineConfig, dockerInfo, svcOptions)
+	plan, err := librke.New().GeneratePlan(context.Background(), appliedSpec.RangerKubernetesEngineConfig, dockerInfo, svcOptions)
 	if err != nil {
 		return rketypes.RKEConfigNodePlan{}, err
 	}
@@ -612,13 +612,13 @@ func objectsAreEqual(existing *apimgmtv3.Node, toUpdate *apimgmtv3.Node) bool {
 }
 
 func statusEqualTest(proposed, existing corev1.NodeStatus) bool {
-	// Tests here should validate that fields of the corev1.NodeStatus type are equal for Rancher's purposes.
+	// Tests here should validate that fields of the corev1.NodeStatus type are equal for Ranger's purposes.
 	// The Images field lists would be equal if they contain the same data regardless of order. Using reflect.DeepEqual
 	// does not see lists with the same content but different order as equal, and would cause
-	// Rancher to update the resource unnecessarily. So if Images becomes a field we need to validate we need to add
+	// Ranger to update the resource unnecessarily. So if Images becomes a field we need to validate we need to add
 	// a custom method to validate the equality.
 	//
-	// Rancher doesn't use the following NodeStatus data, so for time savings we are skipping, but in the future these tests
+	// Ranger doesn't use the following NodeStatus data, so for time savings we are skipping, but in the future these tests
 	// should be added here.
 	//
 	// SKIP:
@@ -818,8 +818,8 @@ func (m *nodesSyncer) isClusterRestoring() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	if cluster.Spec.RancherKubernetesEngineConfig != nil &&
-		cluster.Spec.RancherKubernetesEngineConfig.Restore.Restore {
+	if cluster.Spec.RangerKubernetesEngineConfig != nil &&
+		cluster.Spec.RangerKubernetesEngineConfig.Restore.Restore {
 		return true, nil
 	}
 	return false, nil

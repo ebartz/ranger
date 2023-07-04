@@ -1,8 +1,8 @@
 # Release HA Upgrade Validation
 
-Release HA upgrade is an automation task for the Rancher release testing process. It heavily relies on the framework's configuration file generation. Its initial configuration contains two main components:
+Release HA upgrade is an automation task for the Ranger release testing process. It heavily relies on the framework's configuration file generation. Its initial configuration contains two main components:
 
-1.  HA Configuration: Parent field that has the HA options, such as rancher version to deploy, or rancher version to upgrade.
+1.  HA Configuration: Parent field that has the HA options, such as ranger version to deploy, or ranger version to upgrade.
 2.  Clusters Configuration: Parent field that has the downstream options. This part maintains the match of the matrix for the configuration file generation. This matrix enables the test to generate individual configuration files per cluster type, providers, image, and SSH user to the given images.
 
 You can check the whole configuration, [here](../../../../../framework/extensions/pipelineutil/releaseupgrade.go).

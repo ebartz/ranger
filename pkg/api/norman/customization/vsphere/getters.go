@@ -4,8 +4,8 @@ import (
 	"context"
 	"strings"
 
-	"github.com/rancher/rancher/pkg/capr"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
+	"github.com/ranger/ranger/pkg/capr"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
 	"github.com/vmware/govmomi/object"
 	"github.com/vmware/govmomi/vim25/mo"
 )

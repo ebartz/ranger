@@ -3,9 +3,9 @@ package bundledclusters
 import (
 	"fmt"
 
-	v3 "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
+	v3 "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
 )
 
 // BundledCluster is a struct that can contain different cluster version types and the meta of the cluster:

@@ -7,17 +7,17 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rancher/rancher/pkg/agent/clean"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	util "github.com/rancher/rancher/pkg/cluster"
-	"github.com/rancher/rancher/pkg/dialer"
-	"github.com/rancher/rancher/pkg/features"
-	"github.com/rancher/rancher/pkg/kubectl"
-	nodehelper "github.com/rancher/rancher/pkg/node"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/systemtemplate"
-	"github.com/rancher/rancher/pkg/types/config"
-	rketypes "github.com/rancher/rke/types"
+	"github.com/ranger/ranger/pkg/agent/clean"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	util "github.com/ranger/ranger/pkg/cluster"
+	"github.com/ranger/ranger/pkg/dialer"
+	"github.com/ranger/ranger/pkg/features"
+	"github.com/ranger/ranger/pkg/kubectl"
+	nodehelper "github.com/ranger/ranger/pkg/node"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/systemtemplate"
+	"github.com/ranger/ranger/pkg/types/config"
+	rketypes "github.com/ranger/rke/types"
 	"github.com/sirupsen/logrus"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -338,15 +338,15 @@ func (m *Lifecycle) createCleanupJob(userContext *config.UserContext, cluster *v
 		},
 	}
 
-	if cluster.Spec.RancherKubernetesEngineConfig != nil {
+	if cluster.Spec.RangerKubernetesEngineConfig != nil {
 		env = append(env,
 			corev1.EnvVar{
 				Name:  "PREFIX_PATH",
-				Value: cluster.Spec.RancherKubernetesEngineConfig.PrefixPath,
+				Value: cluster.Spec.RangerKubernetesEngineConfig.PrefixPath,
 			},
 			corev1.EnvVar{
 				Name:  "WINDOWS_PREFIX_PATH",
-				Value: cluster.Spec.RancherKubernetesEngineConfig.WindowsPrefixPath,
+				Value: cluster.Spec.RangerKubernetesEngineConfig.WindowsPrefixPath,
 			},
 		)
 	}

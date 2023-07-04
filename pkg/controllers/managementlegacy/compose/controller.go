@@ -6,23 +6,23 @@ import (
 	"fmt"
 	"strings"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/clientbase"
-	"github.com/rancher/norman/controller"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/rancher/pkg/auth/tokens"
-	clusterClient "github.com/rancher/rancher/pkg/client/generated/cluster/v3"
-	managementClient "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	projectClient "github.com/rancher/rancher/pkg/client/generated/project/v3"
-	"github.com/rancher/rancher/pkg/controllers/managementlegacy/compose/common"
-	"github.com/rancher/rancher/pkg/generated/compose"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/types/config/systemtokens"
-	"github.com/rancher/rancher/pkg/user"
+	"github.com/ranger/norman/clientbase"
+	"github.com/ranger/norman/controller"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/ranger/pkg/auth/tokens"
+	clusterClient "github.com/ranger/ranger/pkg/client/generated/cluster/v3"
+	managementClient "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	projectClient "github.com/ranger/ranger/pkg/client/generated/project/v3"
+	"github.com/ranger/ranger/pkg/controllers/managementlegacy/compose/common"
+	"github.com/ranger/ranger/pkg/generated/compose"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/types/config/systemtokens"
+	"github.com/ranger/ranger/pkg/user"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -97,7 +97,7 @@ func (l Lifecycle) Create(obj *v3.ComposeConfig) (*v3.ComposeConfig, error) {
 	}()
 
 	config := &compose.Config{}
-	if err := yaml.Unmarshal([]byte(obj.Spec.RancherCompose), config); err != nil {
+	if err := yaml.Unmarshal([]byte(obj.Spec.RangerCompose), config); err != nil {
 		return obj, err
 	}
 	if err := up(token, l.HTTPSPortGetter.GetHTTPSPort(), config); err != nil {

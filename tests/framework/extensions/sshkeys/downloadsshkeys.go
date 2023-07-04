@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"regexp"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
 )
 
 const (
@@ -16,7 +16,7 @@ const (
 
 // DownloadSSHKeys is a helper function that takes a client, the machinePoolNodeName to download
 // the ssh key for a particular node.
-func DownloadSSHKeys(client *rancher.Client, machinePoolNodeName string) (string, error) {
+func DownloadSSHKeys(client *ranger.Client, machinePoolNodeName string) (string, error) {
 	machinePoolNodeNameName := fmt.Sprintf("fleet-default/%s", machinePoolNodeName)
 	machine, err := client.Steve.SteveType(ClusterMachineConstraintResourceSteveType).ByID(machinePoolNodeNameName)
 	if err != nil {
@@ -30,7 +30,7 @@ func DownloadSSHKeys(client *rancher.Client, machinePoolNodeName string) (string
 		return "", err
 	}
 
-	req.Header.Add("Authorization", "Bearer "+client.RancherConfig.AdminToken)
+	req.Header.Add("Authorization", "Bearer "+client.RangerConfig.AdminToken)
 
 	resp, err := client.Management.APIBaseClient.Ops.Client.Do(req)
 	if err != nil {

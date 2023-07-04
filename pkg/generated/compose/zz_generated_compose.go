@@ -1,9 +1,9 @@
 package compose
 
 import (
-	clusterClient "github.com/rancher/rancher/pkg/client/generated/cluster/v3"
-	managementClient "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	projectClient "github.com/rancher/rancher/pkg/client/generated/project/v3"
+	clusterClient "github.com/ranger/ranger/pkg/client/generated/cluster/v3"
+	managementClient "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	projectClient "github.com/ranger/ranger/pkg/client/generated/project/v3"
 )
 
 type Config struct {
@@ -68,7 +68,7 @@ type Config struct {
 	RkeK8sServiceOptions                       map[string]managementClient.RkeK8sServiceOption                       `json:"rkeK8sServiceOptions,omitempty" yaml:"rkeK8sServiceOptions,omitempty"`
 	RkeAddons                                  map[string]managementClient.RkeAddon                                  `json:"rkeAddons,omitempty" yaml:"rkeAddons,omitempty"`
 	FleetWorkspaces                            map[string]managementClient.FleetWorkspace                            `json:"fleetWorkspaces,omitempty" yaml:"fleetWorkspaces,omitempty"`
-	RancherUserNotifications                   map[string]managementClient.RancherUserNotification                   `json:"rancherUserNotifications,omitempty" yaml:"rancherUserNotifications,omitempty"`
+	RangerUserNotifications                   map[string]managementClient.RangerUserNotification                   `json:"rangerUserNotifications,omitempty" yaml:"rangerUserNotifications,omitempty"`
 
 	// Cluster Client
 	Namespaces        map[string]clusterClient.Namespace        `json:"namespaces,omitempty" yaml:"namespaces,omitempty"`

@@ -1,6 +1,6 @@
 #!groovy
 
-rootPath = "/src/rancher-validation/"
+rootPath = "/src/ranger-validation/"
 def job_name = "${JOB_NAME}"
 if (job_name.contains('/')) { 
   job_names = job_name.split('/')
@@ -8,15 +8,15 @@ if (job_name.contains('/')) {
 }
 
 containerPrefix = "${job_name}${BUILD_NUMBER}"
-rancherConfig = "rancher_env.config"
-imageName = "rancher-validation-${job_name}${env.BUILD_NUMBER}"
+rangerConfig = "ranger_env.config"
+imageName = "ranger-validation-${job_name}${env.BUILD_NUMBER}"
 testsDir = "tests/v3_api/"
 paramsConfigFile = "params_env.config"
 
 containerName = containerPrefix + "-validation"
 
 // If tests fail, set to `true` in the catch in order to prevent 
-// Rancher server from being deleted if RANCHER_SERVER_DELETE is true
+// Ranger server from being deleted if RANCHER_SERVER_DELETE is true
 buildFail = false
 
 // We add the clusters the user selected as they are created
@@ -58,9 +58,9 @@ node {
           }
           
           dir ("tests/validation") {
-            stage('Build container / Deploy Rancher Server') {
+            stage('Build container / Deploy Ranger Server') {
                 buildContainer()
-                deployRancherServer()
+                deployRangerServer()
             }
 
             stage('Provision Cluster(s)') {
@@ -122,7 +122,7 @@ node {
           dir ("tests/validation") {
             stage('Rebuild / Run Upgrade') {
               buildContainer()
-              upgradeRancher()
+              upgradeRanger()
             }
 
             stage('Run postupgrade tests') {
@@ -199,9 +199,9 @@ node {
             }
 
             // If RANCHER_DELETE_SERVER is true and no tests have failed (buildFail = true),
-            // delete Rancher server and all clusters
-            stage('Delete Rancher Server') {
-              deleteRancherServer()
+            // delete Ranger server and all clusters
+            stage('Delete Ranger Server') {
+              deleteRangerServer()
             }
           }
         }
@@ -334,23 +334,23 @@ def loadClusterConfig() {
   }
 }
 
-def deployRancherServer() {
+def deployRangerServer() {
   try {
     def reportName = "deploy"
     htmlString = "--html=reports/${reportName}.html"
 
     sh "docker run --name ${containerName} -t --env-file .env " +
         "${imageName} /bin/bash -c \'" +
-        "pytest -v -s -k test_deploy_rancher_server ${testsDir} " +
+        "pytest -v -s -k test_deploy_ranger_server ${testsDir} " +
         "--junit-xml=reports/${reportName}.xml " +
         "${htmlString}\'"
 
-    sh "docker cp ${containerName}:${rootPath}${testsDir}${rancherConfig} ."
+    sh "docker cp ${containerName}:${rootPath}${testsDir}${rangerConfig} ."
 
-    load rancherConfig
+    load rangerConfig
   } catch(err) {
     echo "Error: " + err
-    echo "Deploy rancher failed"
+    echo "Deploy ranger failed"
     buildFail = true
     currentBuild.result = 'ABORTED'
   } finally {
@@ -455,10 +455,10 @@ def runPreupgradeTests(def cluster, def validate, def create) {
   }
 }
 
-def upgradeRancher() {
+def upgradeRanger() {
   try  {
     // The fixture in test_upgrade.py requires a cluster name
-    // in order to create a client. Though the `test_rancher_upgrade`
+    // in order to create a client. Though the `test_ranger_upgrade`
     // test doesn't need a cluster name, we supply the first provisioned
     def existing_cluster_name = ""
     clusters.each { type,param ->
@@ -474,13 +474,13 @@ def upgradeRancher() {
       "export CATTLE_TEST_URL=${CATTLE_TEST_URL} && " + 
       "export ADMIN_TOKEN=${ADMIN_TOKEN} && " +
       "export USER_TOKEN=${USER_TOKEN} && " +
-      "export RANCHER_UPGRADE_CHECK=upgrade_rancher && " +
-      "pytest -v -s -k test_rancher_upgrade ${testsDir} " +
+      "export RANCHER_UPGRADE_CHECK=upgrade_ranger && " +
+      "pytest -v -s -k test_ranger_upgrade ${testsDir} " +
       "--junit-xml=reports/${reportName}.xml " +
       "${htmlString}\'"
   } catch(err) {
     echo "Error: " + err
-    echo "Upgrade rancher failed"
+    echo "Upgrade ranger failed"
     buildFail = true
     currentBuild.result == 'FAILURE'
   } finally {
@@ -556,7 +556,7 @@ def run_k8s_upgrade(def cluster, def k8s_version) {
   }
 }
 
-def deleteRancherServer() {
+def deleteRangerServer() {
   try {
     if (RANCHER_DELETE_SERVER.toLowerCase() == "true" && buildFail == false || DELETE_SERVER_OVERRIDE.toLowerCase() == "true") {
       def reportName="delete"
@@ -567,7 +567,7 @@ def deleteRancherServer() {
         "export CATTLE_TEST_URL=${CATTLE_TEST_URL} && " + 
         "export ADMIN_TOKEN=${ADMIN_TOKEN} && " +
         "export USER_TOKEN=${USER_TOKEN} && " +
-        "pytest -v -s -k test_delete_rancher_server ${testsDir} " +
+        "pytest -v -s -k test_delete_ranger_server ${testsDir} " +
         "--junit-xml=reports/${reportName}.xml " +
         "${htmlString}\'"
     } else {

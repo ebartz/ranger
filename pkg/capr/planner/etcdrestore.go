@@ -7,11 +7,11 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver/v3"
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1/plan"
-	"github.com/rancher/rancher/pkg/capr"
-	"github.com/rancher/rancher/pkg/controllers/capr/managesystemagent"
-	"github.com/rancher/wrangler/pkg/name"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1/plan"
+	"github.com/ranger/ranger/pkg/capr"
+	"github.com/ranger/ranger/pkg/controllers/capr/managesystemagent"
+	"github.com/ranger/wrangler/pkg/name"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/api/equality"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -19,7 +19,7 @@ import (
 )
 
 const (
-	etcdRestoreInstallRoot = "/var/lib/rancher"
+	etcdRestoreInstallRoot = "/var/lib/ranger"
 	etcdRestoreBinPrefix   = "capr/etcd-restore/bin"
 
 	etcdRestorePostRestoreWaitForPodListCleanupPath   = "wait_for_pod_list.sh"
@@ -315,7 +315,7 @@ func (p *Planner) generateEtcdSnapshotRestorePlan(controlPlane *rkev1.RKEControl
 	args := []string{
 		"server",
 		"--cluster-reset",
-		"--etcd-arg=advertise-client-urls=https://127.0.0.1:2379", // this is a workaround for: https://github.com/rancher/rke2/issues/4052 and can likely remain indefinitely (unless IPv6-only becomes a requirement)
+		"--etcd-arg=advertise-client-urls=https://127.0.0.1:2379", // this is a workaround for: https://github.com/ranger/rke2/issues/4052 and can likely remain indefinitely (unless IPv6-only becomes a requirement)
 	}
 
 	var env []string
@@ -354,7 +354,7 @@ func (p *Planner) generateEtcdSnapshotRestorePlan(controlPlane *rkev1.RKEControl
 			Command: "rm",
 			Args: []string{
 				"-rf",
-				fmt.Sprintf("/var/lib/rancher/%s/server/db/etcd", capr.GetRuntimeCommand(controlPlane.Spec.KubernetesVersion)),
+				fmt.Sprintf("/var/lib/ranger/%s/server/db/etcd", capr.GetRuntimeCommand(controlPlane.Spec.KubernetesVersion)),
 			}}),
 		idempotentInstruction("etcd-restore/restore", fmt.Sprintf("%v", controlPlane.Status.ETCDSnapshotRestore), capr.GetRuntimeCommand(controlPlane.Spec.KubernetesVersion), args, env),
 	)
@@ -378,7 +378,7 @@ func (p *Planner) generateStopServiceAndKillAllPlan(controlPlane *rkev1.RKEContr
 	return nodePlan, joinedServer, nil
 }
 
-// generateManifestRemovalInstruction generates a rm -rf command for the manifests of a server. This was created in response to https://github.com/rancher/rancher/issues/41174
+// generateManifestRemovalInstruction generates a rm -rf command for the manifests of a server. This was created in response to https://github.com/ranger/ranger/issues/41174
 func generateManifestRemovalInstruction(runtime string, entry *planEntry) (bool, plan.OneTimeInstruction) {
 	if runtime == "" || entry == nil || roleNot(roleOr(isEtcd, isControlPlane))(entry) {
 		return false, plan.OneTimeInstruction{}
@@ -388,7 +388,7 @@ func generateManifestRemovalInstruction(runtime string, entry *planEntry) (bool,
 		Command: "/bin/sh",
 		Args: []string{
 			"-c",
-			fmt.Sprintf("rm -rf /var/lib/rancher/%s/server/manifests/%s-*.yaml", runtime, runtime),
+			fmt.Sprintf("rm -rf /var/lib/ranger/%s/server/manifests/%s-*.yaml", runtime, runtime),
 		},
 	}
 }
@@ -410,7 +410,7 @@ func generateCreateEtcdTombstoneInstruction(controlPlane *rkev1.RKEControlPlane)
 		Name:    "create-etcd-tombstone",
 		Command: "touch",
 		Args: []string{
-			fmt.Sprintf("/var/lib/rancher/%s/server/db/etcd/tombstone", capr.GetRuntimeCommand(controlPlane.Spec.KubernetesVersion)),
+			fmt.Sprintf("/var/lib/ranger/%s/server/db/etcd/tombstone", capr.GetRuntimeCommand(controlPlane.Spec.KubernetesVersion)),
 		},
 	}
 }
@@ -461,18 +461,18 @@ func (p *Planner) generateEtcdRestorePodCleanupFilesAndInstruction(controlPlane 
 		"kube-system:k8s-app=kube-dns-autoscaler",
 	}
 
-	// RKE2 charts come from: https://github.com/rancher/rke2/blob/253af9ca3115de691f5fdb8ed8dcb284287b1856/Dockerfile#L109-L123 and are deployed into `kube-system` as the Helm {{ .Release.Namespace }} by default
+	// RKE2 charts come from: https://github.com/ranger/rke2/blob/253af9ca3115de691f5fdb8ed8dcb284287b1856/Dockerfile#L109-L123 and are deployed into `kube-system` as the Helm {{ .Release.Namespace }} by default
 	if runtime == capr.RuntimeRKE2 {
 		podSelectors = append(podSelectors,
-			"kube-system:app=rke2-metrics-server",                   // rke2-metrics-server is deployed into `{{ .Release.Namespace }}` which is kube-system in RKE2: https://github.com/rancher/rke2-charts/blob/237251fccd793df825de0f27804ca7b6ad6e2981/charts/rke2-metrics-server/rke2-metrics-server/2.11.100/templates/metrics-server-deployment.yaml#L5
-			"tigera-operator:k8s-app=tigera-operator",               // https://github.com/rancher/rke2-charts/blob/237251fccd793df825de0f27804ca7b6ad6e2981/charts/rke2-calico/rke2-calico/v3.25.002/templates/tigera-operator/00-namespace-tigera-operator.yaml#L4
+			"kube-system:app=rke2-metrics-server",                   // rke2-metrics-server is deployed into `{{ .Release.Namespace }}` which is kube-system in RKE2: https://github.com/ranger/rke2-charts/blob/237251fccd793df825de0f27804ca7b6ad6e2981/charts/rke2-metrics-server/rke2-metrics-server/2.11.100/templates/metrics-server-deployment.yaml#L5
+			"tigera-operator:k8s-app=tigera-operator",               // https://github.com/ranger/rke2-charts/blob/237251fccd793df825de0f27804ca7b6ad6e2981/charts/rke2-calico/rke2-calico/v3.25.002/templates/tigera-operator/00-namespace-tigera-operator.yaml#L4
 			"calico-system:k8s-app=calico-node",                     // Managed by tigera-operator https://github.com/tigera/operator/blob/08cdc5df85fda2ebe69ffafded1953744409c554/pkg/common/common.go#L20
 			"calico-system:k8s-app=calico-kube-controllers",         // Managed by tigera-operator https://github.com/tigera/operator/blob/08cdc5df85fda2ebe69ffafded1953744409c554/pkg/common/common.go#L21
 			"calico-system:k8s-app=calico-typha",                    // Managed by tigera-operator https://github.com/tigera/operator/blob/08cdc5df85fda2ebe69ffafded1953744409c554/pkg/common/common.go#L19
-			"kube-system:k8s-app=canal",                             // Canal is hardcode deployed into `kube-system` https://github.com/rancher/rke2-charts/blob/237251fccd793df825de0f27804ca7b6ad6e2981/charts/rke2-canal/rke2-canal/v3.25.0-build2023020902/templates/daemonset.yaml#L10
-			"kube-system:k8s-app=cilium",                            // Cilium agent is deployed into `{{ .Release.Namespace }}` which is kube-system in RKE2: https://github.com/rancher/rke2-charts/blob/237251fccd793df825de0f27804ca7b6ad6e2981/charts/rke2-cilium/rke2-cilium/1.13.200/templates/cilium-agent/daemonset.yaml#L26
-			"kube-system:app=rke2-multus",                           // Multus is deployed into `{{ .Release.Namespace }}` which is kube-system in RKE2: https://github.com/rancher/rke2-charts/blob/237251fccd793df825de0f27804ca7b6ad6e2981/charts/rke2-multus/rke2-multus/v3.9.3-build2023010902/templates/daemonSet.yaml#L20
-			"kube-system:app.kubernetes.io/name=rke2-ingress-nginx", // rke2-ingress-nginx is deployed into `{{ .Release.Namespace }}` which is in kube-system in RKE2: https://github.com/rancher/rke2-charts/blob/237251fccd793df825de0f27804ca7b6ad6e2981/charts/rke2-ingress-nginx/rke2-ingress-nginx/4.5.201/templates/controller-daemonset.yaml#L13
+			"kube-system:k8s-app=canal",                             // Canal is hardcode deployed into `kube-system` https://github.com/ranger/rke2-charts/blob/237251fccd793df825de0f27804ca7b6ad6e2981/charts/rke2-canal/rke2-canal/v3.25.0-build2023020902/templates/daemonset.yaml#L10
+			"kube-system:k8s-app=cilium",                            // Cilium agent is deployed into `{{ .Release.Namespace }}` which is kube-system in RKE2: https://github.com/ranger/rke2-charts/blob/237251fccd793df825de0f27804ca7b6ad6e2981/charts/rke2-cilium/rke2-cilium/1.13.200/templates/cilium-agent/daemonset.yaml#L26
+			"kube-system:app=rke2-multus",                           // Multus is deployed into `{{ .Release.Namespace }}` which is kube-system in RKE2: https://github.com/ranger/rke2-charts/blob/237251fccd793df825de0f27804ca7b6ad6e2981/charts/rke2-multus/rke2-multus/v3.9.3-build2023010902/templates/daemonSet.yaml#L20
+			"kube-system:app.kubernetes.io/name=rke2-ingress-nginx", // rke2-ingress-nginx is deployed into `{{ .Release.Namespace }}` which is in kube-system in RKE2: https://github.com/ranger/rke2-charts/blob/237251fccd793df825de0f27804ca7b6ad6e2981/charts/rke2-ingress-nginx/rke2-ingress-nginx/4.5.201/templates/controller-daemonset.yaml#L13
 		)
 	}
 
@@ -575,7 +575,7 @@ func generateRemoveTLSAndCredDirInstructions(controlPlane *rkev1.RKEControlPlane
 			Command: "rm",
 			Args: []string{
 				"-rf",
-				fmt.Sprintf("/var/lib/rancher/%s/server/tls", capr.GetRuntimeCommand(controlPlane.Spec.KubernetesVersion)),
+				fmt.Sprintf("/var/lib/ranger/%s/server/tls", capr.GetRuntimeCommand(controlPlane.Spec.KubernetesVersion)),
 			},
 		},
 		{
@@ -583,7 +583,7 @@ func generateRemoveTLSAndCredDirInstructions(controlPlane *rkev1.RKEControlPlane
 			Command: "rm",
 			Args: []string{
 				"-rf",
-				fmt.Sprintf("/var/lib/rancher/%s/server/cred", capr.GetRuntimeCommand(controlPlane.Spec.KubernetesVersion)),
+				fmt.Sprintf("/var/lib/ranger/%s/server/cred", capr.GetRuntimeCommand(controlPlane.Spec.KubernetesVersion)),
 			},
 		},
 	}

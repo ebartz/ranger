@@ -6,17 +6,17 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rancher/norman/types"
-	"github.com/rancher/rancher/pkg/api/scheme"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/ref"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	"github.com/rancher/rancher/tests/framework/extensions/defaults"
-	"github.com/rancher/rancher/tests/framework/extensions/kubeapi/rbac"
-	kubeapiSecrets "github.com/rancher/rancher/tests/framework/extensions/kubeapi/secrets"
-	"github.com/rancher/rancher/tests/framework/extensions/secrets"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/ref"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/extensions/defaults"
+	"github.com/ranger/ranger/tests/framework/extensions/kubeapi/rbac"
+	kubeapiSecrets "github.com/ranger/ranger/tests/framework/extensions/kubeapi/secrets"
+	"github.com/ranger/ranger/tests/framework/extensions/secrets"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/labels"
@@ -32,8 +32,8 @@ const (
 var timeout = int64(60 * 3)
 
 // CreateUserWithRole is helper function that creates a user with a role or multiple roles
-func CreateUserWithRole(rancherClient *rancher.Client, user *management.User, roles ...string) (*management.User, error) {
-	createdUser, err := rancherClient.Management.User.Create(user)
+func CreateUserWithRole(rangerClient *ranger.Client, user *management.User, roles ...string) (*management.User, error) {
+	createdUser, err := rangerClient.Management.User.Create(user)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +44,7 @@ func CreateUserWithRole(rancherClient *rancher.Client, user *management.User, ro
 			UserID:       createdUser.ID,
 		}
 
-		_, err = rancherClient.Management.GlobalRoleBinding.Create(roleBinding)
+		_, err = rangerClient.Management.GlobalRoleBinding.Create(roleBinding)
 		if err != nil {
 			return nil, err
 		}
@@ -54,7 +54,7 @@ func CreateUserWithRole(rancherClient *rancher.Client, user *management.User, ro
 }
 
 // AddProjectMember is a helper function that adds a project role to `user`. It uses the watch.WatchWait ensure BackingNamespaceCreated is true
-func AddProjectMember(rancherClient *rancher.Client, project *management.Project, user *management.User, projectRole string) error {
+func AddProjectMember(rangerClient *ranger.Client, project *management.Project, user *management.User, projectRole string) error {
 	role := &management.ProjectRoleTemplateBinding{
 		ProjectID:       project.ID,
 		UserPrincipalID: user.PrincipalIDs[0],
@@ -63,7 +63,7 @@ func AddProjectMember(rancherClient *rancher.Client, project *management.Project
 
 	name := strings.Split(project.ID, ":")[1]
 
-	adminClient, err := rancher.NewClient(rancherClient.RancherConfig.AdminToken, rancherClient.Session)
+	adminClient, err := ranger.NewClient(rangerClient.RangerConfig.AdminToken, rangerClient.Session)
 	if err != nil {
 		return err
 	}
@@ -96,13 +96,13 @@ func AddProjectMember(rancherClient *rancher.Client, project *management.Project
 		return err
 	}
 
-	roleTemplateResp, err := rancherClient.Management.ProjectRoleTemplateBinding.Create(role)
+	roleTemplateResp, err := rangerClient.Management.ProjectRoleTemplateBinding.Create(role)
 	if err != nil {
 		return err
 	}
 
 	err = kwait.Poll(500*time.Millisecond, 2*time.Minute, func() (done bool, err error) {
-		projectRoleTemplate, err := rancherClient.Management.ProjectRoleTemplateBinding.ByID(roleTemplateResp.ID)
+		projectRoleTemplate, err := rangerClient.Management.ProjectRoleTemplateBinding.ByID(roleTemplateResp.ID)
 		if err != nil {
 			return false, err
 		}
@@ -164,8 +164,8 @@ func AddProjectMember(rancherClient *rancher.Client, project *management.Project
 }
 
 // RemoveProjectMember is a helper function that removes the project role from `user`
-func RemoveProjectMember(rancherClient *rancher.Client, user *management.User) error {
-	roles, err := rancherClient.Management.ProjectRoleTemplateBinding.List(&types.ListOpts{})
+func RemoveProjectMember(rangerClient *ranger.Client, user *management.User) error {
+	roles, err := rangerClient.Management.ProjectRoleTemplateBinding.List(&types.ListOpts{})
 	if err != nil {
 		return err
 	}
@@ -185,7 +185,7 @@ func RemoveProjectMember(rancherClient *rancher.Client, user *management.User) e
 		Jitter:   0,
 		Steps:    5,
 	}
-	err = rancherClient.Management.ProjectRoleTemplateBinding.Delete(&roleToDelete)
+	err = rangerClient.Management.ProjectRoleTemplateBinding.Delete(&roleToDelete)
 	if err != nil {
 		return err
 	}
@@ -196,7 +196,7 @@ func RemoveProjectMember(rancherClient *rancher.Client, user *management.User) e
 			return false, err
 		}
 
-		downstreamRBs, err := rbac.ListRoleBindings(rancherClient, clusterID, "", metav1.ListOptions{
+		downstreamRBs, err := rbac.ListRoleBindings(rangerClient, clusterID, "", metav1.ListOptions{
 			LabelSelector: labels.NewSelector().Add(*req).String(),
 		})
 		if err != nil {
@@ -211,14 +211,14 @@ func RemoveProjectMember(rancherClient *rancher.Client, user *management.User) e
 }
 
 // AddClusterRoleToUser is a helper function that adds a cluster role to `user`.
-func AddClusterRoleToUser(rancherClient *rancher.Client, cluster *management.Cluster, user *management.User, clusterRole string) error {
+func AddClusterRoleToUser(rangerClient *ranger.Client, cluster *management.Cluster, user *management.User, clusterRole string) error {
 	role := &management.ClusterRoleTemplateBinding{
 		ClusterID:       cluster.Resource.ID,
 		UserPrincipalID: user.PrincipalIDs[0],
 		RoleTemplateID:  clusterRole,
 	}
 
-	adminClient, err := rancher.NewClient(rancherClient.RancherConfig.AdminToken, rancherClient.Session)
+	adminClient, err := ranger.NewClient(rangerClient.RangerConfig.AdminToken, rangerClient.Session)
 	if err != nil {
 		return err
 	}
@@ -257,13 +257,13 @@ func AddClusterRoleToUser(rancherClient *rancher.Client, cluster *management.Clu
 		return err
 	}
 
-	roleTemplateResp, err := rancherClient.Management.ClusterRoleTemplateBinding.Create(role)
+	roleTemplateResp, err := rangerClient.Management.ClusterRoleTemplateBinding.Create(role)
 	if err != nil {
 		return err
 	}
 
 	err = kwait.Poll(600*time.Millisecond, 3*time.Minute, func() (done bool, err error) {
-		clusterRoleTemplate, err := rancherClient.Management.ClusterRoleTemplateBinding.ByID(roleTemplateResp.ID)
+		clusterRoleTemplate, err := rangerClient.Management.ClusterRoleTemplateBinding.ByID(roleTemplateResp.ID)
 		if err != nil {
 			return false, err
 		}
@@ -279,8 +279,8 @@ func AddClusterRoleToUser(rancherClient *rancher.Client, cluster *management.Clu
 }
 
 // RemoveClusterRoleFromUser is a helper function that removes the user from cluster
-func RemoveClusterRoleFromUser(rancherClient *rancher.Client, user *management.User) error {
-	roles, err := rancherClient.Management.ClusterRoleTemplateBinding.List(&types.ListOpts{})
+func RemoveClusterRoleFromUser(rangerClient *ranger.Client, user *management.User) error {
+	roles, err := rangerClient.Management.ClusterRoleTemplateBinding.List(&types.ListOpts{})
 	if err != nil {
 		return err
 	}
@@ -294,7 +294,7 @@ func RemoveClusterRoleFromUser(rancherClient *rancher.Client, user *management.U
 		}
 	}
 
-	if err = rancherClient.Management.ClusterRoleTemplateBinding.Delete(&roleToDelete); err != nil {
+	if err = rangerClient.Management.ClusterRoleTemplateBinding.Delete(&roleToDelete); err != nil {
 		return err
 	}
 
@@ -311,7 +311,7 @@ func RemoveClusterRoleFromUser(rancherClient *rancher.Client, user *management.U
 			return false, err
 		}
 
-		downstreamCRBs, err := rbac.ListClusterRoleBindings(rancherClient, roleToDelete.ClusterID, metav1.ListOptions{
+		downstreamCRBs, err := rbac.ListClusterRoleBindings(rangerClient, roleToDelete.ClusterID, metav1.ListOptions{
 			LabelSelector: labels.NewSelector().Add(*req).String(),
 		})
 		if err != nil {
@@ -326,7 +326,7 @@ func RemoveClusterRoleFromUser(rancherClient *rancher.Client, user *management.U
 }
 
 // GetUserIDByName is a helper function that returns the user ID by name
-func GetUserIDByName(client *rancher.Client, username string) (string, error) {
+func GetUserIDByName(client *ranger.Client, username string) (string, error) {
 	userList, err := client.Management.User.List(&types.ListOpts{})
 	if err != nil {
 		return "", err

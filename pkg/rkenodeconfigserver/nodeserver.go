@@ -7,27 +7,27 @@ import (
 	"net/http"
 	"strings"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/controllers/dashboard/clusterregistrationtoken"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	"github.com/rancher/rancher/pkg/tunnelserver/mcmauthorizer"
-	"github.com/rancher/rke/hosts"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/controllers/dashboard/clusterregistrationtoken"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	"github.com/ranger/ranger/pkg/tunnelserver/mcmauthorizer"
+	"github.com/ranger/rke/hosts"
 
-	rketypes "github.com/rancher/rke/types"
+	rketypes "github.com/ranger/rke/types"
 
 	"github.com/pkg/errors"
-	util "github.com/rancher/rancher/pkg/cluster"
-	kd "github.com/rancher/rancher/pkg/controllers/management/kontainerdrivermetadata"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/image"
-	"github.com/rancher/rancher/pkg/librke"
-	"github.com/rancher/rancher/pkg/rkeworker"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/systemaccount"
-	"github.com/rancher/rancher/pkg/taints"
-	"github.com/rancher/rancher/pkg/types/config"
-	rkepki "github.com/rancher/rke/pki"
-	rkeservices "github.com/rancher/rke/services"
+	util "github.com/ranger/ranger/pkg/cluster"
+	kd "github.com/ranger/ranger/pkg/controllers/management/kontainerdrivermetadata"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/image"
+	"github.com/ranger/ranger/pkg/librke"
+	"github.com/ranger/ranger/pkg/rkeworker"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/systemaccount"
+	"github.com/ranger/ranger/pkg/taints"
+	"github.com/ranger/ranger/pkg/types/config"
+	rkepki "github.com/ranger/rke/pki"
+	rkeservices "github.com/ranger/rke/services"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 )
@@ -107,7 +107,7 @@ func (n *RKENodeConfigServer) ServeHTTP(rw http.ResponseWriter, req *http.Reques
 		return
 	}
 
-	if client.Cluster.Status.AppliedSpec.RancherKubernetesEngineConfig == nil {
+	if client.Cluster.Status.AppliedSpec.RangerKubernetesEngineConfig == nil {
 		rw.WriteHeader(http.StatusServiceUnavailable)
 		return
 	}
@@ -183,7 +183,7 @@ func (n *RKENodeConfigServer) nonWorkerConfig(ctx context.Context, cluster *v3.C
 
 func (n *RKENodeConfigServer) nodeConfig(ctx context.Context, cluster *v3.Cluster, node *v3.Node, agentNeedsNewKubeletCertificate bool) (*rkeworker.NodeConfig, error) {
 	status := cluster.Status.AppliedSpec.DeepCopy()
-	rkeConfig := status.RancherKubernetesEngineConfig
+	rkeConfig := status.RangerKubernetesEngineConfig
 
 	nodePlan := node.Status.NodePlan
 	hostAddress := node.Status.NodeConfig.Address
@@ -274,7 +274,7 @@ func GenerateKubeletServingCertForNode(certs map[string]rkepki.CertificatePKI, n
 	return nil
 }
 
-func FilterHostForSpec(spec *rketypes.RancherKubernetesEngineConfig, n *v3.Node) {
+func FilterHostForSpec(spec *rketypes.RangerKubernetesEngineConfig, n *v3.Node) {
 	nodeList := make([]rketypes.RKEConfigNode, 0)
 	for _, node := range spec.Nodes {
 		if IsNonWorker(node.Role) || node.NodeName == n.Status.NodeConfig.NodeName {
@@ -351,7 +351,7 @@ func EnhanceWindowsProcesses(processes map[string]rketypes.Process) map[string]r
 	newProcesses := make(map[string]rketypes.Process, len(processes))
 	for k, p := range processes {
 		p.Binds = append(p.Binds,
-			"//./pipe/rancher_wins://./pipe/rancher_wins",
+			"//./pipe/ranger_wins://./pipe/ranger_wins",
 		)
 		newProcesses[k] = p
 	}

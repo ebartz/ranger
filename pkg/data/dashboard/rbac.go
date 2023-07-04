@@ -1,7 +1,7 @@
 package dashboard
 
 import (
-	"github.com/rancher/wrangler/pkg/apply"
+	"github.com/ranger/wrangler/pkg/apply"
 	rbacv1 "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

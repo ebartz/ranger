@@ -5,9 +5,9 @@ from packaging import version
 
 k8s_resource_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                "resources/k8s_ymls/")
-k8s_rancher_version = str(os.environ.get("RANCHER_K8S_VERSION").split("-")[0][1:])
-k8s_rancher_version = version.parse(k8s_rancher_version)
-k8s_rancher_version = version.parse(f"{str(k8s_rancher_version.major)}.{str(k8s_rancher_version.minor)}")
+k8s_ranger_version = str(os.environ.get("RANCHER_K8S_VERSION").split("-")[0][1:])
+k8s_ranger_version = version.parse(k8s_ranger_version)
+k8s_ranger_version = version.parse(f"{str(k8s_ranger_version.major)}.{str(k8s_ranger_version.minor)}")
 k8s_fixed_version = version.parse("1.21")
 
 # Global expectedimagesdict declared to store the images for a specific
@@ -138,7 +138,7 @@ def wait_for_etcd_cluster_health(node, etcd_private_ip=False):
     endpoints = "127.0.0.1"
     if etcd_private_ip:
         endpoints = node.private_ip_address
-    if k8s_rancher_version <= k8s_fixed_version:
+    if k8s_ranger_version <= k8s_fixed_version:
         etcd_tls_cmd = (
                 'ETCDCTL_API=2 etcdctl --endpoints "https://' + endpoints + ':2379" '
                  ' --ca-file /etc/kubernetes/ssl/kube-ca.pem --cert-file '
@@ -156,7 +156,7 @@ def wait_for_etcd_cluster_health(node, etcd_private_ip=False):
         result = node.docker_exec('etcd', "sh -c '" + etcd_tls_cmd + "'")
         print("**RESULT**")
         print(result)
-        if k8s_rancher_version <= k8s_fixed_version:
+        if k8s_ranger_version <= k8s_fixed_version:
             if 'cluster is healthy' in result:
                 break
         else:
@@ -170,7 +170,7 @@ def verify_metrics_server_addon_images(k8sversion, kubectl,
                                        namespace, selector):
 
     metricserver = get_component_version(k8sversion,
-                                         "rancher/metrics-server")
+                                         "ranger/metrics-server")
     # Sleep to allow the metrics server component to get to running state
     time.sleep(10)
     verify_component_status_with_kubectl(kubectl, namespace, selector,
@@ -182,11 +182,11 @@ def verify_ingress_addon_images(k8sversion, kubectl, namespace,
 
     ingressdefaultbackend = \
         get_component_version(k8sversion,
-                              "rancher/nginx-ingress-controller-defaultbackend"
+                              "ranger/nginx-ingress-controller-defaultbackend"
                               )
     nginxingresscontoller =\
         get_component_version(k8sversion,
-                              "rancher/nginx-ingress-controller")
+                              "ranger/nginx-ingress-controller")
     # Sleep to allow the ingress addon components to get to running state
     time.sleep(5)
     verify_component_status_with_kubectl(kubectl, namespace, selector1,
@@ -199,7 +199,7 @@ def verify_dns_addon_images(k8sversion, kubectl, namespace,
                             selector):
 
     coredns = get_component_version(k8sversion,
-                                    "rancher/coredns-coredns")
+                                    "ranger/coredns-coredns")
     # Sleep to allow the dns addon component to get to running state
     time.sleep(5)
 
@@ -210,10 +210,10 @@ def verify_networking_addon_images(k8sversion, kubectl,
                                    namespace, selector):
 
     flannel = get_component_version(k8sversion,
-                                    "rancher/coreos-flannel")
+                                    "ranger/coreos-flannel")
 
     calico = get_component_version(k8sversion,
-                                   "rancher/calico-node")
+                                   "ranger/calico-node")
     # Sleep to allow the network addon component to get to running state
     time.sleep(5)
     verify_component_status_with_kubectl(kubectl, namespace, selector, calico,
@@ -299,16 +299,16 @@ def build_expectedimages_dict(k8s_version, rke_client):
         result = get_system_images(rke_client, k8s_version)
         for item in result:
             itemlist = item.split(":")
-            if "rancher/hyperkube" == itemlist[0]:
+            if "ranger/hyperkube" == itemlist[0]:
                 expectedimagesdict[k8s_version]["kube-proxy"] = item
                 expectedimagesdict[k8s_version]["kube-scheduler"] = item
                 expectedimagesdict[k8s_version]["kube-controller-manager"] \
                     = item
                 expectedimagesdict[k8s_version]["kube-apiserver"] = item
                 expectedimagesdict[k8s_version]["kubelet"] = item
-            if "rancher/coreos-etc[k8s_version]" == itemlist[0]:
+            if "ranger/coreos-etc[k8s_version]" == itemlist[0]:
                 expectedimagesdict[k8s_version]["etcd"] = item
-            if "rancher/rke-tools" == itemlist[0]:
+            if "ranger/rke-tools" == itemlist[0]:
                 expectedimagesdict[k8s_version]["service-sidekick"] = item
 
         expectedimagesdict[k8s_version]["rkesystemimages"] = result
@@ -371,7 +371,7 @@ def validation_node_roles(nodes, k8s_nodes, etcd_private_ip=False):
                             "Expected to find taint for etcd-only node"
                 # check etcd membership and cluster health
                 result = wait_for_etcd_cluster_health(node, etcd_private_ip)
-                if k8s_rancher_version <= k8s_fixed_version:
+                if k8s_ranger_version <= k8s_fixed_version:
                     for member in etcd_members:
                         expect = "got healthy result from https://{}".format(member)
                         assert expect in result, result

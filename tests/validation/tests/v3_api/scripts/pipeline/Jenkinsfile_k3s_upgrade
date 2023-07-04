@@ -21,7 +21,7 @@ def needs_cluster(py_options, upgrade_check, create_resource_prefix) {
           string(name: 'RANCHER_CREATE_RESOURCES_PREFIX', value: "${create_resource_prefix}"),
         ]
         echo "Params are: ${params}"
-        jobs["test-${i}"] = { build job: 'rancher-v3_needs_cluster', parameters: params }
+        jobs["test-${i}"] = { build job: 'ranger-v3_needs_cluster', parameters: params }
       }
       parallel jobs
   } catch(err) {
@@ -31,7 +31,7 @@ def needs_cluster(py_options, upgrade_check, create_resource_prefix) {
 }
 
 node {
-  def rootPath = "/src/rancher-validation/"
+  def rootPath = "/src/ranger-validation/"
   def job_name = "${JOB_NAME}"
   if (job_name.contains('/')) { 
     job_names = job_name.split('/')
@@ -41,15 +41,15 @@ node {
   def setupContainer = "${job_name}${env.BUILD_NUMBER}_setup"
   def clusterSetupContainer = "${job_name}${env.BUILD_NUMBER}_cluster_setup"
 
-  def deployPytestOptions = "-k test_deploy_rancher_server"
+  def deployPytestOptions = "-k test_deploy_ranger_server"
   def deployClusterPytestOptions = "-k test_deploy_k3s"
 
   def setupResultsOut = "setup-results.xml"
-  def imageName = "rancher-validation-${job_name}${env.BUILD_NUMBER}"
+  def imageName = "ranger-validation-${job_name}${env.BUILD_NUMBER}"
   def testsDir = "tests/v3_api/"
 
   def envFile = ".env"
-  def rancherConfig = "rancher_env.config"
+  def rangerConfig = "ranger_env.config"
 
   def branch = "release/v2.6"
   if ("${env.branch}" != "null" && "${env.branch}" != "") {
@@ -88,10 +88,10 @@ node {
               sh "./tests/v3_api/scripts/build.sh"
             }
 
-            stage('Deploy Rancher Server') {
+            stage('Deploy Ranger Server') {
               try {
                 if (!env.CATTLE_TEST_URL.trim() && !env.ADMIN_TOKEN.trim() && !env.USER_TOKEN.trim()) {
-                  // deploy rancher server
+                  // deploy ranger server
                   sh "docker run --name ${setupContainer} -t --env-file ${envFile} " +
                     "${imageName} /bin/bash -c \'export RANCHER_AUTO_DEPLOY_CUSTOM_CLUSTER=False " +
                     "&& pytest -v -s --junit-xml=${setupResultsOut} " +
@@ -99,11 +99,11 @@ node {
                   RANCHER_DEPLOYED = true
 
                   // copy file containing CATTLE_TEST_URL, ADMIN_TOKEN, USER_TOKEN and load into environment variables
-                  sh "docker cp ${setupContainer}:${rootPath}${testsDir}${rancherConfig} ."
-                  load rancherConfig
+                  sh "docker cp ${setupContainer}:${rootPath}${testsDir}${rangerConfig} ."
+                  load rangerConfig
                 }
                 else {
-                  echo "User Provided Rancher Server"
+                  echo "User Provided Ranger Server"
                   RANCHER_DEPLOYED = false
                 }
 

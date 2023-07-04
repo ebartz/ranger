@@ -10,13 +10,13 @@ import (
 
 	"github.com/docker/docker/pkg/reexec"
 	"github.com/ehazlett/simplelog"
-	_ "github.com/rancher/norman/controller"
-	"github.com/rancher/norman/pkg/kwrapper/k8s"
-	"github.com/rancher/rancher/pkg/data/management"
-	"github.com/rancher/rancher/pkg/logserver"
-	"github.com/rancher/rancher/pkg/rancher"
-	"github.com/rancher/rancher/pkg/version"
-	"github.com/rancher/wrangler/pkg/signals"
+	_ "github.com/ranger/norman/controller"
+	"github.com/ranger/norman/pkg/kwrapper/k8s"
+	"github.com/ranger/ranger/pkg/data/management"
+	"github.com/ranger/ranger/pkg/logserver"
+	"github.com/ranger/ranger/pkg/ranger"
+	"github.com/ranger/ranger/pkg/version"
+	"github.com/ranger/wrangler/pkg/signals"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
@@ -49,7 +49,7 @@ func main() {
 		os.Setenv("PATH", newPath)
 	}
 
-	var config rancher.Options
+	var config ranger.Options
 
 	app := cli.NewApp()
 	app.Version = version.FriendlyVersion()
@@ -115,8 +115,8 @@ func main() {
 		cli.StringFlag{
 			Name:        "audit-log-path",
 			EnvVar:      "AUDIT_LOG_PATH",
-			Value:       "/var/log/auditlog/rancher-api-audit.log",
-			Usage:       "Log path for Rancher Server API. Default path is /var/log/auditlog/rancher-api-audit.log",
+			Value:       "/var/log/auditlog/ranger-api-audit.log",
+			Usage:       "Log path for Ranger Server API. Default path is /var/log/auditlog/ranger-api-audit.log",
 			Destination: &config.AuditLogPath,
 		},
 		cli.IntFlag{
@@ -180,7 +180,7 @@ func main() {
 	app.Run(os.Args)
 }
 
-func initLogs(c *cli.Context, cfg rancher.Options) {
+func initLogs(c *cli.Context, cfg ranger.Options) {
 	switch c.String("log-format") {
 	case "simple":
 		logrus.SetFormatter(&simplelog.StandardFormatter{})
@@ -202,13 +202,13 @@ func initLogs(c *cli.Context, cfg rancher.Options) {
 	logserver.StartServerWithDefaults()
 }
 
-func run(cli *cli.Context, cfg rancher.Options) error {
-	logrus.Infof("Rancher version %s is starting", version.FriendlyVersion())
-	logrus.Infof("Rancher arguments %+v", cfg)
+func run(cli *cli.Context, cfg ranger.Options) error {
+	logrus.Infof("Ranger version %s is starting", version.FriendlyVersion())
+	logrus.Infof("Ranger arguments %+v", cfg)
 	ctx := signals.SetupSignalContext()
 
 	if cfg.AddLocal != "true" && cfg.AddLocal != "auto" {
-		logrus.Fatal("add-local flag must be set to 'true', see Rancher 2.5.0 release notes for more information")
+		logrus.Fatal("add-local flag must be set to 'true', see Ranger 2.5.0 release notes for more information")
 	}
 
 	embedded, clientConfig, err := k8s.GetConfig(ctx, cfg.K8sMode, kubeConfig)
@@ -219,7 +219,7 @@ func run(cli *cli.Context, cfg rancher.Options) error {
 
 	os.Unsetenv("KUBECONFIG")
 
-	server, err := rancher.New(ctx, clientConfig, &cfg)
+	server, err := ranger.New(ctx, clientConfig, &cfg)
 	if err != nil {
 		return err
 	}

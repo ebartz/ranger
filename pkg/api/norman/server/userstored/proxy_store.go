@@ -4,12 +4,12 @@ import (
 	"context"
 	"strings"
 
-	"github.com/rancher/norman/store/proxy"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/rancher/pkg/api/scheme"
-	clusterSchema "github.com/rancher/rancher/pkg/schemas/cluster.cattle.io/v3"
-	schema "github.com/rancher/rancher/pkg/schemas/project.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/norman/store/proxy"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	clusterSchema "github.com/ranger/ranger/pkg/schemas/cluster.cattle.io/v3"
+	schema "github.com/ranger/ranger/pkg/schemas/project.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
 )
 
 type storeWrapperFunc func(types.Store) types.Store

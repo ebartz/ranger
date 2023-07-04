@@ -14,22 +14,22 @@ import (
 	"testing"
 	"time"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	clientv1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	kubenamespaces "github.com/rancher/rancher/tests/framework/extensions/kubeapi/namespaces"
-	"github.com/rancher/rancher/tests/framework/extensions/kubeapi/rbac"
-	"github.com/rancher/rancher/tests/framework/extensions/kubeapi/secrets"
-	"github.com/rancher/rancher/tests/framework/extensions/namespaces"
-	stevesecrets "github.com/rancher/rancher/tests/framework/extensions/secrets"
-	"github.com/rancher/rancher/tests/framework/extensions/serviceaccounts"
-	"github.com/rancher/rancher/tests/framework/extensions/unstructured"
-	"github.com/rancher/rancher/tests/framework/extensions/users"
-	password "github.com/rancher/rancher/tests/framework/extensions/users/passwordgenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/namegenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	clientv1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	kubenamespaces "github.com/ranger/ranger/tests/framework/extensions/kubeapi/namespaces"
+	"github.com/ranger/ranger/tests/framework/extensions/kubeapi/rbac"
+	"github.com/ranger/ranger/tests/framework/extensions/kubeapi/secrets"
+	"github.com/ranger/ranger/tests/framework/extensions/namespaces"
+	stevesecrets "github.com/ranger/ranger/tests/framework/extensions/secrets"
+	"github.com/ranger/ranger/tests/framework/extensions/serviceaccounts"
+	"github.com/ranger/ranger/tests/framework/extensions/unstructured"
+	"github.com/ranger/ranger/tests/framework/extensions/users"
+	password "github.com/ranger/ranger/tests/framework/extensions/users/passwordgenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -47,7 +47,7 @@ const (
 	continueToken     = "nondeterministictoken"
 	revisionNum       = "nondeterministicint"
 	fakeTestID        = "nondeterministicid"
-	defautlUrlString  = "https://rancherurl/"
+	defautlUrlString  = "https://rangerurl/"
 	steveAPITestLabel = "test.cattle.io/steveapi"
 )
 
@@ -227,10 +227,10 @@ var (
 
 type steveAPITestSuite struct {
 	suite.Suite
-	client            *rancher.Client
+	client            *ranger.Client
 	session           *session.Session
 	clusterID         string
-	userClients       map[string]*rancher.Client
+	userClients       map[string]*ranger.Client
 	lastContinueToken string
 	lastRevision      string
 }
@@ -259,14 +259,14 @@ func (s *steveAPITestSuite) setupSuite(clusterName string) {
 	testSession := session.NewSession()
 	s.session = testSession
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(s.T(), err)
 	s.client = client
 
-	s.userClients = make(map[string]*rancher.Client)
+	s.userClients = make(map[string]*ranger.Client)
 
 	if clusterName == "" {
-		clusterName = s.client.RancherConfig.ClusterName
+		clusterName = s.client.RangerConfig.ClusterName
 	}
 	s.clusterID, err = clusters.GetClusterIDByName(client, clusterName)
 	require.NoError(s.T(), err)

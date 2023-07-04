@@ -7,15 +7,15 @@ import (
 	"testing"
 	"time"
 
-	provisioningv1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/capr"
-	"github.com/rancher/rancher/tests/v2prov/clients"
-	"github.com/rancher/rancher/tests/v2prov/cluster"
-	"github.com/rancher/rancher/tests/v2prov/operations"
-	"github.com/rancher/rancher/tests/v2prov/systemdnode"
-	"github.com/rancher/wrangler/pkg/name"
-	"github.com/rancher/wrangler/pkg/randomtoken"
+	provisioningv1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/capr"
+	"github.com/ranger/ranger/tests/v2prov/clients"
+	"github.com/ranger/ranger/tests/v2prov/cluster"
+	"github.com/ranger/ranger/tests/v2prov/operations"
+	"github.com/ranger/ranger/tests/v2prov/systemdnode"
+	"github.com/ranger/wrangler/pkg/name"
+	"github.com/ranger/wrangler/pkg/randomtoken"
 	"github.com/stretchr/testify/assert"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -64,7 +64,7 @@ func Test_Operation_Custom_EtcdSnapshotOperationsOnNewCombinedNode(t *testing.T)
 
 	// store the snapshots in a universal directory
 	etcdSnapshotDir := []string{
-		fmt.Sprintf("%s:/var/lib/rancher/%s/server/db/snapshots", tmpDir, capr.GetRuntime(c.Spec.KubernetesVersion)),
+		fmt.Sprintf("%s:/var/lib/ranger/%s/server/db/snapshots", tmpDir, capr.GetRuntime(c.Spec.KubernetesVersion)),
 	}
 
 	var etcdNode *corev1.Pod

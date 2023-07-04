@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	rketypes "github.com/rancher/rke/types"
+	rketypes "github.com/ranger/rke/types"
 
 	"github.com/sirupsen/logrus"
 	v1 "k8s.io/api/core/v1"

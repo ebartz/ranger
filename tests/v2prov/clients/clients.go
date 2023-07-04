@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/rancher/rancher/pkg/wrangler"
-	"github.com/rancher/wrangler/pkg/kubeconfig"
-	"github.com/rancher/wrangler/pkg/ratelimit"
+	"github.com/ranger/ranger/pkg/wrangler"
+	"github.com/ranger/wrangler/pkg/kubeconfig"
+	"github.com/ranger/wrangler/pkg/ratelimit"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/tools/clientcmd"

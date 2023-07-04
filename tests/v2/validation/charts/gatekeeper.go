@@ -3,9 +3,9 @@ package charts
 import (
 	"time"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
 	"k8s.io/apimachinery/pkg/util/wait"
 )
 
@@ -13,7 +13,7 @@ const (
 	// Project that charts are installed in
 	gatekeeperProjectName = "gatekeeper-project"
 	// namespace that is created without a label
-	RancherDisallowedNamespace  = "no-label"
+	RangerDisallowedNamespace  = "no-label"
 	ConstraintResourceSteveType = "constraints.gatekeeper.sh.k8srequiredlabels"
 )
 
@@ -24,7 +24,7 @@ type ConstraintStatus struct {
 	Violations      []interface{}
 }
 
-func getAuditTimestamp(client *rancher.Client, project *management.Project) error {
+func getAuditTimestamp(client *ranger.Client, project *management.Project) error {
 	// wait until the first audit finishes running.
 	// AuditTimestamp will be empty string until first audit finishes
 	steveClient, err := client.Steve.ProxyDownstream(project.ClusterID)

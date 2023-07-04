@@ -5,14 +5,14 @@ import (
 	"strings"
 	"time"
 
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	steveV1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/machinepools"
-	"github.com/rancher/rancher/tests/framework/extensions/workloads"
-	"github.com/rancher/rancher/tests/framework/extensions/workloads/pods"
-	"github.com/rancher/rancher/tests/v2/validation/provisioning"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	steveV1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/machinepools"
+	"github.com/ranger/ranger/tests/framework/extensions/workloads"
+	"github.com/ranger/ranger/tests/framework/extensions/workloads/pods"
+	"github.com/ranger/ranger/tests/v2/validation/provisioning"
 	"github.com/sirupsen/logrus"
 	appv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -35,7 +35,7 @@ const (
 	s3BackupPrefix               = "on-demand-"
 )
 
-func restoreSnapshot(client *rancher.Client, clustername string, name string,
+func restoreSnapshot(client *ranger.Client, clustername string, name string,
 	generation int, restoreconfig string, namespace string) error {
 
 	clusterObj, existingSteveAPIObj, err := clusters.GetProvisioningClusterByName(client, clustername, namespace)
@@ -57,7 +57,7 @@ func restoreSnapshot(client *rancher.Client, clustername string, name string,
 	return nil
 }
 
-func getSnapshots(client *rancher.Client,
+func getSnapshots(client *ranger.Client,
 	localClusterID string) ([]steveV1.SteveAPIObject, error) {
 
 	steveclient, err := client.Steve.ProxyDownstream(localClusterID)
@@ -73,7 +73,7 @@ func getSnapshots(client *rancher.Client,
 
 }
 
-func createRKE2NodeDriverCluster(client *rancher.Client, provider *Provider, clusterName string, k8sVersion string, namespace string, cni string, advancedOptions provisioning.AdvancedOptions, s3Snapshot *rkev1.ETCDSnapshotS3) (*steveV1.SteveAPIObject, error) {
+func createRKE2NodeDriverCluster(client *ranger.Client, provider *Provider, clusterName string, k8sVersion string, namespace string, cni string, advancedOptions provisioning.AdvancedOptions, s3Snapshot *rkev1.ETCDSnapshotS3) (*steveV1.SteveAPIObject, error) {
 
 	nodeRoles := []machinepools.NodeRoles{
 		{
@@ -116,7 +116,7 @@ func createRKE2NodeDriverCluster(client *rancher.Client, provider *Provider, clu
 
 }
 
-func upgradeClusterK8sVersion(client *rancher.Client, clustername string, k8sUpgradedVersion string, namespaceName string) error {
+func upgradeClusterK8sVersion(client *ranger.Client, clustername string, k8sUpgradedVersion string, namespaceName string) error {
 	clusterObj, existingSteveAPIObj, err := clusters.GetProvisioningClusterByName(client, clustername, namespaceName)
 	if err != nil {
 		return err
@@ -132,7 +132,7 @@ func upgradeClusterK8sVersion(client *rancher.Client, clustername string, k8sUpg
 	return nil
 }
 
-func createDeployment(deployment *appv1.Deployment, steveclient *steveV1.Client, client *rancher.Client, clusterID string) (*steveV1.SteveAPIObject, error) {
+func createDeployment(deployment *appv1.Deployment, steveclient *steveV1.Client, client *ranger.Client, clusterID string) (*steveV1.SteveAPIObject, error) {
 	deploymentResp2, err := steveclient.SteveType(workloads.DeploymentSteveType).Create(deployment)
 	if err != nil {
 		return nil, err
@@ -164,7 +164,7 @@ func createDeployment(deployment *appv1.Deployment, steveclient *steveV1.Client,
 
 }
 
-func watchAndWaitForPods(client *rancher.Client, clusterID string) error {
+func watchAndWaitForPods(client *ranger.Client, clusterID string) error {
 	logrus.Infof("waiting for all Pods to be up.............")
 	err := kwait.Poll(5*time.Second, 5*time.Minute, func() (done bool, err error) {
 		steveClient, err := client.Steve.ProxyDownstream(clusterID)
@@ -204,7 +204,7 @@ func watchAndWaitForPods(client *rancher.Client, clusterID string) error {
 	return err
 }
 
-func upgradeClusterK8sVersionWithUpgradeStrategy(client *rancher.Client, clustername string, k8sUpgradedVersion string, namespaceName string) error {
+func upgradeClusterK8sVersionWithUpgradeStrategy(client *ranger.Client, clustername string, k8sUpgradedVersion string, namespaceName string) error {
 	clusterObj, existingSteveAPIObj, err := clusters.GetProvisioningClusterByName(client, clustername, namespaceName)
 	if err != nil {
 		return err

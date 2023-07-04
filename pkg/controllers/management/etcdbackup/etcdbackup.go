@@ -17,19 +17,19 @@ import (
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/controllers/management/clusterprovisioner"
-	"github.com/rancher/rancher/pkg/controllers/management/secretmigrator/assemblers"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/kontainer-engine/drivers/rke"
-	"github.com/rancher/rancher/pkg/kontainer-engine/service"
-	"github.com/rancher/rancher/pkg/rkedialerfactory"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/types/config/dialer"
-	rkecluster "github.com/rancher/rke/cluster"
-	rketypes "github.com/rancher/rke/types"
-	"github.com/rancher/wrangler/pkg/ticker"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/controllers/management/clusterprovisioner"
+	"github.com/ranger/ranger/pkg/controllers/management/secretmigrator/assemblers"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/kontainer-engine/drivers/rke"
+	"github.com/ranger/ranger/pkg/kontainer-engine/service"
+	"github.com/ranger/ranger/pkg/rkedialerfactory"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/types/config/dialer"
+	rkecluster "github.com/ranger/rke/cluster"
+	rketypes "github.com/ranger/rke/types"
+	"github.com/ranger/wrangler/pkg/ticker"
 	log "github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -75,7 +75,7 @@ func Register(ctx context.Context, management *config.ManagementContext) {
 		Docker:  true,
 		Ctx:     ctx,
 	}
-	driver := service.Drivers[service.RancherKubernetesEngineDriverName]
+	driver := service.Drivers[service.RangerKubernetesEngineDriverName]
 	rkeDriver := driver.(*rke.Driver)
 	rkeDriver.DockerDialer = docker.Build
 	rkeDriver.LocalDialer = local.Build
@@ -95,7 +95,7 @@ func (c *Controller) Create(b *v3.EtcdBackup) (runtime.Object, error) {
 		return b, err
 	}
 
-	if !isBackupSet(cluster.Spec.RancherKubernetesEngineConfig) {
+	if !isBackupSet(cluster.Spec.RangerKubernetesEngineConfig) {
 		return b, fmt.Errorf("[etcd-backup] cluster doesn't have a backup config")
 	}
 
@@ -249,7 +249,7 @@ func (c *Controller) createRecurringBackup(cluster *v3.Cluster) error {
 
 	// this cluster has backups, lets see if the last one is old enough
 	// a new backup is due if this is true
-	intervalHours := cluster.Spec.RancherKubernetesEngineConfig.Services.Etcd.BackupConfig.IntervalHours
+	intervalHours := cluster.Spec.RangerKubernetesEngineConfig.Services.Etcd.BackupConfig.IntervalHours
 	backupIntervalHours := time.Duration(intervalHours) * time.Hour
 
 	if time.Since(getBackupCompletedTime(newestBackup)) > backupIntervalHours {
@@ -270,8 +270,8 @@ func IsBackupRecurring(backup *v3.EtcdBackup) bool {
 func (c *Controller) createBackupForCluster(b *v3.EtcdBackup, cluster *v3.Cluster) (*v3.EtcdBackup, error) {
 	var err error
 	if b.DeletionTimestamp != nil || rketypes.BackupConditionCreated.IsUnknown(b) {
-		b.Spec.Filename = generateBackupFilename(b.Name, cluster.Spec.RancherKubernetesEngineConfig.Services.Etcd.BackupConfig)
-		b.Spec.BackupConfig = *cluster.Spec.RancherKubernetesEngineConfig.Services.Etcd.BackupConfig
+		b.Spec.Filename = generateBackupFilename(b.Name, cluster.Spec.RangerKubernetesEngineConfig.Services.Etcd.BackupConfig)
+		b.Spec.BackupConfig = *cluster.Spec.RangerKubernetesEngineConfig.Services.Etcd.BackupConfig
 		rketypes.BackupConditionCreated.True(b)
 		// we set ConditionCompleted to Unknown to avoid incorrect "active" state
 		rketypes.BackupConditionCompleted.Unknown(b)
@@ -327,7 +327,7 @@ func anyBackupsQueued(backups []*v3.EtcdBackup) bool {
 }
 
 func getTimeout(cluster *v3.Cluster) time.Duration {
-	if rkeCfg := cluster.Spec.RancherKubernetesEngineConfig; rkeCfg != nil && rkeCfg.Services.Etcd.BackupConfig.Timeout > 0 {
+	if rkeCfg := cluster.Spec.RangerKubernetesEngineConfig; rkeCfg != nil && rkeCfg.Services.Etcd.BackupConfig.Timeout > 0 {
 		return time.Duration(rkeCfg.Services.Etcd.BackupConfig.Timeout) * time.Second
 	}
 	return time.Duration(rkecluster.DefaultEtcdBackupConfigTimeout) * time.Second
@@ -359,7 +359,7 @@ func (c *Controller) createNewBackup(cluster *v3.Cluster) (*v3.EtcdBackup, error
 
 // etcdSave will utilize RKE to take a snapshot on each of the nodes.
 func (c *Controller) etcdSave(b *v3.EtcdBackup) (*v3.EtcdBackup, error) {
-	kontainerDriver, err := c.KontainerDriverLister.Get("", service.RancherKubernetesEngineDriverName)
+	kontainerDriver, err := c.KontainerDriverLister.Get("", service.RangerKubernetesEngineDriverName)
 	if err != nil {
 		return b, err
 	}
@@ -370,7 +370,7 @@ func (c *Controller) etcdSave(b *v3.EtcdBackup) (*v3.EtcdBackup, error) {
 		if err != nil {
 			return b, err
 		}
-		cluster.Spec.RancherKubernetesEngineConfig.Services.Etcd.BackupConfig = b.Spec.BackupConfig.DeepCopy()
+		cluster.Spec.RangerKubernetesEngineConfig.Services.Etcd.BackupConfig = b.Spec.BackupConfig.DeepCopy()
 		spec, err := assemblers.AssembleS3Credential(cluster.GetSecret("S3CredentialSecret"), assemblers.ClusterType, cluster.Name, cluster.Spec, c.secretLister)
 		if err != nil {
 			return b, err
@@ -393,7 +393,7 @@ func (c *Controller) etcdSave(b *v3.EtcdBackup) (*v3.EtcdBackup, error) {
 func (c *Controller) etcdRemoveSnapshotWithBackoff(b *v3.EtcdBackup) error {
 	backoff := getBackoff()
 
-	kontainerDriver, err := c.KontainerDriverLister.Get("", service.RancherKubernetesEngineDriverName)
+	kontainerDriver, err := c.KontainerDriverLister.Get("", service.RangerKubernetesEngineDriverName)
 	if err != nil {
 		return err
 	}
@@ -401,7 +401,7 @@ func (c *Controller) etcdRemoveSnapshotWithBackoff(b *v3.EtcdBackup) error {
 	if err != nil {
 		return err
 	}
-	cluster.Spec.RancherKubernetesEngineConfig.Services.Etcd.BackupConfig = b.Spec.BackupConfig.DeepCopy()
+	cluster.Spec.RangerKubernetesEngineConfig.Services.Etcd.BackupConfig = b.Spec.BackupConfig.DeepCopy()
 	spec, err := assemblers.AssembleS3Credential(cluster.GetSecret("S3CredentialSecret"), assemblers.ClusterType, cluster.Name, cluster.Spec, c.secretLister)
 	if err != nil {
 		return err
@@ -435,7 +435,7 @@ func IsBackupFailed(backup *v3.EtcdBackup) bool {
 }
 
 func (c *Controller) rotateBackups(cluster *v3.Cluster, filter FilterFunc) error {
-	retention := cluster.Spec.RancherKubernetesEngineConfig.Services.Etcd.BackupConfig.Retention
+	retention := cluster.Spec.RangerKubernetesEngineConfig.Services.Etcd.BackupConfig.Retention
 	backups, err := c.getBackupsList(cluster)
 	if err != nil {
 		return err
@@ -469,7 +469,7 @@ func NewBackupObject(cluster *v3.Cluster, manual bool) (*v3.EtcdBackup, error) {
 	if manual {
 		typeFlag = "m" // manual backup
 	}
-	if cluster.Spec.RancherKubernetesEngineConfig.Services.Etcd.BackupConfig.S3BackupConfig != nil {
+	if cluster.Spec.RangerKubernetesEngineConfig.Services.Etcd.BackupConfig.S3BackupConfig != nil {
 		providerFlag = "s" // s3 backup
 	}
 	prefix := fmt.Sprintf("%s-%s%s-", cluster.Name, typeFlag, providerFlag)
@@ -498,7 +498,7 @@ func NewBackupObject(cluster *v3.Cluster, manual bool) (*v3.EtcdBackup, error) {
 			Manual:    manual,
 		},
 		Status: rketypes.EtcdBackupStatus{
-			KubernetesVersion: cluster.Spec.RancherKubernetesEngineConfig.Version,
+			KubernetesVersion: cluster.Spec.RangerKubernetesEngineConfig.Version,
 			ClusterObject:     compressedCluster,
 		},
 	}, nil
@@ -655,11 +655,11 @@ func getBackupCreatedTime(o runtime.Object) time.Time {
 
 func shouldBackup(cluster *v3.Cluster) bool {
 	// not an rke cluster, we do nothing
-	if cluster.Spec.RancherKubernetesEngineConfig == nil {
+	if cluster.Spec.RangerKubernetesEngineConfig == nil {
 		log.Debugf("[etcd-backup] [%s] is not an rke cluster, skipping..", cluster.Name)
 		return false
 	}
-	if !isBackupSet(cluster.Spec.RancherKubernetesEngineConfig) {
+	if !isBackupSet(cluster.Spec.RangerKubernetesEngineConfig) {
 		// no backend backup config
 		log.Debugf("[etcd-backup] no backup config for cluster [%s]", cluster.Name)
 		return false
@@ -669,7 +669,7 @@ func shouldBackup(cluster *v3.Cluster) bool {
 		return false
 	}
 
-	if !isRecurringBackupEnabled(cluster.Spec.RancherKubernetesEngineConfig) {
+	if !isRecurringBackupEnabled(cluster.Spec.RangerKubernetesEngineConfig) {
 		log.Debugf("[etcd-backup] recurring backup is disabled cluster [%s]", cluster.Name)
 		return false
 	}
@@ -685,12 +685,12 @@ func getBackoff() wait.Backoff {
 	}
 }
 
-func isBackupSet(rkeConfig *rketypes.RancherKubernetesEngineConfig) bool {
+func isBackupSet(rkeConfig *rketypes.RangerKubernetesEngineConfig) bool {
 	return rkeConfig != nil && // rke cluster
 		rkeConfig.Services.Etcd.BackupConfig != nil // backupConfig is set
 }
 
-func isRecurringBackupEnabled(rkeConfig *rketypes.RancherKubernetesEngineConfig) bool {
+func isRecurringBackupEnabled(rkeConfig *rketypes.RangerKubernetesEngineConfig) bool {
 	return isBackupSet(rkeConfig) && rkeConfig.Services.Etcd.BackupConfig.Enabled != nil && *rkeConfig.Services.Etcd.BackupConfig.Enabled
 }
 

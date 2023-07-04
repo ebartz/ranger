@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
 	coreV1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -21,7 +21,7 @@ const (
 
 // PatchSecret is a helper function that uses the dynamic client to patch a secret in a namespace for a specific cluster.
 // Different secret operations are supported: add, replace, remove.
-func PatchSecret(client *rancher.Client, clusterID, secretName, namespace string, patchType types.PatchType, patchOp PatchOP, patchPath, patchData string, patchOpts metav1.PatchOptions) (*coreV1.Secret, error) {
+func PatchSecret(client *ranger.Client, clusterID, secretName, namespace string, patchType types.PatchType, patchOp PatchOP, patchPath, patchData string, patchOpts metav1.PatchOptions) (*coreV1.Secret, error) {
 	patchJSONOperation := fmt.Sprintf(`
 	[
 	  { "op": "%v", "path": "%v", "value": "%v" }

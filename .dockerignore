@@ -4,7 +4,7 @@
 ./dist
 ./.idea
 ./default.etcd
-./package/rancher
+./package/ranger
 ./package/agent
 ./tests/MANIFEST
 ./tests/.idea

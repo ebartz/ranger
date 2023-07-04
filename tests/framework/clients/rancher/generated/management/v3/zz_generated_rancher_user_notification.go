@@ -1,24 +1,24 @@
 package client
 
 import (
-	"github.com/rancher/norman/types"
+	"github.com/ranger/norman/types"
 )
 
 const (
-	RancherUserNotificationType                 = "rancherUserNotification"
-	RancherUserNotificationFieldAnnotations     = "annotations"
-	RancherUserNotificationFieldComponentName   = "componentName"
-	RancherUserNotificationFieldCreated         = "created"
-	RancherUserNotificationFieldCreatorID       = "creatorId"
-	RancherUserNotificationFieldLabels          = "labels"
-	RancherUserNotificationFieldMessage         = "message"
-	RancherUserNotificationFieldName            = "name"
-	RancherUserNotificationFieldOwnerReferences = "ownerReferences"
-	RancherUserNotificationFieldRemoved         = "removed"
-	RancherUserNotificationFieldUUID            = "uuid"
+	RangerUserNotificationType                 = "rangerUserNotification"
+	RangerUserNotificationFieldAnnotations     = "annotations"
+	RangerUserNotificationFieldComponentName   = "componentName"
+	RangerUserNotificationFieldCreated         = "created"
+	RangerUserNotificationFieldCreatorID       = "creatorId"
+	RangerUserNotificationFieldLabels          = "labels"
+	RangerUserNotificationFieldMessage         = "message"
+	RangerUserNotificationFieldName            = "name"
+	RangerUserNotificationFieldOwnerReferences = "ownerReferences"
+	RangerUserNotificationFieldRemoved         = "removed"
+	RangerUserNotificationFieldUUID            = "uuid"
 )
 
-type RancherUserNotification struct {
+type RangerUserNotification struct {
 	types.Resource
 	Annotations     map[string]string `json:"annotations,omitempty" yaml:"annotations,omitempty"`
 	ComponentName   string            `json:"componentName,omitempty" yaml:"componentName,omitempty"`
@@ -32,59 +32,59 @@ type RancherUserNotification struct {
 	UUID            string            `json:"uuid,omitempty" yaml:"uuid,omitempty"`
 }
 
-type RancherUserNotificationCollection struct {
+type RangerUserNotificationCollection struct {
 	types.Collection
-	Data   []RancherUserNotification `json:"data,omitempty"`
-	client *RancherUserNotificationClient
+	Data   []RangerUserNotification `json:"data,omitempty"`
+	client *RangerUserNotificationClient
 }
 
-type RancherUserNotificationClient struct {
+type RangerUserNotificationClient struct {
 	apiClient *Client
 }
 
-type RancherUserNotificationOperations interface {
-	List(opts *types.ListOpts) (*RancherUserNotificationCollection, error)
-	ListAll(opts *types.ListOpts) (*RancherUserNotificationCollection, error)
-	Create(opts *RancherUserNotification) (*RancherUserNotification, error)
-	Update(existing *RancherUserNotification, updates interface{}) (*RancherUserNotification, error)
-	Replace(existing *RancherUserNotification) (*RancherUserNotification, error)
-	ByID(id string) (*RancherUserNotification, error)
-	Delete(container *RancherUserNotification) error
+type RangerUserNotificationOperations interface {
+	List(opts *types.ListOpts) (*RangerUserNotificationCollection, error)
+	ListAll(opts *types.ListOpts) (*RangerUserNotificationCollection, error)
+	Create(opts *RangerUserNotification) (*RangerUserNotification, error)
+	Update(existing *RangerUserNotification, updates interface{}) (*RangerUserNotification, error)
+	Replace(existing *RangerUserNotification) (*RangerUserNotification, error)
+	ByID(id string) (*RangerUserNotification, error)
+	Delete(container *RangerUserNotification) error
 }
 
-func newRancherUserNotificationClient(apiClient *Client) *RancherUserNotificationClient {
-	return &RancherUserNotificationClient{
+func newRangerUserNotificationClient(apiClient *Client) *RangerUserNotificationClient {
+	return &RangerUserNotificationClient{
 		apiClient: apiClient,
 	}
 }
 
-func (c *RancherUserNotificationClient) Create(container *RancherUserNotification) (*RancherUserNotification, error) {
-	resp := &RancherUserNotification{}
-	err := c.apiClient.Ops.DoCreate(RancherUserNotificationType, container, resp)
+func (c *RangerUserNotificationClient) Create(container *RangerUserNotification) (*RangerUserNotification, error) {
+	resp := &RangerUserNotification{}
+	err := c.apiClient.Ops.DoCreate(RangerUserNotificationType, container, resp)
 	return resp, err
 }
 
-func (c *RancherUserNotificationClient) Update(existing *RancherUserNotification, updates interface{}) (*RancherUserNotification, error) {
-	resp := &RancherUserNotification{}
-	err := c.apiClient.Ops.DoUpdate(RancherUserNotificationType, &existing.Resource, updates, resp)
+func (c *RangerUserNotificationClient) Update(existing *RangerUserNotification, updates interface{}) (*RangerUserNotification, error) {
+	resp := &RangerUserNotification{}
+	err := c.apiClient.Ops.DoUpdate(RangerUserNotificationType, &existing.Resource, updates, resp)
 	return resp, err
 }
 
-func (c *RancherUserNotificationClient) Replace(obj *RancherUserNotification) (*RancherUserNotification, error) {
-	resp := &RancherUserNotification{}
-	err := c.apiClient.Ops.DoReplace(RancherUserNotificationType, &obj.Resource, obj, resp)
+func (c *RangerUserNotificationClient) Replace(obj *RangerUserNotification) (*RangerUserNotification, error) {
+	resp := &RangerUserNotification{}
+	err := c.apiClient.Ops.DoReplace(RangerUserNotificationType, &obj.Resource, obj, resp)
 	return resp, err
 }
 
-func (c *RancherUserNotificationClient) List(opts *types.ListOpts) (*RancherUserNotificationCollection, error) {
-	resp := &RancherUserNotificationCollection{}
-	err := c.apiClient.Ops.DoList(RancherUserNotificationType, opts, resp)
+func (c *RangerUserNotificationClient) List(opts *types.ListOpts) (*RangerUserNotificationCollection, error) {
+	resp := &RangerUserNotificationCollection{}
+	err := c.apiClient.Ops.DoList(RangerUserNotificationType, opts, resp)
 	resp.client = c
 	return resp, err
 }
 
-func (c *RancherUserNotificationClient) ListAll(opts *types.ListOpts) (*RancherUserNotificationCollection, error) {
-	resp := &RancherUserNotificationCollection{}
+func (c *RangerUserNotificationClient) ListAll(opts *types.ListOpts) (*RangerUserNotificationCollection, error) {
+	resp := &RangerUserNotificationCollection{}
 	resp, err := c.List(opts)
 	if err != nil {
 		return resp, err
@@ -101,9 +101,9 @@ func (c *RancherUserNotificationClient) ListAll(opts *types.ListOpts) (*RancherU
 	return resp, err
 }
 
-func (cc *RancherUserNotificationCollection) Next() (*RancherUserNotificationCollection, error) {
+func (cc *RangerUserNotificationCollection) Next() (*RangerUserNotificationCollection, error) {
 	if cc != nil && cc.Pagination != nil && cc.Pagination.Next != "" {
-		resp := &RancherUserNotificationCollection{}
+		resp := &RangerUserNotificationCollection{}
 		err := cc.client.apiClient.Ops.DoNext(cc.Pagination.Next, resp)
 		resp.client = cc.client
 		return resp, err
@@ -111,12 +111,12 @@ func (cc *RancherUserNotificationCollection) Next() (*RancherUserNotificationCol
 	return nil, nil
 }
 
-func (c *RancherUserNotificationClient) ByID(id string) (*RancherUserNotification, error) {
-	resp := &RancherUserNotification{}
-	err := c.apiClient.Ops.DoByID(RancherUserNotificationType, id, resp)
+func (c *RangerUserNotificationClient) ByID(id string) (*RangerUserNotification, error) {
+	resp := &RangerUserNotification{}
+	err := c.apiClient.Ops.DoByID(RangerUserNotificationType, id, resp)
 	return resp, err
 }
 
-func (c *RancherUserNotificationClient) Delete(container *RancherUserNotification) error {
-	return c.apiClient.Ops.DoResourceDelete(RancherUserNotificationType, &container.Resource)
+func (c *RangerUserNotificationClient) Delete(container *RangerUserNotification) error {
+	return c.apiClient.Ops.DoResourceDelete(RangerUserNotificationType, &container.Resource)
 }

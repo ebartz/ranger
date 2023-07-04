@@ -28,7 +28,7 @@ metadata:
   name: cattle-cleanup-job
   namespace: default
   labels:
-    rancher-cleanup: "true"
+    ranger-cleanup: "true"
 spec:
   backoffLimit: 6
   completions: 1

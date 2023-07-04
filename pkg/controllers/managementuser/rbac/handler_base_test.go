@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	fakes "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3/fakes"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	fakes "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3/fakes"
 	"github.com/stretchr/testify/assert"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime/schema"

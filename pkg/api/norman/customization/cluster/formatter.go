@@ -3,14 +3,14 @@ package cluster
 import (
 	"strings"
 
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/norman/types/values"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	managementschema "github.com/rancher/rancher/pkg/schemas/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/norman/types/values"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	managementschema "github.com/ranger/ranger/pkg/schemas/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/labels"
 	v1 "k8s.io/client-go/kubernetes/typed/authorization/v1"
@@ -57,18 +57,18 @@ func (f *Formatter) Formatter(request *types.APIContext, resource *types.RawReso
 	}
 
 	// If this is an RKE1 cluster only
-	if _, ok := resource.Values["rancherKubernetesEngineConfig"]; ok {
+	if _, ok := resource.Values["rangerKubernetesEngineConfig"]; ok {
 		resource.AddAction(request, v32.ClusterActionExportYaml)
 
 		// If a user has the backupetcd role/privilege, add it- In this case, the resource is the cluster, so use
 		// the ID as the namespace for the ETCD check since that's where the backups live
-		if _, ok := values.GetValue(resource.Values, "rancherKubernetesEngineConfig", "services", "etcd", "backupConfig"); ok && canBackupEtcd(request, resource.ID) {
+		if _, ok := values.GetValue(resource.Values, "rangerKubernetesEngineConfig", "services", "etcd", "backupConfig"); ok && canBackupEtcd(request, resource.ID) {
 			resource.AddAction(request, v32.ClusterActionBackupEtcd)
 		}
 
 		// If user has permissions to update the cluster
 		if canUpdateClusterWithValues(request, resource.Values) {
-			if _, ok := values.GetValue(resource.Values, "rancherKubernetesEngineConfig", "services", "etcd", "backupConfig"); ok {
+			if _, ok := values.GetValue(resource.Values, "rangerKubernetesEngineConfig", "services", "etcd", "backupConfig"); ok {
 				resource.AddAction(request, v32.ClusterActionRestoreFromEtcdBackup)
 			}
 			resource.AddAction(request, v32.ClusterActionRotateCertificates)
@@ -149,9 +149,9 @@ func rotateEncryptionKeyEnabled(clusterLister v3.ClusterLister, clusterName stri
 	}
 
 	// check that encryption is enabled on cluster
-	if cluster.Spec.RancherKubernetesEngineConfig == nil ||
-		cluster.Spec.RancherKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig == nil ||
-		!cluster.Spec.RancherKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig.Enabled {
+	if cluster.Spec.RangerKubernetesEngineConfig == nil ||
+		cluster.Spec.RangerKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig == nil ||
+		!cluster.Spec.RangerKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig.Enabled {
 		return false
 	}
 

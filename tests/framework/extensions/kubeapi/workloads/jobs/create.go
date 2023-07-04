@@ -3,11 +3,11 @@ package jobs
 import (
 	"context"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/defaults"
-	"github.com/rancher/rancher/tests/framework/extensions/unstructured"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/defaults"
+	"github.com/ranger/ranger/tests/framework/extensions/unstructured"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -26,7 +26,7 @@ var JobGroupVersionResource = schema.GroupVersionResource{
 
 // CreateJob is a helper function that uses the dynamic client to create a batch job on a namespace for a specific cluster.
 // It registers a delete fuction a wait.WatchWait to ensure the job is deleted cleanly.
-func CreateJob(client *rancher.Client, clusterName, jobName, namespace string, template corev1.PodTemplateSpec) (*batchv1.Job, error) {
+func CreateJob(client *ranger.Client, clusterName, jobName, namespace string, template corev1.PodTemplateSpec) (*batchv1.Job, error) {
 	dynamicClient, err := client.GetDownStreamClusterClient(clusterName)
 	if err != nil {
 		return nil, err

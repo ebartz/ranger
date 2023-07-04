@@ -3,7 +3,7 @@
 set -e
 
 namespaces="${NAMESPACES}"
-rancher_namespace="${RANCHER_NAMESPACE}"
+ranger_namespace="${RANCHER_NAMESPACE}"
 timeout="${TIMEOUT}"
 ignoreTimeoutError="${IGNORETIMEOUTERROR}"
 
@@ -12,8 +12,8 @@ if [[ -z ${namespaces} ]]; then
   exit 1
 fi
 
-if [[ -z ${rancher_namespace} ]]; then
-  echo "No rancher namespace is provided."
+if [[ -z ${ranger_namespace} ]]; then
+  echo "No ranger namespace is provided."
   exit 1
 fi
 
@@ -34,7 +34,7 @@ get_pod_count() {
   kubectl get pods --selector app="${1}" -n "${2}" -o json | jq '.items | length'
 }
 
-echo "Uninstalling Rancher resources in the following namespaces: ${namespaces}"
+echo "Uninstalling Ranger resources in the following namespaces: ${namespaces}"
 
 for namespace in ${namespaces}; do
   for app in $(helm list -n "${namespace}" -q); do
@@ -76,8 +76,8 @@ for namespace in ${namespaces}; do
   done
 done
 
-echo "Removing Rancher bootstrap secret in the following namespace: ${rancher_namespace}"
-kubectl --ignore-not-found=true delete secret bootstrap-secret -n "${rancher_namespace}"
+echo "Removing Ranger bootstrap secret in the following namespace: ${ranger_namespace}"
+kubectl --ignore-not-found=true delete secret bootstrap-secret -n "${ranger_namespace}"
 
 echo "------ Summary ------"
 if [[ ${#succeeded[@]} -ne 0 ]]; then

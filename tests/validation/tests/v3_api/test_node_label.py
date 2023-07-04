@@ -21,7 +21,7 @@ from .common import rbac_get_user_token_by_role
 from .common import validate_cluster_state
 from .common import wait_for_condition
 from .conftest import wait_for_cluster_delete
-from rancher import ApiError
+from ranger import ApiError
 from .test_rke_cluster_provisioning import evaluate_clustername
 from .test_rke_cluster_provisioning import get_custom_host_registration_cmd
 from .test_rke_cluster_provisioning import HOST_NAME
@@ -40,7 +40,7 @@ custom_cluster_add_edit = {"cluster": None, "aws_node": []}
 cluster_node_template_2 = {"cluster": [], "node_template": []}
 roles = [CLUSTER_MEMBER, CLUSTER_OWNER, PROJECT_OWNER, PROJECT_MEMBER,
          PROJECT_READ_ONLY]
-engine_install_url = "https://releases.rancher.com/install-docker/24.0.sh"
+engine_install_url = "https://releases.ranger.com/install-docker/24.0.sh"
 
 
 def test_node_label_add():
@@ -550,7 +550,7 @@ def test_node_label_node_template_edit():
                                                     "stackscriptData": "",
                                                     "swapSize": "512",
                                                     "tags": "",
-                                                    "uaPrefix": "Rancher"})
+                                                    "uaPrefix": "Ranger"})
     node_template_new = client.wait_success(node_template_new)
     assert test_label in node_template_new["labels"], \
         "Label is not set on node template"
@@ -616,7 +616,7 @@ def test_node_label_node_template_delete():
                                                     "stackscriptData": "",
                                                     "swapSize": "512",
                                                     "tags": "",
-                                                    "uaPrefix": "Rancher"})
+                                                    "uaPrefix": "Ranger"})
     node_template_new = client.wait_success(node_template_new)
     assert test_label not in node_template_new["labels"], \
         "Label is available on the node template"
@@ -678,7 +678,7 @@ def test_node_label_node_template_delete_api():
     which is added through node template
     :return: None
     Expected failure because of issue -
-    https://github.com/rancher/rancher/issues/26604
+    https://github.com/ranger/ranger/issues/26604
     """
     test_label = random_name()
     label_value = random_name()
@@ -810,7 +810,7 @@ def test_node_label_custom_delete():
     This test deletes the label on the node via API
     :return: None
     Expected failure because of issue -
-    https://github.com/rancher/rancher/issues/26604
+    https://github.com/ranger/ranger/issues/26604
     """
     create_kubeconfig(cluster_custom["cluster"])
     client = cluster_detail["client"]
@@ -1116,7 +1116,7 @@ def create_cluster_node_template_label(test_label, label_value):
     nodes.append(node)
     cluster = client.create_cluster(
         name=random_name(),
-        rancherKubernetesEngineConfig=rke_config)
+        rangerKubernetesEngineConfig=rke_config)
     node_pools = []
     for node in nodes:
         node["clusterId"] = cluster.id
@@ -1158,8 +1158,8 @@ def create_custom_node_label(node_roles, test_label,
     cluster_name = random_name() if random_cluster_name \
         else evaluate_clustername()
     cluster = client.create_cluster(name=cluster_name,
-                                    driver="rancherKubernetesEngine",
-                                    rancherKubernetesEngineConfig=rke_config)
+                                    driver="rangerKubernetesEngine",
+                                    rangerKubernetesEngineConfig=rke_config)
     assert cluster.state == "provisioning"
     i = 0
     for aws_node in aws_nodes:
@@ -1203,7 +1203,7 @@ def create_node_template_label(client, test_label, label_value):
                       "stackscriptData": "",
                       "swapSize": "512",
                       "tags": "",
-                      "uaPrefix": "Rancher"},
+                      "uaPrefix": "Ranger"},
         name=random_name(),
         driver="linode",
         cloudCredentialId=linode_cloud_credential.id,

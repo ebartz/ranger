@@ -12,18 +12,18 @@ import (
 	"strconv"
 	"strings"
 
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/capr"
-	"github.com/rancher/rancher/pkg/controllers/management/drivers"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	namespace2 "github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/wrangler/pkg/data"
-	"github.com/rancher/wrangler/pkg/data/convert"
-	corecontrollers "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
-	"github.com/rancher/wrangler/pkg/generic"
-	"github.com/rancher/wrangler/pkg/kv"
-	name2 "github.com/rancher/wrangler/pkg/name"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/capr"
+	"github.com/ranger/ranger/pkg/controllers/management/drivers"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	namespace2 "github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/wrangler/pkg/data"
+	"github.com/ranger/wrangler/pkg/data/convert"
+	corecontrollers "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
+	"github.com/ranger/wrangler/pkg/generic"
+	"github.com/ranger/wrangler/pkg/kv"
+	name2 "github.com/ranger/wrangler/pkg/name"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	apierror "k8s.io/apimachinery/pkg/api/errors"
@@ -137,11 +137,11 @@ func (h *handler) getArgsEnvAndStatus(infra *infraObject, args map[string]interf
 			cmd = append(cmd, fmt.Sprintf("--hostname-override=%s", hostname))
 		}
 
-		rancherCluster, err := h.rancherClusterCache.Get(infra.meta.GetNamespace(), infra.meta.GetLabels()[capi.ClusterLabelName])
+		rangerCluster, err := h.rangerClusterCache.Get(infra.meta.GetNamespace(), infra.meta.GetLabels()[capi.ClusterLabelName])
 		if err != nil {
 			return driverArgs{}, err
 		}
-		cmd = append(cmd, toArgs(driver, args, rancherCluster.Status.ClusterName)...)
+		cmd = append(cmd, toArgs(driver, args, rangerCluster.Status.ClusterName)...)
 	} else {
 		cmd = append(cmd, "rm", "-y")
 		jobBackoffLimit = 3
@@ -281,7 +281,7 @@ func toArgs(driverName string, args map[string]interface{}, clusterID string) (c
 	}
 
 	if driverName == "amazonec2" &&
-		convert.ToString(args["securityGroup"]) != "rancher-nodes" &&
+		convert.ToString(args["securityGroup"]) != "ranger-nodes" &&
 		args["securityGroupReadonly"] == nil {
 		cmd = append(cmd, "--amazonec2-security-group-readonly")
 	}
@@ -375,7 +375,7 @@ func getHostname(infra infraObject) string {
 	return hostname
 }
 
-// getInstanceName will get the instance name for use in rancher/machine's create/delete functions. This name will use
+// getInstanceName will get the instance name for use in ranger/machine's create/delete functions. This name will use
 // the wrangler SafeConcatName mechanism to ensure that the generated name is both less than or equal to the limit of 63
 // characters, and distinct by replacing the last six characters of the name with a `-`, followed by a 5 character hash
 // of the entire input.

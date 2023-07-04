@@ -8,20 +8,20 @@ import (
 	"strings"
 	"time"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/api/access"
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/parse"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	gaccess "github.com/rancher/rancher/pkg/api/norman/customization/globalnamespaceaccess"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/rbac"
-	managementschema "github.com/rancher/rancher/pkg/schemas/management.cattle.io/v3"
+	"github.com/ranger/norman/api/access"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/parse"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	gaccess "github.com/ranger/ranger/pkg/api/norman/customization/globalnamespaceaccess"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/rbac"
+	managementschema "github.com/ranger/ranger/pkg/schemas/management.cattle.io/v3"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/meta"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -297,7 +297,7 @@ func (w Wrapper) validateChartCompatibility(tempVersion, currentAppVersion strin
 		return err
 	}
 
-	if err := w.CatalogManager.ValidateRancherVersion(template, currentAppVersion); err != nil {
+	if err := w.CatalogManager.ValidateRangerVersion(template, currentAppVersion); err != nil {
 		return httperror.NewAPIError(httperror.InvalidBodyContent, err.Error())
 	}
 

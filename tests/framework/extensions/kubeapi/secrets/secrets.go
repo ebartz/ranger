@@ -5,8 +5,8 @@ import (
 
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
 	coreV1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -20,7 +20,7 @@ var SecretGroupVersionResource = schema.GroupVersionResource{
 }
 
 // GetSecretByName is a helper function that uses the dynamic client to get a specific secret on a namespace for a specific cluster.
-func GetSecretByName(client *rancher.Client, clusterID, namespace, secretName string, getOpts metav1.GetOptions) (*coreV1.Secret, error) {
+func GetSecretByName(client *ranger.Client, clusterID, namespace, secretName string, getOpts metav1.GetOptions) (*coreV1.Secret, error) {
 	dynamicClient, err := client.GetDownStreamClusterClient(clusterID)
 	if err != nil {
 		return nil, err

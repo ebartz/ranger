@@ -3,8 +3,8 @@ package etcdbackup
 import (
 	"testing"
 
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	rketypes "github.com/rancher/rke/types"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	rketypes "github.com/ranger/rke/types"
 	"github.com/stretchr/testify/assert"
 )
 

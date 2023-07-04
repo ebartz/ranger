@@ -2,7 +2,7 @@
 
 // RANCHER_VERSION resolution is first via Jenkins Build Parameter RANCHER_VERSION fed in from console,
 // then from $DOCKER_TRIGGER_TAG which is sourced from the Docker Hub Jenkins plugin webhook.
-def rancher_version() {
+def ranger_version() {
   try { if ('' != RANCHER_VERSION) { return RANCHER_VERSION } }
   catch (MissingPropertyException e) {}
 
@@ -61,11 +61,11 @@ node {
             sh "./tests/v3_api/scripts/build.sh"
           }
 
-          stage('install Rancher') {
-            // skip provisioning a new Rancher Server 
+          stage('install Ranger') {
+            // skip provisioning a new Ranger Server 
             // if CATTLE_TEST_URL, ADMIN_TOKEN, USER_TOKEN are provided
             if(env.CATTLE_TEST_URL != "" || env.ADMIN_TOKEN != "" || env.USER_TOKEN != "") {
-              println "Rancher Server is provided: ${env.CATTLE_TEST_URL}"
+              println "Ranger Server is provided: ${env.CATTLE_TEST_URL}"
             }
             else {
               def job_name = "${JOB_NAME}"
@@ -73,27 +73,27 @@ node {
                 job_names = job_name.split('/')
                 job_name = job_names[job_names.size() - 1] 
               }
-              def rancherContainerName = "${job_name}${env.BUILD_NUMBER}_rancher_server"
+              def rangerContainerName = "${job_name}${env.BUILD_NUMBER}_ranger_server"
               def envFile = ".env"
-              def imageName = "rancher-validation-${job_name}${env.BUILD_NUMBER}"
-              def rancher_version = rancher_version()
-              def deployPytestOptions = "-k test_deploy_rancher_server"
+              def imageName = "ranger-validation-${job_name}${env.BUILD_NUMBER}"
+              def ranger_version = ranger_version()
+              def deployPytestOptions = "-k test_deploy_ranger_server"
               def setupResultsOut = "setup-results.xml"
               def testResultsOut = "results.xml"
               def testsDir = "tests/v3_api/"
-              def rancherConfig = "rancher_env.config"
-              def rootPath = "/src/rancher-validation/"
-              // deploy rancher server
-              sh "docker run --name ${rancherContainerName} -t --env-file ${envFile} " +
-                "${imageName} /bin/bash -c \'export RANCHER_SERVER_VERSION=${rancher_version} && " +
+              def rangerConfig = "ranger_env.config"
+              def rootPath = "/src/ranger-validation/"
+              // deploy ranger server
+              sh "docker run --name ${rangerContainerName} -t --env-file ${envFile} " +
+                "${imageName} /bin/bash -c \'export RANCHER_SERVER_VERSION=${ranger_version} && " +
                 "pytest -v -s --junit-xml=${setupResultsOut} " +
                 "${deployPytestOptions} ${testsDir}\'"
 
               // copy file containing CATTLE_TEST_URL, ADMIN_TOKEN, USER_TOKEN 
               // and load into environment variables
-              sh "docker cp ${rancherContainerName}:${rootPath}${testsDir}${rancherConfig} ."
-              load rancherConfig
-              println "Rancher Server ip: ${env.CATTLE_TEST_URL}"
+              sh "docker cp ${rangerContainerName}:${rootPath}${testsDir}${rangerConfig} ."
+              load rangerConfig
+              println "Ranger Server ip: ${env.CATTLE_TEST_URL}"
             }
           }
           
@@ -119,7 +119,7 @@ node {
                         string(name: 'RANCHER_K8S_VERSION', value: "${env.RANCHER_K8S_VERSION}")
                         ]
                   println "parameters: ${params}"
-                  jobs["${name}"] = { build job: 'rancher-v3_ontag_custom_certification', parameters: params }
+                  jobs["${name}"] = { build job: 'ranger-v3_ontag_custom_certification', parameters: params }
                 }
                 parallel jobs
             } catch(err) {

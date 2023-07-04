@@ -4,9 +4,9 @@ import (
 	"reflect"
 	"strings"
 
-	workloadutil "github.com/rancher/rancher/pkg/controllers/managementagent/workload"
-	"github.com/rancher/rancher/pkg/ingresswrapper"
-	"github.com/rancher/rancher/pkg/settings"
+	workloadutil "github.com/ranger/ranger/pkg/controllers/managementagent/workload"
+	"github.com/ranger/ranger/pkg/ingresswrapper"
+	"github.com/ranger/ranger/pkg/settings"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/runtime"
 )

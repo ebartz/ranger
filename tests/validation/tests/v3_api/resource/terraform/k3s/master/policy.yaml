@@ -187,7 +187,7 @@ subjects:
   kind: Group
   name: system:serviceaccounts
 ---
-# Reference https://rancher.com/docs/k3s/latest/en/security/hardening_guide/#networkpolicies
+# Reference https://ranger.com/docs/k3s/latest/en/security/hardening_guide/#networkpolicies
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -202,7 +202,7 @@ spec:
   policyTypes:
   - Ingress
 ---
-# Reference https://rancher.com/docs/k3s/latest/en/security/hardening_guide/#networkpolicies
+# Reference https://ranger.com/docs/k3s/latest/en/security/hardening_guide/#networkpolicies
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:

@@ -1,6 +1,6 @@
 from .common import random_str
 from .conftest import wait_until_available, wait_until, wait_for
-from rancher import ApiError
+from ranger import ApiError
 import time
 import pytest
 import kubernetes
@@ -150,7 +150,7 @@ def test_update_role_template_permissions(admin_mc, remove_resource,
     wait_until_available(user_client, admin_cc.cluster)
 
     # add clustercatalog as admin
-    url = "https://github.com/rancher/integration-test-charts.git"
+    url = "https://github.com/ranger/integration-test-charts.git"
     name = random_str()
     cluster_catalog = \
         client.create_cluster_catalog(name=name,
@@ -223,7 +223,7 @@ def test_role_template_update_inherited_role(admin_mc, remove_resource,
     wait_until_available(user_cloned_pm.client, admin_pc.project)
 
     # As the user, assert that the two expected role bindings exist in the
-    # namespace for the user. There should be one for the rancher role
+    # namespace for the user. There should be one for the ranger role
     # 'cloned_pm' and one for the k8s built-in role 'edit'
     rbac = kubernetes.client.RbacAuthorizationV1Api(admin_mc.k8s_client)
 
@@ -253,7 +253,7 @@ def test_role_template_update_inherited_role(admin_mc, remove_resource,
     wait_for(lambda: check_rb(rbac), timeout=60,
              fail_handler=lambda: 'failed to check updated rolebinding')
 
-    # Now there should be one rolebinding for the rancher role
+    # Now there should be one rolebinding for the ranger role
     # 'cloned_pm' and one for the k8s built-in role 'view'
     rbac = kubernetes.client.RbacAuthorizationV1Api(admin_mc.k8s_client)
     rbs = rbac.list_namespaced_role_binding(ns_name)

@@ -8,7 +8,7 @@ from .common import get_user_client, random_test_name, \
 from .cli_common import DEFAULT_TIMEOUT, BaseCli
 
 
-class RancherCli(BaseCli):
+class RangerCli(BaseCli):
     def __init__(self, url, token, context):
         self.login(url, token, context=context)
         self.projects = ProjectCli()
@@ -67,9 +67,9 @@ class ProjectCli(BaseCli):
 
     @classmethod
     def get_current_projects(cls):
-        """This uses the Rancher Python Client to retrieve the current projects
+        """This uses the Ranger Python Client to retrieve the current projects
         as there is not a CLI way to do this without passing stdin at the time
-        of creation (2/13/2020, Rancher v2.3.5).
+        of creation (2/13/2020, Ranger v2.3.5).
         Returns array of dictionaries containing id, name, clusterid, & uuid"""
         client = get_user_client()
         projects = client.list_project()

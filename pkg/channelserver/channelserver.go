@@ -10,13 +10,13 @@ import (
 	"time"
 
 	"github.com/blang/semver"
-	"github.com/rancher/channelserver/pkg/config"
-	"github.com/rancher/channelserver/pkg/model"
-	"github.com/rancher/channelserver/pkg/server"
-	"github.com/rancher/rancher/pkg/catalog/utils"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/wrangler/pkg/data"
-	"github.com/rancher/wrangler/pkg/schemas"
+	"github.com/ranger/channelserver/pkg/config"
+	"github.com/ranger/channelserver/pkg/model"
+	"github.com/ranger/channelserver/pkg/server"
+	"github.com/ranger/ranger/pkg/catalog/utils"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/wrangler/pkg/data"
+	"github.com/ranger/wrangler/pkg/schemas"
 	"github.com/sirupsen/logrus"
 )
 
@@ -47,7 +47,7 @@ func GetURLAndInterval() (string, time.Duration) {
 func getChannelServerArg() string {
 	serverVersion := settings.ServerVersion.Get()
 	if !utils.ReleaseServerVersion(serverVersion) {
-		return settings.RancherVersionDev
+		return settings.RangerVersionDev
 	}
 	return serverVersion
 }
@@ -113,11 +113,11 @@ func GetReleaseConfigByRuntime(ctx context.Context, runtime string) *config.Conf
 	configsInit.Do(func() {
 		urls := []config.Source{
 			&DynamicSource{},
-			config.StringSource("/var/lib/rancher-data/driver-metadata/data.json"),
+			config.StringSource("/var/lib/ranger-data/driver-metadata/data.json"),
 		}
 		configs = map[string]*config.Config{
-			"k3s":  config.NewConfig(ctx, "k3s", &DynamicInterval{"k3s"}, getChannelServerArg(), "rancher", urls),
-			"rke2": config.NewConfig(ctx, "rke2", &DynamicInterval{"rke2"}, getChannelServerArg(), "rancher", urls),
+			"k3s":  config.NewConfig(ctx, "k3s", &DynamicInterval{"k3s"}, getChannelServerArg(), "ranger", urls),
+			"rke2": config.NewConfig(ctx, "rke2", &DynamicInterval{"rke2"}, getChannelServerArg(), "ranger", urls),
 		}
 	})
 	return configs[runtime]

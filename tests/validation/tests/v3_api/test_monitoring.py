@@ -66,7 +66,7 @@ node_graph_list = [
     "node-cpu-usage",
 ]
 
-rancher_component_graph_list = [
+ranger_component_graph_list = [
     "fluentd-buffer-queue-length",
     "fluentd-input-record-number",
     "fluentd-output-errors",
@@ -85,7 +85,7 @@ name_mapping = {
     "cluster": cluster_graph_list,
     "etcd": etcd_graph_list,
     "kube-component": kube_component_graph_list,
-    "rancher-component": rancher_component_graph_list,
+    "ranger-component": ranger_component_graph_list,
     "workload": workload_graph_list,
     "node": node_graph_list,
 }
@@ -131,7 +131,7 @@ P_MONITORING_ANSWER = {"prometheus.retention": "12h",
                        "prometheus.persistent.useReleaseName": "true"}
 
 MONITORING_VERSION = os.environ.get('RANCHER_MONITORING_VERSION', "")
-MONITORING_TEMPLATE_ID = "cattle-global-data:system-library-rancher-monitoring"
+MONITORING_TEMPLATE_ID = "cattle-global-data:system-library-ranger-monitoring"
 CLUSTER_MONITORING_APP = "cluster-monitoring"
 MONITORING_OPERATOR_APP = "monitoring-operator"
 PROJECT_MONITORING_APP = "project-monitoring"
@@ -141,8 +141,8 @@ LONGHORN_APP_VERSION = os.environ.get('RANCHER_LONGHORN_VERSION', "1.0.2")
 
 
 def test_monitoring_cluster_graph():
-    rancher_client, cluster = get_user_client_and_cluster()
-    cluster_monitoring_obj = rancher_client.list_clusterMonitorGraph()
+    ranger_client, cluster = get_user_client_and_cluster()
+    cluster_monitoring_obj = ranger_client.list_clusterMonitorGraph()
     # generate the request payload
     query1 = copy.deepcopy(cluster_query_template)
     query1["obj"] = cluster_monitoring_obj
@@ -152,8 +152,8 @@ def test_monitoring_cluster_graph():
 
 
 def test_monitoring_etcd_graph():
-    rancher_client, cluster = get_user_client_and_cluster()
-    cluster_monitoring_obj = rancher_client.list_clusterMonitorGraph()
+    ranger_client, cluster = get_user_client_and_cluster()
+    cluster_monitoring_obj = ranger_client.list_clusterMonitorGraph()
     # generate the request payload
     query1 = copy.deepcopy(cluster_query_template)
     query1["obj"] = cluster_monitoring_obj
@@ -163,8 +163,8 @@ def test_monitoring_etcd_graph():
 
 
 def test_monitoring_kube_component_graph():
-    rancher_client, cluster = get_user_client_and_cluster()
-    cluster_monitoring_obj = rancher_client.list_clusterMonitorGraph()
+    ranger_client, cluster = get_user_client_and_cluster()
+    cluster_monitoring_obj = ranger_client.list_clusterMonitorGraph()
     # generate the request payload
     query1 = copy.deepcopy(cluster_query_template)
     query1["obj"] = cluster_monitoring_obj
@@ -173,28 +173,28 @@ def test_monitoring_kube_component_graph():
     validate_cluster_graph(query1, "kube-component")
 
 
-# rancher component graphs are from the fluent app for cluster logging
-def test_monitoring_rancher_component_graph():
-    rancher_client, cluster = get_user_client_and_cluster()
+# ranger component graphs are from the fluent app for cluster logging
+def test_monitoring_ranger_component_graph():
+    ranger_client, cluster = get_user_client_and_cluster()
     # check if the cluster logging is enabled, assuming fluent is used
     if cluster.enableClusterAlerting is False:
         print("cluster logging is not enabled, skip the test")
         return
     else:
-        cluster_monitoring_obj = rancher_client.list_clusterMonitorGraph()
+        cluster_monitoring_obj = ranger_client.list_clusterMonitorGraph()
         # generate the request payload
         query1 = copy.deepcopy(cluster_query_template)
         query1["obj"] = cluster_monitoring_obj
         query1["filters"]["clusterId"] = cluster.id
-        query1["filters"]["displayResourceType"] = "rancher-component"
-        validate_cluster_graph(query1, "rancher-component")
+        query1["filters"]["displayResourceType"] = "ranger-component"
+        validate_cluster_graph(query1, "ranger-component")
 
 
 def test_monitoring_node_graph():
-    rancher_client, cluster = get_user_client_and_cluster()
-    node_list_raw = rancher_client.list_node(clusterId=cluster.id).data
+    ranger_client, cluster = get_user_client_and_cluster()
+    node_list_raw = ranger_client.list_node(clusterId=cluster.id).data
     for node in node_list_raw:
-        cluster_monitoring_obj = rancher_client.list_clusterMonitorGraph()
+        cluster_monitoring_obj = ranger_client.list_clusterMonitorGraph()
         # generate the request payload
         query1 = copy.deepcopy(cluster_query_template)
         query1["obj"] = cluster_monitoring_obj
@@ -205,10 +205,10 @@ def test_monitoring_node_graph():
 
 
 def test_monitoring_workload_graph():
-    rancher_client, cluster = get_user_client_and_cluster()
-    system_project = rancher_client.list_project(clusterId=cluster.id,
+    ranger_client, cluster = get_user_client_and_cluster()
+    system_project = ranger_client.list_project(clusterId=cluster.id,
                                                  name="System").data[0]
-    project_monitoring_obj = rancher_client.list_projectMonitorGraph()
+    project_monitoring_obj = ranger_client.list_projectMonitorGraph()
     # generate the request payload
     query1 = copy.deepcopy(cluster_query_template)
     query1["obj"] = project_monitoring_obj
@@ -468,11 +468,11 @@ def setup_monitoring(request):
     with persistence storageClass set to longhorn
     """
     global MONITORING_VERSION
-    rancher_client, cluster = get_user_client_and_cluster()
+    ranger_client, cluster = get_user_client_and_cluster()
     create_kubeconfig(cluster)
-    project = create_project(rancher_client, cluster,
+    project = create_project(ranger_client, cluster,
                              random_test_name("p-monitoring"))
-    system_project = rancher_client.list_project(clusterId=cluster.id,
+    system_project = ranger_client.list_project(clusterId=cluster.id,
                                                  name="System").data[0]
     sys_proj_client = get_project_client_for_token(system_project, USER_TOKEN)
     cluster_client = get_cluster_client_for_token(cluster, USER_TOKEN)
@@ -488,7 +488,7 @@ def setup_monitoring(request):
         ns = create_ns(cluster_client, cluster, project, "longhorn-system")
         app_ext_id = create_catalog_external_id('library', app_name,
                                                 LONGHORN_APP_VERSION)
-        answer = get_defaut_question_answers(rancher_client, app_ext_id)
+        answer = get_defaut_question_answers(ranger_client, app_ext_id)
         project_client = get_project_client_for_token(project, USER_TOKEN)
         try:
             app = project_client.create_app(
@@ -502,14 +502,14 @@ def setup_monitoring(request):
             assert False, "App {} deployment/Validation failed."\
                 .format(app_name)
 
-    monitoring_template = rancher_client.list_template(
+    monitoring_template = ranger_client.list_template(
         id=MONITORING_TEMPLATE_ID).data[0]
     if MONITORING_VERSION == "":
         MONITORING_VERSION = monitoring_template.defaultVersion
     print("MONITORING_VERSION=" + MONITORING_VERSION)
     # Enable cluster monitoring
     if cluster["enableClusterMonitoring"] is False:
-        rancher_client.action(cluster, "enableMonitoring",
+        ranger_client.action(cluster, "enableMonitoring",
                               answers=C_MONITORING_ANSWERS,
                               version=MONITORING_VERSION)
     validate_cluster_monitoring_apps()
@@ -524,11 +524,11 @@ def setup_monitoring(request):
             project_client.delete(app)
             validate_app_deletion(project_client, app.id)
             print("uninstalled the longhorn app")
-        rancher_client.delete(project)
+        ranger_client.delete(project)
         # Disable monitoring
-        cluster = rancher_client.reload(namespace["cluster"])
+        cluster = ranger_client.reload(namespace["cluster"])
         if cluster["enableClusterMonitoring"] is True:
-            rancher_client.action(cluster, "disableMonitoring")
+            ranger_client.action(cluster, "disableMonitoring")
             print("disabled the cluster monitoring")
 
     request.addfinalizer(fin)
@@ -573,18 +573,18 @@ def check_data(source, target_list):
 
 def validate_cluster_graph(action_query, resource_type, timeout=10):
     target_graph_list = copy.deepcopy(name_mapping.get(resource_type))
-    rancher_client, cluster = get_user_client_and_cluster()
+    ranger_client, cluster = get_user_client_and_cluster()
     # handle the special case that if the graph etcd-peer-traffic is
     # is not available if there is only one etcd node in the cluster
     if resource_type == "etcd":
-        nodes = get_etcd_nodes(cluster, rancher_client)
+        nodes = get_etcd_nodes(cluster, ranger_client)
         if len(nodes) == 1:
             target_graph_list.remove("etcd-peer-traffic")
     start = time.time()
 
     if resource_type == "kube-component":
         cluster = namespace["cluster"]
-        k8s_version = cluster.appliedSpec["rancherKubernetesEngineConfig"][
+        k8s_version = cluster.appliedSpec["rangerKubernetesEngineConfig"][
             "kubernetesVersion"]
         # the following two graphs are available only in k8s 1.15 and 1.16
         if not k8s_version[0:5] in ["v1.15", "v1.16"]:
@@ -593,7 +593,7 @@ def validate_cluster_graph(action_query, resource_type, timeout=10):
                 "scheduler-e-2-e-scheduling-latency-seconds-quantile")
 
     while True:
-        res = rancher_client.action(**action_query)
+        res = ranger_client.action(**action_query)
         if check_data(res, target_graph_list):
             return
         if time.time() - start > timeout:

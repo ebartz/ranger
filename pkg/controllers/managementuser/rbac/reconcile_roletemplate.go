@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rancher/norman/types/slice"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	pkgrbac "github.com/rancher/rancher/pkg/rbac"
+	"github.com/ranger/norman/types/slice"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	pkgrbac "github.com/ranger/ranger/pkg/rbac"
 	"github.com/sirupsen/logrus"
 	rbacv1 "k8s.io/api/rbac/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"

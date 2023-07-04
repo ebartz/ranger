@@ -7,15 +7,15 @@ import (
 	"fmt"
 	"strings"
 
-	v1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/capr"
-	"github.com/rancher/rancher/pkg/capr/planner"
-	sb "github.com/rancher/rancher/pkg/controllers/managementuser/snapshotbackpopulate"
-	capicontrollers "github.com/rancher/rancher/pkg/generated/controllers/cluster.x-k8s.io/v1beta1"
-	rkev1controllers "github.com/rancher/rancher/pkg/generated/controllers/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/wrangler"
-	corecontrollers "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
-	"github.com/rancher/wrangler/pkg/name"
+	v1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/capr"
+	"github.com/ranger/ranger/pkg/capr/planner"
+	sb "github.com/ranger/ranger/pkg/controllers/managementuser/snapshotbackpopulate"
+	capicontrollers "github.com/ranger/ranger/pkg/generated/controllers/cluster.x-k8s.io/v1beta1"
+	rkev1controllers "github.com/ranger/ranger/pkg/generated/controllers/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/wrangler"
+	corecontrollers "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
+	"github.com/ranger/wrangler/pkg/name"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -84,7 +84,7 @@ func (h *handler) OnChange(key string, secret *corev1.Secret) (*corev1.Secret, e
 
 	if failedChecksum == planner.PlanHash(plan) {
 		logrus.Debugf("[plansecret] %s/%s: rv: %s: Detected failed plan application, reconciling machine PlanApplied condition to error", secret.Namespace, secret.Name, secret.ResourceVersion)
-		err = h.reconcileMachinePlanAppliedCondition(secret, fmt.Errorf("error applying plan -- check rancher-system-agent.service logs on node for more information"))
+		err = h.reconcileMachinePlanAppliedCondition(secret, fmt.Errorf("error applying plan -- check ranger-system-agent.service logs on node for more information"))
 		return secret, err
 	}
 

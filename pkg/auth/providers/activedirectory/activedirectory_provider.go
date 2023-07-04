@@ -8,16 +8,16 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/types"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/auth/providers/common"
-	"github.com/rancher/rancher/pkg/auth/tokens"
-	v3client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3public"
-	corev1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/user"
+	"github.com/ranger/norman/types"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/auth/providers/common"
+	"github.com/ranger/ranger/pkg/auth/tokens"
+	v3client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3public"
+	corev1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/user"
 	"github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -239,7 +239,7 @@ func (p *adProvider) GetUserExtraAttributes(userPrincipal v3.Principal) map[stri
 	return extras
 }
 
-// IsDisabledProvider checks if the Azure Active Directory provider is currently disabled in Rancher.
+// IsDisabledProvider checks if the Azure Active Directory provider is currently disabled in Ranger.
 func (p *adProvider) IsDisabledProvider() (bool, error) {
 	adConfig, _, err := p.getActiveDirectoryConfig()
 	if err != nil {

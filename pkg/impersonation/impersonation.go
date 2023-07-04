@@ -1,4 +1,4 @@
-// Package impersonation sets up service accounts that are permitted to act on behalf of a Rancher user on a cluster.
+// Package impersonation sets up service accounts that are permitted to act on behalf of a Ranger user on a cluster.
 package impersonation
 
 import (
@@ -8,10 +8,10 @@ import (
 	"sort"
 	"time"
 
-	authcommon "github.com/rancher/rancher/pkg/auth/providers/common"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/serviceaccounttoken"
-	"github.com/rancher/rancher/pkg/types/config"
+	authcommon "github.com/ranger/ranger/pkg/auth/providers/common"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/serviceaccounttoken"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
@@ -55,7 +55,7 @@ func New(userInfo user.Info, clusterContext *config.UserContext) (Impersonator, 
 	return impersonator, nil
 }
 
-// SetUpImpersonation creates a service account on a cluster with a clusterrole and clusterrolebinding allowing it to impersonate a Rancher user.
+// SetUpImpersonation creates a service account on a cluster with a clusterrole and clusterrolebinding allowing it to impersonate a Ranger user.
 // Returns a reference to the service account, which can be used by GetToken to retrieve the account token, or an error if creating any of the resources failed.
 func (i *Impersonator) SetUpImpersonation() (*corev1.ServiceAccount, error) {
 	rules := i.rulesForUser()
@@ -391,7 +391,7 @@ func (i *Impersonator) getUser(userInfo user.Info) (user.Info, error) {
 		return &user.DefaultInfo{}, err
 	}
 	if attribs == nil { // system users do not have userattributes, but principalid and username are on the user
-		// See https://github.com/rancher/rancher/blob/7ce603ea90ca656f5baa29b0149c19c8d7f73e8f/pkg/auth/requests/authenticate.go#L185-L194
+		// See https://github.com/ranger/ranger/blob/7ce603ea90ca656f5baa29b0149c19c8d7f73e8f/pkg/auth/requests/authenticate.go#L185-L194
 		// If the extras are not in userattributes, use displayName and principalIDs from the user.
 		if u.DisplayName != "" {
 			extras[authcommon.UserAttributeUserName] = []string{u.DisplayName}

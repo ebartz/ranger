@@ -5,28 +5,28 @@ import (
 	"fmt"
 	"testing"
 
-	apiv1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/defaults"
-	hardening "github.com/rancher/rancher/tests/framework/extensions/hardening/k3s"
-	"github.com/rancher/rancher/tests/framework/extensions/machinepools"
-	nodestat "github.com/rancher/rancher/tests/framework/extensions/nodes"
-	"github.com/rancher/rancher/tests/framework/extensions/pipeline"
-	psadeploy "github.com/rancher/rancher/tests/framework/extensions/psact"
-	"github.com/rancher/rancher/tests/framework/extensions/tokenregistration"
-	"github.com/rancher/rancher/tests/framework/extensions/workloads/pods"
-	"github.com/rancher/rancher/tests/framework/pkg/environmentflag"
-	namegen "github.com/rancher/rancher/tests/framework/pkg/namegenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
-	provisioning "github.com/rancher/rancher/tests/v2/validation/provisioning"
+	apiv1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/defaults"
+	hardening "github.com/ranger/ranger/tests/framework/extensions/hardening/k3s"
+	"github.com/ranger/ranger/tests/framework/extensions/machinepools"
+	nodestat "github.com/ranger/ranger/tests/framework/extensions/nodes"
+	"github.com/ranger/ranger/tests/framework/extensions/pipeline"
+	psadeploy "github.com/ranger/ranger/tests/framework/extensions/psact"
+	"github.com/ranger/ranger/tests/framework/extensions/tokenregistration"
+	"github.com/ranger/ranger/tests/framework/extensions/workloads/pods"
+	"github.com/ranger/ranger/tests/framework/pkg/environmentflag"
+	namegen "github.com/ranger/ranger/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
+	provisioning "github.com/ranger/ranger/tests/v2/validation/provisioning"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func TestProvisioningK3SCustomCluster(t *testing.T, client *rancher.Client, externalNodeProvider provisioning.ExternalNodeProvider, nodesAndRoles []machinepools.NodeRoles, kubeVersion string, hardened bool, psact string, advancedOptions provisioning.AdvancedOptions) {
+func TestProvisioningK3SCustomCluster(t *testing.T, client *ranger.Client, externalNodeProvider provisioning.ExternalNodeProvider, nodesAndRoles []machinepools.NodeRoles, kubeVersion string, hardened bool, psact string, advancedOptions provisioning.AdvancedOptions) {
 	namespace := "fleet-default"
 	rolesPerNode := []string{}
 	quantityPerPool := []int32{}
@@ -85,7 +85,7 @@ func TestProvisioningK3SCustomCluster(t *testing.T, client *rancher.Client, exte
 		t.Logf(output)
 	}
 
-	adminClient, err := rancher.NewClient(client.RancherConfig.AdminToken, client.Session)
+	adminClient, err := ranger.NewClient(client.RangerConfig.AdminToken, client.Session)
 	require.NoError(t, err)
 	kubeProvisioningClient, err := adminClient.GetKubeAPIProvisioningClient()
 	require.NoError(t, err)
@@ -123,7 +123,7 @@ func TestProvisioningK3SCustomCluster(t *testing.T, client *rancher.Client, exte
 		assert.Equal(t, clusterName, hardenClusterResp.ObjectMeta.Name)
 	}
 
-	if psact == string(provisioning.RancherPrivileged) || psact == string(provisioning.RancherRestricted) {
+	if psact == string(provisioning.RangerPrivileged) || psact == string(provisioning.RangerRestricted) {
 		err = psadeploy.CheckPSACT(client, clusterName)
 		require.NoError(t, err)
 

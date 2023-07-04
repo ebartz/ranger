@@ -3,13 +3,13 @@ package upgrade
 import (
 	"testing"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters/bundledclusters"
-	nodestat "github.com/rancher/rancher/tests/framework/extensions/nodes"
-	psadeploy "github.com/rancher/rancher/tests/framework/extensions/psact"
-	"github.com/rancher/rancher/tests/framework/extensions/workloads/pods"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters/bundledclusters"
+	nodestat "github.com/ranger/ranger/tests/framework/extensions/nodes"
+	psadeploy "github.com/ranger/ranger/tests/framework/extensions/psact"
+	"github.com/ranger/ranger/tests/framework/extensions/workloads/pods"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -18,7 +18,7 @@ import (
 type UpgradeKubernetesTestSuite struct {
 	suite.Suite
 	session  *session.Session
-	client   *rancher.Client
+	client   *ranger.Client
 	clusters []Clusters
 }
 
@@ -30,7 +30,7 @@ func (u *UpgradeKubernetesTestSuite) SetupSuite() {
 	testSession := session.NewSession()
 	u.session = testSession
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(u.T(), err)
 
 	u.client = client
@@ -118,7 +118,7 @@ func (u *UpgradeKubernetesTestSuite) testUpgradeSingleCluster(clusterName, versi
 	require.NoError(u.T(), err)
 	assert.NotEmpty(u.T(), clusterToken)
 
-	if psact == string(RancherPrivileged) || psact == string(RancherRestricted) {
+	if psact == string(RangerPrivileged) || psact == string(RangerRestricted) {
 		err = psadeploy.CheckPSACT(client, clusterName)
 		require.NoError(u.T(), err)
 

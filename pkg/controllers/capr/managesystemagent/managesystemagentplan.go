@@ -6,21 +6,21 @@ import (
 	"fmt"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/rancher/fleet/pkg/apis/fleet.cattle.io/v1alpha1"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	rancherv1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/capr"
-	namespaces "github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/provisioningv2/image"
-	"github.com/rancher/rancher/pkg/settings"
+	"github.com/ranger/fleet/pkg/apis/fleet.cattle.io/v1alpha1"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	rangerv1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/capr"
+	namespaces "github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/provisioningv2/image"
+	"github.com/ranger/ranger/pkg/settings"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
-func (h *handler) OnChangeInstallSUC(cluster *rancherv1.Cluster, status rancherv1.ClusterStatus) ([]runtime.Object, rancherv1.ClusterStatus, error) {
+func (h *handler) OnChangeInstallSUC(cluster *rangerv1.Cluster, status rangerv1.ClusterStatus) ([]runtime.Object, rangerv1.ClusterStatus, error) {
 	if cluster.Spec.RKEConfig == nil {
 		return nil, status, nil
 	}
@@ -47,7 +47,7 @@ func (h *handler) OnChangeInstallSUC(cluster *rancherv1.Cluster, status rancherv
 		},
 		Spec: v3.ManagedChartSpec{
 			DefaultNamespace: namespaces.System,
-			RepoName:         "rancher-charts",
+			RepoName:         "ranger-charts",
 			Chart:            "system-upgrade-controller",
 			Version:          settings.SystemUpgradeControllerChartVersion.Get(),
 			Values: &v1alpha1.GenericMap{

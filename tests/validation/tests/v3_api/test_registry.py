@@ -3,9 +3,9 @@ This file contains test related to add registry and
 deploying workloads with those registry.
 Test requirement:
 Below Env variables need to set
-CATTLE_TEST_URL - url to rancher server
-ADMIN_TOKEN - Admin token from rancher
-USER_TOKEN - User token from rancher
+CATTLE_TEST_URL - url to ranger server
+ADMIN_TOKEN - Admin token from ranger
+USER_TOKEN - User token from ranger
 RANCHER_CLUSTER_NAME - Cluster name to run test on
 RANCHER_REGISTRY - quay.io, dockerhub, custom etc
 RANCHER_TEST_CLIENT_IMAGE - Path to image eg. quay.io/myimage/ubuntuimage
@@ -169,7 +169,7 @@ def test_rbac_registry_create_single_namespace(role):
     """
     Creates registry with given role to a single namespace
     Runs only if RANCHER_TEST_RBAC is True in env. variable
-    @param role: User role in rancher eg. project owner, project member etc
+    @param role: User role in ranger eg. project owner, project member etc
     """
     token = rbac_get_user_token_by_role(role)
     project = rbac_get_project()
@@ -192,7 +192,7 @@ def test_rbac_registry_create_all_namespace(role):
     Runs only if RANCHER_TEST_RBAC is True in env. variable.
     Creates registry scoped all namespace and for
     multiple role passed in parameter.
-    @param role: User role in rancher eg. project owner, project member etc
+    @param role: User role in ranger eg. project owner, project member etc
     """
     c_client = namespace["c_client"]
     cluster = namespace["cluster"]
@@ -223,7 +223,7 @@ def test_rbac_registry_delete_single_namespace(role):
     Creates a registry for single namespace, deploys a workload
     and delete registry afterwards.
     Validates the workload which has become invalid on registry deletion.
-    @param role: User role in rancher eg. project owner, project member etc
+    @param role: User role in ranger eg. project owner, project member etc
     """
     c_owner_token = rbac_get_user_token_by_role(rbac_role_list[0])
     project = rbac_get_project()
@@ -256,7 +256,7 @@ def test_rbac_registry_delete_all_namespace(role):
     Creates a registry scoped for all namespace, deploys a workload
     and delete registry afterwards.
     Validates the workload which has become invalid on registry deletion.
-    @param role: User role in rancher eg. project owner, project member etc
+    @param role: User role in ranger eg. project owner, project member etc
     """
     c_client = namespace["c_client"]
     cluster = namespace["cluster"]
@@ -292,7 +292,7 @@ def test_rbac_registry_edit_single_namespace(role):
     deploys workload with invalid registry and validate the workload
     is not up.
     Update the registry with correct credential and validates workload.
-    @param role: User role in rancher eg. project owner, project member etc
+    @param role: User role in ranger eg. project owner, project member etc
     """
     c_owner_token = rbac_get_user_token_by_role(rbac_role_list[0])
     project = rbac_get_project()
@@ -341,7 +341,7 @@ def test_rbac_registry_edit_all_namespace(role):
     deploys workload with invalid registry and validate the workload
     is not up.
     Update the registry with correct credential and validates workload.
-    @param role: User role in rancher eg. project owner, project member etc
+    @param role: User role in ranger eg. project owner, project member etc
     @param role:
     """
     c_client = namespace["c_client"]

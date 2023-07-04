@@ -5,9 +5,9 @@ metadata:
   annotations:
 {{ toYaml .Values.service.annotations | indent 4 }}
 {{- end }}
-  name: {{ template "rancher.fullname" . }}
+  name: {{ template "ranger.fullname" . }}
   labels:
-{{ include "rancher.labels" . | indent 4 }}
+{{ include "ranger.labels" . | indent 4 }}
 spec:
   {{- /*
   If service.type is not provided this attribute is ommitted and k8s default of ClusterIP is used.
@@ -25,4 +25,4 @@ spec:
     protocol: TCP
     name: https-internal
   selector:
-    app: {{ template "rancher.fullname" . }}
+    app: {{ template "ranger.fullname" . }}

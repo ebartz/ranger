@@ -7,14 +7,14 @@ import yaml
 import socket
 import subprocess
 import json
-import rancher
+import ranger
 from sys import platform
 from .common import random_str, wait_for_template_to_be_created
 from kubernetes.client import ApiClient, Configuration, CustomObjectsApi, \
     ApiextensionsV1Api
 from kubernetes.client.rest import ApiException
 from kubernetes.config.kube_config import KubeConfigLoader
-from rancher import ApiError
+from ranger import ApiError
 from .cluster_common import \
     generate_cluster_config, \
     create_cluster, \
@@ -44,7 +44,7 @@ SERVER_PASSWORD = os.environ.get('RANCHER_SERVER_PASSWORD', 'admin')
 BASE_URL = SERVER_URL + '/v3'
 AUTH_URL = BASE_URL + '-public/localproviders/local?action=login'
 DEFAULT_TIMEOUT = 120
-DEFAULT_CATALOG = "https://github.com/rancher/integration-test-charts"
+DEFAULT_CATALOG = "https://github.com/ranger/integration-test-charts"
 WAIT_HTTP_ERROR_CODES = [404, 405]
 
 
@@ -106,7 +106,7 @@ def admin_mc():
         'responseType': 'json',
     }, verify=False)
     protect_response(r)
-    client = rancher.Client(url=BASE_URL, token=r.json()['token'],
+    client = ranger.Client(url=BASE_URL, token=r.json()['token'],
                             verify=False)
     k8s_client = kubernetes_api_client(client, 'local')
     admin = client.list_user(username='admin').data[0]
@@ -124,7 +124,7 @@ def admin_cc(admin_mc):
 def cluster_and_client(cluster_id, mgmt_client):
     cluster = mgmt_client.by_id_cluster(cluster_id)
     url = cluster.links.self + '/schemas'
-    client = rancher.Client(url=url,
+    client = ranger.Client(url=url,
                             verify=False,
                             token=mgmt_client.token)
     return cluster, client
@@ -132,13 +132,13 @@ def cluster_and_client(cluster_id, mgmt_client):
 
 def user_project_client(user, project):
     """Returns a project level client for the user"""
-    return rancher.Client(url=project.links.self+'/schemas', verify=False,
+    return ranger.Client(url=project.links.self+'/schemas', verify=False,
                           token=user.client.token)
 
 
 def user_cluster_client(user, cluster):
     """Returns a cluster level client for the user"""
-    return rancher.Client(url=cluster.links.self+'/schemas', verify=False,
+    return ranger.Client(url=cluster.links.self+'/schemas', verify=False,
                           token=user.client.token)
 
 
@@ -158,7 +158,7 @@ def admin_pc_factory(admin_cc, remove_resource):
         remove_resource(p)
         p = admin.reload(p)
         url = p.links.self + '/schemas'
-        return ProjectContext(admin_cc, p, rancher.Client(url=url,
+        return ProjectContext(admin_cc, p, ranger.Client(url=url,
                                                           verify=False,
                                                           token=admin.token))
     return _admin_pc
@@ -178,7 +178,7 @@ def admin_system_pc(admin_mc):
     assert len(plist) == 1
     p = plist.data[0]
     url = p.links.self + '/schemas'
-    return ProjectContext(admin_cc, p, rancher.Client(url=url,
+    return ProjectContext(admin_cc, p, ranger.Client(url=url,
                                                       verify=False,
                                                       token=admin.token))
 
@@ -214,7 +214,7 @@ def user_factory(admin_mc, remove_resource):
             'responseType': 'json',
         }, verify=False)
         protect_response(response)
-        client = rancher.Client(url=BASE_URL, token=response.json()['token'],
+        client = ranger.Client(url=BASE_URL, token=response.json()['token'],
                                 verify=False)
         return ManagementContext(client, user=user)
 
@@ -248,7 +248,7 @@ def custom_catalog(admin_mc, remove_resource_session):
 
 
 @pytest.fixture()
-def restore_rancher_version(request, admin_mc):
+def restore_ranger_version(request, admin_mc):
     client = admin_mc.client
     server_version = client.by_id_setting('server-version')
 
@@ -390,7 +390,7 @@ def remove_resource(admin_mc, request):
 def remove_resouce_func(request):
     """Call the delete_func passing in the name of the resource. This is useful
     when dealing with the k8s clients for objects that don't exist in the
-    Rancher client
+    Ranger client
     """
     def _cleanup(delete_func, name):
         def clean():
@@ -408,7 +408,7 @@ def remove_resouce_func(request):
 def raw_remove_custom_resource(admin_mc, request):
     """Remove a custom resource, using the k8s client, after a test finishes
     even if the test fails. This should only be used if remove_resource, which
-    exclusively uses the rancher api, cannot be used"""
+    exclusively uses the ranger api, cannot be used"""
     def _cleanup(resource):
         k8s_v1_client = ApiextensionsV1Api(admin_mc.k8s_client)
         k8s_client = CustomObjectsApi(admin_mc.k8s_client)
@@ -548,8 +548,8 @@ def find_condition(condition_type, status, obj):
     return False
 
 
-def kubernetes_api_client(rancher_client, cluster_name):
-    c = rancher_client.by_id_cluster(cluster_name)
+def kubernetes_api_client(ranger_client, cluster_name):
+    c = ranger_client.by_id_cluster(cluster_name)
     kc = c.generateKubeconfig()
     loader = KubeConfigLoader(config_dict=yaml.full_load(kc.config))
     client_configuration = type.__call__(Configuration)

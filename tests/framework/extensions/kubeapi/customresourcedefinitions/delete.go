@@ -4,12 +4,12 @@ import (
 	"context"
 
 	"github.com/hashicorp/go-multierror"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // deletes a single custom resource definition by name
-func DeleteCustomResourceDefinition(client *rancher.Client, clusterID string, namespace string, name string) error {
+func DeleteCustomResourceDefinition(client *ranger.Client, clusterID string, namespace string, name string) error {
 	dynamicClient, err := client.GetDownStreamClusterClient(clusterID)
 	if err != nil {
 		return err
@@ -23,7 +23,7 @@ func DeleteCustomResourceDefinition(client *rancher.Client, clusterID string, na
 }
 
 // deletes a list of custom resource definitions by name
-func BatchDeleteCustomResourceDefinition(client *rancher.Client, clusterID string, namespace string, list []string) error {
+func BatchDeleteCustomResourceDefinition(client *ranger.Client, clusterID string, namespace string, list []string) error {
 	dynamicClient, err := client.GetDownStreamClusterClient(clusterID)
 	if err != nil {
 		return err

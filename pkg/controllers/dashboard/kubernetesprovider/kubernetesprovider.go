@@ -3,10 +3,10 @@ package kubernetesprovider
 import (
 	"context"
 
-	detector "github.com/rancher/kubernetes-provider-detector"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v32 "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/wrangler"
+	detector "github.com/ranger/kubernetes-provider-detector"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/wrangler"
 	"k8s.io/client-go/kubernetes"
 )
 

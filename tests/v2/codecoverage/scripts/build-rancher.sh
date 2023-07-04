@@ -20,7 +20,7 @@ if [ "$(uname)" != "Darwin" ]; then
   fi
 fi
 
-RKE_VERSION="$(grep -m1 'github.com/rancher/rke' go.mod | awk '{print $2}')"
+RKE_VERSION="$(grep -m1 'github.com/ranger/rke' go.mod | awk '{print $2}')"
 
 # Inject Setting values
 DEFAULT_VALUES="{\"rke-version\":\"${RKE_VERSION}\"}"
@@ -29,10 +29,10 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -tags k8s \
   -cover \
   -gcflags="all=${GCFLAGS}" \
   -ldflags \
-  "-X github.com/rancher/rancher/pkg/version.Version=$VERSION
-   -X github.com/rancher/rancher/pkg/version.GitCommit=$COMMIT
-   -X github.com/rancher/rancher/pkg/settings.InjectDefaults=$DEFAULT_VALUES $LINKFLAGS" \
+  "-X github.com/ranger/ranger/pkg/version.Version=$VERSION
+   -X github.com/ranger/ranger/pkg/version.GitCommit=$COMMIT
+   -X github.com/ranger/ranger/pkg/settings.InjectDefaults=$DEFAULT_VALUES $LINKFLAGS" \
   -o tests/v2/codecoverage/bin \
-  ./tests/v2/codecoverage/rancher
+  ./tests/v2/codecoverage/ranger
  
-curl -sLf https://releases.rancher.com/kontainer-driver-metadata/${CATTLE_KDM_BRANCH}/data.json > tests/v2/codecoverage/bin/data.json
+curl -sLf https://releases.ranger.com/kontainer-driver-metadata/${CATTLE_KDM_BRANCH}/data.json > tests/v2/codecoverage/bin/data.json

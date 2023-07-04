@@ -72,10 +72,10 @@ role="${role_array[$node_index]}"
 echo "Writing config for a ${role} node."
 
 # Write config
-mkdir -p /etc/rancher/rke2/config.yaml.d
+mkdir -p /etc/ranger/rke2/config.yaml.d
 if [[ $role == "etcd-only" ]]
 then
-cat << EOF > /etc/rancher/rke2/config.yaml.d/role_config.yaml
+cat << EOF > /etc/ranger/rke2/config.yaml.d/role_config.yaml
 disable-apiserver: true
 disable-controller-manager: true
 disable-scheduler: true
@@ -85,7 +85,7 @@ EOF
 
 elif [[ $role == "etcd-cp" ]]
 then
-cat << EOF > /etc/rancher/rke2/config.yaml.d/role_config.yaml
+cat << EOF > /etc/ranger/rke2/config.yaml.d/role_config.yaml
 node-taint:
   - node-role.kubernetes.io/control-plane:NoSchedule
   - node-role.kubernetes.io/etcd:NoExecute
@@ -93,7 +93,7 @@ EOF
 
 elif [[ $role == "etcd-worker" ]]
 then
-cat << EOF > /etc/rancher/rke2/config.yaml.d/role_config.yaml
+cat << EOF > /etc/ranger/rke2/config.yaml.d/role_config.yaml
 disable-apiserver: true
 disable-controller-manager: true
 disable-scheduler: true
@@ -101,7 +101,7 @@ EOF
 
 elif [[ $role == "cp-only" ]]
 then
-cat << EOF > /etc/rancher/rke2/config.yaml.d/role_config.yaml
+cat << EOF > /etc/ranger/rke2/config.yaml.d/role_config.yaml
 disable-etcd: true
 node-taint:
   - node-role.kubernetes.io/control-plane:NoSchedule
@@ -109,7 +109,7 @@ EOF
 
 elif [[ $role == "cp-worker" ]]
 then
-cat << EOF > /etc/rancher/rke2/config.yaml.d/role_config.yaml
+cat << EOF > /etc/ranger/rke2/config.yaml.d/role_config.yaml
 disable-etcd: true
 EOF
 fi

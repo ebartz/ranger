@@ -4,15 +4,15 @@ import (
 	"context"
 
 	"github.com/moby/locker"
-	"github.com/rancher/lasso/pkg/client"
-	v1 "github.com/rancher/rancher/pkg/apis/catalog.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/catalogv2/helm"
-	catalogv1 "github.com/rancher/rancher/pkg/generated/controllers/catalog.cattle.io/v1"
-	corev1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	"github.com/rancher/wrangler/pkg/apply"
-	corecontrollers "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
-	"github.com/rancher/wrangler/pkg/generic"
-	"github.com/rancher/wrangler/pkg/relatedresource"
+	"github.com/ranger/lasso/pkg/client"
+	v1 "github.com/ranger/ranger/pkg/apis/catalog.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/catalogv2/helm"
+	catalogv1 "github.com/ranger/ranger/pkg/generated/controllers/catalog.cattle.io/v1"
+	corev1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	"github.com/ranger/wrangler/pkg/apply"
+	corecontrollers "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
+	"github.com/ranger/wrangler/pkg/generic"
+	"github.com/ranger/wrangler/pkg/relatedresource"
 	"github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -95,7 +95,7 @@ func (a *appHandler) isLatestSecret(ns string, spec *v1.ReleaseSpec) (bool, erro
 	// TODO: If we find nothing here we didn't even find the original. That's bad and can
 	// indicate that this is a helm v2 release using secrets which we currently
 	// aren't expecting.
-	// https://github.com/rancher/rancher/issues/31297
+	// https://github.com/ranger/ranger/issues/31297
 	if len(others) == 0 {
 		return false, nil
 	}
@@ -119,7 +119,7 @@ func (a *appHandler) isLatestConfigMap(ns string, spec *v1.ReleaseSpec) (bool, e
 	// TODO: If we find nothing here we didn't even find the original. That's bad and can
 	// indicate that this is a helm v2 release using configMaps which we currently
 	// aren't expecting.
-	// https://github.com/rancher/rancher/issues/31297
+	// https://github.com/ranger/ranger/issues/31297
 	if len(others) == 0 {
 		return false, nil
 	}

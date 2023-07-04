@@ -11,7 +11,7 @@ RANCHER_VPC_ID = os.environ.get("AWS_VPC")
 RANCHER_SUBNETS = os.environ.get("AWS_SUBNET")
 RANCHER_AWS_SG = os.environ.get("AWS_SECURITY_GROUPS")
 RANCHER_AVAILABILITY_ZONE = os.environ.get("AWS_AVAILABILITY_ZONE")
-RANCHER_QA_SPACE = os.environ.get("RANCHER_QA_SPACE", "qa.rancher.space.")
+RANCHER_QA_SPACE = os.environ.get("RANCHER_QA_SPACE", "qa.ranger.space.")
 RANCHER_EC2_INSTANCE_CLASS = os.environ.get("AWS_INSTANCE_TYPE", "t3a.medium")
 RANCHER_EC2_WINDOWS_INSTANCE_CLASS = os.environ.get("AWS_WINDOWS_INSTANCE_TYPE", "t3.xlarge")
 HOST_NAME = os.environ.get('RANCHER_HOST_NAME', "sa")
@@ -50,9 +50,9 @@ RKE2_ROLE_ORDER = os.environ.get("RKE2_ROLE_ORDER", "1,2,3,4,5,6")
 RANCHER_OPTIONAL_FILES = os.environ.get("RANCHER_OPTIONAL_FILES")
 
 
-def test_create_rancherd_multiple_control_cluster():
+def test_create_rangerd_multiple_control_cluster():
     cluster_version = RANCHER_RANCHERD_VERSION
-    cluster_type = "rancherd"
+    cluster_type = "rangerd"
     rke2_clusterfilepath = create_rke2_multiple_control_cluster(cluster_type, \
                                                                 cluster_version)
     fqdn_file = "/tmp/" + RANCHER_HOSTNAME_PREFIX + "_fixed_reg_addr"
@@ -68,7 +68,7 @@ def test_create_rancherd_multiple_control_cluster():
     os.chmod(keyPath, 0o400)
     print("\n\nRANCHERD USERNAME AND PASSWORD\n", flush=True)
     cmd = "ssh -o StrictHostKeyChecking=no -i " + keyPath + " " + RANCHER_AWS_USER + \
-          "@" + ip + " rancherd reset-admin"
+          "@" + ip + " rangerd reset-admin"
     result = run_command(cmd, True)
     print(result)
 
@@ -85,7 +85,7 @@ def test_import_rke2_multiple_control_cluster():
     cluster_type = "rke2"
     rke2_clusterfilepath = create_rke2_multiple_control_cluster(
         cluster_type, cluster_version)
-    cluster = create_rancher_cluster(client, rke2_clusterfilepath)
+    cluster = create_ranger_cluster(client, rke2_clusterfilepath)
 
 
 def create_rke2_multiple_control_cluster(cluster_type, cluster_version):
@@ -241,7 +241,7 @@ def create_rke2_multiple_control_cluster(cluster_type, cluster_version):
     return rke2_clusterfilepath
 
 
-def create_rancher_cluster(client, rke2_clusterfilepath):
+def create_ranger_cluster(client, rke2_clusterfilepath):
     if CLUSTER_NAME:
         clustername = CLUSTER_NAME
     else:

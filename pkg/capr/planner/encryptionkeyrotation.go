@@ -8,10 +8,10 @@ import (
 
 	"github.com/blang/semver"
 	"github.com/pkg/errors"
-	"github.com/rancher/channelserver/pkg/model"
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1/plan"
-	"github.com/rancher/rancher/pkg/capr"
+	"github.com/ranger/channelserver/pkg/model"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1/plan"
+	"github.com/ranger/ranger/pkg/capr"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/api/equality"
 )
@@ -28,7 +28,7 @@ const (
 	encryptionKeyRotationSecretsEncryptApplyCommand  = "secrets-encrypt-apply"
 	encryptionKeyRotationSecretsEncryptStatusCommand = "secrets-encrypt-status"
 
-	encryptionKeyRotationInstallRoot = "/var/lib/rancher"
+	encryptionKeyRotationInstallRoot = "/var/lib/ranger"
 	encryptionKeyRotationBinPrefix   = "capr/encryption-key-rotation/bin"
 
 	encryptionKeyRotationWaitForSystemctlStatusPath      = "wait_for_systemctl_status.sh"

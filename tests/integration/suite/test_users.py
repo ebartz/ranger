@@ -1,6 +1,6 @@
 import pytest
 from kubernetes.client import CustomObjectsApi
-from rancher import ApiError
+from ranger import ApiError
 from .conftest import random_str, wait_for
 
 grbAnno = "cleanup.cattle.io/grbUpgradeCluster"
@@ -49,7 +49,7 @@ def test_globalrolebinding_finalizer_cleanup(admin_mc, remove_resource):
     remove_resource(grb)
     assert grb.annotations[grbAnno] == "true"
 
-    # create a grb without the rancher api with a bad finalizer
+    # create a grb without the ranger api with a bad finalizer
     api = CustomObjectsApi(admin_mc.k8s_client)
     json = {
         "apiVersion": "management.cattle.io/v3",
@@ -103,7 +103,7 @@ def test_roletemplate_finalizer_cleanup(admin_mc, remove_resource):
     remove_resource(rt)
     assert rt.annotations[rtAnno] == "true"
 
-    # create rt  without rancher api with a bad finalizer
+    # create rt  without ranger api with a bad finalizer
     api = CustomObjectsApi(admin_mc.k8s_client)
     json = {
         "apiVersion": "management.cattle.io/v3",

@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"testing"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 
-	"github.com/rancher/norman/httperror"
-	fake1 "github.com/rancher/rancher/pkg/generated/norman/core/v1/fakes"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	fake3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3/fakes"
-	nodehelper "github.com/rancher/rancher/pkg/node"
-	"github.com/rancher/rancher/pkg/taints"
+	"github.com/ranger/norman/httperror"
+	fake1 "github.com/ranger/ranger/pkg/generated/norman/core/v1/fakes"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	fake3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3/fakes"
+	nodehelper "github.com/ranger/ranger/pkg/node"
+	"github.com/ranger/ranger/pkg/taints"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

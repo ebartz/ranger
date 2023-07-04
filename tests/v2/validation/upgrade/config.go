@@ -2,10 +2,10 @@ package upgrade
 
 import (
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
-	"github.com/rancher/rancher/tests/framework/pkg/environmentflag"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
+	"github.com/ranger/ranger/tests/framework/pkg/environmentflag"
 )
 
 type PSACT string
@@ -14,8 +14,8 @@ const (
 	ConfigurationFileKey       = "upgradeInput" // ConfigurationFileKey is used to parse the configuration of upgrade tests.
 	localClusterID             = "local"        // localClusterID is a string to used ignore this cluster in comparisons
 	latestKey                  = "latest"       // latestKey is a string to determine automatically version pooling to the latest possible
-	RancherPrivileged    PSACT = "rancher-privileged"
-	RancherRestricted    PSACT = "rancher-restricted"
+	RangerPrivileged    PSACT = "ranger-privileged"
+	RangerRestricted    PSACT = "ranger-restricted"
 )
 
 type Clusters struct {
@@ -42,7 +42,7 @@ type Config struct {
 //  2. An additional config field called update with slice of ClustersToUpgrade struct,
 //     for choosing some clusters to upgrade (version is optional, by default, empty string skips the test
 //     and "latest" upgrades to the latest available.)
-func loadUpgradeKubernetesConfig(client *rancher.Client) (clusters []Clusters, err error) {
+func loadUpgradeKubernetesConfig(client *ranger.Client) (clusters []Clusters, err error) {
 	upgradeConfig := new(Config)
 	config.LoadConfig(ConfigurationFileKey, upgradeConfig)
 
@@ -95,7 +95,7 @@ func loadUpgradeKubernetesConfig(client *rancher.Client) (clusters []Clusters, e
 	return
 }
 
-func loadUpgradeWorkloadConfig(client *rancher.Client) (clusters []Clusters, err error) {
+func loadUpgradeWorkloadConfig(client *ranger.Client) (clusters []Clusters, err error) {
 	upgradeConfig := new(Config)
 	config.LoadConfig(ConfigurationFileKey, upgradeConfig)
 
@@ -143,7 +143,7 @@ func loadUpgradeWorkloadConfig(client *rancher.Client) (clusters []Clusters, err
 	return
 }
 
-func listDownstreamClusters(client *rancher.Client) (clusterNames []string, err error) {
+func listDownstreamClusters(client *ranger.Client) (clusterNames []string, err error) {
 	clusterList, err := client.Management.Cluster.List(&types.ListOpts{})
 	if err != nil {
 		return nil, errors.Wrap(err, "couldn't list downstream clusters")

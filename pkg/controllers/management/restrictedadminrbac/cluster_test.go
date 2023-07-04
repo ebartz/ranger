@@ -1,6 +1,6 @@
 // mocks created with the following commands
 //
-//	mockgen --build_flags=--mod=mod -package restrictedadminrbac -destination ./mocks_test.go github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3 ClusterRoleTemplateBindingController,ClusterRoleTemplateBindingCache,ClusterCache,GlobalRoleBindingCache
+//	mockgen --build_flags=--mod=mod -package restrictedadminrbac -destination ./mocks_test.go github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3 ClusterRoleTemplateBindingController,ClusterRoleTemplateBindingCache,ClusterCache,GlobalRoleBindingCache
 //
 // mockgen --build_flags=--mod=mod -package restrictedadminrbac -destination ./mockIndexer_test.go k8s.io/client-go/tools/cache Indexer
 package restrictedadminrbac
@@ -10,9 +10,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/rbac"
-	"github.com/rancher/wrangler/pkg/relatedresource"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/rbac"
+	"github.com/ranger/wrangler/pkg/relatedresource"
 	"github.com/stretchr/testify/require"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"

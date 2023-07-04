@@ -10,10 +10,10 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/rancher/rancher/pkg/auth/util"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	"github.com/rancher/rancher/pkg/managedcharts/cspadapter"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/ranger/pkg/auth/util"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	"github.com/ranger/ranger/pkg/managedcharts/cspadapter"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/sirupsen/logrus"
 	authzv1 "k8s.io/api/authorization/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -24,7 +24,7 @@ import (
 
 const (
 	// Endpoint The endpoint that this URL is accessible at - used for routing and for SARs
-	Endpoint            = "/v1/generateSUSERancherSupportConfig"
+	Endpoint            = "/v1/generateSUSERangerSupportConfig"
 	cspAdapterConfigmap = "csp-config"
 	tarContentType      = "application/x-tar"
 	logPrefix           = "support-config-generator"
@@ -85,7 +85,7 @@ func (h *Handler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 	writer.Header().Set("Content-Type", tarContentType)
-	writer.Header().Set("Content-Disposition", "attachment; filename=\"supportconfig_rancher.tar\"")
+	writer.Header().Set("Content-Disposition", "attachment; filename=\"supportconfig_ranger.tar\"")
 	n, err := io.Copy(writer, archive)
 	if err != nil {
 		logrus.Warnf("set archive on http response writer: %v", err)
@@ -142,7 +142,7 @@ func (h *Handler) generateSupportConfig() (io.Reader, error) {
 	tw := tar.NewWriter(&buf)
 
 	files := map[string][]byte{
-		"rancher/config.json": configData,
+		"ranger/config.json": configData,
 	}
 
 	for name, body := range files {

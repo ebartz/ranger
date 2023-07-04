@@ -1,5 +1,5 @@
 from .common import random_str
-from rancher import ApiError
+from ranger import ApiError
 from .conftest import wait_for, wait_until_available, user_project_client
 
 import time
@@ -385,7 +385,7 @@ def test_perform_workload_action_read_only(admin_mc, admin_pc, remove_resource,
         scale=1,
         containers=[{
             'name': 'foo',
-            'image': 'rancher/mirrored-library-nginx:1.21.1-alpine',
+            'image': 'ranger/mirrored-library-nginx:1.21.1-alpine',
             'env': [{
                 'name': 'FOO_KEY',
                 'value': 'FOO_VALUE',
@@ -397,7 +397,7 @@ def test_perform_workload_action_read_only(admin_mc, admin_pc, remove_resource,
     # Admin user updates the workload to yield a rollback option.
     workload.containers = [{
         'name': 'foo',
-        'image': 'rancher/mirrored-library-nginx:1.21.1-alpine',
+        'image': 'ranger/mirrored-library-nginx:1.21.1-alpine',
         'env': [{
             'name': 'BAR_KEY',
             'value': 'BAR_VALUE',

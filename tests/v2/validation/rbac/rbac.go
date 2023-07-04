@@ -6,20 +6,20 @@ import (
 	"strings"
 	"time"
 
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
 
-	"github.com/rancher/rancher/tests/framework/extensions/namespaces"
-	"github.com/rancher/rancher/tests/framework/extensions/projects"
-	nodepools "github.com/rancher/rancher/tests/framework/extensions/rke1/nodepools"
-	"github.com/rancher/rancher/tests/framework/extensions/users"
-	password "github.com/rancher/rancher/tests/framework/extensions/users/passwordgenerator"
-	"github.com/rancher/rancher/tests/framework/extensions/workloads"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
-	namegen "github.com/rancher/rancher/tests/framework/pkg/namegenerator"
-	"github.com/rancher/rancher/tests/v2/validation/provisioning"
+	"github.com/ranger/ranger/tests/framework/extensions/namespaces"
+	"github.com/ranger/ranger/tests/framework/extensions/projects"
+	nodepools "github.com/ranger/ranger/tests/framework/extensions/rke1/nodepools"
+	"github.com/ranger/ranger/tests/framework/extensions/users"
+	password "github.com/ranger/ranger/tests/framework/extensions/users/passwordgenerator"
+	"github.com/ranger/ranger/tests/framework/extensions/workloads"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
+	namegen "github.com/ranger/ranger/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/v2/validation/provisioning"
 	appv1 "k8s.io/api/apps/v1"
 	coreV1 "k8s.io/api/core/v1"
 	kwait "k8s.io/apimachinery/pkg/util/wait"
@@ -55,7 +55,7 @@ type ClusterConfig struct {
 	advancedOptions      provisioning.AdvancedOptions
 }
 
-func createUser(client *rancher.Client, role string) (*management.User, error) {
+func createUser(client *ranger.Client, role string) (*management.User, error) {
 	enabled := true
 	var username = namegen.AppendRandomString("testuser-")
 	var testpassword = password.GenerateUserPassword("testpass-")
@@ -74,7 +74,7 @@ func createUser(client *rancher.Client, role string) (*management.User, error) {
 	return newUser, err
 }
 
-func listProjects(client *rancher.Client, clusterID string) ([]string, error) {
+func listProjects(client *ranger.Client, clusterID string) ([]string, error) {
 	projectList, err := projects.GetProjectList(client, clusterID)
 	if err != nil {
 		return nil, err
@@ -109,7 +109,7 @@ func deleteNamespace(namespaceID *v1.SteveAPIObject, steveclient *v1.Client) err
 	return deletens
 }
 
-func createProject(client *rancher.Client, clusterID string) (*management.Project, error) {
+func createProject(client *ranger.Client, clusterID string) (*management.Project, error) {
 	projectName := namegen.AppendRandomString("testproject-")
 	projectConfig := &management.Project{
 		ClusterID: clusterID,
@@ -133,7 +133,7 @@ func getPSALabels(response *v1.SteveAPIObject, actualLabels map[string]string) m
 	return expectedLabels
 }
 
-func createDeploymentAndWait(steveclient *v1.Client, client *rancher.Client, clusterID string, containerName string, image string, namespaceName string) (*v1.SteveAPIObject, error) {
+func createDeploymentAndWait(steveclient *v1.Client, client *ranger.Client, clusterID string, containerName string, image string, namespaceName string) (*v1.SteveAPIObject, error) {
 	deploymentName := namegen.AppendRandomString("rbac-")
 	containerTemplate := workloads.NewContainer(containerName, image, coreV1.PullAlways, []coreV1.VolumeMount{}, []coreV1.EnvFromSource{})
 
@@ -247,7 +247,7 @@ func getClusterConfig() *ClusterConfig {
 	return &clusterConfig
 }
 
-func createRole(client *rancher.Client, context string, roleName string, rules []management.PolicyRule) (role *management.RoleTemplate, err error) {
+func createRole(client *ranger.Client, context string, roleName string, rules []management.PolicyRule) (role *management.RoleTemplate, err error) {
 	role, err = client.Management.RoleTemplate.Create(
 		&management.RoleTemplate{
 			Context: "cluster",

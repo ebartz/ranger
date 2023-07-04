@@ -1,17 +1,17 @@
 package vsphere
 
 import (
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	"github.com/rancher/rancher/tests/framework/extensions/cloudcredentials"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/extensions/cloudcredentials"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
 )
 
 const vmwarevsphereCloudCredNameBase = "vmwarevsphereCloudCredential"
 
-// CreateVsphereCloudCredentials is a helper function that takes the rancher Client as a parameter and creates
+// CreateVsphereCloudCredentials is a helper function that takes the ranger Client as a parameter and creates
 // an AWS cloud credential, and returns the CloudCredential response
-func CreateVsphereCloudCredentials(rancherClient *rancher.Client) (*cloudcredentials.CloudCredential, error) {
+func CreateVsphereCloudCredentials(rangerClient *ranger.Client) (*cloudcredentials.CloudCredential, error) {
 	var vmwarevsphereCredentialConfig cloudcredentials.VmwarevsphereCredentialConfig
 	config.LoadConfig(cloudcredentials.VmwarevsphereCredentialConfigurationFileKey, &vmwarevsphereCredentialConfig)
 
@@ -21,7 +21,7 @@ func CreateVsphereCloudCredentials(rancherClient *rancher.Client) (*cloudcredent
 	}
 
 	resp := &cloudcredentials.CloudCredential{}
-	err := rancherClient.Management.APIBaseClient.Ops.DoCreate(management.CloudCredentialType, cloudCredential, resp)
+	err := rangerClient.Management.APIBaseClient.Ops.DoCreate(management.CloudCredentialType, cloudCredential, resp)
 	if err != nil {
 		return nil, err
 	}

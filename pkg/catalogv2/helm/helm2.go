@@ -10,7 +10,7 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/ptypes/timestamp"
-	v1 "github.com/rancher/rancher/pkg/apis/catalog.cattle.io/v1"
+	v1 "github.com/ranger/ranger/pkg/apis/catalog.cattle.io/v1"
 	"github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	rspb "k8s.io/helm/pkg/proto/hapi/release"

@@ -1,5 +1,5 @@
 import pytest
-import rancher
+import ranger
 import requests
 import time
 from .conftest import SERVER_PASSWORD, BASE_URL, AUTH_URL, protect_response
@@ -20,7 +20,7 @@ def test_certificates(admin_mc):
 
 
 def test_websocket(admin_mc):
-    client = rancher.Client(url=BASE_URL, token=admin_mc.client.token,
+    client = ranger.Client(url=BASE_URL, token=admin_mc.client.token,
                             verify=False)
     # make a request that looks like a websocket
     client._session.headers["Connection"] = "upgrade"
@@ -29,7 +29,7 @@ def test_websocket(admin_mc):
     client._session.headers["User-Agent"] = "Mozilla"
     # do something with client now that we have a "websocket"
 
-    with pytest.raises(rancher.ApiError) as e:
+    with pytest.raises(ranger.ApiError) as e:
         client.list_cluster()
 
     assert e.value.error.Code.Status == 403

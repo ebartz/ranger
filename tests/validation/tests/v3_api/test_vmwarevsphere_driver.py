@@ -129,7 +129,7 @@ def create_cluster(request):
         client, cloud_cred, datastore_cluster=DATASTORE_CLUSTER)
     cluster = client.create_cluster(
         name=CLUSTER_NAME,
-        rancherKubernetesEngineConfig=rke_config)
+        rangerKubernetesEngineConfig=rke_config)
     # Allow sometime for the "cluster_owner" CRTB to take effect
     time.sleep(5)
 

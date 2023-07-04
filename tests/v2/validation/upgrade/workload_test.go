@@ -3,17 +3,17 @@ package upgrade
 import (
 	"testing"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/charts"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/ingresses"
-	"github.com/rancher/rancher/tests/framework/extensions/namespaces"
-	"github.com/rancher/rancher/tests/framework/extensions/secrets"
-	"github.com/rancher/rancher/tests/framework/extensions/services"
-	"github.com/rancher/rancher/tests/framework/extensions/steve"
-	"github.com/rancher/rancher/tests/framework/extensions/workloads"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/charts"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/ingresses"
+	"github.com/ranger/ranger/tests/framework/extensions/namespaces"
+	"github.com/ranger/ranger/tests/framework/extensions/secrets"
+	"github.com/ranger/ranger/tests/framework/extensions/services"
+	"github.com/ranger/ranger/tests/framework/extensions/steve"
+	"github.com/ranger/ranger/tests/framework/extensions/workloads"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -26,7 +26,7 @@ import (
 type UpgradeWorkloadTestSuite struct {
 	suite.Suite
 	session  *session.Session
-	client   *rancher.Client
+	client   *ranger.Client
 	clusters []Clusters
 }
 
@@ -38,7 +38,7 @@ func (u *UpgradeWorkloadTestSuite) SetupSuite() {
 	testSession := session.NewSession()
 	u.session = testSession
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(u.T(), err)
 
 	u.client = client
@@ -252,13 +252,13 @@ func (u *UpgradeWorkloadTestSuite) testPreUpgradeSingleCluster(clusterName strin
 		u.T().Log("Charts tests are enabled")
 
 		u.T().Logf("Checking if the logging chart is installed in cluster [%v]", project.ClusterID)
-		loggingChart, err := charts.GetChartStatus(client, project.ClusterID, charts.RancherLoggingNamespace, charts.RancherLoggingName)
+		loggingChart, err := charts.GetChartStatus(client, project.ClusterID, charts.RangerLoggingNamespace, charts.RangerLoggingName)
 		require.NoError(u.T(), err)
 
 		if !loggingChart.IsAlreadyInstalled {
 			clusterName, err := clusters.GetClusterNameByID(client, project.ClusterID)
 			require.NoError(u.T(), err)
-			latestLoggingVersion, err := client.Catalog.GetLatestChartVersion(charts.RancherLoggingName)
+			latestLoggingVersion, err := client.Catalog.GetLatestChartVersion(charts.RangerLoggingName)
 			require.NoError(u.T(), err)
 
 			loggingChartInstallOption := &charts.InstallOptions{
@@ -268,12 +268,12 @@ func (u *UpgradeWorkloadTestSuite) testPreUpgradeSingleCluster(clusterName strin
 				ProjectID:   project.ID,
 			}
 
-			loggingChartFeatureOption := &charts.RancherLoggingOpts{
+			loggingChartFeatureOption := &charts.RangerLoggingOpts{
 				AdditionalLoggingSources: true,
 			}
 
 			u.T().Logf("Installing logging chart with the latest version in cluster [%v] with version [%v]", project.ClusterID, latestLoggingVersion)
-			err = charts.InstallRancherLoggingChart(client, loggingChartInstallOption, loggingChartFeatureOption)
+			err = charts.InstallRangerLoggingChart(client, loggingChartInstallOption, loggingChartFeatureOption)
 			require.NoError(u.T(), err)
 		}
 	}
@@ -378,7 +378,7 @@ func (u *UpgradeWorkloadTestSuite) testPostUpgradeSingleCluster(clusterName stri
 		u.T().Logf("Chart tests are enabled")
 
 		u.T().Logf("Checking if the logging chart is installed")
-		loggingChart, err := charts.GetChartStatus(client, project.ClusterID, charts.RancherLoggingNamespace, charts.RancherLoggingName)
+		loggingChart, err := charts.GetChartStatus(client, project.ClusterID, charts.RangerLoggingNamespace, charts.RangerLoggingName)
 		require.NoError(u.T(), err)
 		assert.True(u.T(), loggingChart.IsAlreadyInstalled)
 	}

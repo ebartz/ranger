@@ -9,18 +9,18 @@ import (
 	"github.com/crewjam/saml"
 	"github.com/mitchellh/mapstructure"
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/types"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/auth/api/secrets"
-	"github.com/rancher/rancher/pkg/auth/providers/common"
-	"github.com/rancher/rancher/pkg/auth/providers/ldap"
-	"github.com/rancher/rancher/pkg/auth/tokens"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	publicclient "github.com/rancher/rancher/pkg/client/generated/management/v3public"
-	corev1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/user"
+	"github.com/ranger/norman/types"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/auth/api/secrets"
+	"github.com/ranger/ranger/pkg/auth/providers/common"
+	"github.com/ranger/ranger/pkg/auth/providers/ldap"
+	"github.com/ranger/ranger/pkg/auth/tokens"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	publicclient "github.com/ranger/ranger/pkg/client/generated/management/v3public"
+	corev1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/user"
 	"github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -122,11 +122,11 @@ func PerformSamlLogin(name string, apiContext *types.APIContext, input interface
 			return fmt.Errorf("SAML: Provider %v clientState not set", name)
 		}
 		logrus.Debugf("SAML [PerformSamlLogin]: Setting clientState for SAML service provider %v", name)
-		provider.clientState.SetState(apiContext.Response, apiContext.Request, "Rancher_FinalRedirectURL", finalRedirectURL)
-		provider.clientState.SetState(apiContext.Response, apiContext.Request, "Rancher_Action", loginAction)
-		provider.clientState.SetState(apiContext.Response, apiContext.Request, "Rancher_PublicKey", login.PublicKey)
-		provider.clientState.SetState(apiContext.Response, apiContext.Request, "Rancher_RequestID", login.RequestID)
-		provider.clientState.SetState(apiContext.Response, apiContext.Request, "Rancher_ResponseType", login.ResponseType)
+		provider.clientState.SetState(apiContext.Response, apiContext.Request, "Ranger_FinalRedirectURL", finalRedirectURL)
+		provider.clientState.SetState(apiContext.Response, apiContext.Request, "Ranger_Action", loginAction)
+		provider.clientState.SetState(apiContext.Response, apiContext.Request, "Ranger_PublicKey", login.PublicKey)
+		provider.clientState.SetState(apiContext.Response, apiContext.Request, "Ranger_RequestID", login.RequestID)
+		provider.clientState.SetState(apiContext.Response, apiContext.Request, "Ranger_ResponseType", login.ResponseType)
 
 		idpRedirectURL, err := provider.HandleSamlLogin(apiContext.Response, apiContext.Request)
 		if err != nil {
@@ -334,15 +334,15 @@ func formSamlRedirectURLFromMap(config map[string]interface{}, name string) stri
 	var hostname string
 	switch name {
 	case PingName:
-		hostname, _ = config[client.PingConfigFieldRancherAPIHost].(string)
+		hostname, _ = config[client.PingConfigFieldRangerAPIHost].(string)
 	case ADFSName:
-		hostname, _ = config[client.ADFSConfigFieldRancherAPIHost].(string)
+		hostname, _ = config[client.ADFSConfigFieldRangerAPIHost].(string)
 	case KeyCloakName:
-		hostname, _ = config[client.KeyCloakConfigFieldRancherAPIHost].(string)
+		hostname, _ = config[client.KeyCloakConfigFieldRangerAPIHost].(string)
 	case OKTAName:
-		hostname, _ = config[client.OKTAConfigFieldRancherAPIHost].(string)
+		hostname, _ = config[client.OKTAConfigFieldRangerAPIHost].(string)
 	case ShibbolethName:
-		hostname, _ = config[client.ShibbolethConfigFieldRancherAPIHost].(string)
+		hostname, _ = config[client.ShibbolethConfigFieldRangerAPIHost].(string)
 	}
 
 	path := hostname + "/v1-saml/" + name + "/login"
@@ -413,7 +413,7 @@ func (s *Provider) GetUserExtraAttributes(userPrincipal v3.Principal) map[string
 	return extras
 }
 
-// IsDisabledProvider checks if the SAML auth provider is currently disabled in Rancher.
+// IsDisabledProvider checks if the SAML auth provider is currently disabled in Ranger.
 func (s *Provider) IsDisabledProvider() (bool, error) {
 	samlConfig, err := s.getSamlConfig()
 	if err != nil {

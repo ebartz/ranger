@@ -14,21 +14,21 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/moby/locker"
-	"github.com/rancher/channelserver/pkg/model"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1/plan"
-	"github.com/rancher/rancher/pkg/capr"
-	"github.com/rancher/rancher/pkg/controllers/capr/managesystemagent"
-	capicontrollers "github.com/rancher/rancher/pkg/generated/controllers/cluster.x-k8s.io/v1beta1"
-	mgmtcontrollers "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3"
-	ranchercontrollers "github.com/rancher/rancher/pkg/generated/controllers/provisioning.cattle.io/v1"
-	rkecontrollers "github.com/rancher/rancher/pkg/generated/controllers/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/wrangler"
-	corecontrollers "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
-	"github.com/rancher/wrangler/pkg/name"
-	"github.com/rancher/wrangler/pkg/randomtoken"
-	"github.com/rancher/wrangler/pkg/summary"
+	"github.com/ranger/channelserver/pkg/model"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1/plan"
+	"github.com/ranger/ranger/pkg/capr"
+	"github.com/ranger/ranger/pkg/controllers/capr/managesystemagent"
+	capicontrollers "github.com/ranger/ranger/pkg/generated/controllers/cluster.x-k8s.io/v1beta1"
+	mgmtcontrollers "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3"
+	rangercontrollers "github.com/ranger/ranger/pkg/generated/controllers/provisioning.cattle.io/v1"
+	rkecontrollers "github.com/ranger/ranger/pkg/generated/controllers/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/wrangler"
+	corecontrollers "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
+	"github.com/ranger/wrangler/pkg/name"
+	"github.com/ranger/wrangler/pkg/randomtoken"
+	"github.com/ranger/wrangler/pkg/summary"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/equality"
@@ -48,20 +48,20 @@ const (
 
 	KubeControllerManagerArg                      = "kube-controller-manager-arg"
 	KubeControllerManagerExtraMount               = "kube-controller-manager-extra-mount"
-	DefaultKubeControllerManagerCertDir           = "/var/lib/rancher/%s/server/tls/kube-controller-manager"
+	DefaultKubeControllerManagerCertDir           = "/var/lib/ranger/%s/server/tls/kube-controller-manager"
 	DefaultKubeControllerManagerDefaultSecurePort = "10257"
 	DefaultKubeControllerManagerCert              = "kube-controller-manager.crt"
 	KubeSchedulerArg                              = "kube-scheduler-arg"
 	KubeSchedulerExtraMount                       = "kube-scheduler-extra-mount"
-	DefaultKubeSchedulerCertDir                   = "/var/lib/rancher/%s/server/tls/kube-scheduler"
+	DefaultKubeSchedulerCertDir                   = "/var/lib/ranger/%s/server/tls/kube-scheduler"
 	DefaultKubeSchedulerDefaultSecurePort         = "10259"
 	DefaultKubeSchedulerCert                      = "kube-scheduler.crt"
 	SecurePortArgument                            = "secure-port"
 	CertDirArgument                               = "cert-dir"
 	TLSCertFileArgument                           = "tls-cert-file"
 
-	authnWebhookFileName = "/var/lib/rancher/%s/kube-api-authn-webhook.yaml"
-	ConfigYamlFileName   = "/etc/rancher/%s/config.yaml.d/50-rancher.yaml"
+	authnWebhookFileName = "/var/lib/ranger/%s/kube-api-authn-webhook.yaml"
+	ConfigYamlFileName   = "/etc/ranger/%s/config.yaml.d/50-ranger.yaml"
 
 	bootstrapTier    = "bootstrap"
 	etcdTier         = "etcd"
@@ -82,7 +82,7 @@ var (
 		flannelConfArg,
 	}
 	filePaths = map[string]string{
-		privateRegistryArg: "/etc/rancher/%s/registries.yaml",
+		privateRegistryArg: "/etc/ranger/%s/registries.yaml",
 	}
 	AuthnWebhook = []byte(`
 apiVersion: v1
@@ -121,13 +121,13 @@ type Planner struct {
 	capiClient                    capicontrollers.ClusterClient
 	capiClusters                  capicontrollers.ClusterCache
 	managementClusters            mgmtcontrollers.ClusterCache
-	rancherClusterCache           ranchercontrollers.ClusterCache
+	rangerClusterCache           rangercontrollers.ClusterCache
 	locker                        locker.Locker
 	etcdS3Args                    s3Args
 	retrievalFunctions            InfoFunctions
 }
 
-// InfoFunctions is a struct that contains various dynamic functions that allow for abstracting out Rancher-specific
+// InfoFunctions is a struct that contains various dynamic functions that allow for abstracting out Ranger-specific
 // logic from the Planner
 type InfoFunctions struct {
 	ImageResolver           func(image string, cp *rkev1.RKEControlPlane) string
@@ -154,7 +154,7 @@ func New(ctx context.Context, clients *wrangler.Context, functions InfoFunctions
 		capiClient:                    clients.CAPI.Cluster(),
 		capiClusters:                  clients.CAPI.Cluster().Cache(),
 		managementClusters:            clients.Mgmt.Cluster().Cache(),
-		rancherClusterCache:           clients.Provisioning.Cluster().Cache(),
+		rangerClusterCache:           clients.Provisioning.Cluster().Cache(),
 		rkeControlPlanes:              clients.RKE.RKEControlPlane(),
 		rkeBootstrap:                  clients.RKE.RKEBootstrap(),
 		rkeBootstrapCache:             clients.RKE.RKEBootstrap().Cache(),
@@ -984,7 +984,7 @@ func (p *Planner) reconcile(controlPlane *rkev1.RKEControlPlane, tokensSecret pl
 			messages[entry.Machine.Name] = append(messages[entry.Machine.Name], "waiting for kubelet to update")
 		} else if isControlPlane(entry) && !controlPlane.Status.AgentConnected {
 			// If the control plane nodes are currently being provisioned/updated, then it should be ensured that cluster-agent is connected.
-			// Without the agent connected, the controllers running in Rancher, including CAPI, can't communicate with the downstream cluster.
+			// Without the agent connected, the controllers running in Ranger, including CAPI, can't communicate with the downstream cluster.
 			outOfSync = append(outOfSync, entry.Machine.Name)
 			messages[entry.Machine.Name] = append(messages[entry.Machine.Name], "waiting for cluster agent to connect")
 		} else {

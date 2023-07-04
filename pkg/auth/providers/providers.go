@@ -6,21 +6,21 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/rancher/rancher/pkg/auth/providers/activedirectory"
-	"github.com/rancher/rancher/pkg/auth/providers/azure"
-	"github.com/rancher/rancher/pkg/auth/providers/common"
-	"github.com/rancher/rancher/pkg/auth/providers/github"
-	"github.com/rancher/rancher/pkg/auth/providers/googleoauth"
-	"github.com/rancher/rancher/pkg/auth/providers/keycloakoidc"
-	"github.com/rancher/rancher/pkg/auth/providers/ldap"
-	"github.com/rancher/rancher/pkg/auth/providers/local"
-	"github.com/rancher/rancher/pkg/auth/providers/oidc"
-	"github.com/rancher/rancher/pkg/auth/providers/saml"
-	"github.com/rancher/rancher/pkg/auth/tokens"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	publicclient "github.com/rancher/rancher/pkg/client/generated/management/v3public"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/ranger/pkg/auth/providers/activedirectory"
+	"github.com/ranger/ranger/pkg/auth/providers/azure"
+	"github.com/ranger/ranger/pkg/auth/providers/common"
+	"github.com/ranger/ranger/pkg/auth/providers/github"
+	"github.com/ranger/ranger/pkg/auth/providers/googleoauth"
+	"github.com/ranger/ranger/pkg/auth/providers/keycloakoidc"
+	"github.com/ranger/ranger/pkg/auth/providers/ldap"
+	"github.com/ranger/ranger/pkg/auth/providers/local"
+	"github.com/ranger/ranger/pkg/auth/providers/oidc"
+	"github.com/ranger/ranger/pkg/auth/providers/saml"
+	"github.com/ranger/ranger/pkg/auth/tokens"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	publicclient "github.com/ranger/ranger/pkg/client/generated/management/v3public"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
 )
 
 var (
@@ -223,7 +223,7 @@ func ProviderHasPerUserSecrets(providerName string) (bool, error) {
 	if providerName == azure.Name {
 		p, ok := Providers[azure.Name]
 		if !ok {
-			return false, fmt.Errorf("error determining if auth provider uses per-user tokens: provider %s is unknown to Rancher", providerName)
+			return false, fmt.Errorf("error determining if auth provider uses per-user tokens: provider %s is unknown to Ranger", providerName)
 		}
 
 		azureProvider, ok := p.(*azure.Provider)

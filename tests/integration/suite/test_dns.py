@@ -1,5 +1,5 @@
 from .common import random_str, auth_check
-from rancher import ApiError
+from ranger import ApiError
 import pytest
 
 

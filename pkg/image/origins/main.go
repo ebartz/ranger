@@ -7,14 +7,14 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/rancher/rancher/pkg/image/utilities"
+	"github.com/ranger/ranger/pkg/image/utilities"
 
-	img "github.com/rancher/rancher/pkg/image"
+	img "github.com/ranger/ranger/pkg/image"
 )
 
-// This file attempts to create an updated mapping of images used in rancher and their source code origin.
-// It does so on a best-effort basis and prints the resulting map to the terminal. Rancher images which share a name
-// with their base repository (such as gke-operator, which comes from github.com/rancher/gke-operator) will be
+// This file attempts to create an updated mapping of images used in ranger and their source code origin.
+// It does so on a best-effort basis and prints the resulting map to the terminal. Ranger images which share a name
+// with their base repository (such as gke-operator, which comes from github.com/ranger/gke-operator) will be
 // automatically resolved. In the case where images are detected but cannot be automatically resolved, a warning
 // will be printed to the console indicating such images, and the value of the image in the map will be 'unknown'.
 //
@@ -36,15 +36,15 @@ func inner(systemChartsPath, chartsPath string, imagesFromArgs []string) error {
 
 	unusedImages := CheckForImagesNoLongerBeingUsed(targetsAndSources)
 	if len(unusedImages) > 0 {
-		fmt.Println("Some images are no longer used by Rancher, please remove the following images from pkg/image/origin.go: ", unusedImages)
+		fmt.Println("Some images are no longer used by Ranger, please remove the following images from pkg/image/origin.go: ", unusedImages)
 	}
 
 	return PrintUpdatedImageOrigins(targetsAndSources)
 }
 
 // CheckForImagesNoLongerBeingUsed determines if /pkg/img/origins.go has keys within the map which
-// are no longer relevant. If so, they should be removed from /pkg/img/origins.go so that rancher-origins.txt
-// is up-to-date for the current version of Rancher.
+// are no longer relevant. If so, they should be removed from /pkg/img/origins.go so that ranger-origins.txt
+// is up-to-date for the current version of Ranger.
 func CheckForImagesNoLongerBeingUsed(targetsAndSources utilities.ImageTargetsAndSources) []string {
 	currentImages := make(map[string]interface{})
 	for _, e := range img.UniqueTargetImages(targetsAndSources.LinuxImagesFromArgs) {
@@ -71,7 +71,7 @@ func CheckForImagesNoLongerBeingUsed(targetsAndSources utilities.ImageTargetsAnd
 }
 
 func PrintUpdatedImageOrigins(targetsAndSources utilities.ImageTargetsAndSources) error {
-	fmt.Println("Generating updated rancher-image-origins map")
+	fmt.Println("Generating updated ranger-image-origins map")
 
 	// use the existing map so that we don't
 	// check images which have already been resolved.
@@ -128,13 +128,13 @@ func PrintUpdatedImageOrigins(targetsAndSources utilities.ImageTargetsAndSources
 	// warn about unresolved images
 	// so that they may be manually resolved
 	if len(unknownImages) > 0 {
-		fmt.Println(fmt.Sprintf("[WARN] Some images do not have an origin defined, please provide origins within rancher/pkg/image/origins.go for the following images: %s", unknownImages))
+		fmt.Println(fmt.Sprintf("[WARN] Some images do not have an origin defined, please provide origins within ranger/pkg/image/origins.go for the following images: %s", unknownImages))
 	}
 
 	return nil
 }
 
-// convertImagesToRepoUrls attempts to resolve Rancher owned images with its origin repository.
+// convertImagesToRepoUrls attempts to resolve Ranger owned images with its origin repository.
 // It does so on a best-effort basis, any gaps left by this must be covered manually
 // in the OriginMap in origins.go
 func convertImagesToRepoUrls(images []string, imgToURL map[string]string) error {
@@ -162,7 +162,7 @@ func convertImagesToRepoUrls(images []string, imgToURL map[string]string) error 
 		case strings.Contains(repo, "hardened"):
 			// hardened images conversion, best effort
 			cleanRepo := strings.ReplaceAll(repo, "hardened-", "image-build-")
-			url, err := checkURL("https://github.com/rancher/" + cleanRepo)
+			url, err := checkURL("https://github.com/ranger/" + cleanRepo)
 			if err != nil && err.Error() != imageNotFound {
 				return fmt.Errorf("encountered HTTP error while resolving repository %s: %w", repo, err)
 			}
@@ -171,9 +171,9 @@ func convertImagesToRepoUrls(images []string, imgToURL map[string]string) error 
 			}
 			imgToURL[repo] = url
 		default:
-			// handle Rancher images which share
+			// handle Ranger images which share
 			// a name with their base repository
-			url, err := checkURL("https://github.com/rancher/" + repo)
+			url, err := checkURL("https://github.com/ranger/" + repo)
 			if err != nil && err.Error() != imageNotFound {
 				return fmt.Errorf("encountered HTTP error while resolving repository %s: %w", repo, err)
 			}

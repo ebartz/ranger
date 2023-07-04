@@ -16,7 +16,7 @@ The filter looks like:
 (&(objectClass=person)(|(sAMAccountName=test*)(sn=test*)(givenName=test*))
 [user customized filter])
 Here, after we add
-userSearchFilter = (memberOf=CN=testgroup5,CN=Users,DC=tad,DC=rancher,DC=io)
+userSearchFilter = (memberOf=CN=testgroup5,CN=Users,DC=tad,DC=ranger,DC=io)
 we will filter out only testuser40 and testuser41, otherwise, all users start
 with search keyword "testuser" will be listed out.
 
@@ -58,7 +58,7 @@ def test_custom_user_and_group_filter_for_AD():
     disable_ad("testuser1", ADMIN_TOKEN)
     enable_ad_with_customized_filter(
         "testuser1",
-        "(memberOf=CN=testgroup5,CN=Users,DC=tad,DC=rancher,DC=io)",
+        "(memberOf=CN=testgroup5,CN=Users,DC=tad,DC=ranger,DC=io)",
         "", ADMIN_TOKEN)
     search_ad_users("testuser", ADMIN_TOKEN)
 
@@ -140,11 +140,11 @@ def search_ad_users(searchkey, token, expected_status=200):
         assert \
             data[0].get('id') == \
             "activedirectory_user://CN=test user40," \
-            "CN=Users,DC=tad,DC=rancher,DC=io"
+            "CN=Users,DC=tad,DC=ranger,DC=io"
         assert \
             data[1].get('id') == \
             "activedirectory_user://CN=test user41," \
-            "CN=Users,DC=tad,DC=rancher,DC=io"
+            "CN=Users,DC=tad,DC=ranger,DC=io"
 
 
 def search_ad_groups(searchkey, token, expected_status=200):
@@ -161,4 +161,4 @@ def search_ad_groups(searchkey, token, expected_status=200):
         assert \
             data[0].get('id') == \
             "activedirectory_group://CN=testgroup2," \
-            "CN=Users,DC=tad,DC=rancher,DC=io"
+            "CN=Users,DC=tad,DC=ranger,DC=io"

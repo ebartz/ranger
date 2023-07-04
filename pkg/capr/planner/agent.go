@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"sort"
 
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/systemtemplate"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/systemtemplate"
 )
 
 // generateClusterAgentManifest generates a cluster agent manifest

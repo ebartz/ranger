@@ -5,21 +5,21 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rancher/rancher/pkg/ref"
+	"github.com/ranger/ranger/pkg/ref"
 
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/store/transform"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/norman/types/values"
-	"github.com/rancher/rancher/pkg/auth/providers"
-	"github.com/rancher/rancher/pkg/auth/requests"
-	"github.com/rancher/rancher/pkg/catalog/manager"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	"github.com/rancher/rancher/pkg/clusterrouter"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/store/transform"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/norman/types/values"
+	"github.com/ranger/ranger/pkg/auth/providers"
+	"github.com/ranger/ranger/pkg/auth/requests"
+	"github.com/ranger/ranger/pkg/catalog/manager"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	"github.com/ranger/ranger/pkg/clusterrouter"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/sirupsen/logrus"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 )
@@ -200,7 +200,7 @@ func (s *Store) validateChartCompatibility(id string, data map[string]interface{
 		mcappCurrentTemplateVersion = mcappTemplateVersionParts[len(mcappTemplateVersionParts)-1]
 	}
 
-	if err := s.catalogManager.ValidateRancherVersion(template, mcappCurrentTemplateVersion); err != nil {
+	if err := s.catalogManager.ValidateRangerVersion(template, mcappCurrentTemplateVersion); err != nil {
 		return httperror.NewAPIError(httperror.InvalidBodyContent, err.Error())
 	}
 

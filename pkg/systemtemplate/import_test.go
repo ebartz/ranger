@@ -13,9 +13,9 @@ import (
 	rbacv1 "k8s.io/api/rbac/v1"
 	"k8s.io/client-go/kubernetes/scheme"
 
-	apimgmtv3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	corefakes "github.com/rancher/rancher/pkg/generated/norman/core/v1/fakes"
-	rketypes "github.com/rancher/rke/types"
+	apimgmtv3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	corefakes "github.com/ranger/ranger/pkg/generated/norman/core/v1/fakes"
+	rketypes "github.com/ranger/rke/types"
 	"github.com/stretchr/testify/assert"
 	corev1 "k8s.io/api/core/v1"
 	apierror "k8s.io/apimachinery/pkg/api/errors"
@@ -73,7 +73,7 @@ func TestSystemTemplate_systemtemplate(t *testing.T) {
 				},
 				Spec: apimgmtv3.ClusterSpec{
 					ClusterSpecBase: apimgmtv3.ClusterSpecBase{
-						RancherKubernetesEngineConfig: &rketypes.RancherKubernetesEngineConfig{},
+						RangerKubernetesEngineConfig: &rketypes.RangerKubernetesEngineConfig{},
 					},
 				},
 			},

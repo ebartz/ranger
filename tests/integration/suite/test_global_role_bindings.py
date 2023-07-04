@@ -1,6 +1,6 @@
 import pytest
 
-from rancher import ApiError
+from ranger import ApiError
 
 from kubernetes.client.rest import ApiException
 from kubernetes.client import RbacAuthorizationV1Api

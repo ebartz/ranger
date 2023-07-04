@@ -5,7 +5,7 @@
 Clean duplicates bindings found in a management cluster. This will collect all
 PRTBs and CRTBs, create the labels used to identify the k8s resources that correspond
 to those and check for duplicates. If they are found delete all but 1.
-This is technically safe as rancher will recreate any CRB or RB that is deleted that
+This is technically safe as ranger will recreate any CRB or RB that is deleted that
 should not have been.
 */
 
@@ -20,15 +20,15 @@ import (
 	"sync"
 
 	"github.com/hashicorp/go-multierror"
-	apiv3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/controllers/management/auth"
-	"github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io"
-	v3 "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3"
-	pkgrbac "github.com/rancher/rancher/pkg/rbac"
-	"github.com/rancher/wrangler/pkg/generated/controllers/rbac"
-	v1 "github.com/rancher/wrangler/pkg/generated/controllers/rbac/v1"
-	"github.com/rancher/wrangler/pkg/ratelimit"
-	"github.com/rancher/wrangler/pkg/start"
+	apiv3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/controllers/management/auth"
+	"github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io"
+	v3 "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3"
+	pkgrbac "github.com/ranger/ranger/pkg/rbac"
+	"github.com/ranger/wrangler/pkg/generated/controllers/rbac"
+	v1 "github.com/ranger/wrangler/pkg/generated/controllers/rbac/v1"
+	"github.com/ranger/wrangler/pkg/ratelimit"
+	"github.com/ranger/wrangler/pkg/start"
 	"github.com/sirupsen/logrus"
 	k8srbacv1 "k8s.io/api/rbac/v1"
 	k8sErrors "k8s.io/apimachinery/pkg/api/errors"
@@ -70,7 +70,7 @@ func DuplicateBindings(clientConfig *restclient.Config) error {
 	// No one wants to be slow
 	config.RateLimiter = ratelimit.None
 
-	rancherManagement, err := management.NewFactoryFromConfig(config)
+	rangerManagement, err := management.NewFactoryFromConfig(config)
 	if err != nil {
 		return err
 	}
@@ -80,7 +80,7 @@ func DuplicateBindings(clientConfig *restclient.Config) error {
 		return err
 	}
 
-	starters := []start.Starter{rancherManagement, k8srbac}
+	starters := []start.Starter{rangerManagement, k8srbac}
 
 	ctx := context.Background()
 	if err := start.All(ctx, 5, starters...); err != nil {
@@ -88,8 +88,8 @@ func DuplicateBindings(clientConfig *restclient.Config) error {
 	}
 
 	bc := dupeBindingsCleanup{
-		crtbs:               rancherManagement.Management().V3().ClusterRoleTemplateBinding(),
-		prtbs:               rancherManagement.Management().V3().ProjectRoleTemplateBinding(),
+		crtbs:               rangerManagement.Management().V3().ClusterRoleTemplateBinding(),
+		prtbs:               rangerManagement.Management().V3().ProjectRoleTemplateBinding(),
 		clusterRoleBindings: k8srbac.Rbac().V1().ClusterRoleBinding(),
 		roleBindings:        k8srbac.Rbac().V1().RoleBinding(),
 	}
@@ -108,17 +108,17 @@ func (bc *dupeBindingsCleanup) clean() error {
 		return err
 	}
 
-	// The label's key and value changes depending on the rancher version
-	var rancher25 bool
+	// The label's key and value changes depending on the ranger version
+	var ranger25 bool
 
-	// Check if we have the updated label, this indicates we are running on rancher 2.5+
+	// Check if we have the updated label, this indicates we are running on ranger 2.5+
 	if len(crtbs.Items) > 0 {
 		if _, ok := crtbs.Items[0].Labels[auth.RtbCrbRbLabelsUpdated]; ok {
-			rancher25 = true
+			ranger25 = true
 		}
 	} else if len(prtbs.Items) > 0 {
 		if _, ok := prtbs.Items[0].Labels[auth.RtbCrbRbLabelsUpdated]; ok {
-			rancher25 = true
+			ranger25 = true
 		}
 	} else {
 		logrus.Infof("[%v] no clusterRoleTemplateBindings or projectRoleTemplateBindings found, exiting.", dupeBindingsOperation)
@@ -129,14 +129,14 @@ func (bc *dupeBindingsCleanup) clean() error {
 
 	waitGroup.Add(2)
 	go func() {
-		if err := bc.cleanCRTB(rancher25, crtbs.Items); err != nil {
+		if err := bc.cleanCRTB(ranger25, crtbs.Items); err != nil {
 			logrus.Errorf("[%v] %v", dupeBindingsOperation, err)
 		}
 		waitGroup.Done()
 	}()
 
 	go func() {
-		if err := bc.cleanPRTB(rancher25, prtbs.Items); err != nil {
+		if err := bc.cleanPRTB(ranger25, prtbs.Items); err != nil {
 			logrus.Errorf("[%v] %v", dupeBindingsOperation, err)
 		}
 		waitGroup.Done()
@@ -344,13 +344,13 @@ func getDeterministicBindingName(object interface{}) (string, error) {
 }
 
 // createLabelSelectors creates the labels required to list both clusterRoleBindings and
-// roleBindings. See https://github.com/rancher/rancher/pull/28423#issue-468992149 for an explanation
+// roleBindings. See https://github.com/ranger/ranger/pull/28423#issue-468992149 for an explanation
 // of the labels.
 func createLabelSelectors(newLabel bool, obj metav1.ObjectMeta, objType string) []string {
 	var labelSelectors []string
 	var key string
 
-	// newLabel determines if we are using the newer rancher 2.5 style labels
+	// newLabel determines if we are using the newer ranger 2.5 style labels
 	if newLabel {
 		key = pkgrbac.GetRTBLabel(obj)
 		labelSelectors = append(labelSelectors, key+"="+auth.MembershipBindingOwner)

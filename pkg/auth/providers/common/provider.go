@@ -3,8 +3,8 @@ package common
 import (
 	"context"
 
-	"github.com/rancher/norman/types"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/norman/types"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
 )
 
 const (

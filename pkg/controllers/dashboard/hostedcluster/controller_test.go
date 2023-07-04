@@ -7,17 +7,17 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	aksv1 "github.com/rancher/aks-operator/pkg/apis/aks.cattle.io/v1"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/controllers/dashboard/chart"
-	"github.com/rancher/rancher/pkg/controllers/dashboard/chart/fake"
-	"github.com/rancher/rancher/pkg/settings"
+	aksv1 "github.com/ranger/aks-operator/pkg/apis/aks.cattle.io/v1"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/controllers/dashboard/chart"
+	"github.com/ranger/ranger/pkg/controllers/dashboard/chart/fake"
+	"github.com/ranger/ranger/pkg/settings"
 	"github.com/stretchr/testify/assert"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-var priorityClassName = "rancher-critical"
+var priorityClassName = "ranger-critical"
 
 func Test_handler_onClusterChange(t *testing.T) {
 
@@ -152,6 +152,6 @@ func newHandler(ctrl *gomock.Controller) *handler {
 		apps:         apps,
 		projectCache: projectCache,
 		secretsCache: secretsCache,
-		chartsConfig: chart.RancherConfigGetter{ConfigCache: configCache},
+		chartsConfig: chart.RangerConfigGetter{ConfigCache: configCache},
 	}
 }

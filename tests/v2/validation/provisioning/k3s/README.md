@@ -16,7 +16,7 @@ Please see below for more details for your config.
 7. [Back to general provisioning](../README.md)
 
 ## Provisioning Input
-provisioningInput is needed to the run the K3S tests, specifically kubernetesVersion and providers. nodesAndRoles is only needed for the TestProvisioningDynamicInput test, node pools are divided by "{nodepool},". psact is optional and takes values `rancher-privileged` and `rancher-restricted` only.
+provisioningInput is needed to the run the K3S tests, specifically kubernetesVersion and providers. nodesAndRoles is only needed for the TestProvisioningDynamicInput test, node pools are divided by "{nodepool},". psact is optional and takes values `ranger-privileged` and `ranger-restricted` only.
 
 **nodeProviders is only needed for custom cluster tests; the framework only supports custom clusters through aws/ec2 instances.**
 
@@ -107,7 +107,7 @@ Machine K3S config is the final piece needed for the config to run K3S provision
     "zone": "a",
     "retries": "5",
     "rootSize": "16",
-    "securityGroup": ["rancher-nodes"]
+    "securityGroup": ["ranger-nodes"]
 },
 ```
 ### Linode K3S Machine Config
@@ -219,7 +219,7 @@ Dependencies:
           ""
         ],
         "awsSSHKeyName": "",
-        "awsCICDInstanceTag": "rancher-validation",
+        "awsCICDInstanceTag": "ranger-validation",
         "awsIAMProfile": "",
         "awsUser": "ubuntu",
         "volumeSize": 25,
@@ -233,7 +233,7 @@ Dependencies:
           ""
         ],
         "awsSSHKeyName": "",
-        "awsCICDInstanceTag": "rancher-validation",
+        "awsCICDInstanceTag": "ranger-validation",
         "awsIAMProfile": "",
         "awsUser": "ubuntu",
         "volumeSize": 25,

@@ -5,25 +5,25 @@ import (
 	"fmt"
 	"testing"
 
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/tests/framework/clients/corral"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/machinepools"
-	"github.com/rancher/rancher/tests/framework/extensions/registries"
-	nodepools "github.com/rancher/rancher/tests/framework/extensions/rke1/nodepools"
-	"github.com/rancher/rancher/tests/framework/extensions/secrets"
-	"github.com/rancher/rancher/tests/framework/extensions/workloads/pods"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
-	"github.com/rancher/rancher/tests/framework/pkg/environmentflag"
-	namegen "github.com/rancher/rancher/tests/framework/pkg/namegenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
-	provisioning "github.com/rancher/rancher/tests/v2/validation/provisioning"
-	"github.com/rancher/rancher/tests/v2/validation/provisioning/rke1"
-	rke2k3s "github.com/rancher/rancher/tests/v2/validation/provisioning/rke2"
-	"github.com/rancher/rancher/tests/v2prov/defaults"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/tests/framework/clients/corral"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/machinepools"
+	"github.com/ranger/ranger/tests/framework/extensions/registries"
+	nodepools "github.com/ranger/ranger/tests/framework/extensions/rke1/nodepools"
+	"github.com/ranger/ranger/tests/framework/extensions/secrets"
+	"github.com/ranger/ranger/tests/framework/extensions/workloads/pods"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
+	"github.com/ranger/ranger/tests/framework/pkg/environmentflag"
+	namegen "github.com/ranger/ranger/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
+	provisioning "github.com/ranger/ranger/tests/v2/validation/provisioning"
+	"github.com/ranger/ranger/tests/v2/validation/provisioning/rke1"
+	rke2k3s "github.com/ranger/ranger/tests/v2/validation/provisioning/rke2"
+	"github.com/ranger/ranger/tests/v2prov/defaults"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -33,7 +33,7 @@ import (
 )
 
 const (
-	corralRancherName      = "rancherha"
+	corralRangerName      = "rangerha"
 	corralAuthDisabledName = "registryauthdisabled"
 	corralAuthEnabledName  = "registryauthenabled"
 	systemRegistry         = "system-default-registry"
@@ -43,7 +43,7 @@ const (
 type RegistryTestSuite struct {
 	suite.Suite
 	session                        *session.Session
-	client                         *rancher.Client
+	client                         *ranger.Client
 	clusterAuthID                  string
 	clusterNoAuthID                string
 	clusterLocalID                 string
@@ -51,7 +51,7 @@ type RegistryTestSuite struct {
 	clusterNoAuthRegistryHost      string
 	clusterWithGlobalID            string
 	localClusterGlobalRegistryHost string
-	rancherUsesRegistry            bool
+	rangerUsesRegistry            bool
 	advancedOptions                provisioning.AdvancedOptions
 	cnis                           []string
 	providers                      []string
@@ -72,7 +72,7 @@ func (rt *RegistryTestSuite) SetupSuite() {
 	testSession := session.NewSession()
 	rt.session = testSession
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(rt.T(), err)
 	rt.client = client
 
@@ -139,19 +139,19 @@ func (rt *RegistryTestSuite) SetupSuite() {
 	rt.providers = clustersConfig.Providers
 	rt.advancedOptions = clustersConfig.AdvancedOptions
 
-	rt.rancherUsesRegistry = false
+	rt.rangerUsesRegistry = false
 	listOfCorrals, err := corral.ListCorral()
 	require.NoError(rt.T(), err)
-	_, corralExist := listOfCorrals[corralRancherName]
+	_, corralExist := listOfCorrals[corralRangerName]
 	if corralExist {
-		globalRegistryFqdn, err = corral.GetCorralEnvVar(corralRancherName, "registry_fqdn")
+		globalRegistryFqdn, err = corral.GetCorralEnvVar(corralRangerName, "registry_fqdn")
 		require.NoError(rt.T(), err)
 		if globalRegistryFqdn != "<nil>" {
-			rt.rancherUsesRegistry = true
-			logrus.Infof("Rancher Global Registry FQDN %s", globalRegistryFqdn)
+			rt.rangerUsesRegistry = true
+			logrus.Infof("Ranger Global Registry FQDN %s", globalRegistryFqdn)
 		}
-		logrus.Infof("Rancher was built using corral: %t", corralExist)
-		logrus.Infof("Is Rancher using a global registry: %t", rt.rancherUsesRegistry)
+		logrus.Infof("Ranger was built using corral: %t", corralExist)
+		logrus.Infof("Is Ranger using a global registry: %t", rt.rangerUsesRegistry)
 	} else {
 		var isSystemRegistrySet bool
 		registry, err := client.Management.Setting.ByID(systemRegistry)
@@ -163,14 +163,14 @@ func (rt *RegistryTestSuite) SetupSuite() {
 
 		if useRegistries && isSystemRegistrySet {
 			globalRegistryFqdn = registry.Value
-			rt.rancherUsesRegistry = true
-			logrus.Infof("Rancher was built using corral: %t", corralExist)
-			logrus.Infof("Is Rancher using a global registry: %t", rt.rancherUsesRegistry)
-			logrus.Infof("Rancher Global Registry FQDN %s", globalRegistryFqdn)
+			rt.rangerUsesRegistry = true
+			logrus.Infof("Ranger was built using corral: %t", corralExist)
+			logrus.Infof("Is Ranger using a global registry: %t", rt.rangerUsesRegistry)
+			logrus.Infof("Ranger Global Registry FQDN %s", globalRegistryFqdn)
 		} else {
-			rt.rancherUsesRegistry = false
-			logrus.Infof("Rancher was built using corral: %t", corralExist)
-			logrus.Infof("Is Rancher using a global registry: %t", rt.rancherUsesRegistry)
+			rt.rangerUsesRegistry = false
+			logrus.Infof("Ranger was built using corral: %t", corralExist)
+			logrus.Infof("Is Ranger using a global registry: %t", rt.rangerUsesRegistry)
 		}
 	}
 
@@ -213,7 +213,7 @@ func (rt *RegistryTestSuite) TestRegistriesRKE() {
 	require.NoError(rt.T(), err)
 	rt.clusterAuthID = clusterID
 
-	if rt.rancherUsesRegistry {
+	if rt.rangerUsesRegistry {
 		clusterWithGlobal, err := rt.testProvisionRKE1Cluster(subClient, provider, rt.rkeNodesAndRoles, rt.rkeKubernetesVersions[0], rt.cnis[0], nil, rt.advancedOptions)
 		require.NoError(rt.T(), err)
 		clusterID, err := clusters.GetClusterIDByName(rt.client, clusterWithGlobal)
@@ -243,7 +243,7 @@ func (rt *RegistryTestSuite) TestRegistriesRKE2() {
 	rt.testAndProvisionRKE2K3SCluster(subClient, rt.rke2KubernetesVersions[0])
 }
 
-func (rt *RegistryTestSuite) testAndProvisionRKE2K3SCluster(client *rancher.Client, kubernetesVersion string) {
+func (rt *RegistryTestSuite) testAndProvisionRKE2K3SCluster(client *ranger.Client, kubernetesVersion string) {
 	rt.clusterAuthRegistryHost = rt.privateRegistriesAuth[0].URL
 	registryEnabledUsername := rt.privateRegistriesAuth[0].User
 	registryEnabledPassword := rt.privateRegistriesAuth[0].Password
@@ -261,7 +261,7 @@ func (rt *RegistryTestSuite) testAndProvisionRKE2K3SCluster(client *rancher.Clie
 	require.NoError(rt.T(), err)
 	rt.clusterNoAuthID = clusterID
 
-	if rt.rancherUsesRegistry {
+	if rt.rangerUsesRegistry {
 		rke2k3sClusterName = rt.testProvisionRKE2K3SCluster(client, rke2k3sProvider, rt.k3sRke2NodesAndRoles, kubernetesVersion, "", rt.localClusterGlobalRegistryHost, "", "", rt.advancedOptions)
 		clusterID, err = clusters.GetClusterIDByName(rt.client, rke2k3sClusterName)
 		require.NoError(rt.T(), err)
@@ -272,12 +272,12 @@ func (rt *RegistryTestSuite) testAndProvisionRKE2K3SCluster(client *rancher.Clie
 	rt.testRegistryAllPods()
 }
 
-func (rt *RegistryTestSuite) testProvisionRKE1Cluster(client *rancher.Client, provider rke1.Provider, nodesAndRoles []nodepools.NodeRoles, kubeVersion, cni string, privateRegistries []management.PrivateRegistry, advancedOptions provisioning.AdvancedOptions) (string, error) {
+func (rt *RegistryTestSuite) testProvisionRKE1Cluster(client *ranger.Client, provider rke1.Provider, nodesAndRoles []nodepools.NodeRoles, kubeVersion, cni string, privateRegistries []management.PrivateRegistry, advancedOptions provisioning.AdvancedOptions) (string, error) {
 	clusterName := namegen.AppendRandomString(provider.Name.String())
 	cluster := clusters.NewRKE1ClusterConfig(clusterName, cni, kubeVersion, "", client, advancedOptions)
 
 	if privateRegistries != nil {
-		cluster.RancherKubernetesEngineConfig.PrivateRegistries = privateRegistries
+		cluster.RangerKubernetesEngineConfig.PrivateRegistries = privateRegistries
 	}
 
 	clusterResp, err := clusters.CreateRKE1Cluster(client, cluster)
@@ -308,7 +308,7 @@ func (rt *RegistryTestSuite) testProvisionRKE1Cluster(client *rancher.Client, pr
 	return clusterName, nil
 }
 
-func (rt *RegistryTestSuite) testProvisionRKE2K3SCluster(client *rancher.Client, provider rke2k3s.Provider, nodesAndRoles []machinepools.NodeRoles, kubeVersion string, psact string, registryHostname string, registryUsername string, registryPassword string, advancedOptions provisioning.AdvancedOptions) string {
+func (rt *RegistryTestSuite) testProvisionRKE2K3SCluster(client *ranger.Client, provider rke2k3s.Provider, nodesAndRoles []machinepools.NodeRoles, kubeVersion string, psact string, registryHostname string, registryUsername string, registryPassword string, advancedOptions provisioning.AdvancedOptions) string {
 	cloudCredential, err := provider.CloudCredFunc(client)
 	require.NoError(rt.T(), err)
 
@@ -390,7 +390,7 @@ func (rt *RegistryTestSuite) testProvisionRKE2K3SCluster(client *rancher.Client,
 		require.NoError(rt.T(), err)
 	}
 
-	adminClient, err := rancher.NewClient(client.RancherConfig.AdminToken, client.Session)
+	adminClient, err := ranger.NewClient(client.RangerConfig.AdminToken, client.Session)
 	require.NoError(rt.T(), err)
 	kubeProvisioningClient, err := adminClient.GetKubeAPIProvisioningClient()
 	require.NoError(rt.T(), err)
@@ -410,7 +410,7 @@ func (rt *RegistryTestSuite) testProvisionRKE2K3SCluster(client *rancher.Client,
 
 func (rt *RegistryTestSuite) testRegistryAllPods() {
 
-	if rt.rancherUsesRegistry {
+	if rt.rangerUsesRegistry {
 		havePrefix, err := registries.CheckAllClusterPodsForRegistryPrefix(rt.client, rt.clusterLocalID, rt.localClusterGlobalRegistryHost)
 		require.NoError(rt.T(), err)
 		assert.True(rt.T(), havePrefix)
@@ -442,7 +442,7 @@ func (rt *RegistryTestSuite) testStatusAllPods() {
 	assert.NotEmpty(rt.T(), podResults)
 	assert.Empty(rt.T(), podErrors)
 
-	if rt.rancherUsesRegistry {
+	if rt.rangerUsesRegistry {
 		podResults, podErrors = pods.StatusPods(rt.client, rt.clusterWithGlobalID)
 		assert.NotEmpty(rt.T(), podResults)
 		assert.Empty(rt.T(), podErrors)

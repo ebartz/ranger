@@ -13,9 +13,9 @@ import (
 	"time"
 
 	"github.com/ghodss/yaml"
-	v1 "github.com/rancher/gke-operator/pkg/apis/gke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/controllers/management/clusteroperator"
-	mgmtv3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
+	v1 "github.com/ranger/gke-operator/pkg/apis/gke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/controllers/management/clusteroperator"
+	mgmtv3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/mock"
 	secretv1 "k8s.io/api/core/v1"

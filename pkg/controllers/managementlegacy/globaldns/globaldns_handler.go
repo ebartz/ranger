@@ -7,13 +7,13 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/rancher/rancher/pkg/controllers/management/rbac"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/ranger/pkg/controllers/management/rbac"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/sirupsen/logrus"
 
-	"github.com/rancher/rancher/pkg/ingresswrapper"
+	"github.com/ranger/ranger/pkg/ingresswrapper"
 	apiv1 "k8s.io/api/core/v1"
 	kextv1beta1 "k8s.io/api/extensions/v1beta1"
 	knetworkingv1 "k8s.io/api/networking/v1"
@@ -29,7 +29,7 @@ const (
 	annotationIngressClass = "kubernetes.io/ingress.class"
 	annotationFilter       = "annotationFilter"
 	annotationDNSTTL       = "external-dns.alpha.kubernetes.io/ttl"
-	defaultIngressClass    = "rancher-external-dns"
+	defaultIngressClass    = "ranger-external-dns"
 )
 
 type GDController struct {
@@ -64,7 +64,7 @@ func (n *GDController) sync(key string, obj *v3.GlobalDns) (runtime.Object, erro
 	}
 
 	if err := rbac.CreateRoleAndRoleBinding(rbac.GlobalDNSResource, v3.GlobalDnsGroupVersionKind.Kind, obj.Name, namespace.GlobalNamespace,
-		rbac.RancherManagementAPIVersion, creatorID, []string{rbac.RancherManagementAPIGroup},
+		rbac.RangerManagementAPIVersion, creatorID, []string{rbac.RangerManagementAPIGroup},
 		obj.UID, obj.Spec.Members, n.managementContext); err != nil {
 		return nil, err
 	}
@@ -169,7 +169,7 @@ func (n *GDController) generateNewIngressV1Spec(globaldns *v3.GlobalDns) *knetwo
 				},
 			},
 			Annotations: map[string]string{
-				annotationIngressClass: "rancher-external-dns",
+				annotationIngressClass: "ranger-external-dns",
 			},
 			Namespace: globaldns.Namespace,
 		},
@@ -215,7 +215,7 @@ func (n *GDController) generateNewIngressV1Beta1Spec(globaldns *v3.GlobalDns) *k
 				},
 			},
 			Annotations: map[string]string{
-				annotationIngressClass: "rancher-external-dns",
+				annotationIngressClass: "ranger-external-dns",
 			},
 			Namespace: globaldns.Namespace,
 		},

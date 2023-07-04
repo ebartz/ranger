@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/blang/semver"
-	"github.com/rancher/rancher/pkg/catalog/utils/version"
+	"github.com/ranger/ranger/pkg/catalog/utils/version"
 )
 
 func VersionBetween(a, b, c string) bool {

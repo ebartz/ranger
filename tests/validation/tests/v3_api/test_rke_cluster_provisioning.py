@@ -1,7 +1,7 @@
 from threading import Thread
 import pytest
 from .common import *  # NOQA
-from rancher import ApiError
+from ranger import ApiError
 
 K8S_VERSION = os.environ.get('RANCHER_K8S_VERSION', "")
 K8S_VERSION_UPGRADE = os.environ.get('RANCHER_K8S_VERSION_UPGRADE', "")
@@ -15,7 +15,7 @@ AZURE_CLIENT_SECRET = os.environ.get("AZURE_CLIENT_SECRET")
 AZURE_TENANT_ID = os.environ.get("AZURE_TENANT_ID")
 worker_count = int(os.environ.get('RANCHER_STRESS_TEST_WORKER_COUNT', 1))
 HOST_NAME = os.environ.get('RANCHER_HOST_NAME', "testcustom")
-engine_install_url = "https://releases.rancher.com/install-docker/24.0.sh"
+engine_install_url = "https://releases.ranger.com/install-docker/24.0.sh"
 
 rke_config = {
     "addonJobTimeout": 30,
@@ -343,8 +343,8 @@ def test_cis_complaint():
     client = get_admin_client()
     cluster = client.create_cluster(
         name=evaluate_clustername(),
-        driver="rancherKubernetesEngine",
-        rancherKubernetesEngineConfig=rke_config_cis,
+        driver="rangerKubernetesEngine",
+        rangerKubernetesEngineConfig=rke_config_cis,
         enableNetworkPolicy=True,
         defaultPodSecurityPolicyTemplateId=POD_SECURITY_POLICY_TEMPLATE)
     assert cluster.state == "provisioning"
@@ -381,22 +381,22 @@ def test_rke_az_host_with_provider_2(node_template_az):
     validate_rke_dm_host_2(node_template_az, rke_config_azure_provider)
 
 
-@pytest.mark.skip(reason="https://github.com/rancher/qa-tasks/issues/318")
+@pytest.mark.skip(reason="https://github.com/ranger/qa-tasks/issues/318")
 def test_rke_do_host_1(node_template_do):
     validate_rke_dm_host_1(node_template_do, rke_config)
 
 
-@pytest.mark.skip(reason="https://github.com/rancher/qa-tasks/issues/318")
+@pytest.mark.skip(reason="https://github.com/ranger/qa-tasks/issues/318")
 def test_rke_do_host_2(node_template_do):
     validate_rke_dm_host_2(node_template_do, rke_config)
 
 
-@pytest.mark.skip(reason="https://github.com/rancher/qa-tasks/issues/318")
+@pytest.mark.skip(reason="https://github.com/ranger/qa-tasks/issues/318")
 def test_rke_do_host_3(node_template_do):
     validate_rke_dm_host_3(node_template_do, rke_config)
 
 
-@pytest.mark.skip(reason="https://github.com/rancher/qa-tasks/issues/318")
+@pytest.mark.skip(reason="https://github.com/ranger/qa-tasks/issues/318")
 def test_rke_do_host_4(node_template_do):
     validate_rke_dm_host_4(node_template_do, rke_config)
 
@@ -481,8 +481,8 @@ def test_rke_custom_host_4():
     ]
     client = get_user_client()
     cluster = client.create_cluster(name=evaluate_clustername(),
-                                    driver="rancherKubernetesEngine",
-                                    rancherKubernetesEngineConfig=rke_config)
+                                    driver="rangerKubernetesEngine",
+                                    rangerKubernetesEngineConfig=rke_config)
     assert cluster.state == "provisioning"
     delay = 120
     host_threads = []
@@ -511,8 +511,8 @@ def test_rke_custom_host_stress():
         node_roles.append(worker_role)
     client = get_user_client()
     cluster = client.create_cluster(name=evaluate_clustername(),
-                                    driver="rancherKubernetesEngine",
-                                    rancherKubernetesEngineConfig=rke_config)
+                                    driver="rangerKubernetesEngine",
+                                    rangerKubernetesEngineConfig=rke_config)
     assert cluster.state == "provisioning"
     i = 0
     for aws_node in aws_nodes:
@@ -535,8 +535,8 @@ def test_rke_custom_host_etcd_plane_changes():
 
     client = get_user_client()
     cluster = client.create_cluster(name=evaluate_clustername(),
-                                    driver="rancherKubernetesEngine",
-                                    rancherKubernetesEngineConfig=rke_config)
+                                    driver="rangerKubernetesEngine",
+                                    rangerKubernetesEngineConfig=rke_config)
     assert cluster.state == "provisioning"
     i = 0
     for i in range(0, 5):
@@ -581,8 +581,8 @@ def test_rke_custom_host_etcd_plane_changes_1():
 
     client = get_user_client()
     cluster = client.create_cluster(name=evaluate_clustername(),
-                                    driver="rancherKubernetesEngine",
-                                    rancherKubernetesEngineConfig=rke_config)
+                                    driver="rangerKubernetesEngine",
+                                    rangerKubernetesEngineConfig=rke_config)
     assert cluster.state == "provisioning"
     i = 0
     for i in range(0, 5):
@@ -622,8 +622,8 @@ def test_rke_custom_host_control_plane_changes():
 
     client = get_user_client()
     cluster = client.create_cluster(name=evaluate_clustername(),
-                                    driver="rancherKubernetesEngine",
-                                    rancherKubernetesEngineConfig=rke_config)
+                                    driver="rangerKubernetesEngine",
+                                    rangerKubernetesEngineConfig=rke_config)
     assert cluster.state == "provisioning"
     i = 0
     for i in range(0, 5):
@@ -661,8 +661,8 @@ def test_rke_custom_host_worker_plane_changes():
 
     client = get_user_client()
     cluster = client.create_cluster(name=evaluate_clustername(),
-                                    driver="rancherKubernetesEngine",
-                                    rancherKubernetesEngineConfig=rke_config)
+                                    driver="rangerKubernetesEngine",
+                                    rangerKubernetesEngineConfig=rke_config)
     assert cluster.state == "provisioning"
     i = 0
     for i in range(0, 3):
@@ -699,8 +699,8 @@ def test_rke_custom_host_control_node_power_down():
 
     client = get_user_client()
     cluster = client.create_cluster(name=evaluate_clustername(),
-                                    driver="rancherKubernetesEngine",
-                                    rancherKubernetesEngineConfig=rke_config)
+                                    driver="rangerKubernetesEngine",
+                                    rangerKubernetesEngineConfig=rke_config)
     assert cluster.state == "provisioning"
     i = 0
     for i in range(0, 3):
@@ -749,12 +749,12 @@ def test_edit_cluster_k8s_version():
     clusters = client.list_cluster(name=evaluate_clustername()).data
     assert len(clusters) == 1
     cluster = clusters[0]
-    rke_config = cluster.rancherKubernetesEngineConfig
+    rke_config = cluster.rangerKubernetesEngineConfig
     rke_updated_config = rke_config.copy()
     rke_updated_config["kubernetesVersion"] = K8S_VERSION_UPGRADE
     cluster = client.update(cluster,
                             name=cluster.name,
-                            rancherKubernetesEngineConfig=rke_updated_config)
+                            rangerKubernetesEngineConfig=rke_updated_config)
     cluster = validate_cluster(client, cluster, intermediate_state="updating",
                                k8s_version=K8S_VERSION_UPGRADE)
 
@@ -766,7 +766,7 @@ def test_delete_cluster():
 
 
 def validate_rke_dm_host_1(node_template,
-                           rancherKubernetesEngineConfig=rke_config,
+                           rangerKubernetesEngineConfig=rke_config,
                            attemptDelete=True):
     client = get_user_client()
     nodes = []
@@ -780,7 +780,7 @@ def validate_rke_dm_host_1(node_template,
             "clusterId": None}
     nodes.append(node)
     cluster, node_pools = create_and_validate_cluster(
-        client, nodes, rancherKubernetesEngineConfig)
+        client, nodes, rangerKubernetesEngineConfig)
     if attemptDelete:
         cluster_cleanup(client, cluster)
     else:
@@ -788,7 +788,7 @@ def validate_rke_dm_host_1(node_template,
 
 
 def validate_rke_dm_host_2(node_template,
-                           rancherKubernetesEngineConfig=rke_config,
+                           rangerKubernetesEngineConfig=rke_config,
                            attemptDelete=True, clusterName=None):
     client = get_user_client()
     nodes = []
@@ -814,13 +814,13 @@ def validate_rke_dm_host_2(node_template,
             "quantity": 3}
     nodes.append(node)
     cluster, node_pools = create_and_validate_cluster(
-        client, nodes, rancherKubernetesEngineConfig, clusterName)
+        client, nodes, rangerKubernetesEngineConfig, clusterName)
     if attemptDelete:
         cluster_cleanup(client, cluster)
 
 
 def validate_rke_dm_host_3(node_template,
-                           rancherKubernetesEngineConfig=rke_config):
+                           rangerKubernetesEngineConfig=rke_config):
     client = get_user_client()
     nodes = []
     node_name = random_node_name()
@@ -845,12 +845,12 @@ def validate_rke_dm_host_3(node_template,
             "quantity": 3}
     nodes.append(node)
     cluster, node_pools = create_and_validate_cluster(
-        client, nodes, rancherKubernetesEngineConfig)
+        client, nodes, rangerKubernetesEngineConfig)
     cluster_cleanup(client, cluster)
 
 
 def validate_rke_dm_host_4(node_template,
-                           rancherKubernetesEngineConfig=rke_config):
+                           rangerKubernetesEngineConfig=rke_config):
     client = get_user_client()
 
     # Create cluster and add a node pool to this cluster
@@ -865,7 +865,7 @@ def validate_rke_dm_host_4(node_template,
             "quantity": 1}
     nodes.append(node)
     cluster, node_pools = create_and_validate_cluster(
-        client, nodes, rancherKubernetesEngineConfig)
+        client, nodes, rangerKubernetesEngineConfig)
     assert len(cluster.nodes()) == 1
     node1 = cluster.nodes().data[0]
     assert len(node_pools) == 1
@@ -889,13 +889,13 @@ def validate_rke_dm_host_4(node_template,
 
 
 def create_and_validate_cluster(client, nodes,
-                                rancherKubernetesEngineConfig=rke_config,
+                                rangerKubernetesEngineConfig=rke_config,
                                 clusterName=None):
 
     cluster = client.create_cluster(
         name=clusterName
         if clusterName is not None else evaluate_clustername(),
-        rancherKubernetesEngineConfig=rancherKubernetesEngineConfig)
+        rangerKubernetesEngineConfig=rangerKubernetesEngineConfig)
     node_pools = []
     for node in nodes:
         node["clusterId"] = cluster.id
@@ -1001,7 +1001,7 @@ def node_template_az():
     return node_template
 
 
-@pytest.mark.skip(reason="https://github.com/rancher/qa-tasks/issues/318")
+@pytest.mark.skip(reason="https://github.com/ranger/qa-tasks/issues/318")
 @pytest.fixture(scope='session')
 def node_template_do():
     client = get_user_client()
@@ -1043,7 +1043,7 @@ def node_template_linode():
                       "stackscriptData": "",
                       "swapSize": "512",
                       "tags": "",
-                      "uaPrefix": "Rancher"},
+                      "uaPrefix": "Ranger"},
         name=random_name(),
         driver="linode",
         cloudCredentialId=linode_cloud_credential.id,
@@ -1169,8 +1169,8 @@ def create_custom_host_from_nodes(nodes, node_roles,
         config["kubernetesVersion"] = version
 
     cluster = client.create_cluster(name=cluster_name,
-                                    driver="rancherKubernetesEngine",
-                                    rancherKubernetesEngineConfig=config,
+                                    driver="rangerKubernetesEngine",
+                                    rangerKubernetesEngineConfig=config,
                                     windowsPreferedCluster=windows)
     assert cluster.state == "provisioning"
 

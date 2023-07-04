@@ -1,6 +1,6 @@
 import time
 import pytest
-from rancher import ApiError
+from ranger import ApiError
 from .test_catalog import wait_for_template_to_be_created
 from .common import random_str, wait_for_template_versions_to_be_created
 from .conftest import set_server_version, wait_for, wait_for_condition, \
@@ -43,10 +43,10 @@ def test_app_mysql(admin_pc, admin_mc):
 @pytest.mark.skip(reason="istio disabled")
 def test_app_istio(admin_cc, admin_pc, admin_mc):
     client = admin_pc.client
-    name = "rancher-istio"
+    name = "ranger-istio"
     url = "	https://github.com/guangbochen/system-charts.git"
     external_id = "catalog://?catalog=system-library" \
-                  "&template=rancher-istio&version=1.1.5"
+                  "&template=ranger-istio&version=1.1.5"
 
     ns = admin_pc.cluster.client.create_namespace(name="istio-system",
                                                   projectId=admin_pc.
@@ -263,9 +263,9 @@ def test_app_custom_values_file(admin_pc, admin_mc):
 
 @pytest.mark.nonparallel
 def test_app_create_validation(admin_mc, admin_pc, custom_catalog,
-                               remove_resource, restore_rancher_version):
-    """Test create validation for apps. This test will set the rancher version
-    explicitly and attempt to create apps with rancher version requirements.
+                               remove_resource, restore_ranger_version):
+    """Test create validation for apps. This test will set the ranger version
+    explicitly and attempt to create apps with ranger version requirements.
     """
     # 2.3.1 uses 2.4.1-2.6.0
     # 2.7.0 uses 2.5.0-2.7.0
@@ -319,7 +319,7 @@ def test_app_create_validation(admin_mc, admin_pc, custom_catalog,
         app1 = admin_pc.client.create_app(app_data)
         remove_resource(app1)
     assert e.value.error.status == 422
-    assert 'incompatible rancher version [%s] for template' % server_version \
+    assert 'incompatible ranger version [%s] for template' % server_version \
         in e.value.error.message
 
     server_version = "2.7.1"
@@ -330,7 +330,7 @@ def test_app_create_validation(admin_mc, admin_pc, custom_catalog,
         app1 = admin_pc.client.create_app(app_data)
         remove_resource(app1)
     assert e.value.error.status == 422
-    assert 'incompatible rancher version [%s] for template' % server_version \
+    assert 'incompatible ranger version [%s] for template' % server_version \
         in e.value.error.message
 
     set_server_version(client, "2.5.1-rc4")
@@ -343,9 +343,9 @@ def test_app_create_validation(admin_mc, admin_pc, custom_catalog,
 
 @pytest.mark.nonparallel
 def test_app_update_validation(admin_mc, admin_pc, custom_catalog,
-                               remove_resource, restore_rancher_version):
-    """Test update validation for apps. This test will set the rancher version
-    explicitly and attempt to update apps with rancher version requirements.
+                               remove_resource, restore_ranger_version):
+    """Test update validation for apps. This test will set the ranger version
+    explicitly and attempt to update apps with ranger version requirements.
     """
     # 2.3.1 uses 2.4.1-2.6.0
     # 2.7.0 uses 2.5.0-2.7.0
@@ -394,7 +394,7 @@ def test_app_update_validation(admin_mc, admin_pc, custom_catalog,
     server_version = "2.4.2-rc3"
     set_server_version(client, server_version)
 
-    # Launch the app version 2.3.1 with rancher 2.4.2-rc3
+    # Launch the app version 2.3.1 with ranger 2.4.2-rc3
     app1 = admin_pc.client.create_app(app_data)
     remove_resource(app1)
     wait_for_workload(admin_pc.client, ns.name, count=1)
@@ -412,7 +412,7 @@ def test_app_update_validation(admin_mc, admin_pc, custom_catalog,
     with pytest.raises(ApiError) as e:
         app1 = client.action(**upgrade_dict)
     assert e.value.error.status == 422
-    assert 'incompatible rancher version [%s] for template' % server_version \
+    assert 'incompatible ranger version [%s] for template' % server_version \
         in e.value.error.message
 
     server_version = "2.7.1"
@@ -422,15 +422,15 @@ def test_app_update_validation(admin_mc, admin_pc, custom_catalog,
     with pytest.raises(ApiError) as e:
         app1 = client.action(**upgrade_dict)
     assert e.value.error.status == 422
-    assert 'incompatible rancher version [%s] for template' % server_version \
+    assert 'incompatible ranger version [%s] for template' % server_version \
         in e.value.error.message
 
 
 @pytest.mark.nonparallel
 def test_app_rollback_validation(admin_mc, admin_pc, custom_catalog,
-                                 remove_resource, restore_rancher_version):
-    """Test rollback validation for apps. This test will set the rancher version
-    explicitly and attempt to rollback apps with rancher version requirements.
+                                 remove_resource, restore_ranger_version):
+    """Test rollback validation for apps. This test will set the ranger version
+    explicitly and attempt to rollback apps with ranger version requirements.
     """
     # 2.3.1 uses 2.4.1-2.6.0
     # 2.7.0 uses 2.5.0-2.7.0
@@ -478,7 +478,7 @@ def test_app_rollback_validation(admin_mc, admin_pc, custom_catalog,
 
     set_server_version(client, "2.5.0")
 
-    # Launch the app version 2.3.1 with rancher 2.4.2
+    # Launch the app version 2.3.1 with ranger 2.4.2
     app1 = admin_pc.client.create_app(app_data)
     remove_resource(app1)
     wait_for_workload(admin_pc.client, ns.name, count=1)
@@ -538,7 +538,7 @@ def test_app_rollback_validation(admin_mc, admin_pc, custom_catalog,
     with pytest.raises(ApiError) as e:
         client.action(**rollback_dict)
     assert e.value.error.status == 422
-    assert 'incompatible rancher version [%s] for template' % server_version \
+    assert 'incompatible ranger version [%s] for template' % server_version \
         in e.value.error.message
 
     server_version = "2.0.0-rc3"
@@ -548,7 +548,7 @@ def test_app_rollback_validation(admin_mc, admin_pc, custom_catalog,
     with pytest.raises(ApiError) as e:
         client.action(**rollback_dict)
     assert e.value.error.status == 422
-    assert 'incompatible rancher version [%s] for template' % server_version \
+    assert 'incompatible ranger version [%s] for template' % server_version \
         in e.value.error.message
 
 
@@ -618,7 +618,7 @@ def test_app_upgrade_has_helmversion(admin_pc, admin_mc, remove_resource):
     app2_name = random_str()
     helm_3 = 'helm_v3'
     cat_base = "catalog://?catalog=" + catalog_name + \
-               "&template=rancher-v3-issue&version="
+               "&template=ranger-v3-issue&version="
 
     helm3_catalog = catalog_client.create_catalog(
         name=catalog_name,
@@ -627,7 +627,7 @@ def test_app_upgrade_has_helmversion(admin_pc, admin_mc, remove_resource):
         helmVersion=helm_3
     )
     remove_resource(helm3_catalog)
-    version = catalog_name+"-rancher-v3-issue-0.1.0"
+    version = catalog_name+"-ranger-v3-issue-0.1.0"
     wait_for_template_to_be_created(catalog_client, catalog_name)
     wait_for_template_versions_to_be_created(catalog_client, version)
     ns = admin_pc.cluster.client.create_namespace(name=random_str(),
@@ -676,7 +676,7 @@ def test_app_upgrade_has_helmversion(admin_pc, admin_mc, remove_resource):
         fail_handler=lambda:
         "Timed out waiting for catalog to stop transitioning")
 
-    version = catalog_name+"-rancher-v3-issue-0.1.1"
+    version = catalog_name+"-ranger-v3-issue-0.1.1"
     wait_for_template_versions_to_be_created(catalog_client, version)
     templates = catalog_client.list_template(catalogId=helm3_catalog.id).data
     assert templates[1].status.helmVersion == helm_3
@@ -726,7 +726,7 @@ def test_app_externalid_target_project_verification(admin_mc,
     # create a project scoped catalog in p1
     project_name = str.lstrip(p1.id, "local:")
     name = random_str()
-    url = "https://github.com/rancher/integration-test-charts.git"
+    url = "https://github.com/ranger/integration-test-charts.git"
 
     client.create_project_catalog(name=name,
                                   branch="master",

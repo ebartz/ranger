@@ -6,13 +6,13 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
 
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/rancher/pkg/monitoring"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/ranger/pkg/monitoring"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -160,7 +160,7 @@ func (a ActionHandler) validateChartCompatibility(version, clusterName string) e
 	if version == "" {
 		return nil
 	}
-	templateVersionID := fmt.Sprintf("system-library-rancher-monitoring-%s", version)
+	templateVersionID := fmt.Sprintf("system-library-ranger-monitoring-%s", version)
 	templateVersion, err := a.CatalogTemplateVersionLister.Get("cattle-global-data", templateVersionID)
 	if err != nil {
 		return err

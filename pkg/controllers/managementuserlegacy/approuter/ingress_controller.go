@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/rancher/pkg/ingresswrapper"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/wrangler/pkg/ticker"
+	"github.com/ranger/ranger/pkg/ingresswrapper"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/wrangler/pkg/ticker"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -19,7 +19,7 @@ import (
 const (
 	annotationIngressClass = "kubernetes.io/ingress.class"
 	ingressClassNginx      = "nginx"
-	RdnsIPDomain           = "lb.rancher.cloud"
+	RdnsIPDomain           = "lb.ranger.cloud"
 	maxHost                = 10
 )
 

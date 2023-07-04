@@ -3,19 +3,19 @@ package rke2
 import (
 	"testing"
 
-	provv1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
-	namegen "github.com/rancher/rancher/tests/framework/pkg/namegenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
-	"github.com/rancher/rancher/tests/v2/validation/provisioning"
+	provv1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
+	namegen "github.com/ranger/ranger/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/v2/validation/provisioning"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 )
 
 type HostnameTruncationTestSuite struct {
 	suite.Suite
-	client             *rancher.Client
+	client             *ranger.Client
 	session            *session.Session
 	kubernetesVersions []string
 	cnis               []string
@@ -39,7 +39,7 @@ func (r *HostnameTruncationTestSuite) SetupSuite() {
 	r.providers = clustersConfig.Providers
 	r.advancedOptions = clustersConfig.AdvancedOptions
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(r.T(), err)
 
 	r.client = client

@@ -6,14 +6,14 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/rancher/apiserver/pkg/types"
-	"github.com/rancher/rancher/pkg/auth/requests"
-	"github.com/rancher/rancher/pkg/auth/tokens"
-	"github.com/rancher/rancher/pkg/features"
-	"github.com/rancher/rancher/pkg/kubeconfig"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/user"
-	"github.com/rancher/wrangler/pkg/schemas/validation"
+	"github.com/ranger/apiserver/pkg/types"
+	"github.com/ranger/ranger/pkg/auth/requests"
+	"github.com/ranger/ranger/pkg/auth/tokens"
+	"github.com/ranger/ranger/pkg/features"
+	"github.com/ranger/ranger/pkg/kubeconfig"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/user"
+	"github.com/ranger/wrangler/pkg/schemas/validation"
 	"k8s.io/apiserver/pkg/endpoints/request"
 )
 

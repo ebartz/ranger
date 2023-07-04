@@ -1,7 +1,7 @@
 package v3
 
 import (
-	cond "github.com/rancher/norman/condition"
+	cond "github.com/ranger/norman/condition"
 )
 
 const (

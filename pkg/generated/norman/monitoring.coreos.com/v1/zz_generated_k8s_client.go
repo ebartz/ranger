@@ -2,10 +2,10 @@ package v1
 
 import (
 	"github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
-	"github.com/rancher/lasso/pkg/client"
-	"github.com/rancher/lasso/pkg/controller"
-	"github.com/rancher/norman/generator"
-	"github.com/rancher/norman/objectclient"
+	"github.com/ranger/lasso/pkg/client"
+	"github.com/ranger/lasso/pkg/controller"
+	"github.com/ranger/norman/generator"
+	"github.com/ranger/norman/objectclient"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/rest"
 )

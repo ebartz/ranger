@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/rancher/rancher/pkg/controllers/dashboard/chart"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/settings"
-	corev1 "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
+	"github.com/ranger/ranger/pkg/controllers/dashboard/chart"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/settings"
+	corev1 "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
 	"github.com/stretchr/testify/assert"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -19,9 +19,9 @@ var (
 	errNotFound      = fmt.Errorf("not found")
 )
 
-const priorityClassName = "rancher-critical"
+const priorityClassName = "ranger-critical"
 
-func TestGetPriorityClassNameFromRancherConfigMap(t *testing.T) {
+func TestGetPriorityClassNameFromRangerConfigMap(t *testing.T) {
 	configCache := &mockCache{
 		Maps: []*v1.ConfigMap{
 			{
@@ -78,7 +78,7 @@ func TestGetPriorityClassNameFromRancherConfigMap(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.setup()
-			getter := chart.RancherConfigGetter{configCache}
+			getter := chart.RangerConfigGetter{configCache}
 			got, err := getter.GetPriorityClassName()
 			if tt.wantErr {
 				assert.Error(t, err, "Expected test to error.")

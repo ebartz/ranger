@@ -6,16 +6,16 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/norman/types/slice"
-	"github.com/rancher/rancher/pkg/apis/management.cattle.io"
-	apisV3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/controllers/managementuser/resourcequota"
-	fleetconst "github.com/rancher/rancher/pkg/fleet"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	namespaceutil "github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/project"
-	projectpkg "github.com/rancher/rancher/pkg/project"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/norman/types/slice"
+	"github.com/ranger/ranger/pkg/apis/management.cattle.io"
+	apisV3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/controllers/managementuser/resourcequota"
+	fleetconst "github.com/ranger/ranger/pkg/fleet"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	namespaceutil "github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/project"
+	projectpkg "github.com/ranger/ranger/pkg/project"
 	"github.com/sirupsen/logrus"
 	v1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
@@ -96,7 +96,7 @@ func (n *nsLifecycle) syncNS(obj *v1.Namespace) (bool, error) {
 	if IsFleetNamespace(obj) &&
 		// If this is the local cluster, then only move the namespace to ths system project if the projectIDAnnotation is
 		// empty or beings with "local" (i.e. not c-). If the projectIDAnnotation begins with something other than "local"
-		// then it is likely that local cluster is the tenant cluster in a hosted Rancher setup and the namespace belongs to
+		// then it is likely that local cluster is the tenant cluster in a hosted Ranger setup and the namespace belongs to
 		// the system project for the cluster in the host cluster. Moving it here would only cause the namespace to be
 		// continually moved between projects forever.
 		(n.m.clusterName != "local" || obj.Annotations[projectIDAnnotation] == "" || strings.HasPrefix(obj.Annotations[projectIDAnnotation], "local")) {

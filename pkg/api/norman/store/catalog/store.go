@@ -5,17 +5,17 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/values"
-	c "github.com/rancher/rancher/pkg/api/norman/customization/catalog"
-	gaccess "github.com/rancher/rancher/pkg/api/norman/customization/globalnamespaceaccess"
-	"github.com/rancher/rancher/pkg/controllers/management/secretmigrator"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/ref"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/values"
+	c "github.com/ranger/ranger/pkg/api/norman/customization/catalog"
+	gaccess "github.com/ranger/ranger/pkg/api/norman/customization/globalnamespaceaccess"
+	"github.com/ranger/ranger/pkg/controllers/management/secretmigrator"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/ref"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	k8sTypes "k8s.io/apimachinery/pkg/types"
@@ -277,7 +277,7 @@ func (s *Store) isRestrictedAdmin(apiContext *types.APIContext) (bool, error) {
 	return ma.IsRestrictedAdmin(callerID)
 }
 
-// isSystemCatalog checks whether the catalog is the the system catalog maintained by rancher
+// isSystemCatalog checks whether the catalog is the the system catalog maintained by ranger
 func (s *Store) isSystemCatalog(apiContext *types.APIContext, schema *types.Schema, id string) (bool, error) {
 	catalog, err := s.ByID(apiContext, schema, id)
 	if err != nil {

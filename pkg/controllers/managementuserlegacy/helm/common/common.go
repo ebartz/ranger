@@ -18,19 +18,19 @@ import (
 
 	"github.com/ghodss/yaml"
 	"github.com/pkg/errors"
-	v32 "github.com/rancher/rancher/pkg/apis/project.cattle.io/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/project.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/jailer"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/settings"
+	v32 "github.com/ranger/ranger/pkg/apis/project.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/project.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/jailer"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/settings"
 	"github.com/sirupsen/logrus"
 )
 
 const (
 	base                    = 32768
 	end                     = 61000
-	tillerName              = "rancher-tiller"
-	HelmV2                  = "rancher-helm"
+	tillerName              = "ranger-tiller"
+	HelmV2                  = "ranger-helm"
 	HelmV3                  = "helm_v3"
 	forceUpgradeStr         = "--force"
 	appLabel                = "io.cattle.field/appId"

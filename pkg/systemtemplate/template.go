@@ -357,9 +357,9 @@ spec:
         - name: docker-pipe
           mountPath: \\.\pipe\docker_engine
         - name: wins-pipe
-          mountPath: \\.\pipe\rancher_wins
+          mountPath: \\.\pipe\ranger_wins
         - name: wins-config
-          mountPath: c:/etc/rancher/wins
+          mountPath: c:/etc/ranger/wins
       volumes:
       - name: k8s-ssl
         hostPath:
@@ -381,10 +381,10 @@ spec:
           path: \\.\pipe\docker_engine
       - name: wins-pipe
         hostPath:
-          path: \\.\pipe\rancher_wins
+          path: \\.\pipe\ranger_wins
       - name: wins-config
         hostPath:
-          path: c:/etc/rancher/wins
+          path: c:/etc/ranger/wins
           type: DirectoryOrCreate
   updateStrategy:
     type: RollingUpdate

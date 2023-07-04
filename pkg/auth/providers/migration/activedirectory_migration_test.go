@@ -3,12 +3,12 @@ package migration
 import (
 	"context"
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/rancher/pkg/auth/providers"
-	"github.com/rancher/rancher/pkg/auth/providers/activedirectory"
-	"github.com/rancher/rancher/pkg/auth/providers/common"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3/fakes"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/ranger/pkg/auth/providers"
+	"github.com/ranger/ranger/pkg/auth/providers/activedirectory"
+	"github.com/ranger/ranger/pkg/auth/providers/common"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3/fakes"
 	"github.com/stretchr/testify/assert"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -53,7 +53,7 @@ func Test_adMigration_migrate(t *testing.T) {
 						Name: "testuser4",
 					},
 					PrincipalIDs: []string{
-						"activedirectory_user://CN=testuser4,CN=Users,DC=qa,DC=rancher,DC=space",
+						"activedirectory_user://CN=testuser4,CN=Users,DC=qa,DC=ranger,DC=space",
 					},
 				},
 			},
@@ -86,7 +86,7 @@ func Test_adMigration_migrate(t *testing.T) {
 						Namespace: testNamespace,
 					},
 					RoleTemplateName:  "testRoleTemplateName",
-					UserPrincipalName: "activedirectory_user://CN=testuser4,CN=Users,DC=qa,DC=rancher,DC=space",
+					UserPrincipalName: "activedirectory_user://CN=testuser4,CN=Users,DC=qa,DC=ranger,DC=space",
 				},
 				{
 					ObjectMeta: v1.ObjectMeta{
@@ -94,7 +94,7 @@ func Test_adMigration_migrate(t *testing.T) {
 						Namespace: testNamespace,
 					},
 					RoleTemplateName:  "testRoleTemplateName",
-					UserPrincipalName: "activedirectory_user://CN=testuser4,CN=Users,DC=qa,DC=rancher,DC=space",
+					UserPrincipalName: "activedirectory_user://CN=testuser4,CN=Users,DC=qa,DC=ranger,DC=space",
 				},
 				{
 					ObjectMeta: v1.ObjectMeta{
@@ -112,7 +112,7 @@ func Test_adMigration_migrate(t *testing.T) {
 						Namespace: testNamespace,
 					},
 					RoleTemplateName:  "testRoleTemplateName",
-					UserPrincipalName: "activedirectory_user://CN=testuser4,CN=Users,DC=qa,DC=rancher,DC=space",
+					UserPrincipalName: "activedirectory_user://CN=testuser4,CN=Users,DC=qa,DC=ranger,DC=space",
 				},
 				{
 					ObjectMeta: v1.ObjectMeta{
@@ -120,7 +120,7 @@ func Test_adMigration_migrate(t *testing.T) {
 						Namespace: testNamespace,
 					},
 					RoleTemplateName:  "testRoleTemplateName",
-					UserPrincipalName: "activedirectory_user://CN=testuser4,CN=Users,DC=qa,DC=rancher,DC=space",
+					UserPrincipalName: "activedirectory_user://CN=testuser4,CN=Users,DC=qa,DC=ranger,DC=space",
 				},
 				{
 					ObjectMeta: v1.ObjectMeta{
@@ -146,7 +146,7 @@ func Test_adMigration_migrate(t *testing.T) {
 						Name: "testuser4",
 					},
 					PrincipalIDs: []string{
-						"activedirectory_user://CN=testuser4,CN=Users,DC=qa,DC=rancher,DC=space",
+						"activedirectory_user://CN=testuser4,CN=Users,DC=qa,DC=ranger,DC=space",
 					},
 				},
 				{
@@ -187,7 +187,7 @@ func Test_adMigration_migrate(t *testing.T) {
 						Namespace: testNamespace,
 					},
 					RoleTemplateName:  "testRoleTemplateName",
-					UserPrincipalName: "activedirectory_user://CN=testuser4,CN=Users,DC=qa,DC=rancher,DC=space",
+					UserPrincipalName: "activedirectory_user://CN=testuser4,CN=Users,DC=qa,DC=ranger,DC=space",
 				},
 				{
 					ObjectMeta: v1.ObjectMeta{
@@ -195,7 +195,7 @@ func Test_adMigration_migrate(t *testing.T) {
 						Namespace: testNamespace,
 					},
 					RoleTemplateName:  "testRoleTemplateName",
-					UserPrincipalName: "activedirectory_user://CN=testuser4,CN=Users,DC=qa,DC=rancher,DC=space",
+					UserPrincipalName: "activedirectory_user://CN=testuser4,CN=Users,DC=qa,DC=ranger,DC=space",
 				},
 				{
 					ObjectMeta: v1.ObjectMeta{
@@ -213,7 +213,7 @@ func Test_adMigration_migrate(t *testing.T) {
 						Namespace: testNamespace,
 					},
 					RoleTemplateName:  "testRoleTemplateName",
-					UserPrincipalName: "activedirectory_user://CN=testuser4,CN=Users,DC=qa,DC=rancher,DC=space",
+					UserPrincipalName: "activedirectory_user://CN=testuser4,CN=Users,DC=qa,DC=ranger,DC=space",
 				},
 				{
 					ObjectMeta: v1.ObjectMeta{
@@ -221,7 +221,7 @@ func Test_adMigration_migrate(t *testing.T) {
 						Namespace: testNamespace,
 					},
 					RoleTemplateName:  "testRoleTemplateName",
-					UserPrincipalName: "activedirectory_user://CN=testuser4,CN=Users,DC=qa,DC=rancher,DC=space",
+					UserPrincipalName: "activedirectory_user://CN=testuser4,CN=Users,DC=qa,DC=ranger,DC=space",
 				},
 				{
 					ObjectMeta: v1.ObjectMeta{
@@ -385,7 +385,7 @@ func Test_adMigration_migrateCRTB(t *testing.T) {
 			createFail:            false,
 			deleteFail:            false,
 			args: args{
-				dn:             "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=rancher,DC=space",
+				dn:             "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=ranger,DC=space",
 				newPrincipalID: "activedirectory_user://abcdef123456abcdef123456",
 			},
 			existingCrtbs: []*v3.ClusterRoleTemplateBinding{
@@ -395,7 +395,7 @@ func Test_adMigration_migrateCRTB(t *testing.T) {
 						Namespace: testNamespace,
 					},
 					RoleTemplateName:  "testRoleTemplateName",
-					UserPrincipalName: "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=rancher,DC=space",
+					UserPrincipalName: "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=ranger,DC=space",
 				},
 				{
 					ObjectMeta: v1.ObjectMeta{
@@ -403,7 +403,7 @@ func Test_adMigration_migrateCRTB(t *testing.T) {
 						Namespace: testNamespace,
 					},
 					RoleTemplateName:  "testRoleTemplateName",
-					UserPrincipalName: "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=rancher,DC=space",
+					UserPrincipalName: "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=ranger,DC=space",
 				},
 				{
 					ObjectMeta: v1.ObjectMeta{
@@ -423,7 +423,7 @@ func Test_adMigration_migrateCRTB(t *testing.T) {
 			createFail:            true,
 			deleteFail:            false,
 			args: args{
-				dn:             "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=rancher,DC=space",
+				dn:             "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=ranger,DC=space",
 				newPrincipalID: "activedirectory_user://abcdef123456abcdef123456",
 			},
 			existingCrtbs: []*v3.ClusterRoleTemplateBinding{
@@ -433,7 +433,7 @@ func Test_adMigration_migrateCRTB(t *testing.T) {
 						Namespace: testNamespace,
 					},
 					RoleTemplateName:  "testRoleTemplateName",
-					UserPrincipalName: "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=rancher,DC=space",
+					UserPrincipalName: "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=ranger,DC=space",
 				},
 			},
 		},
@@ -445,7 +445,7 @@ func Test_adMigration_migrateCRTB(t *testing.T) {
 			createFail:            false,
 			deleteFail:            true,
 			args: args{
-				dn:             "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=rancher,DC=space",
+				dn:             "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=ranger,DC=space",
 				newPrincipalID: "activedirectory_user://abcdef123456abcdef123456",
 			},
 			existingCrtbs: []*v3.ClusterRoleTemplateBinding{
@@ -455,7 +455,7 @@ func Test_adMigration_migrateCRTB(t *testing.T) {
 						Namespace: testNamespace,
 					},
 					RoleTemplateName:  "testRoleTemplateName",
-					UserPrincipalName: "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=rancher,DC=space",
+					UserPrincipalName: "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=ranger,DC=space",
 				},
 			},
 		},
@@ -526,7 +526,7 @@ func Test_adMigration_migratePRTB(t *testing.T) {
 			createFail:            false,
 			deleteFail:            false,
 			args: args{
-				dn:             "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=rancher,DC=space",
+				dn:             "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=ranger,DC=space",
 				newPrincipalID: "activedirectory_user://abcdef123456abcdef123456",
 			},
 			existingPrtbs: []*v3.ProjectRoleTemplateBinding{
@@ -536,7 +536,7 @@ func Test_adMigration_migratePRTB(t *testing.T) {
 						Namespace: testNamespace,
 					},
 					RoleTemplateName:  "testRoleTemplateName",
-					UserPrincipalName: "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=rancher,DC=space",
+					UserPrincipalName: "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=ranger,DC=space",
 				},
 				{
 					ObjectMeta: v1.ObjectMeta{
@@ -544,7 +544,7 @@ func Test_adMigration_migratePRTB(t *testing.T) {
 						Namespace: testNamespace,
 					},
 					RoleTemplateName:  "testRoleTemplateName",
-					UserPrincipalName: "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=rancher,DC=space",
+					UserPrincipalName: "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=ranger,DC=space",
 				},
 				{
 					ObjectMeta: v1.ObjectMeta{
@@ -564,7 +564,7 @@ func Test_adMigration_migratePRTB(t *testing.T) {
 			createFail:            true,
 			deleteFail:            false,
 			args: args{
-				dn:             "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=rancher,DC=space",
+				dn:             "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=ranger,DC=space",
 				newPrincipalID: "activedirectory_user://abcdef123456abcdef123456",
 			},
 			existingPrtbs: []*v3.ProjectRoleTemplateBinding{
@@ -574,7 +574,7 @@ func Test_adMigration_migratePRTB(t *testing.T) {
 						Namespace: testNamespace,
 					},
 					RoleTemplateName:  "testRoleTemplateName",
-					UserPrincipalName: "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=rancher,DC=space",
+					UserPrincipalName: "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=ranger,DC=space",
 				},
 			},
 		},
@@ -586,7 +586,7 @@ func Test_adMigration_migratePRTB(t *testing.T) {
 			createFail:            false,
 			deleteFail:            true,
 			args: args{
-				dn:             "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=rancher,DC=space",
+				dn:             "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=ranger,DC=space",
 				newPrincipalID: "activedirectory_user://abcdef123456abcdef123456",
 			},
 			existingPrtbs: []*v3.ProjectRoleTemplateBinding{
@@ -596,7 +596,7 @@ func Test_adMigration_migratePRTB(t *testing.T) {
 						Namespace: testNamespace,
 					},
 					RoleTemplateName:  "testRoleTemplateName",
-					UserPrincipalName: "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=rancher,DC=space",
+					UserPrincipalName: "activedirectory_user://CN=testuser1,CN=Users,DC=qa,DC=ranger,DC=space",
 				},
 			},
 		},

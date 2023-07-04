@@ -1,12 +1,12 @@
 import os
 import pytest
-from rancher import ApiError
+from ranger import ApiError
 from .common import *  # NOQA
 from .test_rke_cluster_provisioning import rke_config
 from .test_rke_cluster_provisioning import random_node_name
 from .test_rke_cluster_provisioning import create_and_validate_cluster
 
-engine_install_url = "https://releases.rancher.com/install-docker/24.0.sh"
+engine_install_url = "https://releases.ranger.com/install-docker/24.0.sh"
 user_clients = {"admin": None, "standard_user_1": None,
                 "standard_user_2": None}
 
@@ -226,7 +226,7 @@ def create_node_template_linode(client, cloud_credential=None):
                       "stackscriptData": "",
                       "swapSize": "512",
                       "tags": "",
-                      "uaPrefix": "Rancher"},
+                      "uaPrefix": "Ranger"},
         name=random_name(),
         driver="linode",
         cloudCredentialId=linode_cloud_credential.id,
@@ -245,7 +245,7 @@ def create_cloud_credential_linode(client):
 
 
 def create_and_validate_linode_cluster(node_template,
-                                       rancherKubernetesEngineConfig=rke_config,
+                                       rangerKubernetesEngineConfig=rke_config,
                                        attemptDelete=True):
     nodes = []
     node_name = random_node_name()
@@ -258,7 +258,7 @@ def create_and_validate_linode_cluster(node_template,
             "clusterId": None}
     nodes.append(node)
     cluster, node_pools = create_and_validate_cluster(
-        user_clients["admin"], nodes, rancherKubernetesEngineConfig,
+        user_clients["admin"], nodes, rangerKubernetesEngineConfig,
         clusterName=random_name())
     if attemptDelete:
         cluster_cleanup(user_clients["admin"], cluster)

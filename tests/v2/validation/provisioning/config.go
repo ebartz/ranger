@@ -1,11 +1,11 @@
 package provisioning
 
 import (
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	"github.com/rancher/rancher/tests/framework/extensions/machinepools"
-	nodepools "github.com/rancher/rancher/tests/framework/extensions/rke1/nodepools"
-	"github.com/rancher/rke/types"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/extensions/machinepools"
+	nodepools "github.com/ranger/ranger/tests/framework/extensions/rke1/nodepools"
+	"github.com/ranger/rke/types"
 )
 
 type Version string
@@ -16,8 +16,8 @@ const (
 	defaultRandStringLength         = 5
 	ConfigurationFileKey            = "provisioningInput"
 	HardenedKubeVersion     Version = "v1.24.99"
-	RancherPrivileged       PSACT   = "rancher-privileged"
-	RancherRestricted       PSACT   = "rancher-restricted"
+	RangerPrivileged       PSACT   = "ranger-privileged"
+	RangerRestricted       PSACT   = "ranger-restricted"
 )
 
 // ProviderName is string enum for provider names used in provisioning tests.

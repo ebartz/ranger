@@ -8,9 +8,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/systemtemplate"
-	"github.com/rancher/rancher/pkg/tls"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/systemtemplate"
+	"github.com/ranger/ranger/pkg/tls"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 )
@@ -163,7 +163,7 @@ func WindowsInstallScript(ctx context.Context, token string, envVars []corev1.En
 # Enables CSI Proxy
 $env:CSI_PROXY_URL = "%s"
 $env:CSI_PROXY_VERSION = "%s"
-$env:CSI_PROXY_KUBELET_PATH = "C:/var/lib/rancher/rke2/bin/kubelet.exe"
+$env:CSI_PROXY_KUBELET_PATH = "C:/var/lib/ranger/rke2/bin/kubelet.exe"
 
 Invoke-WinsInstaller @PSBoundParameters
 exit 0

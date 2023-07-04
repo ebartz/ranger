@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 )
 
 type EnvType int

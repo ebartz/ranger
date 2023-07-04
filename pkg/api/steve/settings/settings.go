@@ -1,9 +1,9 @@
 package settings
 
 import (
-	"github.com/rancher/apiserver/pkg/types"
-	schema2 "github.com/rancher/steve/pkg/schema"
-	steve "github.com/rancher/steve/pkg/server"
+	"github.com/ranger/apiserver/pkg/types"
+	schema2 "github.com/ranger/steve/pkg/schema"
+	steve "github.com/ranger/steve/pkg/server"
 )
 
 func Register(server *steve.Server) {

@@ -16,7 +16,7 @@ cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )/../../../" && pwd )"
 
 count=0
 while [[ 3 -gt $count ]]; do
-    docker build --rm --build-arg RKE_VERSION=$RKE_VERSION --build-arg KUBECTL_VERSION=$KUBECTL_VERSION -f Dockerfile.rke -t rancher-validation-tests .
+    docker build --rm --build-arg RKE_VERSION=$RKE_VERSION --build-arg KUBECTL_VERSION=$KUBECTL_VERSION -f Dockerfile.rke -t ranger-validation-tests .
     if [[ $? -eq 0 ]]; then break; fi
     count=$(($count + 1))
     echo "Repeating failed Docker build ${count} of 3..."

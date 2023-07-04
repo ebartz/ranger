@@ -1,7 +1,7 @@
 package ingresses
 
 import (
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
 	networkingv1 "k8s.io/api/networking/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -16,10 +16,10 @@ var IngressesGroupVersionResource = schema.GroupVersionResource{
 }
 
 // GetIngressByName is a helper function that returns the ingress by name in a specific cluster, uses ListIngresses to get the ingress.
-func GetIngressByName(client *rancher.Client, clusterID, namespaceName, ingressName string) (*networkingv1.Ingress, error) {
+func GetIngressByName(client *ranger.Client, clusterID, namespaceName, ingressName string) (*networkingv1.Ingress, error) {
 	var ingress *networkingv1.Ingress
 
-	adminClient, err := rancher.NewClient(client.RancherConfig.AdminToken, client.Session)
+	adminClient, err := ranger.NewClient(client.RangerConfig.AdminToken, client.Session)
 	if err != nil {
 		return ingress, err
 	}

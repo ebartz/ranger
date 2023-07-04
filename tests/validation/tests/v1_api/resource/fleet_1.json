@@ -9,7 +9,7 @@
   "metadata.labels": {
   },
   "spec": {
-    "repo": "https://github.com/rancher/fleet-examples",
+    "repo": "https://github.com/ranger/fleet-examples",
     "branch": "master",
     "paths": [
       "/simple"

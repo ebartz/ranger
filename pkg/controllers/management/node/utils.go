@@ -14,11 +14,11 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/types/convert"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/auth/tokens"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/jailer"
+	"github.com/ranger/norman/types/convert"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/auth/tokens"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/jailer"
 	"github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
@@ -35,7 +35,7 @@ var (
 const (
 	errorCreatingNode = "Error creating machine: "
 	nodeDirEnvKey     = "MACHINE_STORAGE_PATH="
-	nodeCmd           = "rancher-machine"
+	nodeCmd           = "ranger-machine"
 	ec2TagFlag        = "tags"
 )
 
@@ -151,7 +151,7 @@ func buildCommand(nodeDir string, node *v3.Node, cmdArgs []string) (*exec.Cmd, e
 	command := exec.Command(nodeCmd, cmdArgs...)
 	command.Env = []string{
 		nodeDirEnvKey + nodeDir,
-		"PATH=/usr/bin:/var/lib/rancher/management-state/bin",
+		"PATH=/usr/bin:/var/lib/ranger/management-state/bin",
 	}
 	logrus.Tracef("buildCommand args: %v", command.Args)
 	return jailer.JailCommand(command, path.Join(jailer.BaseJailPath, node.Namespace))

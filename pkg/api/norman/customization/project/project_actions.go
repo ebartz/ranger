@@ -11,23 +11,23 @@ import (
 
 	"github.com/ghodss/yaml"
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/api/handler"
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	provisioningv1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	"github.com/rancher/rancher/pkg/clustermanager"
-	"github.com/rancher/rancher/pkg/controllers/management/imported"
-	"github.com/rancher/rancher/pkg/fleet"
-	"github.com/rancher/rancher/pkg/generated/compose"
-	provisioningcontrollerv1 "github.com/rancher/rancher/pkg/generated/controllers/provisioning.cattle.io/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/monitoring"
-	"github.com/rancher/rancher/pkg/ref"
-	managementschema "github.com/rancher/rancher/pkg/schemas/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/user"
+	"github.com/ranger/norman/api/handler"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	provisioningv1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	"github.com/ranger/ranger/pkg/clustermanager"
+	"github.com/ranger/ranger/pkg/controllers/management/imported"
+	"github.com/ranger/ranger/pkg/fleet"
+	"github.com/ranger/ranger/pkg/generated/compose"
+	provisioningcontrollerv1 "github.com/ranger/ranger/pkg/generated/controllers/provisioning.cattle.io/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/monitoring"
+	"github.com/ranger/ranger/pkg/ref"
+	managementschema "github.com/ranger/ranger/pkg/schemas/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/user"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 )
 
@@ -472,7 +472,7 @@ func getID(id interface{}) (string, error) {
 	return split[0] + ":" + split[len(split)-1], nil
 }
 
-// isProvisionedRke2Cluster check to see if this is a rancher provisioned rke2 cluster
+// isProvisionedRke2Cluster check to see if this is a ranger provisioned rke2 cluster
 func isProvisionedRke2Cluster(cluster *v3.Cluster) bool {
 	return cluster.Status.Provider == v32.ClusterDriverRke2 && imported.IsAdministratedByProvisioningCluster(cluster)
 }

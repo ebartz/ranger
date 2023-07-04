@@ -3,8 +3,8 @@ package ingresses
 import (
 	"context"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
 	networkingv1 "k8s.io/api/networking/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -15,7 +15,7 @@ type IngressList struct {
 }
 
 // ListIngresses is a helper function that uses the dynamic client to list ingresses on a namespace for a specific cluster with its list options.
-func ListIngresses(client *rancher.Client, clusterID, namespace string, listOpts metav1.ListOptions) (*IngressList, error) {
+func ListIngresses(client *ranger.Client, clusterID, namespace string, listOpts metav1.ListOptions) (*IngressList, error) {
 	ingressList := new(IngressList)
 
 	dynamicClient, err := client.GetDownStreamClusterClient(clusterID)

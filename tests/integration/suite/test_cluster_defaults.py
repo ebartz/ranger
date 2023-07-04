@@ -1,6 +1,6 @@
 import json
 import pytest
-from rancher import ApiError
+from ranger import ApiError
 from .common import random_str
 from .conftest import wait_for
 
@@ -32,11 +32,11 @@ def test_generic_initial_defaults(admin_mc):
         if name == "enableNetworkPolicy":
             schema_defaults["enableNetworkPolicy"] = default
 
-    for name in cclient.schema.types['rancherKubernetesEngineConfig'] \
+    for name in cclient.schema.types['rangerKubernetesEngineConfig'] \
             .resourceFields.keys():
         if name == "ignoreDockerVersion":
             schema_defaults["ignoreDockerVersion"] = cclient.schema. \
-                types["rancherKubernetesEngineConfig"]. \
+                types["rangerKubernetesEngineConfig"]. \
                 resourceFields["ignoreDockerVersion"]. \
                 data_dict()["default"]
 
@@ -45,7 +45,7 @@ def test_generic_initial_defaults(admin_mc):
 
     setting_defaults["enableNetworkPolicy"] = data["enableNetworkPolicy"]
     setting_defaults["ignoreDockerVersion"] = \
-        data["rancherKubernetesEngineConfig"]["ignoreDockerVersion"]
+        data["rangerKubernetesEngineConfig"]["ignoreDockerVersion"]
 
     assert schema_defaults == setting_defaults
 
@@ -124,7 +124,7 @@ def test_eks_cluster_immutable_subnets(admin_mc, remove_resource):
 
 def test_rke_initial_conditions(admin_mc, remove_resource):
     cluster = admin_mc.client.create_cluster(
-        name=random_str(), rancherKubernetesEngineConfig={
+        name=random_str(), rangerKubernetesEngineConfig={
             "accessKey": "asdfsd"})
     remove_resource(cluster)
 
@@ -147,7 +147,7 @@ def test_psp_enabled_set(admin_mc, remove_resource):
     cluster capabilities"""
     admin_client = admin_mc.client
     cluster = admin_client.create_cluster(
-        name=random_str(), rancherKubernetesEngineConfig={
+        name=random_str(), rangerKubernetesEngineConfig={
             "accessKey": "asdfsd",
             "services": {
                 "kubeApi": {
@@ -180,22 +180,22 @@ def test_rke_k8s_deprecated_versions(admin_mc, remove_resource):
     deprecated_versions_setting = client.by_id_setting(
                                 "k8s-versions-deprecated")
     client.update_by_id_setting(id=deprecated_versions_setting.id,
-                                value="{\"v1.8.10-rancher1-1\":true}")
+                                value="{\"v1.8.10-ranger1-1\":true}")
     with pytest.raises(ApiError) as e:
         cluster = client.create_cluster(
-            name=random_str(), rancherKubernetesEngineConfig={
-                "kubernetesVersion": "v1.8.10-rancher1-1"})
+            name=random_str(), rangerKubernetesEngineConfig={
+                "kubernetesVersion": "v1.8.10-ranger1-1"})
         remove_resource(cluster)
     assert e.value.error.status == 500
     assert e.value.error.message == 'Requested kubernetesVersion ' \
-                                    'v1.8.10-rancher1-1 is deprecated'
+                                    'v1.8.10-ranger1-1 is deprecated'
     client.update_by_id_setting(id=deprecated_versions_setting.id,
                                 value="")
 
 
 def test_save_as_template_action_rbac(admin_mc, remove_resource, user_factory):
     cluster = admin_mc.client.create_cluster(name=random_str(),
-                                             rancherKubernetesEngineConfig={
+                                             rangerKubernetesEngineConfig={
                                                  "services": {
                                                      "type":
                                                      "rkeConfigServices",

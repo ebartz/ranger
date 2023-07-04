@@ -7,10 +7,10 @@ import (
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	mgmtcontrollers "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/wrangler/pkg/ticker"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	mgmtcontrollers "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/wrangler/pkg/ticker"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/labels"
 )
@@ -27,14 +27,14 @@ var (
 		prometheus.GaugeOpts{
 			Subsystem: "cluster_manager",
 			Name:      "nodes",
-			Help:      "Number of nodes in rancher managed clusters",
+			Help:      "Number of nodes in ranger managed clusters",
 		}, nodeLabels,
 	)
 	numCores = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Subsystem: "cluster_manager",
 			Name:      "node_cores",
-			Help:      "Number of node cores in rancher managed clusters",
+			Help:      "Number of node cores in ranger managed clusters",
 		}, nodeLabels,
 	)
 )

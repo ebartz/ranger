@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -21,7 +21,7 @@ var TokenGroupVersionResource = schema.GroupVersionResource{
 
 // PatchToken is a helper function that uses the dynamic client to patch a token by its name.
 // Different token operations are supported: add, replace, remove.
-func PatchToken(client *rancher.Client, clusterID, tokenName, patchOp, patchPath, patchData string) (*v3.Token, *unstructured.Unstructured, error) {
+func PatchToken(client *ranger.Client, clusterID, tokenName, patchOp, patchPath, patchData string) (*v3.Token, *unstructured.Unstructured, error) {
 	dynamicClient, err := client.GetDownStreamClusterClient(clusterID)
 	if err != nil {
 		return nil, nil, err

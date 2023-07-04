@@ -2,8 +2,8 @@
 
 I hereby claim:
 
-  * I am rancher on github.
-  * I am rancher (https://keybase.io/rancher) on keybase.
+  * I am ranger on github.
+  * I am ranger (https://keybase.io/ranger) on keybase.
   * I have a public key whose fingerprint is 7ACE 6FB6 0DC4 E26C 4C6F  344D C9DF 50BD AC35 1DA9
 
 To claim this, I am signing this object:
@@ -18,11 +18,11 @@ To claim this, I am signing this object:
       "key_id": "c9df50bdac351da9",
       "kid": "010195274cdf339669e41a38d3439a161ebf7d5dc4d7cb3cedaefcef3515c85c8b2f0a",
       "uid": "01b937b34ac988003e7eccf9d986f719",
-      "username": "rancher"
+      "username": "ranger"
     },
     "service": {
       "name": "github",
-      "username": "rancher"
+      "username": "ranger"
     },
     "type": "web_service_binding",
     "version": 1
@@ -35,7 +35,7 @@ To claim this, I am signing this object:
 }
 ```
 
-with the key [7ACE 6FB6 0DC4 E26C 4C6F  344D C9DF 50BD AC35 1DA9](https://keybase.io/rancher), yielding the signature:
+with the key [7ACE 6FB6 0DC4 E26C 4C6F  344D C9DF 50BD AC35 1DA9](https://keybase.io/ranger), yielding the signature:
 
 ```
 -----BEGIN PGP MESSAGE-----
@@ -72,7 +72,7 @@ And finally, I am proving ownership of the github account by posting this as a g
 
 ### My publicly-auditable identity:
 
-https://keybase.io/rancher
+https://keybase.io/ranger
 
 ### From the command line:
 
@@ -80,5 +80,5 @@ Consider the [keybase command line program](https://keybase.io/download).
 
 ```bash
 # look me up
-keybase id rancher
+keybase id ranger
 ```

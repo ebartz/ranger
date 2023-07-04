@@ -16,7 +16,7 @@ const (
 	AzureADConfigFieldLabels              = "labels"
 	AzureADConfigFieldName                = "name"
 	AzureADConfigFieldOwnerReferences     = "ownerReferences"
-	AzureADConfigFieldRancherURL          = "rancherUrl"
+	AzureADConfigFieldRangerURL          = "rangerUrl"
 	AzureADConfigFieldRemoved             = "removed"
 	AzureADConfigFieldTenantID            = "tenantId"
 	AzureADConfigFieldTokenEndpoint       = "tokenEndpoint"
@@ -39,7 +39,7 @@ type AzureADConfig struct {
 	Labels              map[string]string `json:"labels,omitempty" yaml:"labels,omitempty"`
 	Name                string            `json:"name,omitempty" yaml:"name,omitempty"`
 	OwnerReferences     []OwnerReference  `json:"ownerReferences,omitempty" yaml:"ownerReferences,omitempty"`
-	RancherURL          string            `json:"rancherUrl,omitempty" yaml:"rancherUrl,omitempty"`
+	RangerURL          string            `json:"rangerUrl,omitempty" yaml:"rangerUrl,omitempty"`
 	Removed             string            `json:"removed,omitempty" yaml:"removed,omitempty"`
 	TenantID            string            `json:"tenantId,omitempty" yaml:"tenantId,omitempty"`
 	TokenEndpoint       string            `json:"tokenEndpoint,omitempty" yaml:"tokenEndpoint,omitempty"`

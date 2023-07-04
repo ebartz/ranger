@@ -1,10 +1,10 @@
 #!/bin/bash
 echo "$@"
 
-mkdir -p /etc/rancher/k3s
-mkdir -p /var/lib/rancher/k3s/server/logs
+mkdir -p /etc/ranger/k3s
+mkdir -p /var/lib/ranger/k3s/server/logs
 token=$(openssl rand -base64 21)
-cat << EOF >/etc/rancher/k3s/config.yaml
+cat << EOF >/etc/ranger/k3s/config.yaml
 write-kubeconfig-mode: "0644"
 tls-san:
   - ${2}
@@ -14,13 +14,13 @@ EOF
 if [[ -n "${8}" ]] && [[ "${8}" == *":"* ]]
 then
    echo "$"
-   echo -e "$8" >> /etc/rancher/k3s/config.yaml
-   cat /etc/rancher/k3s/config.yaml
+   echo -e "$8" >> /etc/ranger/k3s/config.yaml
+   cat /etc/ranger/k3s/config.yaml
 fi
 
 if [[ -n "${8}" ]] && [[ "${8}" == *"protect-kernel-defaults"* ]]
 then
-  cat /tmp/cis_masterconfig.yaml >> /etc/rancher/k3s/config.yaml
+  cat /tmp/cis_masterconfig.yaml >> /etc/ranger/k3s/config.yaml
   echo -e "vm.panic_on_oom=0" >>/etc/sysctl.d/90-kubelet.conf
   echo -e "vm.overcommit_memory=1" >>/etc/sysctl.d/90-kubelet.conf
   echo -e "kernel.panic=10" >>/etc/sysctl.d/90-kubelet.conf
@@ -28,23 +28,23 @@ then
   echo -e "kernel.keys.root_maxbytes=25000000" >>/etc/sysctl.d/90-kubelet.conf
   sysctl -p /etc/sysctl.d/90-kubelet.conf
   systemctl restart systemd-sysctl
-  mkdir -p /var/lib/rancher/k3s/server/manifests
-  cat /tmp/policy.yaml > /var/lib/rancher/k3s/server/manifests/policy.yaml
-  cat /tmp/audit.yaml > /var/lib/rancher/k3s/server/audit.yaml
+  mkdir -p /var/lib/ranger/k3s/server/manifests
+  cat /tmp/policy.yaml > /var/lib/ranger/k3s/server/manifests/policy.yaml
+  cat /tmp/audit.yaml > /var/lib/ranger/k3s/server/audit.yaml
 
   if [[ "${4}" == *"v1.18"* ]] || [[ "${4}" == *"v1.19"* ]] || [[ "${4}" == *"v1.20"* ]]
   then
-    cat /tmp/v120ingresspolicy.yaml > /var/lib/rancher/k3s/server/manifests/v120ingresspolicy.yaml
+    cat /tmp/v120ingresspolicy.yaml > /var/lib/ranger/k3s/server/manifests/v120ingresspolicy.yaml
   else
-    cat /tmp/v121ingresspolicy.yaml > /var/lib/rancher/k3s/server/manifests/v121ingresspolicy.yaml
+    cat /tmp/v121ingresspolicy.yaml > /var/lib/ranger/k3s/server/manifests/v121ingresspolicy.yaml
   fi
 fi
 
 
 if [[ "${8}" == *"traefik"* ]]
 then
-   mkdir -p /var/lib/rancher/k3s/server/manifests
-   cat /tmp/nginx-ingress.yaml> /var/lib/rancher/k3s/server/manifests/nginx-ingress.yaml
+   mkdir -p /var/lib/ranger/k3s/server/manifests
+   cat /tmp/nginx-ingress.yaml> /var/lib/ranger/k3s/server/manifests/nginx-ingress.yaml
 fi
 
 if [ "${1}" = "rhel" ]
@@ -139,6 +139,6 @@ do
    sleep 20
    timeElapsed=$(expr $timeElapsed + 20)
 done
-cat /etc/rancher/k3s/config.yaml> /tmp/joinflags
-cat /var/lib/rancher/k3s/server/node-token >/tmp/nodetoken
-cat /etc/rancher/k3s/k3s.yaml >/tmp/config
+cat /etc/ranger/k3s/config.yaml> /tmp/joinflags
+cat /var/lib/ranger/k3s/server/node-token >/tmp/nodetoken
+cat /etc/ranger/k3s/k3s.yaml >/tmp/config

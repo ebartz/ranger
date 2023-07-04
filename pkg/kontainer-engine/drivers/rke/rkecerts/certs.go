@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/rancher/rke/pki"
-	"github.com/rancher/rke/pki/cert"
+	"github.com/ranger/rke/pki"
+	"github.com/ranger/rke/pki/cert"
 )
 
 type savedCertificatePKI struct {

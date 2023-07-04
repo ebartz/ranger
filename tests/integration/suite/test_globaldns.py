@@ -1,5 +1,5 @@
 from .common import random_str
-from rancher import ApiError
+from ranger import ApiError
 from kubernetes.client import CustomObjectsApi
 from kubernetes.client import CoreV1Api
 import pytest

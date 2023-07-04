@@ -5,11 +5,11 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	gaccess "github.com/rancher/rancher/pkg/api/norman/customization/globalnamespaceaccess"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	gaccess "github.com/ranger/ranger/pkg/api/norman/customization/globalnamespaceaccess"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
 	"k8s.io/apimachinery/pkg/api/meta"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -90,7 +90,7 @@ func (w Wrapper) Validator(request *types.APIContext, schema *types.Schema, data
 		return fmt.Errorf("invalid access type %v for globaldns member", accessType)
 	}
 	// only members list, FQDN and multiclusterappID can be edited through PUT, for updating projects, we need to use actions only
-	// that's why projects and multiclusterappID field have been made non updatable in rancher/types
+	// that's why projects and multiclusterappID field have been made non updatable in ranger/types
 	if err := gaccess.CheckAccessToUpdateMembers(gDNS.Spec.Members, data, accessType == gaccess.OwnerAccess); err != nil {
 		return err
 	}

@@ -2,7 +2,7 @@ package deployer
 
 const (
 	NotificationTmpl = `
-{{- define "rancher.title" -}}
+{{- define "ranger.title" -}}
 {{- if eq .Status "resolved" -}}
 [Resolved]
 {{- end -}}
@@ -43,7 +43,7 @@ The metric {{ .CommonLabels.alert_name}} crossed the threshold
 {{ end -}}
 
 {{- define "__wechat_text_list" -}}
-{{ template "rancher.title" . }}
+{{ template "ranger.title" . }}
 {{ template "__text_list" . }}
 {{ end -}}
 

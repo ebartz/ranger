@@ -3,7 +3,7 @@
 // RANCHER_VERSION resolution is first via Jenkins Build Parameter RANCHER_VERSION fed in from console,
 // then from $DOCKER_TRIGGER_TAG which is sourced from the Docker Hub Jenkins plugin webhook.
 
-def rancher_version() {
+def ranger_version() {
   try { if ('' != RANCHER_VERSION) { return RANCHER_VERSION } }
   catch (MissingPropertyException e) {}
 
@@ -31,15 +31,15 @@ def via_webhook() {
 // Filter out Docker Hub tags like 'latest', 'master', 'enterprise'.
 // Just want things like v1.2*
 def branch = "v2.1"
-def rancher_version = rancher_version()
-def String rancher_version_regex = "^v[\\d]\\.[\\d]\\.[\\d][\\-rc\\d]+\$"
+def ranger_version = ranger_version()
+def String ranger_version_regex = "^v[\\d]\\.[\\d]\\.[\\d][\\-rc\\d]+\$"
 
-if ( true == via_webhook() && (!(rancher_version ==~ rancher_version_regex)) ) {
-  println("Received RANCHER_VERSION \'${rancher_version}\' via webhook which does not match regex \'${rancher_version_regex}\'.")
+if ( true == via_webhook() && (!(ranger_version ==~ ranger_version_regex)) ) {
+  println("Received RANCHER_VERSION \'${ranger_version}\' via webhook which does not match regex \'${ranger_version_regex}\'.")
   println("** This will **not** result in a pipeline run.")
   currentBuild.result = lastBuildResult()
 } else {
-  if (rancher_version.startsWith("v2.2") || rancher_version.startsWith("v2.3") || rancher_version == "master-head") {
+  if (ranger_version.startsWith("v2.2") || ranger_version.startsWith("v2.3") || ranger_version == "master-head") {
     branch = "release/v2.6"
   }
   if (env.BRANCH) {
@@ -47,7 +47,7 @@ if ( true == via_webhook() && (!(rancher_version ==~ rancher_version_regex)) ) {
   }
   try {
     node {
-      def rootPath = "/src/rancher-validation/"
+      def rootPath = "/src/ranger-validation/"
       def job_name = "${JOB_NAME}"
       if (job_name.contains('/')) { 
         job_names = job_name.split('/')
@@ -59,20 +59,20 @@ if ( true == via_webhook() && (!(rancher_version ==~ rancher_version_regex)) ) {
       def deleteContainer = "${job_name}${env.BUILD_NUMBER}_delete"
       def deleteContainer2 = "${job_name}${env.BUILD_NUMBER}_delete2"
 
-      def deployPytestOptions = "-k test_deploy_rancher_server"
+      def deployPytestOptions = "-k test_deploy_ranger_server"
 
-      def deletePytestOptions = "-k test_delete_rancher_server"
+      def deletePytestOptions = "-k test_delete_ranger_server"
 
       def setupResultsOut = "setup-results.xml"
       def setupResultsOut2 = "setup-results-2.xml"
       def deleteResultsOut = "delete-results.xml"
       def deleteResultsOut2 = "delete-results-2.xml"
 
-      def imageName = "rancher-validation-${job_name}${env.BUILD_NUMBER}"
+      def imageName = "ranger-validation-${job_name}${env.BUILD_NUMBER}"
       def testsDir = "tests/v3_api/"
 
       def envFile = ".env"
-      def rancherConfig = "rancher_env.config"
+      def rangerConfig = "ranger_env.config"
 
       def CATTLE_TEST_URL_2 = ""
       def ADMIN_TOKEN_2 = ""
@@ -115,17 +115,17 @@ if ( true == via_webhook() && (!(rancher_version ==~ rancher_version_regex)) ) {
               }
 
               try {
-                stage('Deploy Rancher server 1') {
+                stage('Deploy Ranger server 1') {
                   try {
-                    // deploy rancher server
+                    // deploy ranger server
                     sh "docker run --name ${setupContainer} -t --env-file ${envFile} " +
-                      "${imageName} /bin/bash -c \'export RANCHER_SERVER_VERSION=${rancher_version} && " +
+                      "${imageName} /bin/bash -c \'export RANCHER_SERVER_VERSION=${ranger_version} && " +
                       "pytest -v -s --junit-xml=${setupResultsOut} " +
                       "${deployPytestOptions} ${testsDir}\'"
 
                     // copy file containing CATTLE_TEST_URL, ADMIN_TOKEN, USER_TOKEN and load into environment variables
-                    sh "docker cp ${setupContainer}:${rootPath}${testsDir}${rancherConfig} ."
-                    load rancherConfig
+                    sh "docker cp ${setupContainer}:${rootPath}${testsDir}${rangerConfig} ."
+                    load rangerConfig
 
                     CATTLE_TEST_URL_2 = "${CATTLE_TEST_URL}"
                     ADMIN_TOKEN_2 = "${ADMIN_TOKEN}"
@@ -137,17 +137,17 @@ if ( true == via_webhook() && (!(rancher_version ==~ rancher_version_regex)) ) {
                   }
                 }
 
-                stage('Deploy Rancher server 2') {
+                stage('Deploy Ranger server 2') {
                   try {
-                    // deploy rancher server
+                    // deploy ranger server
                     sh "docker run --name ${setupContainer2} -t --env-file ${envFile} " +
-                      "${imageName} /bin/bash -c \'export RANCHER_SERVER_VERSION=${rancher_version} && " +
+                      "${imageName} /bin/bash -c \'export RANCHER_SERVER_VERSION=${ranger_version} && " +
                       "pytest -v -s --junit-xml=${setupResultsOut2} " +
                       "${deployPytestOptions} ${testsDir}\'"
 
                     // copy file containing CATTLE_TEST_URL & ADMIN_TOKEN and load into environment variables
-                    sh "docker cp ${setupContainer2}:${rootPath}${testsDir}${rancherConfig} ."
-                    load rancherConfig
+                    sh "docker cp ${setupContainer2}:${rootPath}${testsDir}${rangerConfig} ."
+                    load rangerConfig
                   } catch(err) {
                     echo "Error: " + err
                     echo 'Test run had failures. Collecting results...'
@@ -175,7 +175,7 @@ if ( true == via_webhook() && (!(rancher_version ==~ rancher_version_regex)) ) {
                   try {
                       jobs = [:]
                       println "Branch: ${branch}"
-                      if (rancher_version.startsWith("v2.5")){
+                      if (ranger_version.startsWith("v2.5")){
                         if (!env.RKE_VERSION) {
                           RKE_VERSION = "v1.2.22"
                         }
@@ -183,7 +183,7 @@ if ( true == via_webhook() && (!(rancher_version ==~ rancher_version_regex)) ) {
                           RANCHER_K3S_VERSION = "v1.20.15+k3s1"
                         }
                       }
-                      else if (rancher_version.startsWith("v2.6")){
+                      else if (ranger_version.startsWith("v2.6")){
                         if (!env.RKE_VERSION) {
                           RKE_VERSION = "v1.3.19"
                         }
@@ -191,7 +191,7 @@ if ( true == via_webhook() && (!(rancher_version ==~ rancher_version_regex)) ) {
                           RANCHER_K3S_VERSION = "v1.24.11+k3s1"
                         }
                       }
-                      else if (rancher_version.startsWith("v2.7")){
+                      else if (ranger_version.startsWith("v2.7")){
                         if (!env.RKE_VERSION) {
                           RKE_VERSION = "v1.4.4"
                         }
@@ -203,43 +203,43 @@ if ( true == via_webhook() && (!(rancher_version ==~ rancher_version_regex)) ) {
                       params = [ string(name: 'CATTLE_TEST_URL', value: "${CATTLE_TEST_URL}"),
                                 string(name: 'ADMIN_TOKEN', value: "${ADMIN_TOKEN}"),
                                 string(name: 'USER_TOKEN', value: "${USER_TOKEN}"),
-                                string(name: 'RANCHER_SERVER_VERSION', value: "${rancher_version}"), 
+                                string(name: 'RANCHER_SERVER_VERSION', value: "${ranger_version}"), 
                                 string(name: 'BRANCH', value: branch) ]
 
                       params2 = [ string(name: 'CATTLE_TEST_URL', value: "${CATTLE_TEST_URL_2}"),
                                   string(name: 'ADMIN_TOKEN', value: "${ADMIN_TOKEN_2}"),
                                   string(name: 'USER_TOKEN', value: "${USER_TOKEN_2}"),
-                                  string(name: 'RANCHER_SERVER_VERSION', value: "${rancher_version}"),
+                                  string(name: 'RANCHER_SERVER_VERSION', value: "${ranger_version}"),
                                   string(name: 'RKE_VERSION', value: "${RKE_VERSION}"),
                                   string(name: 'RANCHER_K3S_VERSION', value: "${RANCHER_K3S_VERSION}"),
                                   string(name: 'BRANCH', value: branch) ]
 
                       goParams = [ string(name: 'TIMEOUT', value: "${TIMEOUT}"),
                                   text(name: 'CONFIG', value: "${env.CONFIG}"),
-                                  string(name: 'REPO', value: "https://github.com/rancher/rancher.git"),
+                                  string(name: 'REPO', value: "https://github.com/ranger/ranger.git"),
                                   string(name: 'BRANCH', value: branch),
                                   string(name: 'TEST_PACKAGE', value: "provisioning/..."),
                                   string(name: 'GOTEST_TESTCASE', value: "${env.GOTEST_TESTCASE}") ]
 
-                      // Rancher server 1 is used to test RKE1, RKE2 and K3s clusters.
-                      // DO Note: https://github.com/rancher/qa-tasks/issues/318
-                      // jobs["do"] = { build job: 'rancher-v3_ontag_do_certification', parameters: params }
-                      jobs["ec2"] = { build job: 'rancher-v3_ontag_ec2_certification', parameters: params }
-                      jobs["az"] = { build job: 'rancher-v3_ontag_az_certification', parameters: params }
-                      jobs["custom"] = { build job: 'rancher-v3_ontag_custom_certification', parameters: params}
-                      jobs["go-provisioning"] = { build job: 'rancher_ontag_go_certification', parameters: goParams }
-                      // windows note: https://github.com/rancher/dashboard/issues/6549
-                      // jobs["windows"] = { build job: 'rancher-v3_ontag_windows_certification', parameters: params}
-                      if (rancher_version.startsWith("v2.6") || rancher_version.startsWith("v2.7")){
-                        // Rancher server 2 is used to test GKE, EKS, AKS and Imported clusters.
-                        jobs["eks"] = { build job: 'rancher-v3_ontag_eks_certification', parameters: params2 }
-                        jobs["aks"] = { build job: 'rancher-v3_ontag_aks_certification', parameters: params2 }
-                        // gke note: https://github.com/rancher/qa-tasks/issues/429
-                        // jobs["gke"] = { build job: 'rancher-v3_ontag_gke_certification', parameters: params2 }
+                      // Ranger server 1 is used to test RKE1, RKE2 and K3s clusters.
+                      // DO Note: https://github.com/ranger/qa-tasks/issues/318
+                      // jobs["do"] = { build job: 'ranger-v3_ontag_do_certification', parameters: params }
+                      jobs["ec2"] = { build job: 'ranger-v3_ontag_ec2_certification', parameters: params }
+                      jobs["az"] = { build job: 'ranger-v3_ontag_az_certification', parameters: params }
+                      jobs["custom"] = { build job: 'ranger-v3_ontag_custom_certification', parameters: params}
+                      jobs["go-provisioning"] = { build job: 'ranger_ontag_go_certification', parameters: goParams }
+                      // windows note: https://github.com/ranger/dashboard/issues/6549
+                      // jobs["windows"] = { build job: 'ranger-v3_ontag_windows_certification', parameters: params}
+                      if (ranger_version.startsWith("v2.6") || ranger_version.startsWith("v2.7")){
+                        // Ranger server 2 is used to test GKE, EKS, AKS and Imported clusters.
+                        jobs["eks"] = { build job: 'ranger-v3_ontag_eks_certification', parameters: params2 }
+                        jobs["aks"] = { build job: 'ranger-v3_ontag_aks_certification', parameters: params2 }
+                        // gke note: https://github.com/ranger/qa-tasks/issues/429
+                        // jobs["gke"] = { build job: 'ranger-v3_ontag_gke_certification', parameters: params2 }
                         
                       }
-                      jobs["import"] = { build job: 'rancher-v3_ontag_import_certification', parameters: params2}
-                      jobs["importk3s"] = { build job: 'rancher-v3_ontag_import_k3s_certification', parameters: params2}
+                      jobs["import"] = { build job: 'ranger-v3_ontag_import_certification', parameters: params2}
+                      jobs["importk3s"] = { build job: 'ranger-v3_ontag_import_k3s_certification', parameters: params2}
 
                       parallel jobs
                     } catch(err) {
@@ -247,7 +247,7 @@ if ( true == via_webhook() && (!(rancher_version ==~ rancher_version_regex)) ) {
                     }
                 }
 
-                stage('Delete Rancher Server') {
+                stage('Delete Ranger Server') {
                   if (env.RANCHER_DELETE_SERVER.toLowerCase() == "true") {
                     try {
                       sh "docker run --name ${deleteContainer} -t --env-file ${envFile} " +

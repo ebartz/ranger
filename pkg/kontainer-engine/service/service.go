@@ -12,18 +12,18 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rancher/rancher/pkg/jailer"
+	"github.com/ranger/ranger/pkg/jailer"
 
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/rancher/pkg/kontainer-engine/cluster"
-	"github.com/rancher/rancher/pkg/kontainer-engine/drivers/aks"
-	"github.com/rancher/rancher/pkg/kontainer-engine/drivers/eks"
-	"github.com/rancher/rancher/pkg/kontainer-engine/drivers/gke"
-	kubeimport "github.com/rancher/rancher/pkg/kontainer-engine/drivers/import"
-	"github.com/rancher/rancher/pkg/kontainer-engine/drivers/rke"
-	"github.com/rancher/rancher/pkg/kontainer-engine/types"
+	"github.com/ranger/ranger/pkg/kontainer-engine/cluster"
+	"github.com/ranger/ranger/pkg/kontainer-engine/drivers/aks"
+	"github.com/ranger/ranger/pkg/kontainer-engine/drivers/eks"
+	"github.com/ranger/ranger/pkg/kontainer-engine/drivers/gke"
+	kubeimport "github.com/ranger/ranger/pkg/kontainer-engine/drivers/import"
+	"github.com/ranger/ranger/pkg/kontainer-engine/drivers/rke"
+	"github.com/ranger/ranger/pkg/kontainer-engine/types"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 )
@@ -34,7 +34,7 @@ const (
 	AzureKubernetesServiceDriverName        = "azurekubernetesservice"
 	AmazonElasticContainerServiceDriverName = "amazonelasticcontainerservice"
 	ImportDriverName                        = "import"
-	RancherKubernetesEngineDriverName       = "rancherkubernetesengine"
+	RangerKubernetesEngineDriverName       = "rangerkubernetesengine"
 )
 
 var (
@@ -43,7 +43,7 @@ var (
 		AzureKubernetesServiceDriverName:        aks.NewDriver(),
 		AmazonElasticContainerServiceDriverName: eks.NewDriver(),
 		ImportDriverName:                        kubeimport.NewDriver(),
-		RancherKubernetesEngineDriverName:       rke.NewDriver(),
+		RangerKubernetesEngineDriverName:       rke.NewDriver(),
 	}
 )
 
@@ -67,8 +67,8 @@ func (c controllerConfigGetter) GetConfig() (types.DriverOptions, error) {
 			return driverOptions, err
 		}
 		flatten(config, &driverOptions)
-	case RancherKubernetesEngineDriverName:
-		config, err := yaml.Marshal(c.clusterSpec.RancherKubernetesEngineConfig)
+	case RangerKubernetesEngineDriverName:
+		config, err := yaml.Marshal(c.clusterSpec.RangerKubernetesEngineConfig)
 		if err != nil {
 			return driverOptions, err
 		}
@@ -177,8 +177,8 @@ func (e *EngineService) convertCluster(name string, listenAddr string, spec v3.C
 	driverName := ""
 	if spec.ImportedConfig != nil {
 		driverName = ImportDriverName
-	} else if spec.RancherKubernetesEngineConfig != nil {
-		driverName = RancherKubernetesEngineDriverName
+	} else if spec.RangerKubernetesEngineConfig != nil {
+		driverName = RangerKubernetesEngineDriverName
 	} else if spec.GenericEngineConfig != nil {
 		driverName = (*spec.GenericEngineConfig)["driverName"].(string)
 		if driverName == "" {

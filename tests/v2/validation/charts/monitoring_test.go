@@ -7,17 +7,17 @@ import (
 
 	"net/url"
 
-	"github.com/rancher/norman/types"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/charts"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/namespaces"
-	"github.com/rancher/rancher/tests/framework/extensions/projects"
-	"github.com/rancher/rancher/tests/framework/extensions/secrets"
-	"github.com/rancher/rancher/tests/framework/extensions/services"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/charts"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/namespaces"
+	"github.com/ranger/ranger/tests/framework/extensions/projects"
+	"github.com/ranger/ranger/tests/framework/extensions/secrets"
+	"github.com/ranger/ranger/tests/framework/extensions/services"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -28,11 +28,11 @@ import (
 
 type MonitoringTestSuite struct {
 	suite.Suite
-	client              *rancher.Client
+	client              *ranger.Client
 	session             *session.Session
 	project             *management.Project
 	chartInstallOptions *charts.InstallOptions
-	chartFeatureOptions *charts.RancherMonitoringOpts
+	chartFeatureOptions *charts.RangerMonitoringOpts
 }
 
 func (m *MonitoringTestSuite) TearDownSuite() {
@@ -43,13 +43,13 @@ func (m *MonitoringTestSuite) SetupSuite() {
 	testSession := session.NewSession()
 	m.session = testSession
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(m.T(), err)
 
 	m.client = client
 
 	// Get clusterName from config yaml
-	clusterName := client.RancherConfig.ClusterName
+	clusterName := client.RangerConfig.ClusterName
 	require.NotEmptyf(m.T(), clusterName, "Cluster name to install is not set")
 
 	// Get clusterID with clusterName
@@ -69,7 +69,7 @@ func (m *MonitoringTestSuite) SetupSuite() {
 	prometheusTargetsPath = fmt.Sprintf("k8s/clusters/%s/%s", clusterID, prometheusTargetsPath)
 
 	// Get latest versions of the monitoring chart
-	latestMonitoringVersion, err := client.Catalog.GetLatestChartVersion(charts.RancherMonitoringName)
+	latestMonitoringVersion, err := client.Catalog.GetLatestChartVersion(charts.RangerMonitoringName)
 	require.NoError(m.T(), err)
 
 	// Get project system projectId
@@ -85,7 +85,7 @@ func (m *MonitoringTestSuite) SetupSuite() {
 		Version:     latestMonitoringVersion,
 		ProjectID:   m.project.ID,
 	}
-	m.chartFeatureOptions = &charts.RancherMonitoringOpts{
+	m.chartFeatureOptions = &charts.RangerMonitoringOpts{
 		IngressNginx:         true,
 		RKEControllerManager: true,
 		RKEEtcd:              true,
@@ -105,31 +105,31 @@ func (m *MonitoringTestSuite) TestMonitoringChart() {
 	require.NoError(m.T(), err)
 
 	m.T().Log("Checking if the monitoring chart is already installed")
-	initialMonitoringChart, err := charts.GetChartStatus(client, m.project.ClusterID, charts.RancherMonitoringNamespace, charts.RancherMonitoringName)
+	initialMonitoringChart, err := charts.GetChartStatus(client, m.project.ClusterID, charts.RangerMonitoringNamespace, charts.RangerMonitoringName)
 	require.NoError(m.T(), err)
 
 	if !initialMonitoringChart.IsAlreadyInstalled {
 		m.T().Log("Installing monitoring chart")
-		err = charts.InstallRancherMonitoringChart(client, m.chartInstallOptions, m.chartFeatureOptions)
+		err = charts.InstallRangerMonitoringChart(client, m.chartInstallOptions, m.chartFeatureOptions)
 		require.NoError(m.T(), err)
 
 		m.T().Log("Waiting monitoring chart deployments to have expected number of available replicas")
-		err = charts.WatchAndWaitDeployments(client, m.project.ClusterID, charts.RancherMonitoringNamespace, metav1.ListOptions{})
+		err = charts.WatchAndWaitDeployments(client, m.project.ClusterID, charts.RangerMonitoringNamespace, metav1.ListOptions{})
 		require.NoError(m.T(), err)
 
 		m.T().Log("Waiting monitoring chart DaemonSets to have expected number of available nodes")
-		err = charts.WatchAndWaitDaemonSets(client, m.project.ClusterID, charts.RancherMonitoringNamespace, metav1.ListOptions{})
+		err = charts.WatchAndWaitDaemonSets(client, m.project.ClusterID, charts.RangerMonitoringNamespace, metav1.ListOptions{})
 		require.NoError(m.T(), err)
 
 		m.T().Log("Waiting monitoring chart StatefulSets to have expected number of ready replicas")
-		err = charts.WatchAndWaitStatefulSets(client, m.project.ClusterID, charts.RancherMonitoringNamespace, metav1.ListOptions{})
+		err = charts.WatchAndWaitStatefulSets(client, m.project.ClusterID, charts.RangerMonitoringNamespace, metav1.ListOptions{})
 		require.NoError(m.T(), err)
 	}
 
 	paths := []string{alertManagerPath, grafanaPath, prometheusGraphPath, prometheusRulesPath, prometheusTargetsPath}
 	for _, path := range paths {
 		m.T().Logf("Validating %s is accessible", path)
-		result, err := charts.GetChartCaseEndpoint(client, client.RancherConfig.Host, path, true)
+		result, err := charts.GetChartCaseEndpoint(client, client.RangerConfig.Host, path, true)
 		assert.NoError(m.T(), err)
 		assert.True(m.T(), result.Ok)
 	}
@@ -212,7 +212,7 @@ func (m *MonitoringTestSuite) TestMonitoringChart() {
 
 	editedReceiverSecretResp, err := steveclient.SteveType(secrets.SecretSteveType).Update(alertManagerSecretResp, alertManagerSecret)
 	require.NoError(m.T(), err)
-	assert.Equal(m.T(), editedReceiverSecretResp.Name, charts.RancherMonitoringAlertSecret)
+	assert.Equal(m.T(), editedReceiverSecretResp.Name, charts.RangerMonitoringAlertSecret)
 
 	m.T().Logf("Creating prometheus rule")
 	err = createPrometheusRule(client, m.project.ClusterID)
@@ -233,7 +233,7 @@ func (m *MonitoringTestSuite) TestMonitoringChart() {
 
 	editedRouteSecretResp, err := steveclient.SteveType(secrets.SecretSteveType).Update(alertManagerSecretResp, alertManagerSecret)
 	require.NoError(m.T(), err)
-	assert.Equal(m.T(), editedRouteSecretResp.Name, charts.RancherMonitoringAlertSecret)
+	assert.Equal(m.T(), editedRouteSecretResp.Name, charts.RangerMonitoringAlertSecret)
 
 	m.T().Logf("Validating traefik is accessible externally")
 	host := fmt.Sprintf("%v:%v", randWorkerNodePublicIP, webhookReceiverServiceSpec.Ports[0].NodePort)
@@ -254,11 +254,11 @@ func (m *MonitoringTestSuite) TestUpgradeMonitoringChart() {
 	require.NoError(m.T(), err)
 
 	m.T().Log("Checking if the monitoring chart is installed with one of the previous versions")
-	initialMonitoringChart, err := charts.GetChartStatus(client, m.project.ClusterID, charts.RancherMonitoringNamespace, charts.RancherMonitoringName)
+	initialMonitoringChart, err := charts.GetChartStatus(client, m.project.ClusterID, charts.RangerMonitoringNamespace, charts.RangerMonitoringName)
 	require.NoError(m.T(), err)
 
 	// Change monitoring install option version to previous version of the latest version
-	versionsList, err := client.Catalog.GetListChartVersions(charts.RancherMonitoringName)
+	versionsList, err := client.Catalog.GetListChartVersions(charts.RangerMonitoringName)
 	require.NoError(m.T(), err)
 	require.Greaterf(m.T(), len(versionsList), 1, "There should be at least 2 versions of the monitoring chart")
 	versionLatest := versionsList[0]
@@ -271,40 +271,40 @@ func (m *MonitoringTestSuite) TestUpgradeMonitoringChart() {
 
 	if !initialMonitoringChart.IsAlreadyInstalled {
 		m.T().Log("Installing monitoring chart with the last but one version")
-		err = charts.InstallRancherMonitoringChart(client, m.chartInstallOptions, m.chartFeatureOptions)
+		err = charts.InstallRangerMonitoringChart(client, m.chartInstallOptions, m.chartFeatureOptions)
 		require.NoError(m.T(), err)
 
 		m.T().Log("Waiting monitoring chart deployments to have expected number of available replicas")
-		err = charts.WatchAndWaitDeployments(client, m.project.ClusterID, charts.RancherMonitoringNamespace, metav1.ListOptions{})
+		err = charts.WatchAndWaitDeployments(client, m.project.ClusterID, charts.RangerMonitoringNamespace, metav1.ListOptions{})
 		require.NoError(m.T(), err)
 
 		m.T().Log("Waiting monitoring chart DaemonSets to have expected number of available nodes")
-		err = charts.WatchAndWaitDaemonSets(client, m.project.ClusterID, charts.RancherMonitoringNamespace, metav1.ListOptions{})
+		err = charts.WatchAndWaitDaemonSets(client, m.project.ClusterID, charts.RangerMonitoringNamespace, metav1.ListOptions{})
 		require.NoError(m.T(), err)
 
 		m.T().Log("Waiting monitoring chart StatefulSets to have expected number of ready replicas")
-		err = charts.WatchAndWaitStatefulSets(client, m.project.ClusterID, charts.RancherMonitoringNamespace, metav1.ListOptions{})
+		err = charts.WatchAndWaitStatefulSets(client, m.project.ClusterID, charts.RangerMonitoringNamespace, metav1.ListOptions{})
 		require.NoError(m.T(), err)
 	}
 
-	monitoringChartPreUpgrade, err := charts.GetChartStatus(client, m.project.ClusterID, charts.RancherMonitoringNamespace, charts.RancherMonitoringName)
+	monitoringChartPreUpgrade, err := charts.GetChartStatus(client, m.project.ClusterID, charts.RangerMonitoringNamespace, charts.RangerMonitoringName)
 	require.NoError(m.T(), err)
 
-	// Validate current version of rancher monitoring is one of the versions before latest
+	// Validate current version of ranger monitoring is one of the versions before latest
 	chartVersionPreUpgrade := monitoringChartPreUpgrade.ChartDetails.Spec.Chart.Metadata.Version
 	assert.Contains(m.T(), versionsList[1:], chartVersionPreUpgrade)
 
-	m.chartInstallOptions.Version, err = client.Catalog.GetLatestChartVersion(charts.RancherMonitoringName)
+	m.chartInstallOptions.Version, err = client.Catalog.GetLatestChartVersion(charts.RangerMonitoringName)
 	require.NoError(m.T(), err)
 
 	m.T().Log("Upgrading monitoring chart with the latest version")
-	err = charts.UpgradeRancherMonitoringChart(client, m.chartInstallOptions, m.chartFeatureOptions)
+	err = charts.UpgradeRangerMonitoringChart(client, m.chartInstallOptions, m.chartFeatureOptions)
 	require.NoError(m.T(), err)
 
-	monitoringChartPostUpgrade, err := charts.GetChartStatus(client, m.project.ClusterID, charts.RancherMonitoringNamespace, charts.RancherMonitoringName)
+	monitoringChartPostUpgrade, err := charts.GetChartStatus(client, m.project.ClusterID, charts.RangerMonitoringNamespace, charts.RangerMonitoringName)
 	require.NoError(m.T(), err)
 
-	// Compare rancher monitoring versions
+	// Compare ranger monitoring versions
 	chartVersionPostUpgrade := monitoringChartPostUpgrade.ChartDetails.Spec.Chart.Metadata.Version
 	assert.Equal(m.T(), m.chartInstallOptions.Version, chartVersionPostUpgrade)
 }

@@ -3,10 +3,10 @@ package provisioning
 import (
 	"fmt"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/nodes/ec2"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
-	"github.com/rancher/rancher/tests/framework/pkg/nodes"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/nodes/ec2"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
+	"github.com/ranger/ranger/tests/framework/pkg/nodes"
 )
 
 const (
@@ -14,7 +14,7 @@ const (
 	fromConfig          = "config"
 )
 
-type NodeCreationFunc func(client *rancher.Client, rolesPerPool []string, quantityPerPool []int32) (nodes []*nodes.Node, err error)
+type NodeCreationFunc func(client *ranger.Client, rolesPerPool []string, quantityPerPool []int32) (nodes []*nodes.Node, err error)
 
 type ExternalNodeProvider struct {
 	Name             string
@@ -33,7 +33,7 @@ func ExternalNodeProviderSetup(providerType string) ExternalNodeProvider {
 	case fromConfig:
 		return ExternalNodeProvider{
 			Name: providerType,
-			NodeCreationFunc: func(client *rancher.Client, rolesPerPool []string, quantityPerPool []int32) (nodesList []*nodes.Node, err error) {
+			NodeCreationFunc: func(client *ranger.Client, rolesPerPool []string, quantityPerPool []int32) (nodesList []*nodes.Node, err error) {
 				var nodeConfig nodes.ExternalNodeConfig
 				config.LoadConfig(nodes.ExternalNodeConfigConfigurationFileKey, &nodeConfig)
 

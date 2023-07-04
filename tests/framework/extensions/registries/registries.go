@@ -4,17 +4,17 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/workloads/pods"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/workloads/pods"
 	log "github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 )
 
 // CheckAllClusterPodsForRegistryPrefix checks the pods of a cluster and checks to see if they're coming from the
 // expected registry fqdn.
-func CheckAllClusterPodsForRegistryPrefix(client *rancher.Client, clusterID, registryPrefix string) (bool, error) {
+func CheckAllClusterPodsForRegistryPrefix(client *ranger.Client, clusterID, registryPrefix string) (bool, error) {
 	downstreamClient, err := client.Steve.ProxyDownstream(clusterID)
 	if err != nil {
 		return false, err
@@ -45,7 +45,7 @@ func CheckAllClusterPodsForRegistryPrefix(client *rancher.Client, clusterID, reg
 // CheckPodStatusImageSource is an extension that will check if the pod images are pulled from the
 // correct registry and checks to see if pod status are in a ready nonerror state.
 // Func will return a true if both checks are successful
-func CheckPodStatusImageSource(client *rancher.Client, clusterName, registryFQDN string) (bool, []error) {
+func CheckPodStatusImageSource(client *ranger.Client, clusterName, registryFQDN string) (bool, []error) {
 	clusterID, err := clusters.GetClusterIDByName(client, clusterName)
 	if err != nil {
 		return false, []error{err}

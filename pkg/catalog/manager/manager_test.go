@@ -3,8 +3,8 @@ package manager
 import (
 	"testing"
 
-	"github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/settings"
+	"github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/settings"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -15,26 +15,26 @@ func TestLatestAvailableTemplateVersion(t *testing.T) {
 				{
 					ExternalID:        "catalog://?catalog=library&template=artifactory-ha&version=0.12.16",
 					Version:           "0.12.16",
-					RancherMinVersion: "v2.2.0",
-					RancherMaxVersion: "v2.3.0",
+					RangerMinVersion: "v2.2.0",
+					RangerMaxVersion: "v2.3.0",
 				},
 				{
 					ExternalID:        "catalog://?catalog=library&template=artifactory-ha&version=0.12.15",
 					Version:           "0.12.15",
-					RancherMinVersion: "v2.1.0",
-					RancherMaxVersion: "v2.2.0",
+					RangerMinVersion: "v2.1.0",
+					RangerMaxVersion: "v2.2.0",
 				},
 				{
 					ExternalID:        "catalog://?catalog=library&template=artifactory-ha&version=0.12.14",
 					Version:           "0.12.14",
-					RancherMinVersion: "v2.0.0",
-					RancherMaxVersion: "v2.1.0",
+					RangerMinVersion: "v2.0.0",
+					RangerMaxVersion: "v2.1.0",
 				},
 			},
 		},
 	}
 
-	templateWithoutRancherVersion := &v3.CatalogTemplate{
+	templateWithoutRangerVersion := &v3.CatalogTemplate{
 		Spec: v3.TemplateSpec{
 			Versions: []v3.TemplateVersionSpec{
 				{
@@ -53,45 +53,45 @@ func TestLatestAvailableTemplateVersion(t *testing.T) {
 		},
 	}
 
-	templateWithoutMinRancherVersion := &v3.CatalogTemplate{
+	templateWithoutMinRangerVersion := &v3.CatalogTemplate{
 		Spec: v3.TemplateSpec{
 			Versions: []v3.TemplateVersionSpec{
 				{
 					ExternalID:        "catalog://?catalog=library&template=artifactory-ha&version=0.12.16",
 					Version:           "0.12.16",
-					RancherMaxVersion: "v2.3.0",
+					RangerMaxVersion: "v2.3.0",
 				},
 				{
 					ExternalID:        "catalog://?catalog=library&template=artifactory-ha&version=0.12.15",
 					Version:           "0.12.15",
-					RancherMaxVersion: "v2.2.0",
+					RangerMaxVersion: "v2.2.0",
 				},
 				{
 					ExternalID:        "catalog://?catalog=library&template=artifactory-ha&version=0.12.14",
 					Version:           "0.12.14",
-					RancherMaxVersion: "v2.1.0",
+					RangerMaxVersion: "v2.1.0",
 				},
 			},
 		},
 	}
 
-	templateWithoutMaxRancherVersion := &v3.CatalogTemplate{
+	templateWithoutMaxRangerVersion := &v3.CatalogTemplate{
 		Spec: v3.TemplateSpec{
 			Versions: []v3.TemplateVersionSpec{
 				{
 					ExternalID:        "catalog://?catalog=library&template=artifactory-ha&version=0.12.16",
 					Version:           "0.12.16",
-					RancherMinVersion: "v2.2.0",
+					RangerMinVersion: "v2.2.0",
 				},
 				{
 					ExternalID:        "catalog://?catalog=library&template=artifactory-ha&version=0.12.15",
 					Version:           "0.12.15",
-					RancherMinVersion: "v2.1.0",
+					RangerMinVersion: "v2.1.0",
 				},
 				{
 					ExternalID:        "catalog://?catalog=library&template=artifactory-ha&version=0.12.14",
 					Version:           "0.12.14",
-					RancherMinVersion: "v2.0.0",
+					RangerMinVersion: "v2.0.0",
 				},
 			},
 		},
@@ -103,14 +103,14 @@ func TestLatestAvailableTemplateVersion(t *testing.T) {
 				{
 					ExternalID:        "catalog://?catalog=library&template=artifactory-ha&version=0.12.16",
 					Version:           "0.12.16",
-					RancherMinVersion: "v2.2.1-rc1",
-					RancherMaxVersion: "v2.2.2",
+					RangerMinVersion: "v2.2.1-rc1",
+					RangerMaxVersion: "v2.2.2",
 				},
 				{
 					ExternalID:        "catalog://?catalog=library&template=artifactory-ha&version=0.12.15",
 					Version:           "0.12.15",
-					RancherMinVersion: "v2.2.0-rc1",
-					RancherMaxVersion: "v2.2.1",
+					RangerMinVersion: "v2.2.0-rc1",
+					RangerMaxVersion: "v2.2.1",
 				},
 				{
 					ExternalID: "catalog://?catalog=library&template=artifactory-ha&version=0.12.14",
@@ -126,14 +126,14 @@ func TestLatestAvailableTemplateVersion(t *testing.T) {
 				{
 					ExternalID:        "catalog://?catalog=library&template=artifactory-ha&version=0.12.16",
 					Version:           "0.12.16",
-					RancherMinVersion: "v2.3.0-alpha1",
-					RancherMaxVersion: "v2.3.99",
+					RangerMinVersion: "v2.3.0-alpha1",
+					RangerMaxVersion: "v2.3.99",
 				},
 				{
 					ExternalID:        "catalog://?catalog=library&template=artifactory-ha&version=0.12.15",
 					Version:           "0.12.15",
-					RancherMinVersion: "v2.2.0-alpha1",
-					RancherMaxVersion: "v2.2.99",
+					RangerMinVersion: "v2.2.0-alpha1",
+					RangerMaxVersion: "v2.2.99",
 				},
 				{
 					ExternalID: "catalog://?catalog=library&template=artifactory-ha&version=0.12.14",
@@ -153,34 +153,34 @@ func TestLatestAvailableTemplateVersion(t *testing.T) {
 	testLatestAvailableTemplateVersion(t, "master-head", "0.12.16", template)
 	testLatestAvailableTemplateVersion(t, "", "0.12.16", template)
 
-	testLatestAvailableTemplateVersion(t, "v2.0.1", "0.12.16", templateWithoutRancherVersion)
-	testLatestAvailableTemplateVersion(t, "v2.0.2-beta", "0.12.16", templateWithoutRancherVersion)
-	testLatestAvailableTemplateVersion(t, "v2.1.0-alpha1", "0.12.16", templateWithoutRancherVersion)
-	testLatestAvailableTemplateVersion(t, "v2.1.0", "0.12.16", templateWithoutRancherVersion)
-	testLatestAvailableTemplateVersion(t, "v2.2.5", "0.12.16", templateWithoutRancherVersion)
-	testLatestAvailableTemplateVersion(t, "master", "0.12.16", templateWithoutRancherVersion)
-	testLatestAvailableTemplateVersion(t, "master-head", "0.12.16", templateWithoutRancherVersion)
-	testLatestAvailableTemplateVersion(t, "", "0.12.16", templateWithoutRancherVersion)
+	testLatestAvailableTemplateVersion(t, "v2.0.1", "0.12.16", templateWithoutRangerVersion)
+	testLatestAvailableTemplateVersion(t, "v2.0.2-beta", "0.12.16", templateWithoutRangerVersion)
+	testLatestAvailableTemplateVersion(t, "v2.1.0-alpha1", "0.12.16", templateWithoutRangerVersion)
+	testLatestAvailableTemplateVersion(t, "v2.1.0", "0.12.16", templateWithoutRangerVersion)
+	testLatestAvailableTemplateVersion(t, "v2.2.5", "0.12.16", templateWithoutRangerVersion)
+	testLatestAvailableTemplateVersion(t, "master", "0.12.16", templateWithoutRangerVersion)
+	testLatestAvailableTemplateVersion(t, "master-head", "0.12.16", templateWithoutRangerVersion)
+	testLatestAvailableTemplateVersion(t, "", "0.12.16", templateWithoutRangerVersion)
 
-	testLatestAvailableTemplateVersion(t, "v2.0.1", "0.12.16", templateWithoutMinRancherVersion)
-	testLatestAvailableTemplateVersion(t, "v2.0.2-beta", "0.12.16", templateWithoutMinRancherVersion)
-	testLatestAvailableTemplateVersion(t, "v2.1.0-alpha1", "0.12.16", templateWithoutMinRancherVersion)
-	testLatestAvailableTemplateVersion(t, "v2.1.0", "0.12.16", templateWithoutMinRancherVersion)
-	testLatestAvailableTemplateVersion(t, "v2.2.5", "0.12.16", templateWithoutMinRancherVersion)
-	testLatestAvailableTemplateVersion(t, "dev", "0.12.16", templateWithoutMinRancherVersion)
-	testLatestAvailableTemplateVersion(t, "master", "0.12.16", templateWithoutMinRancherVersion)
-	testLatestAvailableTemplateVersion(t, "master-head", "0.12.16", templateWithoutMinRancherVersion)
-	testLatestAvailableTemplateVersion(t, "", "0.12.16", templateWithoutMinRancherVersion)
+	testLatestAvailableTemplateVersion(t, "v2.0.1", "0.12.16", templateWithoutMinRangerVersion)
+	testLatestAvailableTemplateVersion(t, "v2.0.2-beta", "0.12.16", templateWithoutMinRangerVersion)
+	testLatestAvailableTemplateVersion(t, "v2.1.0-alpha1", "0.12.16", templateWithoutMinRangerVersion)
+	testLatestAvailableTemplateVersion(t, "v2.1.0", "0.12.16", templateWithoutMinRangerVersion)
+	testLatestAvailableTemplateVersion(t, "v2.2.5", "0.12.16", templateWithoutMinRangerVersion)
+	testLatestAvailableTemplateVersion(t, "dev", "0.12.16", templateWithoutMinRangerVersion)
+	testLatestAvailableTemplateVersion(t, "master", "0.12.16", templateWithoutMinRangerVersion)
+	testLatestAvailableTemplateVersion(t, "master-head", "0.12.16", templateWithoutMinRangerVersion)
+	testLatestAvailableTemplateVersion(t, "", "0.12.16", templateWithoutMinRangerVersion)
 
-	testLatestAvailableTemplateVersion(t, "v2.0.1", "0.12.14", templateWithoutMaxRancherVersion)
-	testLatestAvailableTemplateVersion(t, "v2.0.2-beta", "0.12.14", templateWithoutMaxRancherVersion)
-	testLatestAvailableTemplateVersion(t, "v2.1.0-alpha1", "0.12.14", templateWithoutMaxRancherVersion)
-	testLatestAvailableTemplateVersion(t, "v2.1.0", "0.12.15", templateWithoutMaxRancherVersion)
-	testLatestAvailableTemplateVersion(t, "v2.2.5", "0.12.16", templateWithoutMaxRancherVersion)
-	testLatestAvailableTemplateVersion(t, "dev", "0.12.16", templateWithoutMaxRancherVersion)
-	testLatestAvailableTemplateVersion(t, "master", "0.12.16", templateWithoutMaxRancherVersion)
-	testLatestAvailableTemplateVersion(t, "master-head", "0.12.16", templateWithoutMaxRancherVersion)
-	testLatestAvailableTemplateVersion(t, "", "0.12.16", templateWithoutMaxRancherVersion)
+	testLatestAvailableTemplateVersion(t, "v2.0.1", "0.12.14", templateWithoutMaxRangerVersion)
+	testLatestAvailableTemplateVersion(t, "v2.0.2-beta", "0.12.14", templateWithoutMaxRangerVersion)
+	testLatestAvailableTemplateVersion(t, "v2.1.0-alpha1", "0.12.14", templateWithoutMaxRangerVersion)
+	testLatestAvailableTemplateVersion(t, "v2.1.0", "0.12.15", templateWithoutMaxRangerVersion)
+	testLatestAvailableTemplateVersion(t, "v2.2.5", "0.12.16", templateWithoutMaxRangerVersion)
+	testLatestAvailableTemplateVersion(t, "dev", "0.12.16", templateWithoutMaxRangerVersion)
+	testLatestAvailableTemplateVersion(t, "master", "0.12.16", templateWithoutMaxRangerVersion)
+	testLatestAvailableTemplateVersion(t, "master-head", "0.12.16", templateWithoutMaxRangerVersion)
+	testLatestAvailableTemplateVersion(t, "", "0.12.16", templateWithoutMaxRangerVersion)
 
 	testLatestAvailableTemplateVersion(t, "v2.2.0-0", "0.12.14", templateWithMinPrerelease)
 	testLatestAvailableTemplateVersion(t, "v2.2.0-alpha1", "0.12.14", templateWithMinPrerelease)

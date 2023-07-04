@@ -10,11 +10,11 @@ import (
 	"path"
 	"strings"
 
-	"github.com/rancher/wrangler/pkg/schemas/validation"
+	"github.com/ranger/wrangler/pkg/schemas/validation"
 
 	"sigs.k8s.io/yaml"
 
-	"github.com/rancher/rancher/pkg/settings"
+	"github.com/ranger/ranger/pkg/settings"
 	"github.com/sirupsen/logrus"
 	"helm.sh/helm/v3/pkg/repo"
 	corev1 "k8s.io/api/core/v1"

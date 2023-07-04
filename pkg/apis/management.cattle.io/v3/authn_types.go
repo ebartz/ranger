@@ -1,8 +1,8 @@
 package v3
 
 import (
-	"github.com/rancher/norman/condition"
-	"github.com/rancher/norman/types"
+	"github.com/ranger/norman/condition"
+	"github.com/ranger/norman/types"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -250,7 +250,7 @@ type AzureADConfig struct {
 	TenantID          string `json:"tenantId,omitempty" norman:"required,notnullable"`
 	ApplicationID     string `json:"applicationId,omitempty" norman:"required,notnullable"`
 	ApplicationSecret string `json:"applicationSecret,omitempty" norman:"required,type=password"`
-	RancherURL        string `json:"rancherUrl,omitempty" norman:"required,notnullable"`
+	RangerURL        string `json:"rangerUrl,omitempty" norman:"required,notnullable"`
 }
 
 type AzureADConfigTestOutput struct {
@@ -372,7 +372,7 @@ type SamlConfig struct {
 	DisplayNameField   string `json:"displayNameField"   norman:"required"`
 	UserNameField      string `json:"userNameField"      norman:"required"`
 	UIDField           string `json:"uidField"           norman:"required"`
-	RancherAPIHost     string `json:"rancherApiHost"     norman:"required"`
+	RangerAPIHost     string `json:"rangerApiHost"     norman:"required"`
 	EntityID           string `json:"entityID"`
 }
 
@@ -422,7 +422,7 @@ type OIDCConfig struct {
 	Issuer             string `json:"issuer" norman:"required,notnullable"`
 	Certificate        string `json:"certificate,omitempty"`
 	PrivateKey         string `json:"privateKey" norman:"type=password"`
-	RancherURL         string `json:"rancherUrl" norman:"required,notnullable"`
+	RangerURL         string `json:"rangerUrl" norman:"required,notnullable"`
 	GroupSearchEnabled *bool  `json:"groupSearchEnabled"`
 }
 

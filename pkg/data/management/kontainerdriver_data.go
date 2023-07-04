@@ -5,11 +5,11 @@ import (
 	"os"
 	"strings"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 
-	"github.com/rancher/rancher/pkg/controllers/management/drivers/kontainerdriver"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/ranger/pkg/controllers/management/drivers/kontainerdriver"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/api/errors"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -31,7 +31,7 @@ func addKontainerDrivers(management *config.ManagementContext) error {
 		return err
 	}
 
-	if err := creator.add("rancherKubernetesEngine"); err != nil {
+	if err := creator.add("rangerKubernetesEngine"); err != nil {
 		return err
 	}
 
@@ -49,20 +49,20 @@ func addKontainerDrivers(management *config.ManagementContext) error {
 
 	if err := creator.addCustomDriver(
 		"baiducloudcontainerengine",
-		"https://drivers.rancher.cn/kontainer-engine-driver-baidu/0.2.0/kontainer-engine-driver-baidu-linux",
+		"https://drivers.ranger.cn/kontainer-engine-driver-baidu/0.2.0/kontainer-engine-driver-baidu-linux",
 		"4613e3be3ae5487b0e21dfa761b95de2144f80f98bf76847411e5fcada343d5e",
-		"https://drivers.rancher.cn/kontainer-engine-driver-baidu/0.2.0/component.js",
+		"https://drivers.ranger.cn/kontainer-engine-driver-baidu/0.2.0/component.js",
 		false,
-		"drivers.rancher.cn", "*.baidubce.com",
+		"drivers.ranger.cn", "*.baidubce.com",
 	); err != nil {
 		return err
 	}
 
 	if err := creator.addCustomDriver(
 		"aliyunkubernetescontainerservice",
-		"https://drivers.rancher.cn/kontainer-engine-driver-aliyun/0.2.6/kontainer-engine-driver-aliyun-linux",
+		"https://drivers.ranger.cn/kontainer-engine-driver-aliyun/0.2.6/kontainer-engine-driver-aliyun-linux",
 		"8a5360269ec803e3d8cf2c9cc94c66879da03a1fd2b580912c1a83454509c84c",
-		"https://drivers.rancher.cn/pandaria/ui/cluster-driver-aliyun/0.1.1/component.js",
+		"https://drivers.ranger.cn/pandaria/ui/cluster-driver-aliyun/0.1.1/component.js",
 		false,
 		"*.aliyuncs.com",
 	); err != nil {
@@ -71,7 +71,7 @@ func addKontainerDrivers(management *config.ManagementContext) error {
 
 	if err := creator.addCustomDriver(
 		"tencentkubernetesengine",
-		"https://drivers.rancher.cn/kontainer-engine-driver-tencent/0.3.0/kontainer-engine-driver-tencent-linux",
+		"https://drivers.ranger.cn/kontainer-engine-driver-tencent/0.3.0/kontainer-engine-driver-tencent-linux",
 		"ad5406502daf826874889963d7bdaed78db4689f147889ecf97394bc4e8d3d76",
 		"",
 		false,
@@ -82,7 +82,7 @@ func addKontainerDrivers(management *config.ManagementContext) error {
 
 	if err := creator.addCustomDriver(
 		"huaweicontainercloudengine",
-		"https://drivers.rancher.cn/kontainer-engine-driver-huawei/0.1.2/kontainer-engine-driver-huawei-linux",
+		"https://drivers.ranger.cn/kontainer-engine-driver-huawei/0.1.2/kontainer-engine-driver-huawei-linux",
 		"0b6c1dfaa477a60a3bd9f8a60a55fcafd883866c2c5c387aec75b95d6ba81d45",
 		"",
 		false,
@@ -92,7 +92,7 @@ func addKontainerDrivers(management *config.ManagementContext) error {
 	}
 	if err := creator.addCustomDriver(
 		"oraclecontainerengine",
-		"https://github.com/rancher-plugins/kontainer-engine-driver-oke/releases/download/v1.8.3/kontainer-engine-driver-oke-linux",
+		"https://github.com/ranger-plugins/kontainer-engine-driver-oke/releases/download/v1.8.3/kontainer-engine-driver-oke-linux",
 		"7bfde567e6d478f1da8d36531f765d348bff1cd3abe83c70ddf7766f46112170",
 		"",
 		false,
@@ -113,9 +113,9 @@ func addKontainerDrivers(management *config.ManagementContext) error {
 
 	return creator.addCustomDriver(
 		"opentelekomcloudcontainerengine",
-		"https://otc-rancher.obs.eu-de.otc.t-systems.com/cluster/driver/1.0.2/kontainer-engine-driver-otccce_linux_amd64.tar.gz",
+		"https://otc-ranger.obs.eu-de.otc.t-systems.com/cluster/driver/1.0.2/kontainer-engine-driver-otccce_linux_amd64.tar.gz",
 		"f2c0a8d1195cd51ae1ccdeb4a8defd2c3147b9a2c7510b091be0c12028740f5f",
-		"https://otc-rancher.obs.eu-de.otc.t-systems.com/cluster/ui/v1.1.0/component.js",
+		"https://otc-ranger.obs.eu-de.otc.t-systems.com/cluster/ui/v1.1.0/component.js",
 		false,
 		"*.otc.t-systems.com",
 	)

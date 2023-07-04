@@ -5,7 +5,7 @@ import (
 	"crypto/rsa"
 	"testing"
 
-	"github.com/rancher/rke/pki"
+	"github.com/ranger/rke/pki"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"github.com/rancher/rancher/pkg/api/steve/catalog/types"
+	"github.com/ranger/ranger/pkg/api/steve/catalog/types"
 
 	"sigs.k8s.io/yaml"
 )

@@ -6,41 +6,41 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/rancher/apiserver/pkg/parse"
-	"github.com/rancher/rancher/pkg/api/norman"
-	"github.com/rancher/rancher/pkg/api/norman/customization/aks"
-	"github.com/rancher/rancher/pkg/api/norman/customization/clusterregistrationtokens"
-	"github.com/rancher/rancher/pkg/api/norman/customization/gke"
-	"github.com/rancher/rancher/pkg/api/norman/customization/oci"
-	"github.com/rancher/rancher/pkg/api/norman/customization/vsphere"
-	managementapi "github.com/rancher/rancher/pkg/api/norman/server"
-	"github.com/rancher/rancher/pkg/api/steve/supportconfigs"
-	"github.com/rancher/rancher/pkg/auth/providers/publicapi"
-	"github.com/rancher/rancher/pkg/auth/providers/saml"
-	"github.com/rancher/rancher/pkg/auth/requests"
-	"github.com/rancher/rancher/pkg/auth/requests/sar"
-	"github.com/rancher/rancher/pkg/auth/tokens"
-	"github.com/rancher/rancher/pkg/auth/webhook"
-	"github.com/rancher/rancher/pkg/channelserver"
-	"github.com/rancher/rancher/pkg/clustermanager"
-	rancherdialer "github.com/rancher/rancher/pkg/dialer"
-	"github.com/rancher/rancher/pkg/httpproxy"
-	k8sProxyPkg "github.com/rancher/rancher/pkg/k8sproxy"
-	"github.com/rancher/rancher/pkg/metrics"
-	"github.com/rancher/rancher/pkg/multiclustermanager/whitelist"
-	"github.com/rancher/rancher/pkg/rbac"
-	"github.com/rancher/rancher/pkg/rkenodeconfigserver"
-	"github.com/rancher/rancher/pkg/telemetry"
-	"github.com/rancher/rancher/pkg/tunnelserver/mcmauthorizer"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/version"
-	"github.com/rancher/steve/pkg/auth"
+	"github.com/ranger/apiserver/pkg/parse"
+	"github.com/ranger/ranger/pkg/api/norman"
+	"github.com/ranger/ranger/pkg/api/norman/customization/aks"
+	"github.com/ranger/ranger/pkg/api/norman/customization/clusterregistrationtokens"
+	"github.com/ranger/ranger/pkg/api/norman/customization/gke"
+	"github.com/ranger/ranger/pkg/api/norman/customization/oci"
+	"github.com/ranger/ranger/pkg/api/norman/customization/vsphere"
+	managementapi "github.com/ranger/ranger/pkg/api/norman/server"
+	"github.com/ranger/ranger/pkg/api/steve/supportconfigs"
+	"github.com/ranger/ranger/pkg/auth/providers/publicapi"
+	"github.com/ranger/ranger/pkg/auth/providers/saml"
+	"github.com/ranger/ranger/pkg/auth/requests"
+	"github.com/ranger/ranger/pkg/auth/requests/sar"
+	"github.com/ranger/ranger/pkg/auth/tokens"
+	"github.com/ranger/ranger/pkg/auth/webhook"
+	"github.com/ranger/ranger/pkg/channelserver"
+	"github.com/ranger/ranger/pkg/clustermanager"
+	rangerdialer "github.com/ranger/ranger/pkg/dialer"
+	"github.com/ranger/ranger/pkg/httpproxy"
+	k8sProxyPkg "github.com/ranger/ranger/pkg/k8sproxy"
+	"github.com/ranger/ranger/pkg/metrics"
+	"github.com/ranger/ranger/pkg/multiclustermanager/whitelist"
+	"github.com/ranger/ranger/pkg/rbac"
+	"github.com/ranger/ranger/pkg/rkenodeconfigserver"
+	"github.com/ranger/ranger/pkg/telemetry"
+	"github.com/ranger/ranger/pkg/tunnelserver/mcmauthorizer"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/version"
+	"github.com/ranger/steve/pkg/auth"
 )
 
 func router(ctx context.Context, localClusterEnabled bool, tunnelAuthorizer *mcmauthorizer.Authorizer, scaledContext *config.ScaledContext, clusterManager *clustermanager.Manager) (func(http.Handler) http.Handler, error) {
 	var (
 		k8sProxy             = k8sProxyPkg.New(scaledContext, scaledContext.Dialer, clusterManager)
-		connectHandler       = scaledContext.Dialer.(*rancherdialer.Factory).TunnelServer
+		connectHandler       = scaledContext.Dialer.(*rangerdialer.Factory).TunnelServer
 		connectConfigHandler = rkenodeconfigserver.Handler(tunnelAuthorizer, scaledContext)
 		clusterImport        = clusterregistrationtokens.ClusterImport{Clusters: scaledContext.Management.Clusters("")}
 	)
@@ -86,7 +86,7 @@ func router(ctx context.Context, localClusterEnabled bool, tunnelAuthorizer *mcm
 	unauthed.Handle("/v3/settings/ui-pl", managementAPI).MatcherFunc(onlyGet)
 	unauthed.Handle("/v3/settings/ui-brand", managementAPI).MatcherFunc(onlyGet)
 	unauthed.Handle("/v3/settings/ui-default-landing", managementAPI).MatcherFunc(onlyGet)
-	unauthed.Handle("/rancherversion", version.NewVersionHandler())
+	unauthed.Handle("/rangerversion", version.NewVersionHandler())
 	unauthed.PathPrefix("/v1-{prefix}-release/channel").Handler(channelserver)
 	unauthed.PathPrefix("/v1-{prefix}-release/release").Handler(channelserver)
 	unauthed.PathPrefix("/v1-saml").Handler(saml.AuthHandler())

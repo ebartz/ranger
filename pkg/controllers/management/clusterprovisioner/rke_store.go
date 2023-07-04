@@ -1,12 +1,12 @@
 package clusterprovisioner
 
 import (
-	kd "github.com/rancher/rancher/pkg/controllers/management/kontainerdrivermetadata"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	kontainerengine "github.com/rancher/rancher/pkg/kontainer-engine/drivers/rke"
-	"github.com/rancher/rancher/pkg/namespace"
-	rketypes "github.com/rancher/rke/types"
-	"github.com/rancher/rke/types/kdm"
+	kd "github.com/ranger/ranger/pkg/controllers/management/kontainerdrivermetadata"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	kontainerengine "github.com/ranger/ranger/pkg/kontainer-engine/drivers/rke"
+	"github.com/ranger/ranger/pkg/namespace"
+	rketypes "github.com/ranger/rke/types"
+	"github.com/ranger/rke/types/kdm"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

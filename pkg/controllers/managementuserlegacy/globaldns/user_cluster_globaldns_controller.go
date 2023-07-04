@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"strings"
 
-	v1coreRancher "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/ingresswrapper"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/types/config"
+	v1coreRanger "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/ingresswrapper"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/sirupsen/logrus"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"
@@ -19,7 +19,7 @@ type UserGlobalDNSController struct {
 	ingressLister         ingresswrapper.CompatLister
 	globalDNSs            v3.GlobalDnsInterface
 	multiclusterappLister v3.MultiClusterAppLister
-	namespaceLister       v1coreRancher.NamespaceLister
+	namespaceLister       v1coreRanger.NamespaceLister
 	clusterName           string
 }
 

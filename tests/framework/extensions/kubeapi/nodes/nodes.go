@@ -3,8 +3,8 @@ package nodes
 import (
 	"context"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -19,7 +19,7 @@ var NodeGroupVersionResource = schema.GroupVersionResource{
 }
 
 // GetNodes returns nodes with metav1.TypeMeta, metav1.ObjectMeta, NodeSpec, and NodeStatus to be used to gather more information from nodes
-func GetNodes(client *rancher.Client, clusterID string, listOpts metav1.ListOptions) ([]corev1.Node, error) {
+func GetNodes(client *ranger.Client, clusterID string, listOpts metav1.ListOptions) ([]corev1.Node, error) {
 	var nodesList []corev1.Node
 
 	dynamicClient, err := client.GetDownStreamClusterClient(clusterID)

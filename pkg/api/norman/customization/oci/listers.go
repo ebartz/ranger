@@ -10,7 +10,7 @@ import (
 	"github.com/oracle/oci-go-sdk/containerengine"
 	"github.com/oracle/oci-go-sdk/core"
 	"github.com/oracle/oci-go-sdk/identity"
-	"github.com/rancher/norman/httperror"
+	"github.com/ranger/norman/httperror"
 	"github.com/sirupsen/logrus"
 )
 

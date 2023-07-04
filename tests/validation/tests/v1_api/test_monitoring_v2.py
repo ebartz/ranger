@@ -5,12 +5,12 @@ import semver
 
 namespace = {'client': None,
              'cluster': None,
-             'rancher_catalog': None,
+             'ranger_catalog': None,
              'project': None}
-m_chart_name = 'rancher-monitoring'
+m_chart_name = 'ranger-monitoring'
 m_version = os.environ.get('RANCHER_MONITORING_V2_VERSION', None)
-m_app = 'cattle-monitoring-system/rancher-monitoring'
-m_crd = 'cattle-monitoring-system/rancher-monitoring-crd'
+m_app = 'cattle-monitoring-system/ranger-monitoring'
+m_crd = 'cattle-monitoring-system/ranger-monitoring-crd'
 m_namespace = "cattle-monitoring-system"
 
 
@@ -20,7 +20,7 @@ def test_install_monitoring_v2():
 
 def install_monitoring():
     client = namespace['client']
-    rancher_catalog = namespace['rancher_catalog']
+    ranger_catalog = namespace['ranger_catalog']
     # install the monitoring v2 app into the new project
     project_id = namespace["project"]["id"]
     cluster_id = namespace["cluster"]["id"]
@@ -32,10 +32,10 @@ def install_monitoring():
         chart["projectId"] = project_id
         chart["values"]["global"]["cattle"]["clusterId"] = cluster_id
         chart["values"]["global"]["cattle"]["clusterName"] = cluster_name
-    client.action(rancher_catalog, "install", values)
+    client.action(ranger_catalog, "install", values)
     # wait 2 minutes for the app to be fully deployed
     time.sleep(120)
-    # check the app rancher-monitoring-crd first then rancher-monitoring
+    # check the app ranger-monitoring-crd first then ranger-monitoring
     wait_for(
         lambda: client.by_id_catalog_cattle_io_app(m_crd).status.summary.state == "deployed",
         timeout_message="time out waiting for app to be ready")
@@ -117,16 +117,16 @@ def create_client(request):
     cluster = get_cluster_by_name(admin_client, CLUSTER_NAME)
     namespace["client"] = client
     namespace["cluster"] = cluster
-    rancher_catalog = \
-        client.by_id_catalog_cattle_io_clusterrepo(id="rancher-charts")
-    if rancher_catalog is None:
-        assert False, "rancher-charts is not available"
-    namespace["rancher_catalog"] = rancher_catalog
+    ranger_catalog = \
+        client.by_id_catalog_cattle_io_clusterrepo(id="ranger-charts")
+    if ranger_catalog is None:
+        assert False, "ranger-charts is not available"
+    namespace["ranger_catalog"] = ranger_catalog
     # set the monitoring chart version the latest if it is not provided
     global m_version
     if m_version is None:
         m_version = \
-            get_chart_latest_version(rancher_catalog, m_chart_name)
+            get_chart_latest_version(ranger_catalog, m_chart_name)
         print("chart version is not provided, "
               "get chart version from repo: {}".format(m_version))
 

@@ -3,7 +3,7 @@ package environmentflag
 import (
 	"strings"
 
-	"github.com/rancher/rancher/tests/framework/pkg/config"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
 	"k8s.io/utils/strings/slices"
 )
 

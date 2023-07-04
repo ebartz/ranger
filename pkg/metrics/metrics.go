@@ -9,12 +9,12 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/rancher/pkg/auth/util"
-	"github.com/rancher/rancher/pkg/clustermanager"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/wrangler/pkg/ticker"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/ranger/pkg/auth/util"
+	"github.com/ranger/ranger/pkg/clustermanager"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/wrangler/pkg/ticker"
 	authV1 "k8s.io/api/authorization/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -31,7 +31,7 @@ var (
 		prometheus.GaugeOpts{
 			Subsystem: "cluster_manager",
 			Name:      "cluster_owner",
-			Help:      "Set a cluster owner to determine which Rancher server is running a clusters controllers",
+			Help:      "Set a cluster owner to determine which Ranger server is running a clusters controllers",
 		},
 		[]string{"cluster", "owner"},
 	)
@@ -75,7 +75,7 @@ func (h *metricsHandler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 			Groups: reqGroup,
 			ResourceAttributes: &authV1.ResourceAttributes{
 				Verb:     "get",
-				Resource: "ranchermetrics",
+				Resource: "rangermetrics",
 				Group:    "management.cattle.io",
 			},
 		},

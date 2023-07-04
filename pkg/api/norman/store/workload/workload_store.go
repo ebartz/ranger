@@ -8,18 +8,18 @@ import (
 	"strings"
 
 	"github.com/docker/distribution/reference"
-	"github.com/rancher/norman/api/access"
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/norman/types/values"
-	"github.com/rancher/rancher/pkg/api/norman/customization/workload"
-	managementv3 "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	projectclient "github.com/rancher/rancher/pkg/client/generated/project/v3"
-	"github.com/rancher/rancher/pkg/clustermanager"
-	managementschema "github.com/rancher/rancher/pkg/schemas/management.cattle.io/v3"
-	projectschema "github.com/rancher/rancher/pkg/schemas/project.cattle.io/v3"
-	schema "github.com/rancher/rancher/pkg/schemas/project.cattle.io/v3"
+	"github.com/ranger/norman/api/access"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/norman/types/values"
+	"github.com/ranger/ranger/pkg/api/norman/customization/workload"
+	managementv3 "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	projectclient "github.com/ranger/ranger/pkg/client/generated/project/v3"
+	"github.com/ranger/ranger/pkg/clustermanager"
+	managementschema "github.com/ranger/ranger/pkg/schemas/management.cattle.io/v3"
+	projectschema "github.com/ranger/ranger/pkg/schemas/project.cattle.io/v3"
+	schema "github.com/ranger/ranger/pkg/schemas/project.cattle.io/v3"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 )
@@ -271,7 +271,7 @@ func setPorts(workloadName string, data map[string]interface{}) error {
 				protocol := strings.ToLower(convert.ToString(port["protocol"]))
 				sourcePort := strings.ToLower(convert.ToString(port["sourcePort"]))
 				portName := convert.ToString(port["name"])
-				if portName == "" || isRancherGeneratedPort(portName, containerPortStr, protocol) {
+				if portName == "" || isRangerGeneratedPort(portName, containerPortStr, protocol) {
 					// port name is of format containerPortProtoSourcePortKind
 					// len limit is 15, therefore a) no separator b) kind is numerated
 					numKind := "0"
@@ -313,7 +313,7 @@ func setPorts(workloadName string, data map[string]interface{}) error {
 	return nil
 }
 
-func isRancherGeneratedPort(portName, containerPort, protocol string) bool {
+func isRangerGeneratedPort(portName, containerPort, protocol string) bool {
 	if strings.HasPrefix(portName, fmt.Sprintf("%s%s", containerPort, protocol)) {
 		return true
 	}

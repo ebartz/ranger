@@ -6,12 +6,12 @@ import (
 	"strings"
 	"time"
 
-	apiv1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/kubeconfig"
-	"github.com/rancher/rancher/tests/framework/pkg/killserver"
+	apiv1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/kubeconfig"
+	"github.com/ranger/ranger/tests/framework/pkg/killserver"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	k8sErrors "k8s.io/apimachinery/pkg/api/errors"
@@ -25,7 +25,7 @@ var podGroupVersionResource = corev1.SchemeGroupVersion.WithResource("pods")
 const (
 	cattleSystemNameSpace = "cattle-system"
 	localCluster          = "local"
-	rancherCoverFile      = "ranchercoverage"
+	rangerCoverFile      = "rangercoverage"
 	agentCoverFile        = "agentcoverage"
 	outputDir             = "cover"
 )
@@ -42,7 +42,7 @@ func checkServiceIsRunning(dynamicClient dynamic.Interface) error {
 	})
 }
 
-func killTestServices(client *rancher.Client, clusterID string, podNames []string) error {
+func killTestServices(client *ranger.Client, clusterID string, podNames []string) error {
 	cmd := []string{
 		"/bin/sh",
 		"-c",
@@ -69,7 +69,7 @@ func killTestServices(client *rancher.Client, clusterID string, podNames []strin
 	return nil
 }
 
-func retrieveCodeCoverageFile(client *rancher.Client, clusterID, coverageFilename string, podNames []string) error {
+func retrieveCodeCoverageFile(client *ranger.Client, clusterID, coverageFilename string, podNames []string) error {
 	kubeConfig, err := kubeconfig.GetKubeconfig(client, clusterID)
 	if err != nil {
 		return err
@@ -93,12 +93,12 @@ func retrieveCodeCoverageFile(client *rancher.Client, clusterID, coverageFilenam
 	return nil
 }
 
-// KillRancherTestServicesRetrieveCoverage is a function that kills the rancher service of the local cluster
+// KillRangerTestServicesRetrieveCoverage is a function that kills the ranger service of the local cluster
 // inorder for the code coverage report to be written, and then copies over the coverage reports from the pods
-// to a local destination. The custom code coverage rancher image must be running in the local cluster.
-func KillRancherTestServicesRetrieveCoverage(client *rancher.Client) error {
+// to a local destination. The custom code coverage ranger image must be running in the local cluster.
+func KillRangerTestServicesRetrieveCoverage(client *ranger.Client) error {
 	var podNames []string
-	dynamicClient, err := client.GetRancherDynamicClient()
+	dynamicClient, err := client.GetRangerDynamicClient()
 	if err != nil {
 		return err
 	}
@@ -110,7 +110,7 @@ func KillRancherTestServicesRetrieveCoverage(client *rancher.Client) error {
 
 	for _, pod := range pods.Items {
 		name := pod.GetName()
-		if strings.Contains(name, "rancher") && !strings.Contains(name, "webhook") {
+		if strings.Contains(name, "ranger") && !strings.Contains(name, "webhook") {
 			podNames = append(podNames, pod.GetName())
 		}
 	}
@@ -125,13 +125,13 @@ func KillRancherTestServicesRetrieveCoverage(client *rancher.Client) error {
 		return err
 	}
 
-	return retrieveCodeCoverageFile(client, localCluster, rancherCoverFile, podNames)
+	return retrieveCodeCoverageFile(client, localCluster, rangerCoverFile, podNames)
 }
 
 // KillAgentTestServicesRetrieveCoverage is a function that kills the cattle-cluster-agent service of a downstream cluster
 // inorder for the code coverage report to be written, and then copies over the coverage reports from the pods
-// to a local destination. The custom code coverage rancher-agent image must be running in the downstream cluster.
-func KillAgentTestServicesRetrieveCoverage(client *rancher.Client) error {
+// to a local destination. The custom code coverage ranger-agent image must be running in the downstream cluster.
+func KillAgentTestServicesRetrieveCoverage(client *ranger.Client) error {
 	clusters, err := client.Steve.SteveType(clusters.ProvisioningSteveResourceType).ListAll(nil)
 	if err != nil {
 		return err

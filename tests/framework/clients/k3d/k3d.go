@@ -6,14 +6,14 @@ import (
 	"os/exec"
 
 	"github.com/pkg/errors"
-	apisV1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/defaults"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
-	"github.com/rancher/wrangler/pkg/randomtoken"
+	apisV1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/defaults"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
+	"github.com/ranger/wrangler/pkg/randomtoken"
 	"github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/watch"
@@ -91,8 +91,8 @@ func ImportImage(image, clusterName string) error {
 	return nil
 }
 
-// CreateAndImportK3DCluster creates a new k3d cluster and imports it into rancher.
-func CreateAndImportK3DCluster(client *rancher.Client, name, image, hostname string, servers, agents int, importImage bool) (*apisV1.Cluster, error) {
+// CreateAndImportK3DCluster creates a new k3d cluster and imports it into ranger.
+func CreateAndImportK3DCluster(client *ranger.Client, name, image, hostname string, servers, agents int, importImage bool) (*apisV1.Cluster, error) {
 	var err error
 
 	name = defaultName(name)

@@ -42,7 +42,7 @@ def validate_daemonset(client, daemonset):
     name = res["metadata"]["name"]
     namespace = res["metadata"]["namespace"]
     node_count = len(get_worker_node(client))
-    # Rancher Dashboard gets pods by passing the label selector
+    # Ranger Dashboard gets pods by passing the label selector
     label_key = 'workload.user.cattle.io/workloadselector'
     label_value = 'apps.daemonset-{}-{}'.format(namespace, name)
     pods = client.list_pod(

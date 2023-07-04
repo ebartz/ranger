@@ -47,7 +47,7 @@ func (s *Provider) getPossibleRequestIDs(r *http.Request) []string {
 	serviceProvider := s.serviceProvider
 
 	for name, value := range s.clientState.GetStates(r) {
-		if strings.HasPrefix(name, "Rancher_") {
+		if strings.HasPrefix(name, "Ranger_") {
 			continue
 		}
 		jwtParser := jwt.Parser{

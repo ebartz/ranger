@@ -5,17 +5,17 @@ import (
 	"net/http"
 
 	gmux "github.com/gorilla/mux"
-	"github.com/rancher/rancher/pkg/api/steve/aggregation"
-	"github.com/rancher/rancher/pkg/api/steve/github"
-	"github.com/rancher/rancher/pkg/api/steve/health"
-	"github.com/rancher/rancher/pkg/api/steve/projects"
-	"github.com/rancher/rancher/pkg/api/steve/proxy"
-	"github.com/rancher/rancher/pkg/capr/configserver"
-	"github.com/rancher/rancher/pkg/capr/installer"
-	"github.com/rancher/rancher/pkg/features"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/wrangler"
-	steve "github.com/rancher/steve/pkg/server"
+	"github.com/ranger/ranger/pkg/api/steve/aggregation"
+	"github.com/ranger/ranger/pkg/api/steve/github"
+	"github.com/ranger/ranger/pkg/api/steve/health"
+	"github.com/ranger/ranger/pkg/api/steve/projects"
+	"github.com/ranger/ranger/pkg/api/steve/proxy"
+	"github.com/ranger/ranger/pkg/capr/configserver"
+	"github.com/ranger/ranger/pkg/capr/installer"
+	"github.com/ranger/ranger/pkg/features"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/wrangler"
+	steve "github.com/ranger/steve/pkg/server"
 )
 
 func AdditionalAPIsPreMCM(config *wrangler.Context) func(http.Handler) http.Handler {

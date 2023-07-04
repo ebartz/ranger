@@ -1,13 +1,13 @@
 package projectsetter
 
 import (
-	"github.com/rancher/norman/store/transform"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	client "github.com/rancher/rancher/pkg/client/generated/cluster/v3"
-	"github.com/rancher/rancher/pkg/clustermanager"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	"github.com/rancher/rancher/pkg/project"
+	"github.com/ranger/norman/store/transform"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	client "github.com/ranger/ranger/pkg/client/generated/cluster/v3"
+	"github.com/ranger/ranger/pkg/clustermanager"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	"github.com/ranger/ranger/pkg/project"
 	k8sv1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/labels"
 )

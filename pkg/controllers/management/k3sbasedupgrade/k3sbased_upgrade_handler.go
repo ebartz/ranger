@@ -5,14 +5,14 @@ import (
 	"strings"
 
 	"github.com/coreos/go-semver/semver"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v33 "github.com/rancher/rancher/pkg/apis/project.cattle.io/v3"
-	app2 "github.com/rancher/rancher/pkg/app"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/project"
-	"github.com/rancher/rancher/pkg/ref"
-	planv1 "github.com/rancher/system-upgrade-controller/pkg/apis/upgrade.cattle.io/v1"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v33 "github.com/ranger/ranger/pkg/apis/project.cattle.io/v3"
+	app2 "github.com/ranger/ranger/pkg/app"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/project"
+	"github.com/ranger/ranger/pkg/ref"
+	planv1 "github.com/ranger/system-upgrade-controller/pkg/apis/upgrade.cattle.io/v1"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -101,7 +101,7 @@ func (h *handler) onClusterChange(key string, cluster *v3.Cluster) (*v3.Cluster,
 	return cluster, nil
 }
 
-// deployK3sBaseUpgradeController creates a rancher k3s/rke2 upgrader controller if one does not exist.
+// deployK3sBaseUpgradeController creates a ranger k3s/rke2 upgrader controller if one does not exist.
 // Updates k3s upgrader controller if one exists and is not the newest available version.
 func (h *handler) deployK3sBasedUpgradeController(clusterName, updateVersion string, isK3s, isRke2 bool) error {
 	userCtx, err := h.manager.UserContextNoControllers(clusterName)
@@ -158,9 +158,9 @@ func (h *handler) deployK3sBasedUpgradeController(clusterName, updateVersion str
 	var appname string
 	switch {
 	case isK3s:
-		appname = "rancher-k3s-upgrader"
+		appname = "ranger-k3s-upgrader"
 	case isRke2:
-		appname = "rancher-rke2-upgrader"
+		appname = "ranger-rke2-upgrader"
 	}
 	app, err := appLister.Get(systemProjectName, appname)
 	if err != nil {

@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/pkg/nodes"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/pkg/nodes"
 	"github.com/sirupsen/logrus"
 )
 
 // CheckETCDVersion will check the etcd version on the etcd node in the provisioned RKE1 cluster.
-func CheckETCDVersion(client *rancher.Client, nodes []*nodes.Node, nodeRoles []string) ([]string, error) {
+func CheckETCDVersion(client *ranger.Client, nodes []*nodes.Node, nodeRoles []string) ([]string, error) {
 	var etcdResult []string
 
 	for key, node := range nodes {

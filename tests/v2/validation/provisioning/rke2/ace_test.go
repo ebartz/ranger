@@ -6,21 +6,21 @@ import (
 	"strings"
 	"testing"
 
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/kubeconfig"
-	"github.com/rancher/rancher/tests/framework/extensions/machinepools"
-	nodestat "github.com/rancher/rancher/tests/framework/extensions/nodes"
-	"github.com/rancher/rancher/tests/framework/extensions/users"
-	password "github.com/rancher/rancher/tests/framework/extensions/users/passwordgenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
-	namegen "github.com/rancher/rancher/tests/framework/pkg/namegenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
-	"github.com/rancher/rancher/tests/integration/pkg/defaults"
-	provisioning "github.com/rancher/rancher/tests/v2/validation/provisioning"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/kubeconfig"
+	"github.com/ranger/ranger/tests/framework/extensions/machinepools"
+	nodestat "github.com/ranger/ranger/tests/framework/extensions/nodes"
+	"github.com/ranger/ranger/tests/framework/extensions/users"
+	password "github.com/ranger/ranger/tests/framework/extensions/users/passwordgenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
+	namegen "github.com/ranger/ranger/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
+	"github.com/ranger/ranger/tests/integration/pkg/defaults"
+	provisioning "github.com/ranger/ranger/tests/v2/validation/provisioning"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -30,9 +30,9 @@ import (
 
 type RKE2ACETestSuite struct {
 	suite.Suite
-	client                   *rancher.Client
+	client                   *ranger.Client
 	session                  *session.Session
-	standardUserClient       *rancher.Client
+	standardUserClient       *ranger.Client
 	kubernetesVersions       []string
 	cnis                     []string
 	providers                []string
@@ -59,7 +59,7 @@ func (r *RKE2ACETestSuite) SetupSuite() {
 	r.advancedOptions = clustersConfig.AdvancedOptions
 	r.localClusterAuthEndpoint = clustersConfig.LocalClusterAuthEndpoint
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(r.T(), err)
 
 	r.client = client
@@ -110,7 +110,7 @@ func (r *RKE2ACETestSuite) TestProvisioningRKE2ClusterACE() {
 	tests := []struct {
 		name      string
 		nodeRoles []machinepools.NodeRoles
-		client    *rancher.Client
+		client    *ranger.Client
 		psact     string
 	}{
 		{"Multiple Control Planes - Admin", nodeRoles0, r.client, r.psact},
@@ -152,7 +152,7 @@ func (r *RKE2ACETestSuite) TestProvisioningRKE2ClusterACE() {
 						clusterResp, err := clusters.CreateK3SRKE2Cluster(client, cluster)
 						require.NoError(r.T(), err)
 
-						adminClient, err := rancher.NewClient(client.RancherConfig.AdminToken, client.Session)
+						adminClient, err := ranger.NewClient(client.RangerConfig.AdminToken, client.Session)
 						require.NoError(r.T(), err)
 						kubeProvisioningClient, err := adminClient.GetKubeAPIProvisioningClient()
 						require.NoError(r.T(), err)

@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/unstructured"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/unstructured"
 	appv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -22,7 +22,7 @@ var DeploymentGroupVersionResource = schema.GroupVersionResource{
 }
 
 // CreateDeployment is a helper function that uses the dynamic client to create a deployment on a namespace for a specific cluster.
-func CreateDeployment(client *rancher.Client, clusterName, deploymentName, namespace string, template corev1.PodTemplateSpec) (*appv1.Deployment, error) {
+func CreateDeployment(client *ranger.Client, clusterName, deploymentName, namespace string, template corev1.PodTemplateSpec) (*appv1.Deployment, error) {
 	dynamicClient, err := client.GetDownStreamClusterClient(clusterName)
 	if err != nil {
 		return nil, err

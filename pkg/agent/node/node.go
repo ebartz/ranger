@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/docker/docker/client"
-	"github.com/rancher/norman/types/slice"
+	"github.com/ranger/norman/types/slice"
 	"github.com/sirupsen/logrus"
 )
 

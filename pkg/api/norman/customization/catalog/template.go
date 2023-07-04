@@ -6,14 +6,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rancher/norman/api/access"
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	helmlib "github.com/rancher/rancher/pkg/helm"
-	managementschema "github.com/rancher/rancher/pkg/schemas/management.cattle.io/v3"
+	"github.com/ranger/norman/api/access"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	helmlib "github.com/ranger/ranger/pkg/helm"
+	managementschema "github.com/ranger/ranger/pkg/schemas/management.cattle.io/v3"
 )
 
 type TemplateWrapper struct {

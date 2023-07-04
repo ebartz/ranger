@@ -1,7 +1,7 @@
 package clustermanager
 
 import (
-	"github.com/rancher/norman/types"
+	"github.com/ranger/norman/types"
 	"github.com/sirupsen/logrus"
 )
 

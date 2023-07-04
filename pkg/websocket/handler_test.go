@@ -49,7 +49,7 @@ func newTestRequest(port string, origins []string, connections []string, uas []s
 				"User-Agent": uas,
 			},
 		),
-		Host: fmt.Sprintf("rancher%s", port),
+		Host: fmt.Sprintf("ranger%s", port),
 	}
 }
 
@@ -60,15 +60,15 @@ func TestServeHTTP(t *testing.T) {
 	// if origin is a websocket request and contains "mozilla" then the origin request origin header must match the request host
 	assert.Equal(403, serveHTTPWithHeader("", []string{"asdf"}, []string{"upgrade"}, []string{"dsafmozillaasdf"}))
 	assert.Equal(403, serveHTTPWithHeader("", []string{"asdf"}, []string{"upgrade"}, []string{"mozilla"}))
-	assert.Equal(403, serveHTTPWithHeader(":3000", []string{"https://rancher"}, []string{"upgrade"}, []string{"dsafmozillaasdf"}))
-	assert.Equal(403, serveHTTPWithHeader("", []string{"https://rancher:3000"}, []string{"upgrade"}, []string{"dsafmozillaasdf"}))
+	assert.Equal(403, serveHTTPWithHeader(":3000", []string{"https://ranger"}, []string{"upgrade"}, []string{"dsafmozillaasdf"}))
+	assert.Equal(403, serveHTTPWithHeader("", []string{"https://ranger:3000"}, []string{"upgrade"}, []string{"dsafmozillaasdf"}))
 	assert.Equal(403, serveHTTPWithHeader("", []string{""}, []string{"upgrade"}, []string{"dsafmozillaasdf"}))
-	assert.Equal(200, serveHTTPWithHeader(":3000", []string{"https://rancher:3000"}, []string{"upgrade"}, []string{"asdf"}))
-	assert.Equal(200, serveHTTPWithHeader(":3000", []string{"https://rancher:3000"}, []string{}, []string{"mozilla"}))
+	assert.Equal(200, serveHTTPWithHeader(":3000", []string{"https://ranger:3000"}, []string{"upgrade"}, []string{"asdf"}))
+	assert.Equal(200, serveHTTPWithHeader(":3000", []string{"https://ranger:3000"}, []string{}, []string{"mozilla"}))
 	assert.Equal(200, serveHTTPWithHeader("", []string{"asdf"}, []string{"upgrade"}, []string{"somthingelse"}))
-	assert.Equal(200, serveHTTPWithHeader("", []string{"https://rancher"}, []string{"upgrade"}, []string{"mozilla"}))
-	assert.Equal(200, serveHTTPWithHeader(":3000", []string{"https://rancher:3000"}, []string{"upgrade"}, []string{"mozilla"}))
-	assert.Equal(200, serveHTTPWithHeader(":3000", []string{"https://rancher:3000"}, []string{"upgrade"}, []string{"dsafmozillaasdf"}))
+	assert.Equal(200, serveHTTPWithHeader("", []string{"https://ranger"}, []string{"upgrade"}, []string{"mozilla"}))
+	assert.Equal(200, serveHTTPWithHeader(":3000", []string{"https://ranger:3000"}, []string{"upgrade"}, []string{"mozilla"}))
+	assert.Equal(200, serveHTTPWithHeader(":3000", []string{"https://ranger:3000"}, []string{"upgrade"}, []string{"dsafmozillaasdf"}))
 }
 
 func (trw *testResponseWriter) Header() http.Header {

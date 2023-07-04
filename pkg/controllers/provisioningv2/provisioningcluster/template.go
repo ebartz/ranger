@@ -9,21 +9,21 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/lasso/pkg/dynamic"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	rancherv1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/capr"
-	"github.com/rancher/rancher/pkg/capr/planner"
-	"github.com/rancher/rancher/pkg/controllers/capr/machineprovision"
-	mgmtcontroller "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3"
-	"github.com/rancher/wrangler/pkg/apply"
-	"github.com/rancher/wrangler/pkg/data"
-	"github.com/rancher/wrangler/pkg/data/convert"
-	v1 "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
-	"github.com/rancher/wrangler/pkg/generic"
-	"github.com/rancher/wrangler/pkg/gvk"
-	"github.com/rancher/wrangler/pkg/name"
+	"github.com/ranger/lasso/pkg/dynamic"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	rangerv1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/capr"
+	"github.com/ranger/ranger/pkg/capr/planner"
+	"github.com/ranger/ranger/pkg/controllers/capr/machineprovision"
+	mgmtcontroller "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3"
+	"github.com/ranger/wrangler/pkg/apply"
+	"github.com/ranger/wrangler/pkg/data"
+	"github.com/ranger/wrangler/pkg/data/convert"
+	v1 "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
+	"github.com/ranger/wrangler/pkg/generic"
+	"github.com/ranger/wrangler/pkg/gvk"
+	"github.com/ranger/wrangler/pkg/name"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/meta"
@@ -46,7 +46,7 @@ func getInfraRef(rkeCluster *rkev1.RKECluster) *corev1.ObjectReference {
 
 // objects generates the corresponding rkecontrolplanes.rke.cattle.io, clusters.cluster.x-k8s.io, and
 // machinedeployments.cluster.x-k8s.io objects based on the passed in clusters.provisioning.cattle.io object
-func objects(cluster *rancherv1.Cluster, dynamic *dynamic.Controller, dynamicSchema mgmtcontroller.DynamicSchemaCache, secrets v1.SecretCache) (result []runtime.Object, _ error) {
+func objects(cluster *rangerv1.Cluster, dynamic *dynamic.Controller, dynamicSchema mgmtcontroller.DynamicSchemaCache, secrets v1.SecretCache) (result []runtime.Object, _ error) {
 	if !cluster.DeletionTimestamp.IsZero() {
 		return nil, nil
 	}
@@ -84,7 +84,7 @@ func pruneBySchema(data map[string]interface{}, dynamicSchemaSpec v3.DynamicSche
 	}
 }
 
-func takeOwnership(dynamic *dynamic.Controller, cluster *rancherv1.Cluster, nodeConfig runtime.Object) error {
+func takeOwnership(dynamic *dynamic.Controller, cluster *rangerv1.Cluster, nodeConfig runtime.Object) error {
 	m, err := meta.Accessor(nodeConfig)
 	if err != nil {
 		return err
@@ -123,7 +123,7 @@ func takeOwnership(dynamic *dynamic.Controller, cluster *rancherv1.Cluster, node
 	return err
 }
 
-func toMachineTemplate(machinePoolName string, cluster *rancherv1.Cluster, machinePool rancherv1.RKEMachinePool,
+func toMachineTemplate(machinePoolName string, cluster *rangerv1.Cluster, machinePool rangerv1.RKEMachinePool,
 	dynamic *dynamic.Controller, secrets v1.SecretCache) (*unstructured.Unstructured, error) {
 	apiVersion := machinePool.NodeConfig.APIVersion
 	kind := machinePool.NodeConfig.Kind
@@ -209,7 +209,7 @@ func toMachineTemplate(machinePoolName string, cluster *rancherv1.Cluster, machi
 	return ustr, nil
 }
 
-func populateHostnameLengthLimitAnnotation(mp rancherv1.RKEMachinePool, cluster *rancherv1.Cluster, annotations map[string]string) error {
+func populateHostnameLengthLimitAnnotation(mp rangerv1.RKEMachinePool, cluster *rangerv1.Cluster, annotations map[string]string) error {
 	if cluster == nil {
 		return errors.New("cannot add hostname length limit annotation for nil cluster")
 	}
@@ -267,7 +267,7 @@ func createMachineTemplateHash(dataMap map[string]interface{}) string {
 	return hex.EncodeToString(hash[:])[:8]
 }
 
-func machineDeployments(cluster *rancherv1.Cluster, capiCluster *capi.Cluster, dynamic *dynamic.Controller,
+func machineDeployments(cluster *rangerv1.Cluster, capiCluster *capi.Cluster, dynamic *dynamic.Controller,
 	dynamicSchema mgmtcontroller.DynamicSchemaCache, secrets v1.SecretCache) (result []runtime.Object, _ error) {
 	bootstrapName := name.SafeConcatName(cluster.Name, "bootstrap", "template")
 
@@ -460,7 +460,7 @@ func machineDeployments(cluster *rancherv1.Cluster, capiCluster *capi.Cluster, d
 }
 
 // deploymentHealthChecks Health checks will mark a machine as failed if it has any of the conditions below for the duration of the given timeout. https://cluster-api.sigs.k8s.io/tasks/healthcheck.html#what-is-a-machinehealthcheck
-func deploymentHealthChecks(machineDeployment *capi.MachineDeployment, machinePool rancherv1.RKEMachinePool) *capi.MachineHealthCheck {
+func deploymentHealthChecks(machineDeployment *capi.MachineDeployment, machinePool rangerv1.RKEMachinePool) *capi.MachineHealthCheck {
 	var maxUnhealthy *intstr.IntOrString
 	if machinePool.MaxUnhealthy != nil {
 		maxUnhealthy = new(intstr.IntOrString)
@@ -507,7 +507,7 @@ func assign(labels map[string]string, key string, value interface{}) error {
 	return nil
 }
 
-func rkeCluster(cluster *rancherv1.Cluster) *rkev1.RKECluster {
+func rkeCluster(cluster *rangerv1.Cluster) *rkev1.RKECluster {
 	return &rkev1.RKECluster{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      cluster.Name,
@@ -517,8 +517,8 @@ func rkeCluster(cluster *rancherv1.Cluster) *rkev1.RKECluster {
 }
 
 // rkeControlPlane generates the rkecontrolplane object for a provided cluster object
-func rkeControlPlane(cluster *rancherv1.Cluster) (*rkev1.RKEControlPlane, error) {
-	// We need to base64/gzip encode the spec of our rancherv1.Cluster object so that we can reference it from the
+func rkeControlPlane(cluster *rangerv1.Cluster) (*rkev1.RKEControlPlane, error) {
+	// We need to base64/gzip encode the spec of our rangerv1.Cluster object so that we can reference it from the
 	// downstream cluster
 	filteredClusterSpec := cluster.Spec.DeepCopy()
 	// set the corresponding specification for various operations to nil as these cause unnecessary reconciliation.
@@ -558,7 +558,7 @@ func rkeControlPlane(cluster *rancherv1.Cluster) (*rkev1.RKEControlPlane, error)
 	}, nil
 }
 
-func capiCluster(cluster *rancherv1.Cluster, rkeControlPlane *rkev1.RKEControlPlane, infraRef *corev1.ObjectReference) *capi.Cluster {
+func capiCluster(cluster *rangerv1.Cluster, rkeControlPlane *rkev1.RKEControlPlane, infraRef *corev1.ObjectReference) *capi.Cluster {
 	gvk, err := gvk.Get(rkeControlPlane)
 	if err != nil {
 		// this is a build issue if it happens
@@ -567,7 +567,7 @@ func capiCluster(cluster *rancherv1.Cluster, rkeControlPlane *rkev1.RKEControlPl
 
 	apiVersion, kind := gvk.ToAPIVersionAndKind()
 
-	ownerGVK := rancherv1.SchemeGroupVersion.WithKind("Cluster")
+	ownerGVK := rangerv1.SchemeGroupVersion.WithKind("Cluster")
 	ownerAPIVersion, _ := ownerGVK.ToAPIVersionAndKind()
 	return &capi.Cluster{
 		ObjectMeta: metav1.ObjectMeta{

@@ -250,7 +250,7 @@ func TestIsInstalled(t *testing.T) {
 
 	releases := []*release.Release{
 		{
-			Name: "rancher-webhook",
+			Name: "ranger-webhook",
 			Info: &release.Info{Status: release.StatusDeployed},
 			Chart: &chart.Chart{
 				Metadata: &chart.Metadata{
@@ -354,7 +354,7 @@ func TestIsInstalledExactVersion(t *testing.T) {
 
 	releases := []*release.Release{
 		{
-			Name: "rancher-webhook",
+			Name: "ranger-webhook",
 			Info: &release.Info{Status: release.StatusDeployed},
 			Chart: &chart.Chart{
 				Metadata: &chart.Metadata{

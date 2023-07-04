@@ -27,14 +27,14 @@ node {
               stage('Run Validation Tests') {
                 try {
                   sh "docker run --name ${job_name}${env.BUILD_NUMBER}  --env-file .env " +
-                    "rancher-validation-tests /bin/bash -c \'pytest -v -s --junit-xml=results.xml ${PYTEST_OPTIONS} tests/rke/\'"
+                    "ranger-validation-tests /bin/bash -c \'pytest -v -s --junit-xml=results.xml ${PYTEST_OPTIONS} tests/rke/\'"
                 } catch(err) {
                   echo 'Test run had failures. Collecting results...'
                 }
               }
 
               stage('Test Report') {
-                sh "docker cp ${job_name}${env.BUILD_NUMBER}:/src/rancher-validation/results.xml ."
+                sh "docker cp ${job_name}${env.BUILD_NUMBER}:/src/ranger-validation/results.xml ."
                 step([$class: 'JUnitResultArchiver', testResults: '**/results.xml'])
                 sh "docker rm -v ${job_name}${env.BUILD_NUMBER}"
               }

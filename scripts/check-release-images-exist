@@ -11,19 +11,19 @@ cd ./..
 TEMP_FILE=$(mktemp)
 
 if [ -n "${DRONE_TAG}" ]; then
-  if [ -s ./bin/rancher-images.txt ]; then
-    # We skip rancher/rancher and rancher/rancher-agent because the manifest for these gets created later in the pipeline
-    for rancherimage in $(cat ./bin/rancher-images.txt | egrep -v "^rancher/rancher:|^rancher/rancher-agent:"); do
-      echo "INFO: Checking if image [${rancherimage}] exists"
-      if ! skopeo inspect "docker://${rancherimage}" >/dev/null; then
-        echo "ERROR: Image [${rancherimage}] does not exist"
-        echo "${rancherimage}" >> $TEMP_FILE
+  if [ -s ./bin/ranger-images.txt ]; then
+    # We skip ranger/ranger and ranger/ranger-agent because the manifest for these gets created later in the pipeline
+    for rangerimage in $(cat ./bin/ranger-images.txt | egrep -v "^ranger/ranger:|^ranger/ranger-agent:"); do
+      echo "INFO: Checking if image [${rangerimage}] exists"
+      if ! skopeo inspect "docker://${rangerimage}" >/dev/null; then
+        echo "ERROR: Image [${rangerimage}] does not exist"
+        echo "${rangerimage}" >> $TEMP_FILE
       else
-        echo "OK: Image [${rancherimage}] does exist"
+        echo "OK: Image [${rangerimage}] does exist"
       fi
     done
   else
-    echo "ERROR: ./bin/rancher-images.txt does not exist or is empty"
+    echo "ERROR: ./bin/ranger-images.txt does not exist or is empty"
     exit 1
   fi
 

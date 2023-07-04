@@ -7,18 +7,18 @@ import (
 	"regexp"
 	"strings"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 
 	errorsutil "github.com/pkg/errors"
-	"github.com/rancher/rancher/pkg/controllers/management/clusterprovisioner"
-	"github.com/rancher/rancher/pkg/controllers/management/drivers"
-	"github.com/rancher/rancher/pkg/controllers/management/drivers/nodedriver"
-	corev1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/kontainer-engine/service"
-	"github.com/rancher/rancher/pkg/kontainer-engine/types"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/ranger/pkg/controllers/management/clusterprovisioner"
+	"github.com/ranger/ranger/pkg/controllers/management/drivers"
+	"github.com/ranger/ranger/pkg/controllers/management/drivers/nodedriver"
+	corev1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/kontainer-engine/service"
+	"github.com/ranger/ranger/pkg/kontainer-engine/types"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/api/errors"
 	v13 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -337,7 +337,7 @@ func (l *Lifecycle) Updated(obj *v3.KontainerDriver) (runtime.Object, error) {
 	}
 
 	if obj.Spec.BuiltIn && v32.KontainerDriverConditionActive.IsTrue(obj) {
-		// Builtin drivers can still have their schema change during Rancher upgrades so we need to try
+		// Builtin drivers can still have their schema change during Ranger upgrades so we need to try
 		return obj, l.createOrUpdateDynamicSchema(obj)
 	}
 
@@ -410,7 +410,7 @@ func (l *Lifecycle) Updated(obj *v3.KontainerDriver) (runtime.Object, error) {
 }
 
 func hasStaticSchema(obj *v3.KontainerDriver) bool {
-	return obj.Name == service.RancherKubernetesEngineDriverName || obj.Name == service.ImportDriverName
+	return obj.Name == service.RangerKubernetesEngineDriverName || obj.Name == service.ImportDriverName
 }
 
 func getDynamicTypeName(obj *v3.KontainerDriver) string {
@@ -466,7 +466,7 @@ func (l *Lifecycle) removeFieldFromCluster(obj *v3.KontainerDriver) error {
 
 	nodeSchema, err := l.dynamicSchemasLister.Get("", "cluster")
 	if err != nil {
-		return fmt.Errorf("error getting schema: %v", err) // this error may fire during Rancher startup
+		return fmt.Errorf("error getting schema: %v", err) // this error may fire during Ranger startup
 	}
 
 	nodeSchema = nodeSchema.DeepCopy()

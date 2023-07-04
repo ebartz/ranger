@@ -4,13 +4,13 @@ import (
 	"path"
 	"strings"
 
-	"github.com/rancher/norman/generator"
-	"github.com/rancher/norman/types"
+	"github.com/ranger/norman/generator"
+	"github.com/ranger/norman/types"
 )
 
 var (
 	outputDir  = "./"
-	baseCattle = "./clients/rancher/generated"
+	baseCattle = "./clients/ranger/generated"
 )
 
 // GenerateClient is used to generate clients using `schema` an object of type Schemas from the norman/types package

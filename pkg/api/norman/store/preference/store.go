@@ -3,12 +3,12 @@ package preference
 import (
 	"strings"
 
-	"github.com/rancher/norman/store/transform"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/rancher/pkg/api/norman/store/userscope"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
+	"github.com/ranger/norman/store/transform"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/ranger/pkg/api/norman/store/userscope"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
 )
 
 const (

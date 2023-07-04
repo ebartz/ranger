@@ -8,7 +8,7 @@ EKS_REGION = os.environ.get('RANCHER_EKS_REGION', "us-west-2")
 EKS_K8S_VERSION = os.environ.get('RANCHER_EKS_K8S_VERSION', "1.17")
 
 # Hardcoded to follow UI-style:
-# https://github.com/rancher/ui/blob/master/lib/shared/addon/components/cluster-driver/driver-amazoneks/component.js
+# https://github.com/ranger/ui/blob/master/lib/shared/addon/components/cluster-driver/driver-amazoneks/component.js
 EKS_K8S_VERSIONS = os.environ.get('RANCHER_EKS_K8S_VERSIONS',
                                   "1.17,1.16,1.15").split(",")
 

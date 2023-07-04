@@ -4,11 +4,11 @@ import (
 	"os"
 	"strings"
 
-	settings "github.com/rancher/rancher/pkg/settings"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	"github.com/rancher/rancher/tests/framework/extensions/charts"
-	namespaces "github.com/rancher/rancher/tests/framework/extensions/namespaces"
-	"github.com/rancher/rancher/tests/framework/pkg/environmentflag"
+	settings "github.com/ranger/ranger/pkg/settings"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/extensions/charts"
+	namespaces "github.com/ranger/ranger/tests/framework/extensions/namespaces"
+	"github.com/ranger/ranger/tests/framework/pkg/environmentflag"
 	"github.com/stretchr/testify/assert"
 	require "github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -26,22 +26,22 @@ func (n *GateKeeperTestSuite) TestGateKeeperAllowedNamespaces() {
 	}
 
 	n.T().Log("Installing latest version of gatekeeper chart")
-	err = charts.InstallRancherGatekeeperChart(client, n.gatekeeperChartInstallOptions)
+	err = charts.InstallRangerGatekeeperChart(client, n.gatekeeperChartInstallOptions)
 	require.NoError(n.T(), err)
 
 	n.T().Log("Waiting for gatekeeper chart deployments to have expected number of available replicas")
-	err = charts.WatchAndWaitDeployments(client, n.project.ClusterID, charts.RancherGatekeeperNamespace, metav1.ListOptions{})
+	err = charts.WatchAndWaitDeployments(client, n.project.ClusterID, charts.RangerGatekeeperNamespace, metav1.ListOptions{})
 	require.NoError(n.T(), err)
 
 	n.T().Log("Waiting for gatekeeper chart DaemonSets to have expected number of available nodes")
-	err = charts.WatchAndWaitDaemonSets(client, n.project.ClusterID, charts.RancherGatekeeperNamespace, metav1.ListOptions{})
+	err = charts.WatchAndWaitDaemonSets(client, n.project.ClusterID, charts.RangerGatekeeperNamespace, metav1.ListOptions{})
 	require.NoError(n.T(), err)
 
 	n.T().Log("creating constraint template")
 	readTemplateYamlFile, err := os.ReadFile("./resources/opa-allowednamespacestemplate.yaml")
 	require.NoError(n.T(), err)
 	yamlTemplateInput := &management.ImportClusterYamlInput{
-		DefaultNamespace: charts.RancherGatekeeperNamespace,
+		DefaultNamespace: charts.RangerGatekeeperNamespace,
 		YAML:             string(readTemplateYamlFile),
 	}
 
@@ -60,7 +60,7 @@ func (n *GateKeeperTestSuite) TestGateKeeperAllowedNamespaces() {
 	n.T().Log(yamlString)
 
 	yamlConstraintInput := &management.ImportClusterYamlInput{
-		DefaultNamespace: charts.RancherGatekeeperNamespace,
+		DefaultNamespace: charts.RangerGatekeeperNamespace,
 		YAML:             yamlString,
 	}
 
@@ -78,7 +78,7 @@ func (n *GateKeeperTestSuite) TestGateKeeperAllowedNamespaces() {
 	require.NoError(n.T(), err)
 
 	n.T().Log("Create a namespace that doesn't have an allowed name and assert that creation fails with the expected error")
-	_, err = namespaces.CreateNamespace(client, RancherDisallowedNamespace, "{}", map[string]string{}, map[string]string{}, n.project)
+	_, err = namespaces.CreateNamespace(client, RangerDisallowedNamespace, "{}", map[string]string{}, map[string]string{}, n.project)
 	assert.ErrorContains(n.T(), err, "admission webhook \"validation.gatekeeper.sh\" denied the request: [ns-must-be-allowed] Namespace not allowed")
 
 }

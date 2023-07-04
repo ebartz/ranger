@@ -3,7 +3,7 @@ import pytest
 from .conftest import create_kubeconfig, wait_for
 from sys import platform
 from kubernetes.client import CustomObjectsApi
-from rancher import ApiError
+from ranger import ApiError
 
 
 # test if the kubeconfig works to list api-resources for the fqdn context

@@ -1,7 +1,7 @@
 package globalrole
 
 import (
-	"github.com/rancher/norman/types"
+	"github.com/ranger/norman/types"
 )
 
 func Formatter(request *types.APIContext, resource *types.RawResource) {

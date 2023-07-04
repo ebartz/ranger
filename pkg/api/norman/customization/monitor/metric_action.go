@@ -6,14 +6,14 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/rancher/norman/parse"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/clustermanager"
-	monitorutil "github.com/rancher/rancher/pkg/monitoring"
-	"github.com/rancher/rancher/pkg/ref"
-	"github.com/rancher/rancher/pkg/types/config/dialer"
+	"github.com/ranger/norman/parse"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/clustermanager"
+	monitorutil "github.com/ranger/ranger/pkg/monitoring"
+	"github.com/ranger/ranger/pkg/ref"
+	"github.com/ranger/ranger/pkg/types/config/dialer"
 )
 
 func NewMetricHandler(dialerFactory dialer.Factory, clustermanager *clustermanager.Manager) *MetricHandler {

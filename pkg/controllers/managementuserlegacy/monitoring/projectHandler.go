@@ -5,18 +5,18 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/rancher/rancher/pkg/app"
-	app2 "github.com/rancher/rancher/pkg/app"
+	"github.com/ranger/ranger/pkg/app"
+	app2 "github.com/ranger/ranger/pkg/app"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v33 "github.com/rancher/rancher/pkg/apis/project.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v33 "github.com/ranger/ranger/pkg/apis/project.cattle.io/v3"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/rancher/pkg/catalog/manager"
-	mgmtv3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/project.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/monitoring"
-	"github.com/rancher/rancher/pkg/ref"
+	"github.com/ranger/ranger/pkg/catalog/manager"
+	mgmtv3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/project.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/monitoring"
+	"github.com/ranger/ranger/pkg/ref"
 	k8scorev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -227,7 +227,7 @@ func (ph *projectHandler) deployApp(appName, appTargetNamespace string, appProje
 		Spec: v33.AppSpec{
 			Answers:          appAnswers,
 			AnswersSetString: appAnswersSetString,
-			Description:      "Rancher Project Monitoring",
+			Description:      "Ranger Project Monitoring",
 			ExternalID:       appCatalogID,
 			ProjectName:      appProjectName,
 			TargetNamespace:  appTargetNamespace,

@@ -10,15 +10,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rancher/norman/types/slice"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/types/config/dialer"
-	"github.com/rancher/rancher/pkg/wrangler"
-	"github.com/rancher/remotedialer"
-	"github.com/rancher/rke/k8s"
-	"github.com/rancher/rke/services"
+	"github.com/ranger/norman/types/slice"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/types/config/dialer"
+	"github.com/ranger/ranger/pkg/wrangler"
+	"github.com/ranger/remotedialer"
+	"github.com/ranger/rke/k8s"
+	"github.com/ranger/rke/services"
 	"github.com/sirupsen/logrus"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -64,7 +64,7 @@ func IsCloudDriver(cluster *v3.Cluster) bool {
 		cluster.Status.Driver != v32.ClusterDriverK3s &&
 		cluster.Status.Driver != v32.ClusterDriverK3os &&
 		cluster.Status.Driver != v32.ClusterDriverRke2 &&
-		cluster.Status.Driver != v32.ClusterDriverRancherD
+		cluster.Status.Driver != v32.ClusterDriverRangerD
 }
 
 func IsPublicCloudDriver(cluster *v3.Cluster) bool {

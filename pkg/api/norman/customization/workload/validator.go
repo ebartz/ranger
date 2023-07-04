@@ -1,14 +1,14 @@
 package workload
 
 import (
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/norman/types/values"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/norman/types/values"
 )
 
 // Validator validates deprecated fields `environment` and `environmentFrom` are not being used.
-// These fields were deprecated in favor of the k8s native fields `env` and `envFrom`. See https://github.com/rancher/rancher/issues/16148
+// These fields were deprecated in favor of the k8s native fields `env` and `envFrom`. See https://github.com/ranger/ranger/issues/16148
 func Validator(request *types.APIContext, schema *types.Schema, data map[string]interface{}) error {
 	if containers, _ := values.GetSlice(data, "containers"); len(containers) > 0 {
 		for _, c := range containers {

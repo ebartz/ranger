@@ -18,14 +18,14 @@ import (
 	"strings"
 	"time"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/git"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/git"
 
-	"github.com/rancher/norman/controller"
-	mgmtv3 "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	nsutil "github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/settings"
+	"github.com/ranger/norman/controller"
+	mgmtv3 "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	nsutil "github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/settings"
 
 	"github.com/blang/semver"
 	"github.com/moby/locker"
@@ -43,7 +43,7 @@ var (
 	Locker          = locker.New()
 	CatalogCache    = filepath.Join("management-state", "catalog-cache")
 	IconCache       = filepath.Join(CatalogCache, ".icon-cache")
-	InternalCatalog = filepath.Join("..", "rancher-data", "local-catalogs")
+	InternalCatalog = filepath.Join("..", "ranger-data", "local-catalogs")
 )
 
 type Helm struct {

@@ -3,9 +3,9 @@ package clusterprovisioner
 import (
 	"encoding/json"
 
-	"github.com/rancher/rancher/pkg/encryptedstore"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	"github.com/rancher/rancher/pkg/kontainer-engine/cluster"
+	"github.com/ranger/ranger/pkg/encryptedstore"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	"github.com/ranger/ranger/pkg/kontainer-engine/cluster"
 	"github.com/sirupsen/logrus"
 )
 

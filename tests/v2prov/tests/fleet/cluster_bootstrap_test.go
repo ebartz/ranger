@@ -4,12 +4,12 @@ import (
 	"testing"
 	"time"
 
-	fleetv1api "github.com/rancher/fleet/pkg/apis/fleet.cattle.io/v1alpha1"
-	apimgmtv3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	provv1api "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	"github.com/rancher/rancher/tests/v2prov/clients"
-	"github.com/rancher/rancher/tests/v2prov/cluster"
-	"github.com/rancher/rancher/tests/v2prov/defaults"
+	fleetv1api "github.com/ranger/fleet/pkg/apis/fleet.cattle.io/v1alpha1"
+	apimgmtv3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	provv1api "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	"github.com/ranger/ranger/tests/v2prov/clients"
+	"github.com/ranger/ranger/tests/v2prov/cluster"
+	"github.com/ranger/ranger/tests/v2prov/defaults"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

@@ -3,13 +3,13 @@ package restrictedadminrbac
 import (
 	"context"
 
-	mgmtv3 "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/rbac.authorization.k8s.io/v1"
-	"github.com/rancher/rancher/pkg/rbac"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/wrangler"
-	"github.com/rancher/wrangler/pkg/relatedresource"
+	mgmtv3 "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/rbac.authorization.k8s.io/v1"
+	"github.com/ranger/ranger/pkg/rbac"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/wrangler"
+	"github.com/ranger/wrangler/pkg/relatedresource"
 	"k8s.io/client-go/tools/cache"
 )
 

@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/auth/providers/common"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/auth/providers/common"
 	"github.com/sirupsen/logrus"
 )
 
@@ -60,9 +60,9 @@ func (s *Provider) testAndEnable(actionName string, action *types.Action, reques
 
 	logrus.Debugf("SAML [testAndEnable]: Setting clientState for SAML service provider %v", s.name)
 	finalRedirectURL := samlLogin.FinalRedirectURL
-	provider.clientState.SetState(request.Response, request.Request, "Rancher_UserID", provider.userMGR.GetUser(request))
-	provider.clientState.SetState(request.Response, request.Request, "Rancher_FinalRedirectURL", finalRedirectURL)
-	provider.clientState.SetState(request.Response, request.Request, "Rancher_Action", testAndEnableAction)
+	provider.clientState.SetState(request.Response, request.Request, "Ranger_UserID", provider.userMGR.GetUser(request))
+	provider.clientState.SetState(request.Response, request.Request, "Ranger_FinalRedirectURL", finalRedirectURL)
+	provider.clientState.SetState(request.Response, request.Request, "Ranger_Action", testAndEnableAction)
 	idpRedirectURL, err := provider.HandleSamlLogin(request.Response, request.Request)
 	if err != nil {
 		return err

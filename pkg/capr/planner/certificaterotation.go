@@ -5,9 +5,9 @@ import (
 	"strconv"
 	"strings"
 
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1/plan"
-	"github.com/rancher/rancher/pkg/capr"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1/plan"
+	"github.com/ranger/ranger/pkg/capr"
 	"github.com/sirupsen/logrus"
 )
 
@@ -142,7 +142,7 @@ func (p *Planner) rotateCertificatesPlan(controlPlane *rkev1.RKEControlPlane, to
 						"rm",
 						[]string{
 							"-f",
-							"/var/lib/rancher/rke2/agent/pod-manifests/kube-controller-manager.yaml",
+							"/var/lib/ranger/rke2/agent/pod-manifests/kube-controller-manager.yaml",
 						},
 						[]string{},
 					))
@@ -180,7 +180,7 @@ func (p *Planner) rotateCertificatesPlan(controlPlane *rkev1.RKEControlPlane, to
 						"rm",
 						[]string{
 							"-f",
-							"/var/lib/rancher/rke2/agent/pod-manifests/kube-scheduler.yaml",
+							"/var/lib/ranger/rke2/agent/pod-manifests/kube-scheduler.yaml",
 						},
 						[]string{},
 					))

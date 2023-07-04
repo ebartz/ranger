@@ -3,12 +3,12 @@ package node
 import (
 	"fmt"
 
-	"github.com/rancher/norman/types/convert"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/settings"
-	rkeservices "github.com/rancher/rke/services"
-	rketypes "github.com/rancher/rke/types"
+	"github.com/ranger/norman/types/convert"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/settings"
+	rkeservices "github.com/ranger/rke/services"
+	rketypes "github.com/ranger/rke/types"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"
@@ -17,7 +17,7 @@ import (
 const (
 	externalAddressAnnotation = "rke.cattle.io/external-ip"
 	LabelNodeName             = "management.cattle.io/nodename"
-	nodeStatusLabel           = "cattle.rancher.io/node-status"
+	nodeStatusLabel           = "cattle.ranger.io/node-status"
 )
 
 func GetNodeName(machine *v3.Node) string {
@@ -221,7 +221,7 @@ func DrainBeforeDelete(node *v3.Node, cluster *v3.Cluster, nodePool *v3.NodePool
 	}
 
 	// vsphere nodes with cloud providers need to be drained to unmount vmdk files as vsphere deletes them automatically
-	if nil != cluster.Spec.RancherKubernetesEngineConfig.CloudProvider.VsphereCloudProvider {
+	if nil != cluster.Spec.RangerKubernetesEngineConfig.CloudProvider.VsphereCloudProvider {
 		return true
 	}
 

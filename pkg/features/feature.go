@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"strings"
 
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	managementv3 "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	managementv3 "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -43,7 +43,7 @@ var (
 		false)
 	Fleet = newFeature(
 		"fleet",
-		"Install Fleet when starting Rancher",
+		"Install Fleet when starting Ranger",
 		true,
 		false,
 		true)
@@ -124,7 +124,7 @@ type Feature struct {
 	val bool
 	// default value of feature
 	def bool
-	// if a feature is not dynamic, then rancher must be restarted when the value is changed
+	// if a feature is not dynamic, then ranger must be restarted when the value is changed
 	dynamic bool
 	// Whether we should install this feature or assume something else will install and manage the Feature CR
 	install bool
@@ -150,7 +150,7 @@ func InitializeFeatures(featuresClient managementv3.FeatureClient, featureArgs s
 			}
 
 			if f.install {
-				// value starts off as nil, that way rancher can determine if value has been manually assigned
+				// value starts off as nil, that way ranger can determine if value has been manually assigned
 				newFeature := &v3.Feature{
 					ObjectMeta: metav1.ObjectMeta{
 						Name: f.name,
@@ -176,12 +176,12 @@ func InitializeFeatures(featuresClient managementv3.FeatureClient, featureArgs s
 				newFeatureState.Status.Default = f.def
 			}
 
-			// checks if developer has changed dynamic value from previous rancher version
+			// checks if developer has changed dynamic value from previous ranger version
 			if featureState.Status.Dynamic != f.dynamic {
 				newFeatureState.Status.Dynamic = f.dynamic
 			}
 
-			// checks if developer has changed description value from previous rancher version
+			// checks if developer has changed description value from previous ranger version
 			if featureState.Status.Description != f.description {
 				newFeatureState.Status.Description = f.description
 			}
@@ -280,7 +280,7 @@ func (f *Feature) Disable() {
 	delete(features, f.name)
 }
 
-// Dynamic returns whether the feature is dynamic. Rancher must be restarted when
+// Dynamic returns whether the feature is dynamic. Ranger must be restarted when
 // a non-dynamic feature's effective value is changed.
 func (f *Feature) Dynamic() bool {
 	return f.dynamic

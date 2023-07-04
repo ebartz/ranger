@@ -7,16 +7,16 @@ import (
 	"strings"
 	"testing"
 
-	provv1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	steveV1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	nodestat "github.com/rancher/rancher/tests/framework/extensions/nodes"
-	"github.com/rancher/rancher/tests/framework/extensions/workloads/pods"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
-	"github.com/rancher/rancher/tests/integration/pkg/defaults"
-	provisioning "github.com/rancher/rancher/tests/v2/validation/provisioning"
-	name2 "github.com/rancher/wrangler/pkg/name"
+	provv1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	steveV1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	nodestat "github.com/ranger/ranger/tests/framework/extensions/nodes"
+	"github.com/ranger/ranger/tests/framework/extensions/workloads/pods"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
+	"github.com/ranger/ranger/tests/integration/pkg/defaults"
+	provisioning "github.com/ranger/ranger/tests/v2/validation/provisioning"
+	name2 "github.com/ranger/wrangler/pkg/name"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"
@@ -25,7 +25,7 @@ import (
 	capi "sigs.k8s.io/cluster-api/api/v1beta1"
 )
 
-func TestHostnameTruncation(t *testing.T, client *rancher.Client, provider Provider, machinePools []provv1.RKEMachinePool, defaultHostnameLengthLimit int, kubeVersion, cni string, advancedOptions provisioning.AdvancedOptions) {
+func TestHostnameTruncation(t *testing.T, client *ranger.Client, provider Provider, machinePools []provv1.RKEMachinePool, defaultHostnameLengthLimit int, kubeVersion, cni string, advancedOptions provisioning.AdvancedOptions) {
 	cloudCredential, err := provider.CloudCredFunc(client)
 	require.NoError(t, err)
 
@@ -113,7 +113,7 @@ func TestHostnameTruncation(t *testing.T, client *rancher.Client, provider Provi
 
 			assert.NotNil(t, m.Status.NodeRef)
 
-			dynamic, err := client.GetRancherDynamicClient()
+			dynamic, err := client.GetRangerDynamicClient()
 			require.NoError(t, err)
 
 			gv, err := schema.ParseGroupVersion(m.Spec.InfrastructureRef.APIVersion)

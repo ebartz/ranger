@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rancher/rancher/tests/v2/validation/provisioning"
+	"github.com/ranger/ranger/tests/v2/validation/provisioning"
 )
 
 // WrapWithAdminRunCommand is a function that returns the go test run command with

@@ -3,11 +3,11 @@ package pspdelete
 import (
 	"context"
 
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/controllers/provisioningv2/cluster"
-	provisioningcontrollers "github.com/rancher/rancher/pkg/generated/controllers/provisioning.cattle.io/v1"
-	v1beta12 "github.com/rancher/rancher/pkg/generated/norman/policy/v1beta1"
-	"github.com/rancher/rancher/pkg/types/config"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/controllers/provisioningv2/cluster"
+	provisioningcontrollers "github.com/ranger/ranger/pkg/generated/controllers/provisioning.cattle.io/v1"
+	v1beta12 "github.com/ranger/ranger/pkg/generated/norman/policy/v1beta1"
+	"github.com/ranger/ranger/pkg/types/config"
 	"k8s.io/api/policy/v1beta1"
 	"k8s.io/apimachinery/pkg/runtime"
 )

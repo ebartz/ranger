@@ -1,7 +1,7 @@
 package unstructured
 
 import (
-	"github.com/rancher/rancher/pkg/api/scheme"
+	"github.com/ranger/ranger/pkg/api/scheme"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 )

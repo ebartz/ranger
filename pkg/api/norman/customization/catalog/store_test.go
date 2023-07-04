@@ -5,26 +5,26 @@ import (
 	"strings"
 	"testing"
 
-	apimgmtv3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/catalog/manager"
-	mgmtv3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3/fakes"
-	"github.com/rancher/rancher/pkg/settings"
+	apimgmtv3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/catalog/manager"
+	mgmtv3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3/fakes"
+	"github.com/ranger/ranger/pkg/settings"
 	"github.com/stretchr/testify/assert"
 	"k8s.io/apimachinery/pkg/version"
 )
 
 type testCase struct {
 	externalID        string
-	rancherVersion    string
+	rangerVersion    string
 	kubernetesVersion string
 	result            bool
 }
 
-func newTestCase(templateName, rancherVersion, kubernetesVersion string, result bool) testCase {
+func newTestCase(templateName, rangerVersion, kubernetesVersion string, result bool) testCase {
 	return testCase{
 		externalID:        generateExternalID(templateName),
-		rancherVersion:    rancherVersion,
+		rangerVersion:    rangerVersion,
 		kubernetesVersion: kubernetesVersion,
 		result:            result,
 	}
@@ -34,49 +34,49 @@ func TestExtractLinks(t *testing.T) {
 
 	// Setup test cases
 	var tests []testCase
-	tests = append(tests, newTestCase("rancher-testRancherConstraint-0.1", "2.4.0", "", true))
-	tests = append(tests, newTestCase("rancher-testRancherConstraint-0.1", "2.5.1", "", false))
-	// all test cases without rancher version should result in true, since a dev environment is assumed and checks are bypassed
-	tests = append(tests, newTestCase("rancher-testRancherConstraint-0.1", "", "", true))
-	tests = append(tests, newTestCase("rancher-testKubeVersionConstraint-0.1", "2.4.0", "1.14.0", true))
-	tests = append(tests, newTestCase("rancher-testKubeVersionConstraint-0.1", "2.4.0", "1.16.0", false))
-	tests = append(tests, newTestCase("rancher-testKubeVersionConstraint-0.1", "2.4.0", "", true))
-	tests = append(tests, newTestCase("rancher-testBothConstraints-0.1", "2.5.1", "1.14.0", false))
-	tests = append(tests, newTestCase("rancher-testBothConstraints-0.1", "2.4.9", "1.16.0", false))
-	tests = append(tests, newTestCase("rancher-testBothConstraints-0.1", "2.5.1", "1.16.0", false))
-	tests = append(tests, newTestCase("rancher-testBothConstraints-0.1", "2.4.9", "1.14.0", true))
-	tests = append(tests, newTestCase("rancher-testBothConstraints-0.1", "", "", true))
-	tests = append(tests, newTestCase("rancher-testBothConstraints-0.1", "", "1.16.0", true))
-	tests = append(tests, newTestCase("rancher-testNeitherConstraints-0.1", "", "", true))
-	tests = append(tests, newTestCase("rancher-testNeitherConstraints-0.1", "2.5.1", "1.16.0", true))
+	tests = append(tests, newTestCase("ranger-testRangerConstraint-0.1", "2.4.0", "", true))
+	tests = append(tests, newTestCase("ranger-testRangerConstraint-0.1", "2.5.1", "", false))
+	// all test cases without ranger version should result in true, since a dev environment is assumed and checks are bypassed
+	tests = append(tests, newTestCase("ranger-testRangerConstraint-0.1", "", "", true))
+	tests = append(tests, newTestCase("ranger-testKubeVersionConstraint-0.1", "2.4.0", "1.14.0", true))
+	tests = append(tests, newTestCase("ranger-testKubeVersionConstraint-0.1", "2.4.0", "1.16.0", false))
+	tests = append(tests, newTestCase("ranger-testKubeVersionConstraint-0.1", "2.4.0", "", true))
+	tests = append(tests, newTestCase("ranger-testBothConstraints-0.1", "2.5.1", "1.14.0", false))
+	tests = append(tests, newTestCase("ranger-testBothConstraints-0.1", "2.4.9", "1.16.0", false))
+	tests = append(tests, newTestCase("ranger-testBothConstraints-0.1", "2.5.1", "1.16.0", false))
+	tests = append(tests, newTestCase("ranger-testBothConstraints-0.1", "2.4.9", "1.14.0", true))
+	tests = append(tests, newTestCase("ranger-testBothConstraints-0.1", "", "", true))
+	tests = append(tests, newTestCase("ranger-testBothConstraints-0.1", "", "1.16.0", true))
+	tests = append(tests, newTestCase("ranger-testNeitherConstraints-0.1", "", "", true))
+	tests = append(tests, newTestCase("ranger-testNeitherConstraints-0.1", "2.5.1", "1.16.0", true))
 
-	// The externalID of a testCase will be tested for compatibility with the given rancherVersion and cluster kubernetes
+	// The externalID of a testCase will be tested for compatibility with the given rangerVersion and cluster kubernetes
 	// version. The result field defines whether compatibility is expected.
 	for _, test := range tests {
-		settings.ServerVersion.Set(test.rancherVersion)
+		settings.ServerVersion.Set(test.rangerVersion)
 		templateStore.CatalogManager = &manager.Manager{ClusterLister: newClusterListerWithVersion(test.kubernetesVersion)}
 		clusterName := "test"
 		if test.kubernetesVersion == "" {
 			// kubernetesVersion being empty is equivalent to not targeting a cluster
 			clusterName = ""
 		}
-		assert.Equal(t, test.result, templateStore.isTemplateVersionCompatible(clusterName, test.externalID), fmt.Sprintf("kubeVersion [%s] or rancherVersion [%s] unexpected compatibility with template [%s]", test.kubernetesVersion, test.rancherVersion, test.externalID))
+		assert.Equal(t, test.result, templateStore.isTemplateVersionCompatible(clusterName, test.externalID), fmt.Sprintf("kubeVersion [%s] or rangerVersion [%s] unexpected compatibility with template [%s]", test.kubernetesVersion, test.rangerVersion, test.externalID))
 	}
 }
 
-// setupTestTemplateStore sets up test templates with different combinations of rancher
+// setupTestTemplateStore sets up test templates with different combinations of ranger
 // version constraints and kubeVersionConstraints
 func setupTestTemplateStore() templateStore {
 	catalogTemplateVersionLister := &fakes.CatalogTemplateVersionListerMock{
 		GetFunc: func(namespace, name string) (*mgmtv3.CatalogTemplateVersion, error) {
 			switch name {
-			case "rancher-testRancherConstraint-0.1":
+			case "ranger-testRangerConstraint-0.1":
 				return newCatalogTemplateVersion("2.4.99", ""), nil
-			case "rancher-testKubeVersionConstraint-0.1":
+			case "ranger-testKubeVersionConstraint-0.1":
 				return newCatalogTemplateVersion("", "<1.15.0"), nil
-			case "rancher-testBothConstraints-0.1":
+			case "ranger-testBothConstraints-0.1":
 				return newCatalogTemplateVersion("2.4.99", "<1.15.0"), nil
-			case "rancher-testNeitherConstraints-0.1":
+			case "ranger-testNeitherConstraints-0.1":
 				return newCatalogTemplateVersion("", ""), nil
 			}
 			return nil, nil
@@ -106,11 +106,11 @@ func newClusterListerWithVersion(kubernetesVersion string) *fakes.ClusterListerM
 	}
 }
 
-func newCatalogTemplateVersion(maxRancherVersion, kubeVersion string) *apimgmtv3.CatalogTemplateVersion {
+func newCatalogTemplateVersion(maxRangerVersion, kubeVersion string) *apimgmtv3.CatalogTemplateVersion {
 	catalogTemplateVersion := &apimgmtv3.CatalogTemplateVersion{
 		Spec: apimgmtv3.TemplateVersionSpec{
 			KubeVersion:       kubeVersion,
-			RancherMaxVersion: maxRancherVersion,
+			RangerMaxVersion: maxRangerVersion,
 		},
 	}
 	return catalogTemplateVersion

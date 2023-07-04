@@ -4,16 +4,16 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/unstructured"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/unstructured"
 	appv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // CreateDaemonSet is a helper function that uses the dynamic client to create a daemon set on a namespace for a specific cluster.
-func CreateDaemonSet(client *rancher.Client, clusterName, daemonSetName, namespace string, template corev1.PodTemplateSpec) (*appv1.DaemonSet, error) {
+func CreateDaemonSet(client *ranger.Client, clusterName, daemonSetName, namespace string, template corev1.PodTemplateSpec) (*appv1.DaemonSet, error) {
 	dynamicClient, err := client.GetDownStreamClusterClient(clusterName)
 	if err != nil {
 		return nil, err

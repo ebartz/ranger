@@ -1,12 +1,12 @@
-Rancher Server has been installed.
+Ranger Server has been installed.
 
-NOTE: Rancher may take several minutes to fully initialize. Please standby while Certificates are being issued, Containers are started and the Ingress rule comes up.
+NOTE: Ranger may take several minutes to fully initialize. Please standby while Certificates are being issued, Containers are started and the Ingress rule comes up.
 
-Check out our docs at https://rancher.com/docs/
+Check out our docs at https://ranger.com/docs/
 
 If you provided your own bootstrap password during installation, browse to https://{{ .Values.hostname }} to get started.
 
-If this is the first time you installed Rancher, get started by running this command and clicking the URL it generates:
+If this is the first time you installed Ranger, get started by running this command and clicking the URL it generates:
 
 ```
 echo https://{{ .Values.hostname }}/dashboard/?setup=$(kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{ "{{" }}.data.bootstrapPassword|base64decode{{ "}}" }}')

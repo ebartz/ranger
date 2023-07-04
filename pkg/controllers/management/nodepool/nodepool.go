@@ -11,11 +11,11 @@ import (
 	"sync"
 	"time"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/ref"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rke/services"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/ref"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/rke/services"
 	"github.com/sirupsen/logrus"
 	v1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -121,7 +121,7 @@ func (c *Controller) Updated(nodePool *v3.NodePool) (runtime.Object, error) {
 			// gate updating the node pool to every 120s.
 			// This has the potential to race if the reconcile loop takes longer than 120 seconds, but this is a
 			// very rare case as there is nothing in reconcile/needsReconcile that should block. It is more likely that
-			// Rancher will die/panic from leader election loss, and a new instance of Rancher will take over (and thus,
+			// Ranger will die/panic from leader election loss, and a new instance of Ranger will take over (and thus,
 			// need to clear the annotation) in order to reconcile the pool.
 			pieces := strings.Split(anno, "/")
 			t, err := time.Parse(time.RFC3339, pieces[1])

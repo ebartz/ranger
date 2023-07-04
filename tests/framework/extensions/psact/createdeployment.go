@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	steveV1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/workloads"
-	namegenerator "github.com/rancher/rancher/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	steveV1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/workloads"
+	namegenerator "github.com/ranger/ranger/tests/framework/pkg/namegenerator"
 	"github.com/sirupsen/logrus"
 	appv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
@@ -19,14 +19,14 @@ const (
 	deploymentName    = "nginx"
 	imageName         = "nginx"
 	namespace         = "default"
-	rancherPrivileged = "rancher-privileged"
-	rancherRestricted = "rancher-restricted"
+	rangerPrivileged = "ranger-privileged"
+	rangerRestricted = "ranger-restricted"
 	workload          = "workload"
 )
 
-// CreateTestDeployment will create an nginx deployment into the default namespace. If the PSACT value is rancher-privileged, then the
-// deployment should successfully create. If the PSACT value is rancher-unprivileged, then the deployment should fail to create.
-func CreateNginxDeployment(client *rancher.Client, clusterID string, psact string) (*steveV1.SteveAPIObject, error) {
+// CreateTestDeployment will create an nginx deployment into the default namespace. If the PSACT value is ranger-privileged, then the
+// deployment should successfully create. If the PSACT value is ranger-unprivileged, then the deployment should fail to create.
+func CreateNginxDeployment(client *ranger.Client, clusterID string, psact string) (*steveV1.SteveAPIObject, error) {
 	labels := map[string]string{}
 	labels["workload.user.cattle.io/workloadselector"] = fmt.Sprintf("apps.deployment-%v-%v", namespace, workload)
 
@@ -66,10 +66,10 @@ func CreateNginxDeployment(client *rancher.Client, clusterID string, psact strin
 			return false, err
 		}
 
-		if *deployment.Spec.Replicas == deployment.Status.AvailableReplicas && psact == rancherPrivileged {
+		if *deployment.Spec.Replicas == deployment.Status.AvailableReplicas && psact == rangerPrivileged {
 			logrus.Infof("Deployment %s successfully created; this is expected for %s!", deployment.Name, psact)
 			return true, nil
-		} else if *deployment.Spec.Replicas != deployment.Status.AvailableReplicas && psact == rancherRestricted {
+		} else if *deployment.Spec.Replicas != deployment.Status.AvailableReplicas && psact == rangerRestricted {
 			logrus.Infof("Deployment %s failed to create; this is expected for %s!", deployment.Name, psact)
 			return true, nil
 		}

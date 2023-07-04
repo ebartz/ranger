@@ -5,9 +5,9 @@ import (
 	"sync"
 
 	"github.com/moby/locker"
-	"github.com/rancher/rancher/pkg/clusterrouter/proxy"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config/dialer"
+	"github.com/ranger/ranger/pkg/clusterrouter/proxy"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config/dialer"
 	"k8s.io/client-go/rest"
 )
 

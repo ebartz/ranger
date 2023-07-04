@@ -5,9 +5,9 @@ import (
 
 	"fmt"
 
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/norman/types/definition"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/norman/types/definition"
 )
 
 type NamespaceReference struct {

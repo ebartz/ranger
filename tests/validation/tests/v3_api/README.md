@@ -1,6 +1,6 @@
 # how to write RBAC-related testing functions
 A set of global variables and functions are introduced to make it easy
-to write tests for rancher's features around RBAC.
+to write tests for ranger's features around RBAC.
 
 When the testing environment is initializing, the following resources are created:
 - a new project that new users and user roles are bound to

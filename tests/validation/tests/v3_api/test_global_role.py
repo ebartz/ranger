@@ -1,10 +1,10 @@
 from .common import *  # NOQA
-from rancher import ApiError
+from ranger import ApiError
 import pytest
 
 # values used to create a catalog
 BRANCH = "dev"
-URL = "https://git.rancher.io/system-charts"
+URL = "https://git.ranger.io/system-charts"
 
 
 def test_global_role_create_1(remove_resource):

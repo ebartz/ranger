@@ -3,10 +3,10 @@ package common
 import (
 	"net/url"
 
-	cutils "github.com/rancher/rancher/pkg/catalog/utils"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/project.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/ref"
-	"github.com/rancher/rancher/pkg/settings"
+	cutils "github.com/ranger/ranger/pkg/catalog/utils"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/project.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/ref"
+	"github.com/ranger/ranger/pkg/settings"
 	"github.com/sirupsen/logrus"
 )
 

@@ -1,8 +1,8 @@
 package secrets
 
 import (
-	azuread "github.com/rancher/rancher/pkg/auth/providers/azure/clients"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
+	azuread "github.com/ranger/ranger/pkg/auth/providers/azure/clients"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
 )
 
 var (
@@ -29,7 +29,7 @@ var (
 		},
 	}
 
-	// NameToFields keeps track of secrets that Rancher must clean up for the given auth provider specified by name.
+	// NameToFields keeps track of secrets that Ranger must clean up for the given auth provider specified by name.
 	NameToFields = map[string][]string{
 		azuread.Name: {"access-token"},
 	}

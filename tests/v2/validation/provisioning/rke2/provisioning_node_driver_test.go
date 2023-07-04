@@ -3,26 +3,26 @@ package rke2
 import (
 	"testing"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters/kubernetesversions"
-	"github.com/rancher/rancher/tests/framework/extensions/machinepools"
-	"github.com/rancher/rancher/tests/framework/extensions/users"
-	password "github.com/rancher/rancher/tests/framework/extensions/users/passwordgenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
-	namegen "github.com/rancher/rancher/tests/framework/pkg/namegenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
-	provisioning "github.com/rancher/rancher/tests/v2/validation/provisioning"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters/kubernetesversions"
+	"github.com/ranger/ranger/tests/framework/extensions/machinepools"
+	"github.com/ranger/ranger/tests/framework/extensions/users"
+	password "github.com/ranger/ranger/tests/framework/extensions/users/passwordgenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
+	namegen "github.com/ranger/ranger/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
+	provisioning "github.com/ranger/ranger/tests/v2/validation/provisioning"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 )
 
 type RKE2NodeDriverProvisioningTestSuite struct {
 	suite.Suite
-	client             *rancher.Client
+	client             *ranger.Client
 	session            *session.Session
-	standardUserClient *rancher.Client
+	standardUserClient *ranger.Client
 	kubernetesVersions []string
 	cnis               []string
 	providers          []string
@@ -47,7 +47,7 @@ func (r *RKE2NodeDriverProvisioningTestSuite) SetupSuite() {
 	r.psact = clustersConfig.PSACT
 	r.advancedOptions = clustersConfig.AdvancedOptions
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(r.T(), err)
 
 	r.client = client
@@ -125,7 +125,7 @@ func (r *RKE2NodeDriverProvisioningTestSuite) TestProvisioningRKE2Cluster() {
 	tests := []struct {
 		name      string
 		nodeRoles []machinepools.NodeRoles
-		client    *rancher.Client
+		client    *ranger.Client
 		psact     string
 	}{
 		{"1 Node all roles " + provisioning.AdminClientName.String(), nodeRoles0, r.client, r.psact},
@@ -171,7 +171,7 @@ func (r *RKE2NodeDriverProvisioningTestSuite) TestProvisioningRKE2ClusterDynamic
 
 	tests := []struct {
 		name   string
-		client *rancher.Client
+		client *ranger.Client
 		psact  string
 	}{
 		{provisioning.AdminClientName.String(), r.client, r.psact},

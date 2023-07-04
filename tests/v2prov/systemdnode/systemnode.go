@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rancher/rancher/tests/v2prov/clients"
-	"github.com/rancher/rancher/tests/v2prov/defaults"
+	"github.com/ranger/ranger/tests/v2prov/clients"
+	"github.com/ranger/ranger/tests/v2prov/defaults"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -87,9 +87,9 @@ func New(clients *clients.Clients, namespace, script string, labels map[string]s
 						MountPath: "/var/lib/cloud/seed/nocloud/user-data",
 						SubPath:   "user-data",
 					},
-					{ // We have to set invocation disabling on the rancher-system-agent because it runs rke2/k3s server on restore and this has cgroup issues
+					{ // We have to set invocation disabling on the ranger-system-agent because it runs rke2/k3s server on restore and this has cgroup issues
 						Name:      "systemd",
-						MountPath: "/etc/default/rancher-system-agent",
+						MountPath: "/etc/default/ranger-system-agent",
 						SubPath:   "disable",
 					},
 					{

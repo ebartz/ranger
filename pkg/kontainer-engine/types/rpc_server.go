@@ -3,8 +3,8 @@ package types
 import (
 	"net"
 
-	"github.com/rancher/rancher/pkg/kontainer-engine/logstream"
-	"github.com/rancher/rke/log"
+	"github.com/ranger/ranger/pkg/kontainer-engine/logstream"
+	"github.com/ranger/rke/log"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"

@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"os"
 
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	managementcontrollers "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/settings"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	managementcontrollers "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/settings"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -107,7 +107,7 @@ func (s *settingsProvider) SetAll(settingsMap map[string]settings.Setting) error
 				fallback[newSetting.Name] = newSetting.Value
 			}
 			_, err := s.settings.Create(newSetting)
-			// Rancher will race in an HA setup to try and create the settings
+			// Ranger will race in an HA setup to try and create the settings
 			// so if it exists just move on.
 			if err != nil && !errors.IsAlreadyExists(err) {
 				return err

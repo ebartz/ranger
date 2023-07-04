@@ -4,8 +4,8 @@
 set -x
 echo $@
 hostname=`hostname -f`
-mkdir -p /etc/rancher/rke2
-cat << EOF >/etc/rancher/rke2/config.yaml
+mkdir -p /etc/ranger/rke2
+cat << EOF >/etc/ranger/rke2/config.yaml
 write-kubeconfig-mode: "0644"
 tls-san:
   - ${2}
@@ -15,14 +15,14 @@ EOF
 if [ ! -z "${7}" ] && [[ "${7}" == *":"* ]]
 then
    echo "${7}"
-   echo -e "${7}" >> /etc/rancher/rke2/config.yaml
+   echo -e "${7}" >> /etc/ranger/rke2/config.yaml
    if [[ "${7}" != *"cloud-provider-name"* ]]
    then
-     echo -e "node-external-ip: ${4}" >> /etc/rancher/rke2/config.yaml
+     echo -e "node-external-ip: ${4}" >> /etc/ranger/rke2/config.yaml
    fi
-   cat /etc/rancher/rke2/config.yaml
+   cat /etc/ranger/rke2/config.yaml
 else
-  echo -e "node-external-ip: ${4}" >> /etc/rancher/rke2/config.yaml
+  echo -e "node-external-ip: ${4}" >> /etc/ranger/rke2/config.yaml
 fi
 
 if [[ ${1} = "rhel" ]]
@@ -73,16 +73,16 @@ then
    sudo systemctl enable rke2-server
    sudo systemctl start rke2-server
 else
-   curl -sfL https://get.rancher.io | INSTALL_RANCHERD_VERSION=${3} sh -
-   sudo systemctl enable rancherd-server
-   sudo systemctl start rancherd-server
+   curl -sfL https://get.ranger.io | INSTALL_RANCHERD_VERSION=${3} sh -
+   sudo systemctl enable rangerd-server
+   sudo systemctl start rangerd-server
 fi
 
 timeElapsed=0
 while [[ $timeElapsed -lt 600 ]]
 do
   notready=false
-  if [[ ! -f /var/lib/rancher/rke2/server/node-token ]] || [[ ! -f /etc/rancher/rke2/rke2.yaml ]]
+  if [[ ! -f /var/lib/ranger/rke2/server/node-token ]] || [[ ! -f /etc/ranger/rke2/rke2.yaml ]]
   then
     notready=true
   fi
@@ -94,6 +94,6 @@ do
   timeElapsed=`expr $timeElapsed + 5`
 done
 
-cat /etc/rancher/rke2/config.yaml> /tmp/joinflags
-cat /var/lib/rancher/rke2/server/node-token >/tmp/nodetoken
-cat /etc/rancher/rke2/rke2.yaml >/tmp/config
+cat /etc/ranger/rke2/config.yaml> /tmp/joinflags
+cat /var/lib/ranger/rke2/server/node-token >/tmp/nodetoken
+cat /etc/ranger/rke2/rke2.yaml >/tmp/config

@@ -14,8 +14,8 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
 )
 
 type APIOperations struct {
@@ -201,7 +201,7 @@ func (a *APIOperations) DoCreate(schemaType string, createObj interface{}, respO
 	collectionURL, ok = schema.Links[COLLECTION]
 	if !ok {
 		// return errors.New("Failed to find collection URL for [" + schemaType + "]")
-		// This is a hack to address https://github.com/rancher/cattle/issues/254
+		// This is a hack to address https://github.com/ranger/cattle/issues/254
 		re := regexp.MustCompile("schemas.*")
 		collectionURL = re.ReplaceAllString(schema.Links[SELF], schema.PluralName)
 	}

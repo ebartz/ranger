@@ -3,10 +3,10 @@ package systeminfo
 import (
 	"fmt"
 
-	v1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	fleetv1alpha1 "github.com/rancher/rancher/pkg/generated/controllers/fleet.cattle.io/v1alpha1"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/wrangler"
+	v1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	fleetv1alpha1 "github.com/ranger/ranger/pkg/generated/controllers/fleet.cattle.io/v1alpha1"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/wrangler"
 	"github.com/sirupsen/logrus"
 )
 
@@ -32,8 +32,8 @@ func (r *Retriever) GetSystemPodLabelSelectors(controlPlane *v1.RKEControlPlane)
 	labelSelectors := []string{
 		"cattle-system:app=cattle-cluster-agent",                               // See pkg/systemtemplate/template.go -- notably hard coded namespace as the systemtemplate is hard coded (as of 05/11/2023)
 		"cattle-system:app=kube-api-auth",                                      // See pkg/systemtemplate/template.go -- notably hard coded namespace as the systemtemplate is hard coded @ Line 402 & 407 (as of 05/11/2023)
-		fmt.Sprintf("%s:app=rancher-webhook", namespace.System),                // See pkg/controllers/dashboard/systemcharts/controller.go Line 115=
-		"cattle-system:upgrade.cattle.io/controller=system-upgrade-controller", // See: https://github.com/rancher/charts/blob/872076dc31642eaa9d2a781a08069d2fc2436f9b/charts/system-upgrade-controller/102.0.0%2Bup0.4.0/templates/deployment.yaml#L5
+		fmt.Sprintf("%s:app=ranger-webhook", namespace.System),                // See pkg/controllers/dashboard/systemcharts/controller.go Line 115=
+		"cattle-system:upgrade.cattle.io/controller=system-upgrade-controller", // See: https://github.com/ranger/charts/blob/872076dc31642eaa9d2a781a08069d2fc2436f9b/charts/system-upgrade-controller/102.0.0%2Bup0.4.0/templates/deployment.yaml#L5
 	}
 
 	fc, err := r.fleetClusterCache.Get(controlPlane.Namespace, controlPlane.Name)

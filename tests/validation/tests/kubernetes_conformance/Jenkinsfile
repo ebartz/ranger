@@ -12,7 +12,7 @@ node {
       stage('Run Validation Tests') {
         try {
           sh "docker run --name ${JOB_NAME}${env.BUILD_NUMBER}  --env-file .env " +
-             "rancher-validation-tests /bin/bash -c \'pytest -v -s ${PYTEST_OPTIONS} tests/kubernetes_conformance/\'"
+             "ranger-validation-tests /bin/bash -c \'pytest -v -s ${PYTEST_OPTIONS} tests/kubernetes_conformance/\'"
         } catch(err) {
           echo 'Test run had failures. Collecting results...'
         }
@@ -20,7 +20,7 @@ node {
       }
 
       stage('Test Report') {
-        sh "docker cp ${JOB_NAME}${env.BUILD_NUMBER}:/src/rancher-validation/conformance_results.tar.gz ."
+        sh "docker cp ${JOB_NAME}${env.BUILD_NUMBER}:/src/ranger-validation/conformance_results.tar.gz ."
         sh 'tar xvzf conformance_results.tar.gz'
         step([$class: 'JUnitResultArchiver', testResults: '**/plugins/e2e/results/junit_01.xml'])
         sh "docker rm -v ${JOB_NAME}${env.BUILD_NUMBER}"

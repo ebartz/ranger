@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: pod-test-util
-        image: ranchertest/mytestcontainer
+        image: rangertest/mytestcontainer
         ports:
         - containerPort: 80

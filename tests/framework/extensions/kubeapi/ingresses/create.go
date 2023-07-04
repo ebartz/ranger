@@ -3,15 +3,15 @@ package ingresses
 import (
 	"context"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/unstructured"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/unstructured"
 	networkingv1 "k8s.io/api/networking/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // CreateIngress is a helper function that uses the dynamic client to create an ingress on a namespace for a specific cluster.
-func CreateIngress(client *rancher.Client, clusterID, ingressName, namespace string, ingressSpec *networkingv1.IngressSpec) (*networkingv1.Ingress, error) {
+func CreateIngress(client *ranger.Client, clusterID, ingressName, namespace string, ingressSpec *networkingv1.IngressSpec) (*networkingv1.Ingress, error) {
 	dynamicClient, err := client.GetDownStreamClusterClient(clusterID)
 	if err != nil {
 		return nil, err

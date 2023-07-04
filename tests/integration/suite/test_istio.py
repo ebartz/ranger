@@ -71,7 +71,7 @@ def test_destination_rule(admin_pc):
 # consistentHash has a "oneOf" only openAPI validation on it,
 # and our types were passing multiple options which failed.
 # This test ensures you can pass a single option.
-# See: https://github.com/rancher/rancher/issues/25515
+# See: https://github.com/ranger/ranger/issues/25515
 @pytest.mark.skip(reason='skipping for now, enable with istio 1.22 fix')
 @pytest.mark.nonparallel
 def test_destination_rule_on_cookie(admin_pc, remove_resource):

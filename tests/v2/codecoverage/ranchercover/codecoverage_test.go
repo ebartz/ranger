@@ -3,22 +3,22 @@ package main
 import (
 	"testing"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/codecoverage"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/codecoverage"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
 	"github.com/stretchr/testify/require"
 )
 
 func TestRetrieveCoverageReports(t *testing.T) {
 	testSession := session.NewSession()
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(t, err)
 
 	err = codecoverage.KillAgentTestServicesRetrieveCoverage(client)
 	require.NoError(t, err)
 
-	err = codecoverage.KillRancherTestServicesRetrieveCoverage(client)
+	err = codecoverage.KillRangerTestServicesRetrieveCoverage(client)
 	require.NoError(t, err)
 
 }

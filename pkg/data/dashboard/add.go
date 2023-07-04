@@ -3,9 +3,9 @@ package dashboard
 import (
 	"context"
 
-	"github.com/rancher/rancher/pkg/data/management"
-	"github.com/rancher/rancher/pkg/features"
-	"github.com/rancher/rancher/pkg/wrangler"
+	"github.com/ranger/ranger/pkg/data/management"
+	"github.com/ranger/ranger/pkg/features"
+	"github.com/ranger/ranger/pkg/wrangler"
 	"k8s.io/client-go/kubernetes"
 )
 

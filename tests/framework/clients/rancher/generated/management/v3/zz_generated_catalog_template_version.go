@@ -1,7 +1,7 @@
 package client
 
 import (
-	"github.com/rancher/norman/types"
+	"github.com/ranger/norman/types"
 )
 
 const (
@@ -18,9 +18,9 @@ const (
 	CatalogTemplateVersionFieldName                 = "name"
 	CatalogTemplateVersionFieldOwnerReferences      = "ownerReferences"
 	CatalogTemplateVersionFieldQuestions            = "questions"
-	CatalogTemplateVersionFieldRancherMaxVersion    = "rancherMaxVersion"
-	CatalogTemplateVersionFieldRancherMinVersion    = "rancherMinVersion"
-	CatalogTemplateVersionFieldRancherVersion       = "rancherVersion"
+	CatalogTemplateVersionFieldRangerMaxVersion    = "rangerMaxVersion"
+	CatalogTemplateVersionFieldRangerMinVersion    = "rangerMinVersion"
+	CatalogTemplateVersionFieldRangerVersion       = "rangerVersion"
 	CatalogTemplateVersionFieldReadme               = "readme"
 	CatalogTemplateVersionFieldRemoved              = "removed"
 	CatalogTemplateVersionFieldRequiredNamespace    = "requiredNamespace"
@@ -50,9 +50,9 @@ type CatalogTemplateVersion struct {
 	Name                 string                 `json:"name,omitempty" yaml:"name,omitempty"`
 	OwnerReferences      []OwnerReference       `json:"ownerReferences,omitempty" yaml:"ownerReferences,omitempty"`
 	Questions            []Question             `json:"questions,omitempty" yaml:"questions,omitempty"`
-	RancherMaxVersion    string                 `json:"rancherMaxVersion,omitempty" yaml:"rancherMaxVersion,omitempty"`
-	RancherMinVersion    string                 `json:"rancherMinVersion,omitempty" yaml:"rancherMinVersion,omitempty"`
-	RancherVersion       string                 `json:"rancherVersion,omitempty" yaml:"rancherVersion,omitempty"`
+	RangerMaxVersion    string                 `json:"rangerMaxVersion,omitempty" yaml:"rangerMaxVersion,omitempty"`
+	RangerMinVersion    string                 `json:"rangerMinVersion,omitempty" yaml:"rangerMinVersion,omitempty"`
+	RangerVersion       string                 `json:"rangerVersion,omitempty" yaml:"rangerVersion,omitempty"`
 	Readme               string                 `json:"readme,omitempty" yaml:"readme,omitempty"`
 	Removed              string                 `json:"removed,omitempty" yaml:"removed,omitempty"`
 	RequiredNamespace    string                 `json:"requiredNamespace,omitempty" yaml:"requiredNamespace,omitempty"`

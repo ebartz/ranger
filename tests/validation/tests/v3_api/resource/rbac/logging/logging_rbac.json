@@ -89,7 +89,7 @@
       "delete -f {resource_root}/rbac/logging/cr_flow.yaml"
     ]
   },
-  "rancher-logging-fluentbit": {
+  "ranger-logging-fluentbit": {
     "should_pass": [
       "get pods",
       "get namespaces"
@@ -125,7 +125,7 @@
       "delete -f {resource_root}/rbac/logging/cr_flow.yaml"
     ]
   },
-  "rancher-logging": {
+  "ranger-logging": {
     "should_pass": [
       "get crd",
       "get loggings",

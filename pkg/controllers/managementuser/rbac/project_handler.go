@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rancher/rancher/pkg/apis/management.cattle.io"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	projectpkg "github.com/rancher/rancher/pkg/project"
-	"github.com/rancher/rancher/pkg/settings"
+	"github.com/ranger/ranger/pkg/apis/management.cattle.io"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	projectpkg "github.com/ranger/ranger/pkg/project"
+	"github.com/ranger/ranger/pkg/settings"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -145,7 +145,7 @@ func (p *pLifecycle) ensureNamespaceRolesUpdated(project *v3.Project) error {
 		}
 		return fmt.Errorf("unable to get backing cluster role for project %s: %w", project.Name, err)
 	}
-	// manage-ns permission was added later on in rancher's lifecycle, so we may need to update the CR if it doesn't
+	// manage-ns permission was added later on in ranger's lifecycle, so we may need to update the CR if it doesn't
 	// have this permission
 	manageNSRecord := authorizer.AttributesRecord{
 		Verb:            manageNSVerb,

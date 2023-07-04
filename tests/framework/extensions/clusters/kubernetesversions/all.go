@@ -11,26 +11,26 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/pkg/errors"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	v3 "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	v3 "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
 )
 
 const (
-	rancherVersionSetting = "server-version"
+	rangerVersionSetting = "server-version"
 
 	rke1VersionsSetting = "k8s-versions-current"
 	rke2ReleasePath     = "v1-rke2-release/releases"
 	k3sReleasePath      = "v1-k3s-release/releases"
 	gkeVersionPath      = "meta/gkeVersions"
 	aksVersionPath      = "meta/aksVersions"
-	eksVersionsFileURL  = "raw.githubusercontent.com/rancher/ui/master/lib/shared/addon/utils/amazon.js"
+	eksVersionsFileURL  = "raw.githubusercontent.com/ranger/ui/master/lib/shared/addon/utils/amazon.js"
 
 	eksVersionsSliceRegex      = `EKS_VERSIONS = \[\s*(.*?)\s*\]\;`
 	eksVersionsSliceItemsRegex = `(?s)'(.*?)'`
 )
 
 // ListRKE1AllVersions is a function that uses the management client to list and return all RKE1 versions.
-func ListRKE1AllVersions(client *rancher.Client) (allAvailableVersions []string, err error) {
+func ListRKE1AllVersions(client *ranger.Client) (allAvailableVersions []string, err error) {
 	setting, err := client.Management.Setting.ByID(rke1VersionsSetting)
 	if err != nil {
 		return
@@ -43,22 +43,22 @@ func ListRKE1AllVersions(client *rancher.Client) (allAvailableVersions []string,
 }
 
 // ListRKE2AllVersions is a function that uses the management client and releases endpoint to list and return all RKE2 versions.
-func ListRKE2AllVersions(client *rancher.Client) (allAvailableVersions []string, err error) {
-	setting, err := client.Management.Setting.ByID(rancherVersionSetting)
+func ListRKE2AllVersions(client *ranger.Client) (allAvailableVersions []string, err error) {
+	setting, err := client.Management.Setting.ByID(rangerVersionSetting)
 	if err != nil {
 		return
 	}
-	rancherVersion, err := semver.NewVersion(setting.Value)
+	rangerVersion, err := semver.NewVersion(setting.Value)
 	if err != nil {
 		return
 	}
 
-	url := fmt.Sprintf("%s://%s/%s", "http", client.RancherConfig.Host, rke2ReleasePath)
+	url := fmt.Sprintf("%s://%s/%s", "http", client.RangerConfig.Host, rke2ReleasePath)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return
 	}
-	bearerToken := fmt.Sprintf("Bearer %s", client.RancherConfig.AdminToken)
+	bearerToken := fmt.Sprintf("Bearer %s", client.RangerConfig.AdminToken)
 	req.Header.Add("Authorization", bearerToken)
 
 	bodyBytes, err := getRequest(req, client)
@@ -73,7 +73,7 @@ func ListRKE2AllVersions(client *rancher.Client) (allAvailableVersions []string,
 
 	releases := mapResponse["data"].([]interface{})
 
-	allAvailableVersions = sortReleases(rancherVersion, releases)
+	allAvailableVersions = sortReleases(rangerVersion, releases)
 
 	sort.Strings(allAvailableVersions)
 
@@ -81,22 +81,22 @@ func ListRKE2AllVersions(client *rancher.Client) (allAvailableVersions []string,
 }
 
 // ListK3SAllVersions is a function that uses the management client and releases endpoint to list and return all K3s versions.
-func ListK3SAllVersions(client *rancher.Client) (allAvailableVersions []string, err error) {
-	setting, err := client.Management.Setting.ByID(rancherVersionSetting)
+func ListK3SAllVersions(client *ranger.Client) (allAvailableVersions []string, err error) {
+	setting, err := client.Management.Setting.ByID(rangerVersionSetting)
 	if err != nil {
 		return
 	}
-	rancherVersion, err := semver.NewVersion(setting.Value)
+	rangerVersion, err := semver.NewVersion(setting.Value)
 	if err != nil {
 		return
 	}
 
-	url := fmt.Sprintf("%s://%s/%s", "http", client.RancherConfig.Host, k3sReleasePath)
+	url := fmt.Sprintf("%s://%s/%s", "http", client.RangerConfig.Host, k3sReleasePath)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return
 	}
-	bearerToken := fmt.Sprintf("Bearer %s", client.RancherConfig.AdminToken)
+	bearerToken := fmt.Sprintf("Bearer %s", client.RangerConfig.AdminToken)
 	req.Header.Add("Authorization", bearerToken)
 
 	bodyBytes, err := getRequest(req, client)
@@ -111,7 +111,7 @@ func ListK3SAllVersions(client *rancher.Client) (allAvailableVersions []string, 
 
 	releases := mapResponse["data"].([]interface{})
 
-	allAvailableVersions = sortReleases(rancherVersion, releases)
+	allAvailableVersions = sortReleases(rangerVersion, releases)
 
 	sort.Strings(allAvailableVersions)
 
@@ -119,13 +119,13 @@ func ListK3SAllVersions(client *rancher.Client) (allAvailableVersions []string, 
 }
 
 // ListGKEAllVersions is a function that uses the management client base and gke meta endpoint to list and return all GKE versions.
-func ListGKEAllVersions(client *rancher.Client, projectID, cloudCredentialID, zone, region string) (availableVersions []string, err error) {
-	url := fmt.Sprintf("%s://%s/%s", "https", client.RancherConfig.Host, gkeVersionPath)
+func ListGKEAllVersions(client *ranger.Client, projectID, cloudCredentialID, zone, region string) (availableVersions []string, err error) {
+	url := fmt.Sprintf("%s://%s/%s", "https", client.RangerConfig.Host, gkeVersionPath)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return
 	}
-	req.Header.Add("Authorization", "Bearer "+client.RancherConfig.AdminToken)
+	req.Header.Add("Authorization", "Bearer "+client.RangerConfig.AdminToken)
 
 	q := req.URL.Query()
 	q.Add("cloudCredentialId", cloudCredentialID)
@@ -159,13 +159,13 @@ func ListGKEAllVersions(client *rancher.Client, projectID, cloudCredentialID, zo
 }
 
 // ListAKSAllVersions is a function that uses the management client base and aks meta endpoint to list and return all AKS versions.
-func ListAKSAllVersions(client *rancher.Client, cluster *v3.Cluster) (allAvailableVersions []string, err error) {
-	url := fmt.Sprintf("%s://%s/%s", "https", client.RancherConfig.Host, "meta/aksVersions")
+func ListAKSAllVersions(client *ranger.Client, cluster *v3.Cluster) (allAvailableVersions []string, err error) {
+	url := fmt.Sprintf("%s://%s/%s", "https", client.RangerConfig.Host, "meta/aksVersions")
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return
 	}
-	req.Header.Add("Authorization", "Bearer "+client.RancherConfig.AdminToken)
+	req.Header.Add("Authorization", "Bearer "+client.RangerConfig.AdminToken)
 
 	if cluster.AKSConfig == nil {
 		return nil, errors.Wrapf(err, "cluster %s has no gke config", cluster.Name)
@@ -193,8 +193,8 @@ func ListAKSAllVersions(client *rancher.Client, cluster *v3.Cluster) (allAvailab
 	return
 }
 
-// ListEKSAllVersions is a function that uses the management client base and rancher/UI repository to list and return all AKS versions.
-func ListEKSAllVersions(client *rancher.Client) (allAvailableVersions []string, err error) {
+// ListEKSAllVersions is a function that uses the management client base and ranger/UI repository to list and return all AKS versions.
+func ListEKSAllVersions(client *ranger.Client) (allAvailableVersions []string, err error) {
 	url := fmt.Sprintf("%s://%s", "https", eksVersionsFileURL)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -228,10 +228,10 @@ func ListEKSAllVersions(client *rancher.Client) (allAvailableVersions []string, 
 
 // sortReleases is a private function that sorts release structs that are used for K3S and RKE2.
 // Sorted versions determined by these conditions:
-//  1. Current rancher version is between min and max channel versions
+//  1. Current ranger version is between min and max channel versions
 //  2. Release struct has serverArgs and agentArgs not empty fields
 //  3. Possible newest version of the minimum channel version
-func sortReleases(rancherVersion *semver.Version, releases []interface{}) (allAvailableVersions []string) {
+func sortReleases(rangerVersion *semver.Version, releases []interface{}) (allAvailableVersions []string) {
 	availableVersionsMap := map[string]semver.Version{}
 
 	for _, release := range releases {
@@ -246,11 +246,11 @@ func sortReleases(rancherVersion *semver.Version, releases []interface{}) (allAv
 		minVersion := release.(map[string]interface{})["minChannelServerVersion"].(string)
 		kubernetesVersion := release.(map[string]interface{})["version"].(string)
 
-		maxRancherVersion, err := semver.NewVersion(strings.TrimPrefix(maxVersion, "v"))
+		maxRangerVersion, err := semver.NewVersion(strings.TrimPrefix(maxVersion, "v"))
 		if err != nil {
 			continue
 		}
-		minRancherVersion, err := semver.NewVersion(strings.TrimPrefix(minVersion, "v"))
+		minRangerVersion, err := semver.NewVersion(strings.TrimPrefix(minVersion, "v"))
 		if err != nil {
 			continue
 		}
@@ -260,14 +260,14 @@ func sortReleases(rancherVersion *semver.Version, releases []interface{}) (allAv
 			continue
 		}
 
-		if !rancherVersion.GreaterThan(minRancherVersion) && !rancherVersion.LessThan(maxRancherVersion) {
+		if !rangerVersion.GreaterThan(minRangerVersion) && !rangerVersion.LessThan(maxRangerVersion) {
 			continue
 		}
 
-		value, ok := availableVersionsMap[minRancherVersion.String()]
+		value, ok := availableVersionsMap[minRangerVersion.String()]
 
 		if !ok || value.LessThan(releaseKubernetesVersion) {
-			availableVersionsMap[minRancherVersion.String()] = *releaseKubernetesVersion
+			availableVersionsMap[minRangerVersion.String()] = *releaseKubernetesVersion
 		}
 	}
 
@@ -279,7 +279,7 @@ func sortReleases(rancherVersion *semver.Version, releases []interface{}) (allAv
 }
 
 // getRequest is a private function that used to reach external endpoints when the clients aren't usable.
-func getRequest(request *http.Request, client *rancher.Client) (bodyBytes []byte, err error) {
+func getRequest(request *http.Request, client *ranger.Client) (bodyBytes []byte, err error) {
 	resp, err := client.Management.APIBaseClient.Ops.Client.Do(request)
 	if err != nil {
 		return

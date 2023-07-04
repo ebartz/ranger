@@ -1,7 +1,7 @@
 package mapper
 
 import (
-	"github.com/rancher/norman/types"
+	"github.com/ranger/norman/types"
 )
 
 type StatefulSetSpecMapper struct {

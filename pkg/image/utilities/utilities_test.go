@@ -9,11 +9,11 @@ func TestCheckImage(t *testing.T) {
 		"weaveworks/npc:latest":         false,
 		"noiro/test:latest":             false,
 		"registry.suse.com/test:latest": true,
-		"rancher/aks-operator:latest":   false,
-		"google/gke-operator:latest":    true, // not from 'rancher/' or whitelisted
-		"rancher/gke-operator-:latest":  true, // trailing '-' in image name
-		"rancher/test":                  true, // missing tag
-		"rancher/test:":                 true, // empty tag
+		"ranger/aks-operator:latest":   false,
+		"google/gke-operator:latest":    true, // not from 'ranger/' or whitelisted
+		"ranger/gke-operator-:latest":  true, // trailing '-' in image name
+		"ranger/test":                  true, // missing tag
+		"ranger/test:":                 true, // empty tag
 	}
 
 	for k, v := range imageListAndErrorExpectations {

@@ -1,10 +1,10 @@
 package auth
 
 import (
-	tokenUtil "github.com/rancher/rancher/pkg/auth/tokens"
-	"github.com/rancher/rancher/pkg/features"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
+	tokenUtil "github.com/ranger/ranger/pkg/auth/tokens"
+	"github.com/ranger/ranger/pkg/features"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 )

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Script to build a Rancher local image with magic for cross-building for different platforms.
+# Script to build a Ranger local image with magic for cross-building for different platforms.
 # Can be improved to build a multiarch image instead.
 
 set -eo pipefail
@@ -31,17 +31,17 @@ fi
 
 set -u
 
-RKE_VERSION="$(grep -m1 'github.com/rancher/rke' "${SCRIPT_DIR}/../go.mod" | awk '{print $2}')"
+RKE_VERSION="$(grep -m1 'github.com/ranger/rke' "${SCRIPT_DIR}/../go.mod" | awk '{print $2}')"
 DEFAULT_VALUES="{\"rke-version\":\"${RKE_VERSION}\"}"
 
-RANCHER_BINARY="${SCRIPT_DIR}/../bin/rancher"
+RANCHER_BINARY="${SCRIPT_DIR}/../bin/ranger"
 GOOS="${TARGET_OS}" GOARCH="${TARGET_ARCH}" CGO_ENABLED=0 "${GO_BINARY}" build -tags k8s \
-    -ldflags "-X github.com/rancher/rancher/pkg/version.Version=dev -X github.com/rancher/rancher/pkg/version.GitCommit=dev -X github.com/rancher/rancher/pkg/settings.InjectDefaults=$DEFAULT_VALUES -extldflags -static -s" \
+    -ldflags "-X github.com/ranger/ranger/pkg/version.Version=dev -X github.com/ranger/ranger/pkg/version.GitCommit=dev -X github.com/ranger/ranger/pkg/settings.InjectDefaults=$DEFAULT_VALUES -extldflags -static -s" \
     -o "${RANCHER_BINARY}"
 
 DATA_JSON_FILE="${SCRIPT_DIR}/../bin/data.json"
 if [ ! -f "${DATA_JSON_FILE}" ]; then
-    curl -sLf https://releases.rancher.com/kontainer-driver-metadata/release-v2.7/data.json > "${DATA_JSON_FILE}"
+    curl -sLf https://releases.ranger.com/kontainer-driver-metadata/release-v2.7/data.json > "${DATA_JSON_FILE}"
 fi
 
 K3S_AIRGAP_IMAGES_TARBALL="${SCRIPT_DIR}/../bin/k3s-airgap-images.tar"

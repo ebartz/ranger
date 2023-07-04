@@ -1,6 +1,6 @@
 from .common import random_str, check_subject_in_rb
 
-from rancher import ApiError
+from ranger import ApiError
 
 from .conftest import (
     wait_until, wait_for, set_server_version, wait_until_available,
@@ -453,9 +453,9 @@ def wait_for_app_condition(admin_pc, name, condition, timeout=60):
 
 @pytest.mark.nonparallel
 def test_mcapp_create_validation(admin_mc, admin_pc, custom_catalog,
-                                 remove_resource, restore_rancher_version):
+                                 remove_resource, restore_ranger_version):
     """Test create validation of multi cluster apps. This test will set the
-    rancher version explicitly and attempt to create apps with rancher version
+    ranger version explicitly and attempt to create apps with ranger version
     requirements
     """
     # 1.6.0 uses 2.0.0-2.2.0
@@ -476,12 +476,12 @@ def test_mcapp_create_validation(admin_mc, admin_pc, custom_catalog,
         'roles': ["cluster-owner", "project-member"],
     }
 
-    # First app requires a min rancher version of 2.1 so we expect an error
+    # First app requires a min ranger version of 2.1 so we expect an error
     with pytest.raises(ApiError) as e:
         mcapp1 = client.create_multi_cluster_app(mcapp_data)
         remove_resource(mcapp1)
     assert e.value.error.status == 422
-    assert 'incompatible rancher version [%s] for template' % server_version \
+    assert 'incompatible ranger version [%s] for template' % server_version \
         in e.value.error.message
 
     # Second app requires a min of 2.0 so no error should be returned
@@ -499,15 +499,15 @@ def test_mcapp_create_validation(admin_mc, admin_pc, custom_catalog,
         mcapp3 = client.create_multi_cluster_app(mcapp_data)
         remove_resource(mcapp3)
     assert e.value.error.status == 422
-    assert 'incompatible rancher version [%s] for template' % server_version \
+    assert 'incompatible ranger version [%s] for template' % server_version \
         in e.value.error.message
 
 
 @pytest.mark.nonparallel
 def test_mcapp_update_validation(admin_mc, admin_pc, custom_catalog,
-                                 remove_resource, restore_rancher_version):
+                                 remove_resource, restore_ranger_version):
     """Test update validation of multi cluster apps. This test will set the
-    rancher version explicitly and attempt to update an app with rancher
+    ranger version explicitly and attempt to update an app with ranger
     version requirements
     """
     # 1.6.0 uses 2.0.0-2.2.0
@@ -528,7 +528,7 @@ def test_mcapp_update_validation(admin_mc, admin_pc, custom_catalog,
         'roles': ["cluster-owner", "project-member"],
     }
 
-    # First app requires a min rancher version of 2.0 so no error
+    # First app requires a min ranger version of 2.0 so no error
     mcapp1 = client.create_multi_cluster_app(mcapp_data)
     remove_resource(mcapp1)
     wait_for_app(admin_pc, mcapp_data['name'])
@@ -538,7 +538,7 @@ def test_mcapp_update_validation(admin_mc, admin_pc, custom_catalog,
         mcapp1 = client.update_by_id_multi_cluster_app(
             id=mcapp1.id, templateVersionId=cat_ns_name+"-chartmuseum-1.6.2")
     assert e.value.error.status == 422
-    assert 'incompatible rancher version [%s] for template' % server_version \
+    assert 'incompatible ranger version [%s] for template' % server_version \
         in e.value.error.message
 
     server_version = "2.3.1"
@@ -548,15 +548,15 @@ def test_mcapp_update_validation(admin_mc, admin_pc, custom_catalog,
         mcapp1 = client.update_by_id_multi_cluster_app(
             id=mcapp1.id, templateVersionId=cat_ns_name+"-chartmuseum-1.6.2")
     assert e.value.error.status == 422
-    assert 'incompatible rancher version [%s] for template' % server_version \
+    assert 'incompatible ranger version [%s] for template' % server_version \
         in e.value.error.message
 
 
 @pytest.mark.nonparallel
 def test_mcapp_rollback_validation(admin_mc, admin_pc, custom_catalog,
-                                   remove_resource, restore_rancher_version):
+                                   remove_resource, restore_ranger_version):
     """Test rollback validation of multi cluster apps. This test will set the
-    rancher version explicitly and attempt to rollback an app with rancher
+    ranger version explicitly and attempt to rollback an app with ranger
     version requirements
     """
     # 1.6.0 uses 2.0.0-2.2.0
@@ -599,7 +599,7 @@ def test_mcapp_rollback_validation(admin_mc, admin_pc, custom_catalog,
         }]
     }
 
-    # First app requires a min rancher version of 2.0 so no error
+    # First app requires a min ranger version of 2.0 so no error
     mcapp1 = client.create_multi_cluster_app(mcapp_data)
     remove_resource(mcapp1)
     wait_for_app(admin_pc, mcapp_data['name'])
@@ -624,7 +624,7 @@ def test_mcapp_rollback_validation(admin_mc, admin_pc, custom_catalog,
         client.action(obj=mcapp1, action_name='rollback',
                       revisionId=original_rev)
     assert e.value.error.status == 422
-    assert 'incompatible rancher version [%s] for template' % server_version \
+    assert 'incompatible ranger version [%s] for template' % server_version \
         in e.value.error.message
 
 

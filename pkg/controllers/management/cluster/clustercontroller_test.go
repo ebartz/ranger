@@ -5,13 +5,13 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/rancher/norman/types"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3/fakes"
-	"github.com/rancher/rke/cloudprovider/aws"
-	"github.com/rancher/rke/cloudprovider/azure"
-	rketypes "github.com/rancher/rke/types"
+	"github.com/ranger/norman/types"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3/fakes"
+	"github.com/ranger/rke/cloudprovider/aws"
+	"github.com/ranger/rke/cloudprovider/azure"
+	rketypes "github.com/ranger/rke/types"
 	"github.com/stretchr/testify/assert"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -38,7 +38,7 @@ func TestSetNodePortRange(t *testing.T) {
 			Name: "testCluster",
 		},
 	}
-	testCluster.Spec.RancherKubernetesEngineConfig = &rketypes.RancherKubernetesEngineConfig{
+	testCluster.Spec.RangerKubernetesEngineConfig = &rketypes.RangerKubernetesEngineConfig{
 		Services: rketypes.RKEConfigServices{
 			KubeAPI: rketypes.KubeAPIService{
 				ServiceNodePortRange: testServiceNodePortRange,
@@ -46,7 +46,7 @@ func TestSetNodePortRange(t *testing.T) {
 		},
 	}
 	caps := v32.Capabilities{}
-	caps, err := c.RKECapabilities(caps, *testCluster.Spec.RancherKubernetesEngineConfig, testCluster.Name)
+	caps, err := c.RKECapabilities(caps, *testCluster.Spec.RangerKubernetesEngineConfig, testCluster.Name)
 	assert.Nil(t, err)
 	assert.Equal(t, testServiceNodePortRange, caps.NodePortRange)
 }
@@ -59,7 +59,7 @@ func TestLoadBalancerCapability(t *testing.T) {
 			Name: "testCluster",
 		},
 	}
-	testCluster.Spec.RancherKubernetesEngineConfig = &rketypes.RancherKubernetesEngineConfig{}
+	testCluster.Spec.RangerKubernetesEngineConfig = &rketypes.RangerKubernetesEngineConfig{}
 
 	// map of cloud provider name to expected lb capability
 	cloudProviderLBCapabilityMap := map[rketypes.CloudProvider]*bool{
@@ -68,9 +68,9 @@ func TestLoadBalancerCapability(t *testing.T) {
 		rketypes.CloudProvider{Name: azure.AzureCloudProviderName}: &lbCap,
 	}
 	for cloudProvider, expectedLB := range cloudProviderLBCapabilityMap {
-		testCluster.Spec.RancherKubernetesEngineConfig.CloudProvider = cloudProvider
+		testCluster.Spec.RangerKubernetesEngineConfig.CloudProvider = cloudProvider
 		caps := v32.Capabilities{}
-		caps, err := c.RKECapabilities(caps, *testCluster.Spec.RancherKubernetesEngineConfig, testCluster.Name)
+		caps, err := c.RKECapabilities(caps, *testCluster.Spec.RangerKubernetesEngineConfig, testCluster.Name)
 		assert.Nil(t, err)
 		assert.Equal(t, expectedLB, caps.LoadBalancerCapabilities.Enabled)
 	}
@@ -80,7 +80,7 @@ func TestIngressCapability(t *testing.T) {
 	c := initializeController()
 	rkeSpec := v32.ClusterSpec{
 		ClusterSpecBase: v32.ClusterSpecBase{
-			RancherKubernetesEngineConfig: &rketypes.RancherKubernetesEngineConfig{
+			RangerKubernetesEngineConfig: &rketypes.RangerKubernetesEngineConfig{
 				Ingress: rketypes.IngressConfig{
 					Provider: NginxIngressProvider,
 				},
@@ -102,13 +102,13 @@ func TestIngressCapability(t *testing.T) {
 		},
 	}
 	// don't set nginx as the ingress provider for second cluster
-	testClusters[1].Spec.RancherKubernetesEngineConfig.Ingress.Provider = ""
+	testClusters[1].Spec.RangerKubernetesEngineConfig.Ingress.Provider = ""
 
 	for _, testCluster := range testClusters {
 		caps := v32.Capabilities{}
-		caps, err := c.RKECapabilities(caps, *testCluster.Spec.RancherKubernetesEngineConfig, testCluster.Name)
+		caps, err := c.RKECapabilities(caps, *testCluster.Spec.RangerKubernetesEngineConfig, testCluster.Name)
 		assert.Nil(t, err)
-		assert.Equal(t, testCluster.Spec.RancherKubernetesEngineConfig.Ingress.Provider, caps.IngressCapabilities[0].IngressProvider)
+		assert.Equal(t, testCluster.Spec.RangerKubernetesEngineConfig.Ingress.Provider, caps.IngressCapabilities[0].IngressProvider)
 	}
 }
 

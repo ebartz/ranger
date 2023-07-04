@@ -7,9 +7,9 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/rancher/apiserver/pkg/types"
-	normantypes "github.com/rancher/norman/types"
-	"github.com/rancher/rancher/tests/framework/pkg/clientbase"
+	"github.com/ranger/apiserver/pkg/types"
+	normantypes "github.com/ranger/norman/types"
+	"github.com/ranger/ranger/tests/framework/pkg/clientbase"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/wait"
 )
@@ -21,7 +21,7 @@ const (
 	steps     = 5                      // only do 5 tries
 )
 
-// State is the Steve specific field in the rancher Steve API
+// State is the Steve specific field in the ranger Steve API
 type State struct {
 	Error         bool   `json:"error,omitempty" yaml:"error,omitempty"`
 	Message       string `json:"message,omitempty" yaml:"message,omitempty"`

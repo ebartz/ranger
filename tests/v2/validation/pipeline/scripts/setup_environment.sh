@@ -7,10 +7,10 @@ sh tests/v2/validation/pipeline/scripts/build_corral_packages.sh
 
 echo | corral config
 
-echo "build rancherHA images"
-sh tests/v2/validation/pipeline/scripts/build_rancherha_images.sh
+echo "build rangerHA images"
+sh tests/v2/validation/pipeline/scripts/build_rangerha_images.sh
 
 corral list
 
-echo "running rancher corral"
-tests/v2/validation/registries/bin/rancherha
+echo "running ranger corral"
+tests/v2/validation/registries/bin/rangerha

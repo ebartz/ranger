@@ -75,7 +75,7 @@ def get_aks_config(version):
     aks_config = {
         "azureKubernetesServiceConfig": {
             "adminUsername": "azureuser",
-            "agentPoolName": "rancher",
+            "agentPoolName": "ranger",
             "agentVmSize": "Standard_D2_v2",
             "clientId": CLIENT_ID,
             "clientSecret": SECRET_KEY,

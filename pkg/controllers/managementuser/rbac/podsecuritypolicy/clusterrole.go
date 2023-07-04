@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	v12 "github.com/rancher/rancher/pkg/generated/norman/rbac.authorization.k8s.io/v1"
-	"github.com/rancher/rancher/pkg/types/config"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	v12 "github.com/ranger/ranger/pkg/generated/norman/rbac.authorization.k8s.io/v1"
+	"github.com/ranger/ranger/pkg/types/config"
 	v1 "k8s.io/api/rbac/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

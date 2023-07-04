@@ -6,15 +6,15 @@ import (
 	"strings"
 
 	"github.com/blang/semver"
-	"github.com/rancher/norman/httperror"
+	"github.com/ranger/norman/httperror"
 )
 
 const (
-	RKEConfigK8sVersion = "rancherKubernetesEngineConfig.kubernetesVersion"
+	RKEConfigK8sVersion = "rangerKubernetesEngineConfig.kubernetesVersion"
 )
 
 func CheckKubernetesVersionFormat(k8sVersion string) (bool, error) {
-	if !strings.Contains(k8sVersion, "-rancher") {
+	if !strings.Contains(k8sVersion, "-ranger") {
 		errMsg := fmt.Sprintf("Requested kubernetesVersion %v is not of valid semver [major.minor.patch] format", k8sVersion)
 		vparts := strings.Split(k8sVersion, ".")
 		if len(vparts) != 3 {

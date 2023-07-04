@@ -1,7 +1,7 @@
 #!groovy
 node {
-    def rootPath = "/root/go/src/github.com/rancher/rancher/"
-    def workPath = "/root/go/src/github.com/rancher/rancher/tests/v2/validation/"
+    def rootPath = "/root/go/src/github.com/ranger/ranger/"
+    def workPath = "/root/go/src/github.com/ranger/ranger/tests/v2/validation/"
 
     def job_name = "${JOB_NAME}"
     if (job_name.contains('/')) { 
@@ -14,9 +14,9 @@ node {
     def configGeneratorContainer = "${job_name}${env.BUILD_NUMBER}_generator"
     def cleanupContainer = "${job_name}${env.BUILD_NUMBER}_cleanup"
 
-    def imageName = "rancher-validation-${job_name}${env.BUILD_NUMBER}"
+    def imageName = "ranger-validation-${job_name}${env.BUILD_NUMBER}"
 
-    def testsDir = "github.com/rancher/rancher/tests/v2/validation/"
+    def testsDir = "github.com/ranger/ranger/tests/v2/validation/"
     def upgradeTestsDir = "${testsDir}upgrade"
     def provisioningTestsDir = "${testsDir}provisioning"
 
@@ -26,13 +26,13 @@ node {
 
     def testResultsOut = "results.xml"
     def envFile = ".env"
-    def rancherConfig = "rancher_env.config"
+    def rangerConfig = "ranger_env.config"
     def branch = "release/v2.7"
     if ("${env.BRANCH}" != "null" && "${env.BRANCH}" != "") {
       branch = "${env.BRANCH}"
     }
     def repo = scm.userRemoteConfigs
-    def pointedRepo = "https://github.com/rancher/rancher.git"
+    def pointedRepo = "https://github.com/ranger/ranger.git"
     if ("${env.REPO}" != "null" && "${env.REPO}" != "") {
       repo = [[url: "${env.REPO}"]]
       pointedRepo = "${env.REPO}"
@@ -208,7 +208,7 @@ node {
                 }
                 println "HA cleanup: ${env.HA_CLEANUP}"
               }
-              stage('Deploys Rancher on a specified version') {
+              stage('Deploys Ranger on a specified version') {
                 deployParams = [
                  string(name: 'RANCHER_HOSTNAME_PREFIX', value: "${env.HA_HOST_PREFIX}"),
                  string(name: 'RANCHER_CHART_VERSION', value: "${env.HA_CHART_VERSION}"),
@@ -220,9 +220,9 @@ node {
                  string(name: 'RANCHER_PSP_ENABLED', value: "${env.RANCHER_PSP_ENABLED}"),
                 ]
 
-              build job: 'rancher-v3_ha_deploy', parameters: deployParams
+              build job: 'ranger-v3_ha_deploy', parameters: deployParams
               }
-              stage('Post Rancher Install Configuration') {
+              stage('Post Ranger Install Configuration') {
                 sh "docker run --name ${setupContainer} -t -e HA_HOST=\$HA_HOST -e ADMIN_PASSWORD=\$ADMIN_PASSWORD " +
                   "${imageName} sh -c \"${workPath}pipeline/hapostinstall/hapostinstall.sh\""
 
@@ -299,7 +299,7 @@ node {
                 configFiles.each {
                   try{
                     sh (
-                      script: "./yq -i '.upgradeInput.clusters[0].name = .rancher.clusterName' ./${patchedConfigsDir}/$it",
+                      script: "./yq -i '.upgradeInput.clusters[0].name = .ranger.clusterName' ./${patchedConfigsDir}/$it",
                       returnStdout: true
                     )
                   } catch(err){
@@ -346,7 +346,7 @@ node {
                   echo "Pre upgrade tests had failures: " + err
                 }
               }
-              stage('Upgrade Rancher') {
+              stage('Upgrade Ranger') {
                 upgradeParams = [
                 string(name: 'RANCHER_HA_HOSTNAME', value: "${env.HA_HOST}"),
                 string(name: 'RANCHER_CHART_VERSION', value: "${env.HA_CHART_VERSION_TO_UPGRADE}"),
@@ -356,7 +356,7 @@ node {
                 string(name: 'RANCHER_HA_KUBECONFIG', value: "${env.HA_KUBECONFIG}")
                ]
 
-                build job: 'rancher-v3_ha_upgrade', parameters: upgradeParams
+                build job: 'ranger-v3_ha_upgrade', parameters: upgradeParams
               }
               stage('Run postupgrade checks') {
                 try {
@@ -514,7 +514,7 @@ node {
                   echo "Deploy new clusters tests had failures: " + err
                 }
               }
-              stage('Delete Rancher and resources') {
+              stage('Delete Ranger and resources') {
                 if (env.HA_CLEANUP.toBoolean()) {
                   try{
                     sh 'echo Cleanup is enabled'
@@ -526,7 +526,7 @@ node {
                       string(name: 'CATTLE_TEST_URL', value: "http://${env.HA_HOST}")
                     ]
 
-                    build job: 'rancher-v3_ha_delete', parameters: deleteParams
+                    build job: 'ranger-v3_ha_delete', parameters: deleteParams
 
                     sh "docker stop ${cleanupContainer}"
                     sh "docker rm -v ${cleanupContainer}"
@@ -548,7 +548,7 @@ node {
               }
             } catch(err) {           
               echo "Caught: ${err}"
-              stage('Delete Rancher and resources in error') {
+              stage('Delete Ranger and resources in error') {
                 if (env.HA_CLEANUP.toBoolean()) {
                   try {
                     sh 'echo Cleanup is enabled'
@@ -560,7 +560,7 @@ node {
                       string(name: 'CATTLE_TEST_URL', value: "http://${env.HA_HOST}")
                     ]
 
-                    build job: 'rancher-v3_ha_delete', parameters: deleteParams
+                    build job: 'ranger-v3_ha_delete', parameters: deleteParams
 
                     sh "docker stop ${cleanupContainer}"
                     sh "docker rm -v ${cleanupContainer}"

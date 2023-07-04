@@ -9,16 +9,16 @@ import (
 	"strings"
 	"time"
 
-	prov "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/controllers/management/cluster"
-	provcluster "github.com/rancher/rancher/pkg/controllers/provisioningv2/cluster"
-	mgmtv3 "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3"
-	provv1 "github.com/rancher/rancher/pkg/generated/controllers/provisioning.cattle.io/v1"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/steve/pkg/auth"
+	prov "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/controllers/management/cluster"
+	provcluster "github.com/ranger/ranger/pkg/controllers/provisioningv2/cluster"
+	mgmtv3 "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3"
+	provv1 "github.com/ranger/ranger/pkg/generated/controllers/provisioning.cattle.io/v1"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/steve/pkg/auth"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apiserver/pkg/authentication/user"
 	"k8s.io/apiserver/pkg/authorization/authorizer"
@@ -174,7 +174,7 @@ func (p *proxy) proxy(req *http.Request) error {
 
 		copy := make([]string, len(value))
 		for i := range value {
-			copy[i] = strings.TrimPrefix(value[i], "rancher:")
+			copy[i] = strings.TrimPrefix(value[i], "ranger:")
 		}
 		headerCopy[name] = copy
 	}
@@ -310,7 +310,7 @@ func (p *proxy) checkAccessToV3ClusterWithID(req *http.Request, user user.Info, 
 }
 
 func replaceCookies(req *http.Request) {
-	// Do not forward rancher cookies to third parties
+	// Do not forward ranger cookies to third parties
 	req.Header.Del(Cookie)
 	// Allow client to use their own cookies with Cookie header
 	if cookie := req.Header.Get(APICookie); cookie != "" {

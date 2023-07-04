@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LIST="rancher-images.txt"
+LIST="ranger-images.txt"
 MISSING_IMAGES=""
 
 scanRegistry() {
@@ -26,7 +26,7 @@ usage() {
 
 $(basename "$0")
 
-This script will scan a specified repository for Rancher images and list images that are not found.
+This script will scan a specified repository for Ranger images and list images that are not found.
 
 USAGE: % ./$(basename "$0") [options]
 
@@ -39,7 +39,7 @@ EXAMPLES OF USAGE:
 
 * Run script
 	
-    $ ./$(basename "$0") -l rancher-images.txt -r docker.io/
+    $ ./$(basename "$0") -l ranger-images.txt -r docker.io/
 
 EOF
 }

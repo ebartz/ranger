@@ -8,22 +8,22 @@ import (
 	"strings"
 
 	"github.com/creasty/defaults"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/tests/framework/clients/k3d"
-	rancherClient "github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/token"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
-	namegen "github.com/rancher/rancher/tests/framework/pkg/namegenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/tests/framework/clients/k3d"
+	rangerClient "github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/token"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
+	namegen "github.com/ranger/ranger/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
 	"github.com/sirupsen/logrus"
 	"k8s.io/client-go/util/retry"
 )
 
 var (
 	agentTag         = os.Getenv("AGENT_TAG")
-	masterAgentImage = "rancher/rancher-agent:" + agentTag
+	masterAgentImage = "ranger/ranger-agent:" + agentTag
 )
 
 const (
@@ -32,7 +32,7 @@ const (
 
 // setup for integration testing
 func main() {
-	rancherConfig := new(rancherClient.Config)
+	rangerConfig := new(rangerClient.Config)
 
 	user := &management.User{
 		Username: "admin",
@@ -50,21 +50,21 @@ func main() {
 	clusterName := namegen.AppendRandomString(k3dClusterNameBasename)
 
 	cleanup := true
-	rancherConfig.AdminToken = token.Token
-	rancherConfig.Host = hostURL
-	rancherConfig.Cleanup = &cleanup
-	rancherConfig.ClusterName = clusterName
+	rangerConfig.AdminToken = token.Token
+	rangerConfig.Host = hostURL
+	rangerConfig.Cleanup = &cleanup
+	rangerConfig.ClusterName = clusterName
 
-	if err := defaults.Set(rancherConfig); err != nil {
+	if err := defaults.Set(rangerConfig); err != nil {
 		logrus.Fatalf("error with setting up config file: %v", err)
 	}
 
-	config.WriteConfig(rancherClient.ConfigurationFileKey, rancherConfig)
+	config.WriteConfig(rangerClient.ConfigurationFileKey, rangerConfig)
 
 	logrus.Infof("Setting up K3D downstream cluster...")
 	testSession := session.NewSession()
 
-	client, err := rancherClient.NewClient("", testSession)
+	client, err := rangerClient.NewClient("", testSession)
 	if err != nil {
 		logrus.Fatalf("error creating admin client: %v", err)
 	}

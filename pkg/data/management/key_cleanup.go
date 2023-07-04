@@ -1,7 +1,7 @@
 package management
 
 import (
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/ranger/pkg/types/config"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -29,13 +29,13 @@ func sshKeyCleanup(management *config.ManagementContext) error {
 	}
 
 	for _, cluster := range clusters.Items {
-		if cluster.Status.AppliedSpec.RancherKubernetesEngineConfig == nil {
+		if cluster.Status.AppliedSpec.RangerKubernetesEngineConfig == nil {
 			continue
 		}
 		pruned := false
-		for i, node := range cluster.Status.AppliedSpec.RancherKubernetesEngineConfig.Nodes {
+		for i, node := range cluster.Status.AppliedSpec.RangerKubernetesEngineConfig.Nodes {
 			if node.SSHKey != "" {
-				cluster.Status.AppliedSpec.RancherKubernetesEngineConfig.Nodes[i].SSHKey = ""
+				cluster.Status.AppliedSpec.RangerKubernetesEngineConfig.Nodes[i].SSHKey = ""
 				pruned = true
 			}
 		}

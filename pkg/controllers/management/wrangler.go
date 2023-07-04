@@ -3,17 +3,17 @@ package management
 import (
 	"context"
 
-	"github.com/rancher/rancher/pkg/clustermanager"
-	"github.com/rancher/rancher/pkg/controllers/management/aks"
-	"github.com/rancher/rancher/pkg/controllers/management/authprovisioningv2"
-	"github.com/rancher/rancher/pkg/controllers/management/clusterupstreamrefresher"
-	"github.com/rancher/rancher/pkg/controllers/management/eks"
-	"github.com/rancher/rancher/pkg/controllers/management/feature"
-	"github.com/rancher/rancher/pkg/controllers/management/gke"
-	"github.com/rancher/rancher/pkg/controllers/management/k3sbasedupgrade"
-	"github.com/rancher/rancher/pkg/features"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/wrangler"
+	"github.com/ranger/ranger/pkg/clustermanager"
+	"github.com/ranger/ranger/pkg/controllers/management/aks"
+	"github.com/ranger/ranger/pkg/controllers/management/authprovisioningv2"
+	"github.com/ranger/ranger/pkg/controllers/management/clusterupstreamrefresher"
+	"github.com/ranger/ranger/pkg/controllers/management/eks"
+	"github.com/ranger/ranger/pkg/controllers/management/feature"
+	"github.com/ranger/ranger/pkg/controllers/management/gke"
+	"github.com/ranger/ranger/pkg/controllers/management/k3sbasedupgrade"
+	"github.com/ranger/ranger/pkg/features"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/wrangler"
 )
 
 func RegisterWrangler(ctx context.Context, wranglerContext *wrangler.Context, management *config.ManagementContext, manager *clustermanager.Manager) error {

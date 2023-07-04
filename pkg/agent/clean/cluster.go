@@ -2,15 +2,15 @@
 // +build !windows
 
 /*
-The cleanup is designed to get a cluster that was imported to Rancher disconnected
+The cleanup is designed to get a cluster that was imported to Ranger disconnected
 and cleanup some objects
 
 Remove the cattle-system namespace which houses the agent used to talk
-to Rancher
+to Ranger
 
-Remove Rancher labels, finalizers and annotations from all namespaces
+Remove Ranger labels, finalizers and annotations from all namespaces
 
-If the cluster was imported to Rancher 2.1 or later cleanup roles, rolebindings,
+If the cluster was imported to Ranger 2.1 or later cleanup roles, rolebindings,
 clusterRoles and clusterRoleBindings
 */
 
@@ -24,11 +24,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rancher/rancher/pkg/controllers/management/usercontrollers"
-	"github.com/rancher/rancher/pkg/controllers/managementagent/nslabels"
-	"github.com/rancher/rancher/pkg/controllers/managementuserlegacy/helm"
-	"github.com/rancher/rancher/pkg/monitoring"
-	"github.com/rancher/rancher/pkg/namespace"
+	"github.com/ranger/ranger/pkg/controllers/management/usercontrollers"
+	"github.com/ranger/ranger/pkg/controllers/managementagent/nslabels"
+	"github.com/ranger/ranger/pkg/controllers/managementuserlegacy/helm"
+	"github.com/ranger/ranger/pkg/monitoring"
+	"github.com/ranger/ranger/pkg/namespace"
 	"github.com/sirupsen/logrus"
 	apierror "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -79,7 +79,7 @@ func Cluster() error {
 	}
 
 	if os.Getenv("SLEEP_FIRST") == "true" {
-		// The sleep allows Rancher server time to finish updating ownerReferences
+		// The sleep allows Ranger server time to finish updating ownerReferences
 		// and close the connection.
 		logrus.Info("Starting sleep for 1 min to allow server time to disconnect....")
 		time.Sleep(time.Duration(1) * time.Minute)
@@ -96,10 +96,10 @@ func Cluster() error {
 		return err
 	}
 
-	if rancherInstalled, err := isRancherInstalled(client); err != nil {
-		return fmt.Errorf("checking for %s/rancher service: %w", namespace.System, err)
-	} else if rancherInstalled {
-		logrus.Info("Rancher is installed, not performing cleanup")
+	if rangerInstalled, err := isRangerInstalled(client); err != nil {
+		return fmt.Errorf("checking for %s/ranger service: %w", namespace.System, err)
+	} else if rangerInstalled {
+		logrus.Info("Ranger is installed, not performing cleanup")
 		return deleteJob(client)
 	}
 
@@ -456,8 +456,8 @@ func getProjectMonitoringNamespaces(client *kubernetes.Clientset) ([]string, err
 	return list, nil
 }
 
-func isRancherInstalled(k8s kubernetes.Interface) (bool, error) {
-	_, err := k8s.CoreV1().Services(namespace.System).Get(context.Background(), "rancher", metav1.GetOptions{})
+func isRangerInstalled(k8s kubernetes.Interface) (bool, error) {
+	_, err := k8s.CoreV1().Services(namespace.System).Get(context.Background(), "ranger", metav1.GetOptions{})
 	if apierror.IsNotFound(err) {
 		return false, nil
 	} else if err != nil {

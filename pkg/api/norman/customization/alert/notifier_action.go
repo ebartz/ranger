@@ -5,20 +5,20 @@ import (
 	"encoding/json"
 	"io/ioutil"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/notifiers"
-	"github.com/rancher/rancher/pkg/rbac"
-	"github.com/rancher/rancher/pkg/ref"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/notifiers"
+	"github.com/ranger/ranger/pkg/rbac"
+	"github.com/ranger/ranger/pkg/ref"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-const testSMTPTitle = "Alert From Rancher: SMTP configuration validated"
+const testSMTPTitle = "Alert From Ranger: SMTP configuration validated"
 
 func NotifierCollectionFormatter(apiContext *types.APIContext, collection *types.GenericCollection) {
 	if canCreateNotifier(apiContext, nil, "") {

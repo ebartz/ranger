@@ -5,10 +5,10 @@ import (
 	"regexp"
 	"time"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 
-	ncondition "github.com/rancher/norman/condition"
-	"github.com/rancher/norman/controller"
+	ncondition "github.com/ranger/norman/condition"
+	"github.com/ranger/norman/controller"
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 )

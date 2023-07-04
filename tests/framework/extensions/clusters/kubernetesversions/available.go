@@ -7,15 +7,15 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/pkg/errors"
-	apiv1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	v3 "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
+	apiv1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	v3 "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
 	"github.com/sirupsen/logrus"
 )
 
 // ListRKE1AvailableVersions is a function to list and return only available RKE1 versions for a specific cluster.
-func ListRKE1AvailableVersions(client *rancher.Client, cluster *v3.Cluster) (availableVersions []string, err error) {
+func ListRKE1AvailableVersions(client *ranger.Client, cluster *v3.Cluster) (availableVersions []string, err error) {
 	var allAvailableVersions []*semver.Version
 	allRKE1Versions, err := ListRKE1AllVersions(client)
 	if err != nil {
@@ -32,7 +32,7 @@ func ListRKE1AvailableVersions(client *rancher.Client, cluster *v3.Cluster) (ava
 		allAvailableVersions = append(allAvailableVersions, rkeVersion)
 	}
 
-	currentVersion, err := semver.NewVersion(strings.TrimPrefix(cluster.RancherKubernetesEngineConfig.Version, "v"))
+	currentVersion, err := semver.NewVersion(strings.TrimPrefix(cluster.RangerKubernetesEngineConfig.Version, "v"))
 	if err != nil {
 		return
 	}
@@ -48,7 +48,7 @@ func ListRKE1AvailableVersions(client *rancher.Client, cluster *v3.Cluster) (ava
 }
 
 // ListRKE2AvailableVersions is a function to list and return only available RKE2 versions for a specific cluster.
-func ListRKE2AvailableVersions(client *rancher.Client, cluster *v1.SteveAPIObject) (availableVersions []string, err error) {
+func ListRKE2AvailableVersions(client *ranger.Client, cluster *v1.SteveAPIObject) (availableVersions []string, err error) {
 	var allAvailableVersions []*semver.Version
 	allRKE2Versions, err := ListRKE2AllVersions(client)
 	if err != nil {
@@ -88,7 +88,7 @@ func ListRKE2AvailableVersions(client *rancher.Client, cluster *v1.SteveAPIObjec
 }
 
 // ListNormanRKE2AvailableVersions is a function to list and return only available RKE2 versions for an imported specific cluster.
-func ListNormanRKE2AvailableVersions(client *rancher.Client, cluster *v3.Cluster) (availableVersions []string, err error) {
+func ListNormanRKE2AvailableVersions(client *ranger.Client, cluster *v3.Cluster) (availableVersions []string, err error) {
 	var allAvailableVersions []*semver.Version
 	allRKE2Versions, err := ListRKE2AllVersions(client)
 	if err != nil {
@@ -122,7 +122,7 @@ func ListNormanRKE2AvailableVersions(client *rancher.Client, cluster *v3.Cluster
 }
 
 // ListK3SAvailableVersions is a function to list and return only available K3S versions for a specific cluster.
-func ListK3SAvailableVersions(client *rancher.Client, cluster *v1.SteveAPIObject) (availableVersions []string, err error) {
+func ListK3SAvailableVersions(client *ranger.Client, cluster *v1.SteveAPIObject) (availableVersions []string, err error) {
 	var allAvailableVersions []*semver.Version
 	allK3sVersions, err := ListK3SAllVersions(client)
 	if err != nil {
@@ -162,7 +162,7 @@ func ListK3SAvailableVersions(client *rancher.Client, cluster *v1.SteveAPIObject
 }
 
 // ListNormanK3SAvailableVersions is a function to list and return only available K3S versions for an imported specific cluster.
-func ListNormanK3SAvailableVersions(client *rancher.Client, cluster *v3.Cluster) (availableVersions []string, err error) {
+func ListNormanK3SAvailableVersions(client *ranger.Client, cluster *v3.Cluster) (availableVersions []string, err error) {
 	var allAvailableVersions []*semver.Version
 	allK3sVersions, err := ListK3SAllVersions(client)
 	if err != nil {
@@ -196,7 +196,7 @@ func ListNormanK3SAvailableVersions(client *rancher.Client, cluster *v3.Cluster)
 }
 
 // ListGKEAvailableVersions is a function to list and return only available GKE versions for a specific cluster.
-func ListGKEAvailableVersions(client *rancher.Client, cluster *v3.Cluster) (availableVersions []string, err error) {
+func ListGKEAvailableVersions(client *ranger.Client, cluster *v3.Cluster) (availableVersions []string, err error) {
 	currentVersion, err := semver.NewVersion(cluster.Version.GitVersion)
 	if err != nil {
 		return
@@ -230,7 +230,7 @@ func ListGKEAvailableVersions(client *rancher.Client, cluster *v3.Cluster) (avai
 }
 
 // ListAKSAvailableVersions is a function to list and return only available AKS versions for a specific cluster.
-func ListAKSAvailableVersions(client *rancher.Client, cluster *v3.Cluster) (availableVersions []string, err error) {
+func ListAKSAvailableVersions(client *ranger.Client, cluster *v3.Cluster) (availableVersions []string, err error) {
 	currentVersion, err := semver.NewVersion(cluster.Version.GitVersion)
 	if err != nil {
 		return
@@ -258,7 +258,7 @@ func ListAKSAvailableVersions(client *rancher.Client, cluster *v3.Cluster) (avai
 }
 
 // ListEKSAvailableVersions is a function to list and return only available EKS versions for a specific cluster.
-func ListEKSAvailableVersions(client *rancher.Client, cluster *v3.Cluster) (availableVersions []string, err error) {
+func ListEKSAvailableVersions(client *ranger.Client, cluster *v3.Cluster) (availableVersions []string, err error) {
 	currentVersion, err := semver.NewVersion(cluster.Version.GitVersion)
 	if err != nil {
 		return

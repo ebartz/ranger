@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/rancher/lasso/pkg/controller"
+	"github.com/ranger/lasso/pkg/controller"
 )
 
 type controllerContextType string

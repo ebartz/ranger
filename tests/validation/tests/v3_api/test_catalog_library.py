@@ -25,7 +25,7 @@ from .common import USER_TOKEN
 from .common import get_user_client
 
 # Skipping all the tests from this module because the library_catalog charts are not supported on latest
-# rancher versions
+# ranger versions
 pytest.skip(allow_module_level=True)
 
 cluster_info = {"cluster": None, "cluster_client": None,

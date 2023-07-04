@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/pkg/sftp"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
 	"golang.org/x/crypto/ssh"
 )
 

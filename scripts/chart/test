@@ -21,6 +21,6 @@ if [[ $? > 0 ]]; then
 fi
 
 current_dir=$(pwd)
-cd ../../build/chart/rancher
+cd ../../build/chart/ranger
 helm_v3 unittest ./
 cd $current_dir

@@ -21,14 +21,14 @@ import (
 	"strings"
 	"time"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/controllers/management/secretmigrator/assemblers"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/controllers/management/secretmigrator/assemblers"
 
 	"github.com/pkg/errors"
 	"github.com/prometheus/common/model"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config/dialer"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config/dialer"
 )
 
 const contentTypeJSON = "application/json"
@@ -130,9 +130,9 @@ func TestPagerduty(key, msg string, cfg *v32.HTTPClientConfig, dialer dialer.Dia
 		EventAction: "trigger",
 		Payload: pagerDutyEventPayload{
 			Summary:  msg,
-			Source:   "rancher",
+			Source:   "ranger",
 			Severity: "info",
-			Group:    "Rancher alert testing",
+			Group:    "Ranger alert testing",
 		},
 	}
 

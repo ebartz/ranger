@@ -4,11 +4,11 @@ import (
 	"context"
 	"sync"
 
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	managementSchema "github.com/rancher/rancher/pkg/schemas/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	managementSchema "github.com/ranger/ranger/pkg/schemas/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
 	"k8s.io/apimachinery/pkg/runtime"
 )
 

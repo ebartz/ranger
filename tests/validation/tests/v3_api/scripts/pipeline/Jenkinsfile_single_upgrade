@@ -1,7 +1,7 @@
 #!groovy
 
 node {
-  def rootPath = "/src/rancher-validation/"
+  def rootPath = "/src/ranger-validation/"
   def job_name = "${JOB_NAME}"
   if (job_name.contains('/')) { 
     job_names = job_name.split('/')
@@ -10,8 +10,8 @@ node {
 
   def containerPrefix = "${job_name}${BUILD_NUMBER}"
 
-  def rancherConfig = "rancher_env.config"
-  def imageName = "rancher-validation-${job_name}${env.BUILD_NUMBER}"
+  def rangerConfig = "ranger_env.config"
+  def imageName = "ranger-validation-${job_name}${env.BUILD_NUMBER}"
   def testsDir = "tests/v3_api/"
 
   def pre_branch = PREUPGRADE_BRANCH
@@ -88,19 +88,19 @@ node {
           sh "./tests/validation/tests/v3_api/scripts/build.sh"
         }
 
-        stage('Deploy Rancher server') {
+        stage('Deploy Ranger server') {
           try {
             sh "docker run --name ${containerPrefix}_deploy -t --env-file .env " +
                 "${imageName} /bin/bash -c \'" +
                 "pytest -v -s --junit-xml=deploy.xml " +
-                "-k test_deploy_rancher_server ${testsDir}\'"
+                "-k test_deploy_ranger_server ${testsDir}\'"
 
-                sh "docker cp ${containerPrefix}_deploy:${rootPath}${testsDir}${rancherConfig} ."
-                load rancherConfig
+                sh "docker cp ${containerPrefix}_deploy:${rootPath}${testsDir}${rangerConfig} ."
+                load rangerConfig
           } catch(err) {
             buildFail = true
             echo "Error: " + err
-            echo "Deploy Rancher server failed"
+            echo "Deploy Ranger server failed"
             currentBuild.result = 'FAILURE'
           }
         }
@@ -170,12 +170,12 @@ node {
               "export CATTLE_TEST_URL=${CATTLE_TEST_URL} && " + 
               "export ADMIN_TOKEN=${ADMIN_TOKEN} && " +
               "export USER_TOKEN=${USER_TOKEN} && " +
-              "export RANCHER_UPGRADE_CHECK=upgrade_rancher && " +
-              "pytest -v -s --junit-xml=upgrade.xml -k test_rancher_upgrade ${testsDir}\'"
+              "export RANCHER_UPGRADE_CHECK=upgrade_ranger && " +
+              "pytest -v -s --junit-xml=upgrade.xml -k test_ranger_upgrade ${testsDir}\'"
           } catch(err) {
             buildFail = true
             echo "Error: " + err
-            echo "Upgrade Rancher failed."
+            echo "Upgrade Ranger failed."
             currentBuild.result = 'FAILURE'
           }
         }
@@ -247,7 +247,7 @@ node {
           }
         }
 
-        stage('Delete Rancher Server') {
+        stage('Delete Ranger Server') {
           try {
             if (RANCHER_DELETE_SERVER.toLowerCase() == "true" && buildFail == false) {
               sh "docker run --name ${containerPrefix}_delete -t --env-file .env " + 
@@ -255,7 +255,7 @@ node {
               "export CATTLE_TEST_URL=${CATTLE_TEST_URL} && " + 
               "export USER_TOKEN=${USER_TOKEN} && " +
               "pytest -v -s --junit-xml=delete.xml " +
-              "-k test_delete_rancher_server ${testsDir}\'"
+              "-k test_delete_ranger_server ${testsDir}\'"
             } else {
               echo "Build failed or RANCHER_DELETE_SERVER is set to false"
               echo "SERVER IS NOT DELETED"

@@ -69,7 +69,7 @@ status:
     multi-cluster-management-agent: true
     provisioningv2: false
     rke2: false
-  agentImage: rancher/rancher-agent:v2.6-head
+  agentImage: ranger/ranger-agent:v2.6-head
   aksStatus:
     privateRequiresTunnel: null
     rbacEnabled: true

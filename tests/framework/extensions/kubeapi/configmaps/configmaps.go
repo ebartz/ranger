@@ -3,9 +3,9 @@ package configmaps
 import (
 	"context"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/unstructured"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/unstructured"
 	coreV1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -21,7 +21,7 @@ var ConfigMapGroupVersionResource = schema.GroupVersionResource{
 
 // CreateConfigMap is a helper function that uses the dynamic client to create a config map on a namespace for a specific cluster.
 // It registers a delete fuction.
-func CreateConfigMap(client *rancher.Client, clusterName, configMapName, description, namespace string, data, labels, annotations map[string]string) (*coreV1.ConfigMap, error) {
+func CreateConfigMap(client *ranger.Client, clusterName, configMapName, description, namespace string, data, labels, annotations map[string]string) (*coreV1.ConfigMap, error) {
 	// ConfigMap object for a namespace in a cluster
 	annotations["field.cattle.io/description"] = description
 	configMap := &coreV1.ConfigMap{

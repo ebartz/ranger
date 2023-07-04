@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/auth/providers/common"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/auth/providers/common"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 )

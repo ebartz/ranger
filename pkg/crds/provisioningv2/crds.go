@@ -3,12 +3,12 @@ package provisioningv2
 import (
 	"embed"
 
-	v1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/features"
-	"github.com/rancher/wrangler/pkg/crd"
-	"github.com/rancher/wrangler/pkg/data"
-	"github.com/rancher/wrangler/pkg/yaml"
+	v1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/features"
+	"github.com/ranger/wrangler/pkg/crd"
+	"github.com/ranger/wrangler/pkg/data"
+	"github.com/ranger/wrangler/pkg/yaml"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -40,7 +40,7 @@ func List() (result []crd.CRD) {
 
 func provisioning() []crd.CRD {
 	return []crd.CRD{
-		newRancherCRD(&v1.Cluster{}, func(c crd.CRD) crd.CRD {
+		newRangerCRD(&v1.Cluster{}, func(c crd.CRD) crd.CRD {
 			c.Labels = map[string]string{
 				"auth.cattle.io/cluster-indexed": "true",
 			}
@@ -63,7 +63,7 @@ func clusterIndexed(c crd.CRD) crd.CRD {
 
 func rke2() []crd.CRD {
 	return []crd.CRD{
-		newRancherCRD(&v1.Cluster{}, func(c crd.CRD) crd.CRD {
+		newRangerCRD(&v1.Cluster{}, func(c crd.CRD) crd.CRD {
 			return clusterIndexed(c).
 				WithColumn("Ready", ".status.ready").
 				WithColumn("Kubeconfig", ".status.clientSecretName")
@@ -184,7 +184,7 @@ func newRKECRD(obj interface{}, customize func(crd.CRD) crd.CRD) crd.CRD {
 	return crd
 }
 
-func newRancherCRD(obj interface{}, customize func(crd.CRD) crd.CRD) crd.CRD {
+func newRangerCRD(obj interface{}, customize func(crd.CRD) crd.CRD) crd.CRD {
 	crd := crd.CRD{
 		GVK: schema.GroupVersionKind{
 			Group:   "provisioning.cattle.io",

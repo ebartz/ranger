@@ -11,13 +11,13 @@ import (
 	"sync"
 
 	errs "github.com/pkg/errors"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/controllers/management/drivers"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/controllers/management/drivers"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -65,9 +65,9 @@ func Register(ctx context.Context, management *config.ManagementContext) {
 		schemas:          management.Schemas,
 	}
 
-	version, err := getRancherMachineVersion()
+	version, err := getRangerMachineVersion()
 	if err != nil {
-		logrus.Warnf("error getting rancher-machine version: %v", err)
+		logrus.Warnf("error getting ranger-machine version: %v", err)
 	}
 	nodeDriverLifecycle.dockerMachineVersion = version
 
@@ -308,7 +308,7 @@ func (m *Lifecycle) checkDriverVersion(obj *v3.NodeDriver) bool {
 		}
 	}
 
-	// Builtin drivers use the rancher-machine version to validate against
+	// Builtin drivers use the ranger-machine version to validate against
 	if obj.Spec.Builtin {
 		if obj.Status.AppliedDockerMachineVersion != m.dockerMachineVersion {
 			return true
@@ -531,8 +531,8 @@ func updateDefault(credField v32.Field, val, kind string) v32.Field {
 	return credField
 }
 
-func getRancherMachineVersion() (string, error) {
-	cmd := exec.Command("rancher-machine", "--version")
+func getRangerMachineVersion() (string, error) {
+	cmd := exec.Command("ranger-machine", "--version")
 	out, err := cmd.CombinedOutput()
 	return string(out), err
 }

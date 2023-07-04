@@ -7,16 +7,16 @@ import (
 	"regexp"
 	"strings"
 
-	provv1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/capr"
-	cluster2 "github.com/rancher/rancher/pkg/controllers/provisioningv2/cluster"
-	capicontrollers "github.com/rancher/rancher/pkg/generated/controllers/cluster.x-k8s.io/v1beta1"
-	provisioningcontrollers "github.com/rancher/rancher/pkg/generated/controllers/provisioning.cattle.io/v1"
-	rkev1controllers "github.com/rancher/rancher/pkg/generated/controllers/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/wrangler/pkg/name"
-	"github.com/rancher/wrangler/pkg/relatedresource"
+	provv1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/capr"
+	cluster2 "github.com/ranger/ranger/pkg/controllers/provisioningv2/cluster"
+	capicontrollers "github.com/ranger/ranger/pkg/generated/controllers/cluster.x-k8s.io/v1beta1"
+	provisioningcontrollers "github.com/ranger/ranger/pkg/generated/controllers/provisioning.cattle.io/v1"
+	rkev1controllers "github.com/ranger/ranger/pkg/generated/controllers/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/wrangler/pkg/name"
+	"github.com/ranger/wrangler/pkg/relatedresource"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/equality"
@@ -143,7 +143,7 @@ func (h *handler) OnChange(key string, configMap *corev1.ConfigMap) (runtime.Obj
 
 				if existingSnapshotCR.Labels[capr.MachineIDLabel] == "" {
 					logrus.Debugf("[snapshotbackpopulate] rkecluster %s/%s: snapshot %s/%s was missing machine ID label: %s", cluster.Namespace, cluster.Name, existingSnapshotCR.Namespace, existingSnapshotCR.Name, capr.MachineIDLabel)
-					// If the machineID label was not set, fall back to looking up the machine by node name, as this may be a snapshot from an earlier version of Rancher that created local snapshots using the snapshotbackpopulate controller, which means the snapshot should not have the machine ID label.
+					// If the machineID label was not set, fall back to looking up the machine by node name, as this may be a snapshot from an earlier version of Ranger that created local snapshots using the snapshotbackpopulate controller, which means the snapshot should not have the machine ID label.
 					listSuccessful, machine, err = capr.GetMachineFromNode(h.machineCache, existingSnapshotCR.SnapshotFile.NodeName, cluster)
 				} else {
 					listSuccessful, machine, err = capr.GetMachineByID(h.machineCache, existingSnapshotCR.Labels[capr.MachineIDLabel], cluster.Namespace, cluster.Name)

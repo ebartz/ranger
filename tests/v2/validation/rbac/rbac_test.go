@@ -6,15 +6,15 @@ import (
 	"strings"
 	"testing"
 
-	apiV1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/namespaces"
-	"github.com/rancher/rancher/tests/framework/extensions/users"
-	namegen "github.com/rancher/rancher/tests/framework/pkg/namegenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
+	apiV1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/namespaces"
+	"github.com/ranger/ranger/tests/framework/extensions/users"
+	namegen "github.com/ranger/ranger/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
 	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -24,16 +24,16 @@ import (
 
 type RBTestSuite struct {
 	suite.Suite
-	client               *rancher.Client
+	client               *ranger.Client
 	standardUser         *management.User
-	standardUserClient   *rancher.Client
+	standardUserClient   *ranger.Client
 	session              *session.Session
 	cluster              *management.Cluster
 	adminProject         *management.Project
 	steveAdminClient     *v1.Client
 	steveStdUserclient   *v1.Client
 	additionalUser       *management.User
-	additionalUserClient *rancher.Client
+	additionalUserClient *ranger.Client
 }
 
 func (rb *RBTestSuite) TearDownSuite() {
@@ -44,13 +44,13 @@ func (rb *RBTestSuite) SetupSuite() {
 	testSession := session.NewSession()
 	rb.session = testSession
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(rb.T(), err)
 
 	rb.client = client
 
 	log.Info("Getting cluster name from the config file and append cluster details in rb")
-	clusterName := client.RancherConfig.ClusterName
+	clusterName := client.RangerConfig.ClusterName
 	require.NotEmptyf(rb.T(), clusterName, "Cluster name to install should be set")
 	clusterID, err := clusters.GetClusterIDByName(rb.client, clusterName)
 	require.NoError(rb.T(), err, "Error getting cluster ID")

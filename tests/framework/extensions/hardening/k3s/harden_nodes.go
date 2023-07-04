@@ -5,12 +5,12 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/pkg/nodes"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/pkg/nodes"
 	"github.com/sirupsen/logrus"
 )
 
-func HardeningNodes(client *rancher.Client, hardened bool, nodes []*nodes.Node, nodeRoles []string) error {
+func HardeningNodes(client *ranger.Client, hardened bool, nodes []*nodes.Node, nodeRoles []string) error {
 	for key, node := range nodes {
 		logrus.Infof("Setting kernel parameters on node %s", node.NodeID)
 		_, err := node.ExecuteCommand("sudo setenforce 1")
@@ -45,7 +45,7 @@ func HardeningNodes(client *rancher.Client, hardened bool, nodes []*nodes.Node, 
 				return nil
 			}
 
-			dirPath := filepath.Join(user.HomeDir, "go/src/github.com/rancher/rancher/tests/framework/extensions/hardening/k3s")
+			dirPath := filepath.Join(user.HomeDir, "go/src/github.com/ranger/ranger/tests/framework/extensions/hardening/k3s")
 			err = node.SCPFileToNode(dirPath+"/audit.yaml", "/home/"+node.SSHUser+"/audit.yaml")
 			if err != nil {
 				return err
@@ -60,24 +60,24 @@ func HardeningNodes(client *rancher.Client, hardened bool, nodes []*nodes.Node, 
 			}
 
 			logrus.Infof("Applying hardened YAML files to node: %s", node.NodeID)
-			_, err = node.ExecuteCommand("sudo bash -c 'mv /home/" + node.SSHUser + "/audit.yaml /var/lib/rancher/k3s/server/audit.yaml'")
+			_, err = node.ExecuteCommand("sudo bash -c 'mv /home/" + node.SSHUser + "/audit.yaml /var/lib/ranger/k3s/server/audit.yaml'")
 			if err != nil {
 				return err
 			}
-			_, err = node.ExecuteCommand("sudo bash -c 'mv /home/" + node.SSHUser + "/psp.yaml /var/lib/rancher/k3s/psp.yaml'")
+			_, err = node.ExecuteCommand("sudo bash -c 'mv /home/" + node.SSHUser + "/psp.yaml /var/lib/ranger/k3s/psp.yaml'")
 			if err != nil {
 				return err
 			}
-			_, err = node.ExecuteCommand("sudo bash -c 'mv /home/" + node.SSHUser + "/system-policy.yaml /var/lib/rancher/k3s/system-policy.yaml'")
+			_, err = node.ExecuteCommand("sudo bash -c 'mv /home/" + node.SSHUser + "/system-policy.yaml /var/lib/ranger/k3s/system-policy.yaml'")
 			if err != nil {
 				return err
 			}
 
-			_, err = node.ExecuteCommand("sudo bash -c 'export KUBECONFIG=/etc/rancher/k3s/k3s.yaml && kubectl apply -f /var/lib/rancher/k3s/psp.yaml'")
+			_, err = node.ExecuteCommand("sudo bash -c 'export KUBECONFIG=/etc/ranger/k3s/k3s.yaml && kubectl apply -f /var/lib/ranger/k3s/psp.yaml'")
 			if err != nil {
 				return err
 			}
-			_, err = node.ExecuteCommand("sudo bash -c 'export KUBECONFIG=/etc/rancher/k3s/k3s.yaml && kubectl apply -f /var/lib/rancher/k3s/system-policy.yaml'")
+			_, err = node.ExecuteCommand("sudo bash -c 'export KUBECONFIG=/etc/ranger/k3s/k3s.yaml && kubectl apply -f /var/lib/ranger/k3s/system-policy.yaml'")
 			if err != nil {
 				return err
 			}

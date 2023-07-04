@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1/plan"
-	"github.com/rancher/rancher/pkg/capr"
-	"github.com/rancher/wrangler/pkg/data/convert"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1/plan"
+	"github.com/ranger/ranger/pkg/capr"
+	"github.com/ranger/wrangler/pkg/data/convert"
 )
 
 var allProbes = map[string]plan.Probe{
@@ -36,9 +36,9 @@ var allProbes = map[string]plan.Probe{
 		FailureThreshold:    2,
 		HTTPGetAction: plan.HTTPGetAction{
 			URL:        "https://127.0.0.1:6443/readyz",
-			CACert:     "/var/lib/rancher/%s/server/tls/server-ca.crt",
-			ClientCert: "/var/lib/rancher/%s/server/tls/client-kube-apiserver.crt",
-			ClientKey:  "/var/lib/rancher/%s/server/tls/client-kube-apiserver.key",
+			CACert:     "/var/lib/ranger/%s/server/tls/server-ca.crt",
+			ClientCert: "/var/lib/ranger/%s/server/tls/client-kube-apiserver.crt",
+			ClientKey:  "/var/lib/ranger/%s/server/tls/client-kube-apiserver.key",
 		},
 	},
 	"kube-scheduler": {

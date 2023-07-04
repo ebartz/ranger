@@ -5,17 +5,17 @@ import (
 	"fmt"
 	"time"
 
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/capr"
-	"github.com/rancher/rancher/pkg/controllers/management/clusterconnected"
-	provcluster "github.com/rancher/rancher/pkg/controllers/provisioningv2/cluster"
-	capicontrollers "github.com/rancher/rancher/pkg/generated/controllers/cluster.x-k8s.io/v1beta1"
-	mgmtcontrollers "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3"
-	provcontrollers "github.com/rancher/rancher/pkg/generated/controllers/provisioning.cattle.io/v1"
-	rkecontrollers "github.com/rancher/rancher/pkg/generated/controllers/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/wrangler"
-	"github.com/rancher/wrangler/pkg/relatedresource"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/capr"
+	"github.com/ranger/ranger/pkg/controllers/management/clusterconnected"
+	provcluster "github.com/ranger/ranger/pkg/controllers/provisioningv2/cluster"
+	capicontrollers "github.com/ranger/ranger/pkg/generated/controllers/cluster.x-k8s.io/v1beta1"
+	mgmtcontrollers "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3"
+	provcontrollers "github.com/ranger/ranger/pkg/generated/controllers/provisioning.cattle.io/v1"
+	rkecontrollers "github.com/ranger/ranger/pkg/generated/controllers/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/wrangler"
+	"github.com/ranger/wrangler/pkg/relatedresource"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/api/equality"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -108,8 +108,8 @@ func (h *handler) doRemove(cp *rkev1.RKEControlPlane) func() (string, error) {
 			return "", err
 		}
 
-		// Some machines may not have gotten the CAPI cluster-name label in previous versions in Rancher.
-		// Because of update issues with the conversion webhook in rancher-webhook, we can't use a "migration" to add the label (it will fail because the conversion webhook is not available).
+		// Some machines may not have gotten the CAPI cluster-name label in previous versions in Ranger.
+		// Because of update issues with the conversion webhook in ranger-webhook, we can't use a "migration" to add the label (it will fail because the conversion webhook is not available).
 		// In addition, there is no way to "or" label selectors in the API, so we need to do this manually.
 		otherMachines, err := h.machineCache.List(cp.Namespace, labels.SelectorFromSet(labels.Set{capr.ClusterNameLabel: cp.Name, capr.ControlPlaneRoleLabel: "true"}))
 		if err != nil {

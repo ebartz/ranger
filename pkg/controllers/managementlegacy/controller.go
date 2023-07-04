@@ -3,12 +3,12 @@ package managementlegacy
 import (
 	"context"
 
-	"github.com/rancher/rancher/pkg/clustermanager"
-	"github.com/rancher/rancher/pkg/controllers/managementlegacy/catalog"
-	"github.com/rancher/rancher/pkg/controllers/managementlegacy/compose"
-	"github.com/rancher/rancher/pkg/controllers/managementlegacy/globaldns"
-	"github.com/rancher/rancher/pkg/controllers/managementlegacy/multiclusterapp"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/ranger/pkg/clustermanager"
+	"github.com/ranger/ranger/pkg/controllers/managementlegacy/catalog"
+	"github.com/ranger/ranger/pkg/controllers/managementlegacy/compose"
+	"github.com/ranger/ranger/pkg/controllers/managementlegacy/globaldns"
+	"github.com/ranger/ranger/pkg/controllers/managementlegacy/multiclusterapp"
+	"github.com/ranger/ranger/pkg/types/config"
 )
 
 func Register(ctx context.Context, management *config.ManagementContext, manager *clustermanager.Manager) {

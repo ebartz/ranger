@@ -1,7 +1,7 @@
 import pytest
 import requests
 import time
-from rancher import ApiError
+from ranger import ApiError
 from lib.aws import AmazonWebServices
 from .common import CLUSTER_MEMBER, configure_cis_requirements
 from .common import CLUSTER_OWNER
@@ -448,8 +448,8 @@ def create_cluster_cis(scan_tool_version="rke-cis-1.4"):
     client = get_user_client()
     cluster = client.create_cluster(
         name=random_test_name(),
-        driver="rancherKubernetesEngine",
-        rancherKubernetesEngineConfig=rke_config_temp,
+        driver="rangerKubernetesEngine",
+        rangerKubernetesEngineConfig=rke_config_temp,
         defaultPodSecurityPolicyTemplateId=POD_SECURITY_POLICY_TEMPLATE
     )
     assert cluster.state == "provisioning"

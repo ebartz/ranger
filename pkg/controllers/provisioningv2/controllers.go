@@ -3,16 +3,16 @@ package provisioningv2
 import (
 	"context"
 
-	"github.com/rancher/rancher/pkg/controllers/provisioningv2/cluster"
-	"github.com/rancher/rancher/pkg/controllers/provisioningv2/fleetcluster"
-	"github.com/rancher/rancher/pkg/controllers/provisioningv2/fleetworkspace"
-	"github.com/rancher/rancher/pkg/controllers/provisioningv2/managedchart"
-	"github.com/rancher/rancher/pkg/controllers/provisioningv2/provisioningcluster"
-	"github.com/rancher/rancher/pkg/controllers/provisioningv2/provisioninglog"
-	"github.com/rancher/rancher/pkg/controllers/provisioningv2/secret"
-	"github.com/rancher/rancher/pkg/features"
-	"github.com/rancher/rancher/pkg/provisioningv2/kubeconfig"
-	"github.com/rancher/rancher/pkg/wrangler"
+	"github.com/ranger/ranger/pkg/controllers/provisioningv2/cluster"
+	"github.com/ranger/ranger/pkg/controllers/provisioningv2/fleetcluster"
+	"github.com/ranger/ranger/pkg/controllers/provisioningv2/fleetworkspace"
+	"github.com/ranger/ranger/pkg/controllers/provisioningv2/managedchart"
+	"github.com/ranger/ranger/pkg/controllers/provisioningv2/provisioningcluster"
+	"github.com/ranger/ranger/pkg/controllers/provisioningv2/provisioninglog"
+	"github.com/ranger/ranger/pkg/controllers/provisioningv2/secret"
+	"github.com/ranger/ranger/pkg/features"
+	"github.com/ranger/ranger/pkg/provisioningv2/kubeconfig"
+	"github.com/ranger/ranger/pkg/wrangler"
 )
 
 func Register(ctx context.Context, clients *wrangler.Context, kubeconfigManager *kubeconfig.Manager) {

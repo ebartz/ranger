@@ -1,7 +1,7 @@
 #!groovy
 
 node {
-  def rootPath = "/src/rancher-validation/"
+  def rootPath = "/src/ranger-validation/"
   def job_name = "${JOB_NAME}"
   if (job_name.contains('/')) { 
     job_names = job_name.split('/')
@@ -13,18 +13,18 @@ node {
   def testContainer = "${job_name}${env.BUILD_NUMBER}_test"
   def deleteContainer = "${job_name}${env.BUILD_NUMBER}_delete"
 
-  def deployPytestOptions = "-k test_deploy_rancher_server"
-  def deletePytestOptions = "-k test_delete_rancher_server"
+  def deployPytestOptions = "-k test_deploy_ranger_server"
+  def deletePytestOptions = "-k test_delete_ranger_server"
   def deployClusterPytestOptions = "-k test_deploy_clusters"
 
   def setupResultsOut = "setup-results.xml"
   def clusterSetupResultsOut = "cluster-setup-results.xml"
   def deleteResultsOut = "delete-results.xml"
-  def imageName = "rancher-validation-${job_name}${env.BUILD_NUMBER}"
+  def imageName = "ranger-validation-${job_name}${env.BUILD_NUMBER}"
   def testsDir = "tests/v3_api/"
 
   def envFile = ".env"
-  def rancherConfig = "rancher_env.config"
+  def rangerConfig = "ranger_env.config"
 
   def branch = "release/v2.6"
   if ("${env.branch}" != "null" && "${env.branch}" != "") {
@@ -106,22 +106,22 @@ node {
               sh "./tests/v3_api/scripts/build.sh"
             }
 
-            stage('Deploy Rancher Server') {
+            stage('Deploy Ranger Server') {
               try {
                 if (!env.CATTLE_TEST_URL || !env.ADMIN_TOKEN || !env.USER_TOKEN ||
                 (env.CATTLE_TEST_URL == "" && env.ADMIN_TOKEN == "" && env.USER_TOKEN == "")) {
-                  // deploy rancher server
+                  // deploy ranger server
                   sh "docker run --name ${setupContainer} -t --env-file ${envFile} " +
                     "${imageName} /bin/bash -c \'pytest -v -s --junit-xml=${setupResultsOut} " +
                     "${deployPytestOptions} ${testsDir}\'"
                   RANCHER_DEPLOYED = true
 
                   // copy file containing CATTLE_TEST_URL, ADMIN_TOKEN, USER_TOKEN and load into environment variables
-                  sh "docker cp ${setupContainer}:${rootPath}${testsDir}${rancherConfig} ."
-                  load rancherConfig
+                  sh "docker cp ${setupContainer}:${rootPath}${testsDir}${rangerConfig} ."
+                  load rangerConfig
                 }
                 else {
-                  echo "User Provided Rancher Server"
+                  echo "User Provided Ranger Server"
                   RANCHER_DEPLOYED = false
                 }
 
@@ -143,8 +143,8 @@ node {
 
                     CLUSTERS_CREATED = true
                     // copy file containing RANCHER_CLUSTER_NAMES and load into environment variables
-                    sh "docker cp ${clusterSetupContainer}:${rootPath}${testsDir}${rancherConfig} ."
-                    load rancherConfig
+                    sh "docker cp ${clusterSetupContainer}:${rootPath}${testsDir}${rangerConfig} ."
+                    load rangerConfig
                 }
                 else {
                     echo "Given clusters: ${env.RANCHER_CLUSTER_NAMES}"
@@ -153,8 +153,8 @@ node {
               } catch(err) {
                 echo "Error: " + err
                 CLUSTERS_CREATED = true
-                sh "docker cp ${clusterSetupContainer}:${rootPath}${testsDir}${rancherConfig} ."
-                load rancherConfig
+                sh "docker cp ${clusterSetupContainer}:${rootPath}${testsDir}${rangerConfig} ."
+                load rangerConfig
                 currentBuild.result = 'UNSTABLE'
               }
             }
@@ -185,7 +185,7 @@ node {
                       string(name: 'RANCHER_CREATE_RESOURCES_PREFIX', value: "${RANCHER_CREATE_RESOURCES_PREFIX}"),
                     ]
                     echo "Params are: ${params}"
-                    jobs["test-${i}"] = { build job: 'rancher-v3_needs_cluster', parameters: params }
+                    jobs["test-${i}"] = { build job: 'ranger-v3_needs_cluster', parameters: params }
                   }
                   parallel jobs
               } catch(err) {
@@ -197,7 +197,7 @@ node {
           } catch(err) {
             echo "Error: " + err
           } finally {
-            stage('Delete Rancher Server') {
+            stage('Delete Ranger Server') {
               try {
                 if (RANCHER_DEPLOYED && env.RANCHER_DELETE_SERVER && env.RANCHER_DELETE_SERVER.toLowerCase() == "true") {
                   sh "docker run --name ${deleteContainer} -t --env-file ${envFile} " +
@@ -209,7 +209,7 @@ node {
                   step([$class: 'JUnitResultArchiver', testResults: "**/${deleteResultsOut}"])
                 }
                 else {
-                  echo "Skipping Rancher server deletion."
+                  echo "Skipping Ranger server deletion."
                 }
               } catch(err) {
                 echo "Error: " + err

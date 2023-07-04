@@ -3,9 +3,9 @@ package v3
 import (
 	"time"
 
-	"github.com/rancher/norman/condition"
-	"github.com/rancher/norman/types"
-	rketypes "github.com/rancher/rke/types"
+	"github.com/ranger/norman/condition"
+	"github.com/ranger/norman/types"
+	rketypes "github.com/ranger/rke/types"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -245,7 +245,7 @@ type NodeSpec struct {
 type NodePlan struct {
 	Plan    *rketypes.RKEConfigNodePlan `json:"plan,omitempty"`
 	Version int                         `json:"version,omitempty"`
-	// current default in rancher-agent is 2m (120s)
+	// current default in ranger-agent is 2m (120s)
 	AgentCheckInterval int `json:"agentCheckInterval,omitempty" norman:"min=1,max=1800,default=120"`
 }
 

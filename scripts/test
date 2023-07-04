@@ -5,7 +5,7 @@ cleanup()
 {
     EXIT=$?
     set +ex
-    echo Stopping rancher server
+    echo Stopping ranger server
     kill $RANCHER_RUN_PID
     wait $RANCHER_RUN_PID
     if [ $PID != -1 ]; then
@@ -29,20 +29,20 @@ if [ ${ARCH} == arm64 ] || [ ${ARCH} == s390x ]; then
     export ETCD_UNSUPPORTED_ARCH=${ARCH}
 fi
 
-echo Starting rancher server for test
-touch /tmp/rancher.log
+echo Starting ranger server for test
+touch /tmp/ranger.log
 
-run_rancher()
+run_ranger()
 {
     while sleep 2; do
         if [ "$PID" != "-1" ] && [ ! -e /proc/$PID ]; then
-            echo Rancher died
-            echo Rancher logs were
-            tail -n 25 /tmp/rancher.log
+            echo Ranger died
+            echo Ranger logs were
+            tail -n 25 /tmp/ranger.log
             echo K3s logs were:
             tail -n 25 build/testdata/k3s.log
             if [ "$INT_TESTS_STARTED" = "true" ]; then
-              echo Rancher died after tests started, aborting
+              echo Ranger died after tests started, aborting
               exit 1
             fi
             set +e
@@ -53,8 +53,8 @@ run_rancher()
             sleep 5
         fi
         if [ "$PID" = "-1" ]; then
-          echo Starting rancher server using run
-          ./scripts/run >/tmp/rancher.log 2>&1 &
+          echo Starting ranger server using run
+          ./scripts/run >/tmp/ranger.log 2>&1 &
           PID=$!
         fi
         sleep 2
@@ -63,21 +63,21 @@ run_rancher()
 
 # uncomment to get startup logs. Don't leave them on because it slows drone down too
 # much
-#tail -F /tmp/rancher.log &
+#tail -F /tmp/ranger.log &
 #TPID=$!
 PID=-1
-run_rancher &
+run_ranger &
 RANCHER_RUN_PID=$!
 trap cleanup exit
 
-echo Sleeping for 5 seconds before checking Rancher health
+echo Sleeping for 5 seconds before checking Ranger health
 sleep 5
 
 while ! curl -sf http://localhost:8080/ping; do
     sleep 2
 done
 
-while ! kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml rollout status -w -n cattle-system deploy/rancher-webhook; do
+while ! kubectl --kubeconfig /etc/ranger/k3s/k3s.yaml rollout status -w -n cattle-system deploy/ranger-webhook; do
     sleep 2
 done
 #kill $TPID
@@ -102,7 +102,7 @@ go test -v ./tests/v2/integration/...
 echo Running tox tests
 INT_TESTS_STARTED=true
 cd ./tests/integration
-tox -e rancher -- -m "not nonparallel" -n $(nproc)
-tox -e rancher -- -m nonparallel
+tox -e ranger -- -m "not nonparallel" -n $(nproc)
+tox -e ranger -- -m nonparallel
 
-#tail -f /tmp/rancher-test.log &
+#tail -f /tmp/ranger-test.log &

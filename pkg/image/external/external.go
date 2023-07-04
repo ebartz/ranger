@@ -8,9 +8,9 @@ import (
 	"strings"
 
 	"github.com/coreos/go-semver/semver"
-	"github.com/rancher/rancher/pkg/controllers/management/k3sbasedupgrade"
-	"github.com/rancher/rancher/pkg/image"
-	"github.com/rancher/rancher/pkg/settings"
+	"github.com/ranger/ranger/pkg/controllers/management/k3sbasedupgrade"
+	"github.com/ranger/ranger/pkg/image"
+	"github.com/ranger/ranger/pkg/settings"
 	"github.com/sirupsen/logrus"
 )
 
@@ -21,7 +21,7 @@ const (
 	RKE2 Source = "rke2"
 )
 
-func GetExternalImages(rancherVersion string, externalData map[string]interface{}, source Source, minimumKubernetesVersion *semver.Version, osType image.OSType) ([]string, error) {
+func GetExternalImages(rangerVersion string, externalData map[string]interface{}, source Source, minimumKubernetesVersion *semver.Version, osType image.OSType) ([]string, error) {
 	if source != K3S && source != RKE2 {
 		return nil, fmt.Errorf("invalid source provided: %s", source)
 	}
@@ -50,7 +50,7 @@ func GetExternalImages(rancherVersion string, externalData map[string]interface{
 			}
 		}
 
-		if rancherVersion != "dev" {
+		if rangerVersion != "dev" {
 			maxVersion, _ := releaseMap["maxChannelServerVersion"].(string)
 			maxVersion = strings.TrimPrefix(maxVersion, "v")
 			if maxVersion == "" {
@@ -62,21 +62,21 @@ func GetExternalImages(rancherVersion string, externalData map[string]interface{
 				continue
 			}
 
-			versionGTMin, err := k3sbasedupgrade.IsNewerVersion(minVersion, rancherVersion)
+			versionGTMin, err := k3sbasedupgrade.IsNewerVersion(minVersion, rangerVersion)
 			if err != nil {
 				continue
 			}
-			if rancherVersion != minVersion && !versionGTMin {
-				// Rancher version not equal to or greater than minimum supported rancher version.
+			if rangerVersion != minVersion && !versionGTMin {
+				// Ranger version not equal to or greater than minimum supported ranger version.
 				continue
 			}
 
-			versionLTMax, err := k3sbasedupgrade.IsNewerVersion(rancherVersion, maxVersion)
+			versionLTMax, err := k3sbasedupgrade.IsNewerVersion(rangerVersion, maxVersion)
 			if err != nil {
 				continue
 			}
-			if rancherVersion != maxVersion && !versionLTMax {
-				// Rancher version not equal to or greater than maximum supported rancher version.
+			if rangerVersion != maxVersion && !versionLTMax {
+				// Ranger version not equal to or greater than maximum supported ranger version.
 				continue
 			}
 		}
@@ -86,13 +86,13 @@ func GetExternalImages(rancherVersion string, externalData map[string]interface{
 	}
 
 	if compatibleReleases == nil || len(compatibleReleases) < 1 {
-		logrus.Infof("skipping image generation since no compatible releases were found for version: %s", rancherVersion)
+		logrus.Infof("skipping image generation since no compatible releases were found for version: %s", rangerVersion)
 		return nil, nil
 	}
 
 	for _, release := range compatibleReleases {
 		// Registries don't allow "+", so image names will have these substituted.
-		upgradeImage := fmt.Sprintf("rancher/%s-upgrade:%s", source, strings.ReplaceAll(release, "+", "-"))
+		upgradeImage := fmt.Sprintf("ranger/%s-upgrade:%s", source, strings.ReplaceAll(release, "+", "-"))
 		externalImagesMap[upgradeImage] = true
 		systemAgentInstallerImage := fmt.Sprintf("%s%s:%s", settings.SystemAgentInstallerImage.Default, source, strings.ReplaceAll(release, "+", "-"))
 		externalImagesMap[systemAgentInstallerImage] = true
@@ -135,9 +135,9 @@ func downloadExternalSupportingImages(release string, source Source, osType imag
 		var externalImageURL string
 		switch osType {
 		case image.Linux:
-			externalImageURL = fmt.Sprintf("https://github.com/rancher/rke2/releases/download/%s/rke2-images-all.linux-amd64.txt", release)
+			externalImageURL = fmt.Sprintf("https://github.com/ranger/rke2/releases/download/%s/rke2-images-all.linux-amd64.txt", release)
 		case image.Windows:
-			externalImageURL = fmt.Sprintf("https://github.com/rancher/rke2/releases/download/%s/rke2-images.windows-amd64.txt", release)
+			externalImageURL = fmt.Sprintf("https://github.com/ranger/rke2/releases/download/%s/rke2-images.windows-amd64.txt", release)
 		default:
 			return "", fmt.Errorf("could not download external supporting images: unsupported os type %v", osType)
 		}

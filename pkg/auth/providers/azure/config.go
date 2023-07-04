@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 	"github.com/sirupsen/logrus"
 )
 
@@ -18,10 +18,10 @@ const (
 	chinaAzureMSLoginEndpoint = "https://login.partner.microsoftonline.cn/"
 )
 
-// GraphEndpointMigratedAnnotation is the main piece of data based on which Rancher decides to use either the
+// GraphEndpointMigratedAnnotation is the main piece of data based on which Ranger decides to use either the
 // deprecated authentication flow via Azure AD Graph or the new one via Microsoft Graph.
 // If the annotation is missing on the Auth Config object, or is present with a value of anything other than "true",
-// then Rancher uses the old, deprecated flow. If the annotation is present and set to "true", Rancher uses the new flow.
+// then Ranger uses the old, deprecated flow. If the annotation is present and set to "true", Ranger uses the new flow.
 const GraphEndpointMigratedAnnotation = "auth.cattle.io/azuread-endpoint-migrated"
 
 func authProviderEnabled(config *v32.AzureADConfig) bool {

@@ -4,9 +4,9 @@ import (
 	"context"
 	"strconv"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/unstructured"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/unstructured"
 	corev1 "k8s.io/api/core/v1"
 	storagev1 "k8s.io/api/storage/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -26,7 +26,7 @@ var PersistentVolumeClaimGroupVersionResource = schema.GroupVersionResource{
 // If you pass a PersistentVolume then `storageClass` and `storage` would be optional, otherwise `persistentVolume` would be optional and `storage` and` storageClass`
 // are needed.
 // The function registers a delete fuction.
-func CreatePersistentVolumeClaim(client *rancher.Client, clusterName, persistentVolumeClaimName, description, namespace string, storage int, accessModes []corev1.PersistentVolumeAccessMode, persistentVolume *corev1.PersistentVolume, storageClass *storagev1.StorageClass) (*corev1.PersistentVolumeClaim, error) {
+func CreatePersistentVolumeClaim(client *ranger.Client, clusterName, persistentVolumeClaimName, description, namespace string, storage int, accessModes []corev1.PersistentVolumeAccessMode, persistentVolume *corev1.PersistentVolume, storageClass *storagev1.StorageClass) (*corev1.PersistentVolumeClaim, error) {
 	var unstructuredVolumeClaim *metav1Unstructured.Unstructured
 	annotations := map[string]string{
 		"field.cattle.io/description": description,

@@ -1,19 +1,19 @@
 package main
 
 import (
-	"github.com/rancher/rancher/tests/framework/clients/corral"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/pipeline"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
-	"github.com/rancher/rancher/tests/framework/pkg/environmentflag"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
-	"github.com/rancher/rancher/tests/v2/validation/pipeline/rancherha/corralha"
+	"github.com/ranger/ranger/tests/framework/clients/corral"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/pipeline"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
+	"github.com/ranger/ranger/tests/framework/pkg/environmentflag"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/v2/validation/pipeline/rangerha/corralha"
 	"github.com/sirupsen/logrus"
 )
 
 func main() {
-	corralRancherHA := new(corralha.CorralRancherHA)
-	config.LoadConfig(corralha.CorralRancherHAConfigConfigurationFileKey, corralRancherHA)
+	corralRangerHA := new(corralha.CorralRangerHA)
+	config.LoadConfig(corralha.CorralRangerHAConfigConfigurationFileKey, corralRangerHA)
 
 	corralSession := session.NewSession()
 
@@ -27,13 +27,13 @@ func main() {
 
 	environmentFlags := environmentflag.NewEnvironmentFlags()
 	environmentflag.LoadEnvironmentFlags(environmentflag.ConfigurationFileKey, environmentFlags)
-	installRancher := environmentFlags.GetValue(environmentflag.InstallRancher)
+	installRanger := environmentFlags.GetValue(environmentflag.InstallRanger)
 
-	logrus.Infof("installRancher value is %t", installRancher)
+	logrus.Infof("installRanger value is %t", installRanger)
 
-	if installRancher {
-		path := configPackage.CorralPackageImages[corralRancherHA.Name]
-		corralName := corralRancherHA.Name
+	if installRanger {
+		path := configPackage.CorralPackageImages[corralRangerHA.Name]
+		corralName := corralRangerHA.Name
 
 		_, err = corral.CreateCorral(corralSession, corralName, path, true, configPackage.HasCleanup)
 		if err != nil {
@@ -69,26 +69,26 @@ func main() {
 			}
 		}
 
-		rancherConfig := new(rancher.Config)
-		config.LoadConfig(rancher.ConfigurationFileKey, rancherConfig)
+		rangerConfig := new(ranger.Config)
+		config.LoadConfig(ranger.ConfigurationFileKey, rangerConfig)
 
-		token, err := pipeline.CreateAdminToken(bootstrapPassword, rancherConfig)
+		token, err := pipeline.CreateAdminToken(bootstrapPassword, rangerConfig)
 		if err != nil {
 			logrus.Errorf("error creating the admin token: %v", err)
 		}
-		rancherConfig.AdminToken = token
-		config.UpdateConfig(rancher.ConfigurationFileKey, rancherConfig)
-		rancherSession := session.NewSession()
-		client, err := rancher.NewClient(rancherConfig.AdminToken, rancherSession)
+		rangerConfig.AdminToken = token
+		config.UpdateConfig(ranger.ConfigurationFileKey, rangerConfig)
+		rangerSession := session.NewSession()
+		client, err := ranger.NewClient(rangerConfig.AdminToken, rangerSession)
 		if err != nil {
-			logrus.Errorf("error creating the rancher client: %v", err)
+			logrus.Errorf("error creating the ranger client: %v", err)
 		}
 
-		err = pipeline.PostRancherInstall(client, rancherConfig.AdminPassword)
+		err = pipeline.PostRangerInstall(client, rangerConfig.AdminPassword)
 		if err != nil {
-			logrus.Errorf("error during post rancher install: %v", err)
+			logrus.Errorf("error during post ranger install: %v", err)
 		}
 	} else {
-		logrus.Infof("Skipped Rancher Install because installRancher is %t", installRancher)
+		logrus.Infof("Skipped Ranger Install because installRanger is %t", installRanger)
 	}
 }

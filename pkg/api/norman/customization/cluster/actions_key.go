@@ -7,12 +7,12 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/api/access"
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v3client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	mgmtv3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/norman/api/access"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v3client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	mgmtv3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -44,7 +44,7 @@ func (a ActionHandler) RotateEncryptionKey(actionName string, action *types.Acti
 		return httperror.NewAPIError(httperror.InvalidAction, "cluster is in updating state")
 	}
 
-	cluster.Spec.RancherKubernetesEngineConfig.RotateEncryptionKey = true
+	cluster.Spec.RangerKubernetesEngineConfig.RotateEncryptionKey = true
 	if _, err := a.ClusterClient.Update(cluster); err != nil {
 		response[v3client.RotateEncryptionKeyOutputFieldMessage] = "failed to update cluster object"
 		apiContext.WriteResponse(http.StatusInternalServerError, response)
@@ -63,13 +63,13 @@ func (a ActionHandler) RotateEncryptionKey(actionName string, action *types.Acti
 
 // checkEncryptionConfig validates that the secrets encryption is both enabled and not custom.
 func checkEncryptionConfig(c *v3.Cluster) error {
-	if c.Spec.RancherKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig == nil {
+	if c.Spec.RangerKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig == nil {
 		return errors.New("secrets encryption configuration is not defined")
 	}
-	if !c.Spec.RancherKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig.Enabled {
+	if !c.Spec.RangerKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig.Enabled {
 		return errors.New("secrets encryption is disabled")
 	}
-	if c.Spec.RancherKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig.CustomConfig != nil {
+	if c.Spec.RangerKubernetesEngineConfig.Services.KubeAPI.SecretsEncryptionConfig.CustomConfig != nil {
 		return errors.New("custom encryption configuration is not supported for key rotation action")
 	}
 	return nil

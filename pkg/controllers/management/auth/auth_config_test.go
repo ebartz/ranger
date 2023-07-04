@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/rancher/norman/objectclient"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	azuread "github.com/rancher/rancher/pkg/auth/providers/azure/clients"
-	"github.com/rancher/rancher/pkg/auth/providers/github"
+	"github.com/ranger/norman/objectclient"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	azuread "github.com/ranger/ranger/pkg/auth/providers/azure/clients"
+	"github.com/ranger/ranger/pkg/auth/providers/github"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	apierror "k8s.io/apimachinery/pkg/api/errors"
@@ -35,14 +35,14 @@ func TestCleanupRuns(t *testing.T) {
 			configEnabled:      false,
 			annotationValue:    CleanupUnlocked,
 			expectCleanup:      true,
-			newAnnotationValue: CleanupRancherLocked,
+			newAnnotationValue: CleanupRangerLocked,
 		},
 		{
 			name:               "no cleanup in disabled auth config without annotation",
 			configEnabled:      false,
 			annotationValue:    "",
 			expectCleanup:      false,
-			newAnnotationValue: CleanupRancherLocked,
+			newAnnotationValue: CleanupRangerLocked,
 		},
 		{
 			name:               "no cleanup in enabled auth config without annotation",
@@ -52,11 +52,11 @@ func TestCleanupRuns(t *testing.T) {
 			newAnnotationValue: CleanupUnlocked,
 		},
 		{
-			name:               "no cleanup in disabled rancher_locked auth config",
+			name:               "no cleanup in disabled ranger_locked auth config",
 			configEnabled:      false,
-			annotationValue:    CleanupRancherLocked,
+			annotationValue:    CleanupRangerLocked,
 			expectCleanup:      false,
-			newAnnotationValue: CleanupRancherLocked,
+			newAnnotationValue: CleanupRangerLocked,
 		},
 		{
 			name:               "no cleanup in disabled user_locked auth config",
@@ -73,9 +73,9 @@ func TestCleanupRuns(t *testing.T) {
 			newAnnotationValue: CleanupUnlocked,
 		},
 		{
-			name:               "no cleanup in enabled rancher_locked auth config",
+			name:               "no cleanup in enabled ranger_locked auth config",
 			configEnabled:      true,
-			annotationValue:    CleanupRancherLocked,
+			annotationValue:    CleanupRangerLocked,
 			expectCleanup:      false,
 			newAnnotationValue: CleanupUnlocked,
 		},
@@ -131,7 +131,7 @@ func TestAuthConfigReset(t *testing.T) {
 		annotationValue string
 		retainedFields  []string
 	}{
-		{CleanupRancherLocked, allFields},
+		{CleanupRangerLocked, allFields},
 		{CleanupUserLocked, allFields},
 		{CleanupUnlocked, postResetFields},
 	}

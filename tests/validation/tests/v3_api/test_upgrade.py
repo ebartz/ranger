@@ -21,9 +21,9 @@ validate_ingress = \
     ast.literal_eval(os.environ.get('RANCHER_INGRESS_CHECK', "True"))
 
 sshUser = os.environ.get('RANCHER_SSH_USER', "ubuntu")
-rancherVersion = os.environ.get('RANCHER_SERVER_VERSION', "master")
+rangerVersion = os.environ.get('RANCHER_SERVER_VERSION', "master")
 upgradeVersion = os.environ.get('RANCHER_SERVER_VERSION_UPGRADE', "master")
-upgradeImage = os.environ.get('RANCHER_UPGRADE_IMAGE', "rancher/rancher")
+upgradeImage = os.environ.get('RANCHER_UPGRADE_IMAGE', "ranger/ranger")
 CLUSTER_VERSION = os.environ.get('RANCHER_CLUSTER_UPGRADE_VERSION', "")
 
 value = base64.b64encode(b"valueall")
@@ -76,7 +76,7 @@ pre_upgrade_externalId = \
 # the post_upgrade_externalId is for upgrading the existing app
 post_upgrade_externalId = \
     create_catalog_external_id("test-catalog", "mysql", "1.3.2")
-catalogUrl = "https://github.com/rancher/integration-test-charts.git"
+catalogUrl = "https://github.com/ranger/integration-test-charts.git"
 catalogBranch = "validation-tests"
 
 if_post_upgrade = pytest.mark.skipif(
@@ -88,9 +88,9 @@ if_pre_upgrade = pytest.mark.skipif(
 if_validate_ingress = pytest.mark.skipif(
     validate_ingress is False,
     reason='This test is not executed')
-if_upgrade_rancher = pytest.mark.skipif(
-    upgrade_check_stage != "upgrade_rancher",
-    reason='This test is only for testing upgrading Rancher')
+if_upgrade_ranger = pytest.mark.skipif(
+    upgrade_check_stage != "upgrade_ranger",
+    reason='This test is only for testing upgrading Ranger')
 if_upgrade_cluster = pytest.mark.skipif(
     upgrade_check_stage != "upgrade_cluster",
     reason='This test is only for testing upgrading clusters')
@@ -229,12 +229,12 @@ def test_create_and_validate_ip_address_pods():
     create_and_validate_ip_address_pods()
 
 
-# the flag if_upgarde_rancher is false all the time
+# the flag if_upgarde_ranger is false all the time
 # because we do not have this option for the variable RANCHER_UPGRADE_CHECK
 # instead, we will have a new pipeline that calls this function directly
-@if_upgrade_rancher
-def test_rancher_upgrade():
-    upgrade_rancher_server(CATTLE_TEST_URL)
+@if_upgrade_ranger
+def test_ranger_upgrade():
+    upgrade_ranger_server(CATTLE_TEST_URL)
     client = get_user_client()
     version = client.list_setting(name="server-version").data[0].value
     assert version == upgradeVersion
@@ -637,9 +637,9 @@ def validate_worklaods_with_secret(workload_name1, workload_name2):
         workloadwithsecretasenvvar=True)
 
 
-def upgrade_rancher_server(serverIp,
+def upgrade_ranger_server(serverIp,
                            sshKeyPath=".ssh/jenkins-elliptic-validation.pem",
-                           containerName="rancher-server"):
+                           containerName="ranger-server"):
     if serverIp.startswith('https://'):
         serverIp = serverIp[8:]
 
@@ -648,8 +648,8 @@ def upgrade_rancher_server(serverIp,
           sshUser, sshKeyPath))
 
     createVolumeCommand = "docker create --volumes-from " + containerName + \
-                          " --name rancher-data rancher/rancher:" + \
-                          rancherVersion
+                          " --name ranger-data ranger/ranger:" + \
+                          rangerVersion
 
     print(exec_shell_command(serverIp, 22, createVolumeCommand, "",
           sshUser, sshKeyPath))
@@ -658,7 +658,7 @@ def upgrade_rancher_server(serverIp,
     print(exec_shell_command(serverIp, 22, removeCommand, "",
           sshUser, sshKeyPath))
 
-    runCommand = "docker run -d --volumes-from rancher-data " \
+    runCommand = "docker run -d --volumes-from ranger-data " \
                  "--restart=unless-stopped " \
                  "-p 80:80 -p 443:443 " + upgradeImage + ":" + upgradeVersion + \
                  " --trace"

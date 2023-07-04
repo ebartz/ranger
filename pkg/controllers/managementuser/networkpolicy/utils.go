@@ -3,10 +3,10 @@ package networkpolicy
 import (
 	"fmt"
 
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/rancher/pkg/controllers/managementagent/nslabels"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/ranger/pkg/controllers/managementagent/nslabels"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
 	corev1 "k8s.io/api/core/v1"
 )
 

@@ -3,22 +3,22 @@ package gke
 import (
 	"testing"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	"github.com/rancher/rancher/tests/framework/extensions/cloudcredentials/google"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters/gke"
-	"github.com/rancher/rancher/tests/framework/extensions/defaults"
-	nodestat "github.com/rancher/rancher/tests/framework/extensions/nodes"
-	"github.com/rancher/rancher/tests/framework/extensions/pipeline"
-	"github.com/rancher/rancher/tests/framework/extensions/users"
-	password "github.com/rancher/rancher/tests/framework/extensions/users/passwordgenerator"
-	"github.com/rancher/rancher/tests/framework/extensions/workloads/pods"
-	"github.com/rancher/rancher/tests/framework/pkg/environmentflag"
-	namegen "github.com/rancher/rancher/tests/framework/pkg/namegenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
-	"github.com/rancher/rancher/tests/v2/validation/provisioning"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/extensions/cloudcredentials/google"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters/gke"
+	"github.com/ranger/ranger/tests/framework/extensions/defaults"
+	nodestat "github.com/ranger/ranger/tests/framework/extensions/nodes"
+	"github.com/ranger/ranger/tests/framework/extensions/pipeline"
+	"github.com/ranger/ranger/tests/framework/extensions/users"
+	password "github.com/ranger/ranger/tests/framework/extensions/users/passwordgenerator"
+	"github.com/ranger/ranger/tests/framework/extensions/workloads/pods"
+	"github.com/ranger/ranger/tests/framework/pkg/environmentflag"
+	namegen "github.com/ranger/ranger/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
+	"github.com/ranger/ranger/tests/v2/validation/provisioning"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -27,9 +27,9 @@ import (
 
 type HostedGKEClusterProvisioningTestSuite struct {
 	suite.Suite
-	client             *rancher.Client
+	client             *ranger.Client
 	session            *session.Session
-	standardUserClient *rancher.Client
+	standardUserClient *ranger.Client
 }
 
 func (h *HostedGKEClusterProvisioningTestSuite) TearDownSuite() {
@@ -40,7 +40,7 @@ func (h *HostedGKEClusterProvisioningTestSuite) SetupSuite() {
 	testSession := session.NewSession()
 	h.session = testSession
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(h.T(), err)
 
 	h.client = client
@@ -69,7 +69,7 @@ func (h *HostedGKEClusterProvisioningTestSuite) SetupSuite() {
 func (h *HostedGKEClusterProvisioningTestSuite) TestProvisioningHostedGKE() {
 	tests := []struct {
 		name        string
-		client      *rancher.Client
+		client      *ranger.Client
 		clusterName string
 	}{
 		{provisioning.AdminClientName.String(), h.client, ""},
@@ -89,12 +89,12 @@ func (h *HostedGKEClusterProvisioningTestSuite) TestProvisioningHostedGKE() {
 	}
 }
 
-func (h *HostedGKEClusterProvisioningTestSuite) testProvisioningHostedGKECluster(rancherClient *rancher.Client, clusterName string) (*management.Cluster, error) {
-	cloudCredential, err := google.CreateGoogleCloudCredentials(rancherClient)
+func (h *HostedGKEClusterProvisioningTestSuite) testProvisioningHostedGKECluster(rangerClient *ranger.Client, clusterName string) (*management.Cluster, error) {
+	cloudCredential, err := google.CreateGoogleCloudCredentials(rangerClient)
 	require.NoError(h.T(), err)
 
 	clusterName = namegen.AppendRandomString("gkehostcluster")
-	clusterResp, err := gke.CreateGKEHostedCluster(rancherClient, clusterName, cloudCredential.ID, false, false, false, false, map[string]string{})
+	clusterResp, err := gke.CreateGKEHostedCluster(rangerClient, clusterName, cloudCredential.ID, false, false, false, false, map[string]string{})
 	require.NoError(h.T(), err)
 
 	if h.client.Flags.GetValue(environmentflag.UpdateClusterName) {
@@ -114,14 +114,14 @@ func (h *HostedGKEClusterProvisioningTestSuite) testProvisioningHostedGKECluster
 	require.NoError(h.T(), err)
 	assert.Equal(h.T(), clusterName, clusterResp.Name)
 
-	clusterToken, err := clusters.CheckServiceAccountTokenSecret(rancherClient, clusterName)
+	clusterToken, err := clusters.CheckServiceAccountTokenSecret(rangerClient, clusterName)
 	require.NoError(h.T(), err)
 	assert.NotEmpty(h.T(), clusterToken)
 
-	err = nodestat.IsNodeReady(rancherClient, clusterResp.ID)
+	err = nodestat.IsNodeReady(rangerClient, clusterResp.ID)
 	require.NoError(h.T(), err)
 
-	podResults, podErrors := pods.StatusPods(rancherClient, clusterResp.ID)
+	podResults, podErrors := pods.StatusPods(rangerClient, clusterResp.ID)
 	assert.NotEmpty(h.T(), podResults)
 	assert.Empty(h.T(), podErrors)
 

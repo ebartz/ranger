@@ -55,8 +55,8 @@ try
         "$($hostPrefixPath)opt\cni"
         "$($hostPrefixPath)opt\cni\bin"
         "$($hostPrefixPath)etc"
-        "$($hostPrefixPath)etc\rancher"
-        "$($hostPrefixPath)etc\rancher\wins"
+        "$($hostPrefixPath)etc\ranger"
+        "$($hostPrefixPath)etc\ranger\wins"
         "$($hostPrefixPath)etc\kubernetes"
         "$($hostPrefixPath)etc\kubernetes\bin"
         "$($hostPrefixPath)etc\cni"
@@ -73,9 +73,9 @@ try
         "$($hostPrefixPath)var\log\containers"
         "$($hostPrefixPath)var\lib"
         "$($hostPrefixPath)var\lib\cni"
-        "$($hostPrefixPath)var\lib\rancher"
-        "$($hostPrefixPath)var\lib\rancher\rke"
-        "$($hostPrefixPath)var\lib\rancher\rke\log"
+        "$($hostPrefixPath)var\lib\ranger"
+        "$($hostPrefixPath)var\lib\ranger\rke"
+        "$($hostPrefixPath)var\lib\ranger\rke\log"
         "$($hostPrefixPath)var\lib\kubelet"
         "$($hostPrefixPath)var\lib\kubelet\volumeplugins"
         "$($hostPrefixPath)run"
@@ -87,8 +87,8 @@ try
 # wins needs to run as a service on the host to accept requests from container
 try
 {
-    Copy-Item -Force -Destination "$($hostPrefixPath)etc\rancher" -Path @(
-        "c:\etc\rancher\utils.psm1"
+    Copy-Item -Force -Destination "$($hostPrefixPath)etc\ranger" -Path @(
+        "c:\etc\ranger\utils.psm1"
         "c:\Windows\wins.exe"
     )
 } catch { }
@@ -220,7 +220,7 @@ if ($env:WITHOUT_VERIFICATION -eq "true") {
     $verification = ""
 }
 
-Out-File -Encoding ascii -FilePath "$($hostPrefixPath)etc\rancher\bootstrap.ps1" -InputObject @"
+Out-File -Encoding ascii -FilePath "$($hostPrefixPath)etc\ranger\bootstrap.ps1" -InputObject @"
 `$ErrorActionPreference = 'Stop'
 `$WarningPreference = 'SilentlyContinue'
 `$VerbosePreference = 'SilentlyContinue'
@@ -276,7 +276,7 @@ catch
 }
 
 # make a powershell copy for wins to use
-Copy-Item $($(Get-Command powershell).Source) $($CATTLE_PREFIX_PATH)etc\rancher\powershell.exe
+Copy-Item $($(Get-Command powershell).Source) $($CATTLE_PREFIX_PATH)etc\ranger\powershell.exe
 
 # output wins config
 @{
@@ -287,30 +287,30 @@ Copy-Item $($(Get-Command powershell).Source) $($CATTLE_PREFIX_PATH)etc\rancher\
             "$($CATTLE_PREFIX_PATH)etc\kubernetes\bin\kubelet.exe"
             "$($CATTLE_PREFIX_PATH)etc\nginx\nginx.exe"
             "$($CATTLE_PREFIX_PATH)opt\bin\flanneld.exe"
-            "$($CATTLE_PREFIX_PATH)etc\rancher\wins\wins-upgrade.exe"
-            "$($CATTLE_PREFIX_PATH)etc\rancher\powershell.exe"
+            "$($CATTLE_PREFIX_PATH)etc\ranger\wins\wins-upgrade.exe"
+            "$($CATTLE_PREFIX_PATH)etc\ranger\powershell.exe"
             "$($CATTLE_PREFIX_PATH)etc\windows-exporter\windows-exporter.exe"
         )
         proxyPorts = @(
             9796
         )
     }
-} | ConvertTo-Json -Compress -Depth 32 | Out-File -NoNewline -Encoding utf8 -Force -FilePath "$($CATTLE_PREFIX_PATH)etc\rancher\wins\config"
+} | ConvertTo-Json -Compress -Depth 32 | Out-File -NoNewline -Encoding utf8 -Force -FilePath "$($CATTLE_PREFIX_PATH)etc\ranger\wins\config"
 
 # register wins
 Start-Process -NoNewWindow -Wait ``
-    -FilePath "$($CATTLE_PREFIX_PATH)etc\rancher\wins.exe" ``
+    -FilePath "$($CATTLE_PREFIX_PATH)etc\ranger\wins.exe" ``
     -ArgumentList "srv app run --register"
 
 # start wins
-Start-Service -Name "rancher-wins" -ErrorAction Ignore
+Start-Service -Name "ranger-wins" -ErrorAction Ignore
 
 # run agent
 Start-Process -NoNewWindow -Wait ``
     -FilePath "docker.exe" ``
-    -ArgumentList "run -d --restart=unless-stopped -e CATTLE_PREFIX_PATH=$CATTLE_PREFIX_PATH -v \\.\pipe\docker_engine:\\.\pipe\docker_engine -v c:\ProgramData\docker\certs.d:c:\etc\docker\certs.d -v $($CATTLE_PREFIX_PATH)etc\kubernetes:c:\etc\kubernetes -v \\.\pipe\rancher_wins:\\.\pipe\rancher_wins -v $($CATTLE_PREFIX_PATH)etc\rancher\wins:c:\etc\rancher\wins $($env:AGENT_IMAGE) execute $($args -join " ")"
+    -ArgumentList "run -d --restart=unless-stopped -e CATTLE_PREFIX_PATH=$CATTLE_PREFIX_PATH -v \\.\pipe\docker_engine:\\.\pipe\docker_engine -v c:\ProgramData\docker\certs.d:c:\etc\docker\certs.d -v $($CATTLE_PREFIX_PATH)etc\kubernetes:c:\etc\kubernetes -v \\.\pipe\ranger_wins:\\.\pipe\ranger_wins -v $($CATTLE_PREFIX_PATH)etc\ranger\wins:c:\etc\ranger\wins $($env:AGENT_IMAGE) execute $($args -join " ")"
 "@
 
 
-Write-Output -InputObject "$($CATTLE_PREFIX_PATH)etc\rancher\bootstrap.ps1"
+Write-Output -InputObject "$($CATTLE_PREFIX_PATH)etc\ranger\bootstrap.ps1"
 

@@ -13,10 +13,10 @@ import (
 	"time"
 
 	"github.com/ghodss/yaml"
-	v1 "github.com/rancher/eks-operator/pkg/apis/eks.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/controllers/management/clusteroperator"
-	mgmtv3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	typesDialer "github.com/rancher/rancher/pkg/types/config/dialer"
+	v1 "github.com/ranger/eks-operator/pkg/apis/eks.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/controllers/management/clusteroperator"
+	mgmtv3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	typesDialer "github.com/ranger/ranger/pkg/types/config/dialer"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/mock"
 	secretv1 "k8s.io/api/core/v1"
@@ -141,7 +141,7 @@ func (m *mockEksOperatorController) generateSATokenWithPublicAPI(cluster *mgmtv3
 		}
 
 		// In the existence of a proxy, it may be the case that the following error occurs,
-		// in which case rancher should use the tunnel connection to communicate with the cluster.
+		// in which case ranger should use the tunnel connection to communicate with the cluster.
 		var urlError *url.Error
 		if stderrors.As(err, &urlError) && urlError.Timeout() {
 			return "", requiresTunnel, nil

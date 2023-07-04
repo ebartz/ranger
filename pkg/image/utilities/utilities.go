@@ -9,12 +9,12 @@ import (
 	"strings"
 
 	"github.com/coreos/go-semver/semver"
-	kd "github.com/rancher/rancher/pkg/controllers/management/kontainerdrivermetadata"
-	img "github.com/rancher/rancher/pkg/image"
-	ext "github.com/rancher/rancher/pkg/image/external"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rke/types/image"
-	"github.com/rancher/rke/types/kdm"
+	kd "github.com/ranger/ranger/pkg/controllers/management/kontainerdrivermetadata"
+	img "github.com/ranger/ranger/pkg/image"
+	ext "github.com/ranger/ranger/pkg/image/external"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/rke/types/image"
+	"github.com/ranger/rke/types/kdm"
 )
 
 var (
@@ -27,25 +27,25 @@ var (
 		"windows-mirror": windowsMirrorScript,
 	}
 	scriptNameMap = map[string]string{
-		"linux-save":     "rancher-save-images.sh",
-		"linux-load":     "rancher-load-images.sh",
-		"linux-mirror":   "rancher-mirror-to-rancher-org.sh",
-		"windows-save":   "rancher-save-images.ps1",
-		"windows-load":   "rancher-load-images.ps1",
-		"windows-mirror": "rancher-mirror-to-rancher-org.ps1",
+		"linux-save":     "ranger-save-images.sh",
+		"linux-load":     "ranger-load-images.sh",
+		"linux-mirror":   "ranger-mirror-to-ranger-org.sh",
+		"windows-save":   "ranger-save-images.ps1",
+		"windows-load":   "ranger-load-images.ps1",
+		"windows-mirror": "ranger-mirror-to-ranger-org.ps1",
 	}
 	filenameMap = map[string]string{
-		"linux":   "rancher-images.txt",
-		"windows": "rancher-windows-images.txt",
+		"linux":   "ranger-images.txt",
+		"windows": "ranger-windows-images.txt",
 	}
 	sourcesFilenameMap = map[string]string{
-		"linux":   "rancher-images-sources.txt",
-		"windows": "rancher-windows-images-sources.txt",
+		"linux":   "ranger-images-sources.txt",
+		"windows": "ranger-windows-images-sources.txt",
 	}
 )
 
 // ImageTargetsAndSources is an aggregate type containing
-// the list of images used by Rancher for Linux and Windows,
+// the list of images used by Ranger for Linux and Windows,
 // as well as the source of these images.
 type ImageTargetsAndSources struct {
 	LinuxImagesFromArgs           []string
@@ -55,19 +55,19 @@ type ImageTargetsAndSources struct {
 	TargetWindowsImagesAndSources []string
 }
 
-// GatherTargetImagesAndSources queries KDM, charts and system-charts to gather all the images used by Rancher and their source.
-// It returns an aggregate type, ImageTargetsAndSources, which contains the images required to run Rancher on Linux and Windows, as well
+// GatherTargetImagesAndSources queries KDM, charts and system-charts to gather all the images used by Ranger and their source.
+// It returns an aggregate type, ImageTargetsAndSources, which contains the images required to run Ranger on Linux and Windows, as well
 // as the source of each image.
 func GatherTargetImagesAndSources(systemChartsPath, chartsPath string, imagesFromArgs []string) (ImageTargetsAndSources, error) {
-	rancherVersion, ok := os.LookupEnv("TAG")
+	rangerVersion, ok := os.LookupEnv("TAG")
 	if !ok {
-		return ImageTargetsAndSources{}, fmt.Errorf("no tag defining current Rancher version, cannot gather target images and sources")
+		return ImageTargetsAndSources{}, fmt.Errorf("no tag defining current Ranger version, cannot gather target images and sources")
 	}
 
-	if !img.IsValidSemver(rancherVersion) || strings.HasPrefix(rancherVersion, "dev") || strings.HasPrefix(rancherVersion, "master") || strings.HasSuffix(rancherVersion, "-head") {
-		rancherVersion = settings.RancherVersionDev
+	if !img.IsValidSemver(rangerVersion) || strings.HasPrefix(rangerVersion, "dev") || strings.HasPrefix(rangerVersion, "master") || strings.HasSuffix(rangerVersion, "-head") {
+		rangerVersion = settings.RangerVersionDev
 	}
-	rancherVersion = strings.TrimPrefix(rancherVersion, "v")
+	rangerVersion = strings.TrimPrefix(rangerVersion, "v")
 
 	// already downloaded in dapper
 	b, err := os.ReadFile(filepath.Join("data.json"))
@@ -83,7 +83,7 @@ func GatherTargetImagesAndSources(systemChartsPath, chartsPath string, imagesFro
 	}
 
 	linuxInfo, windowsInfo := kd.GetK8sVersionInfo(
-		rancherVersion,
+		rangerVersion,
 		data.K8sVersionRKESystemImages,
 		data.K8sVersionServiceOptions,
 		data.K8sVersionWindowsServiceOptions,
@@ -95,8 +95,8 @@ func GatherTargetImagesAndSources(systemChartsPath, chartsPath string, imagesFro
 		k8sVersions = append(k8sVersions, k)
 	}
 	sort.Strings(k8sVersions)
-	if err := writeSliceToFile(filepath.Join(os.Getenv("HOME"), "bin", "rancher-rke-k8s-versions.txt"), k8sVersions); err != nil {
-		return ImageTargetsAndSources{}, fmt.Errorf("%s: %w", "could not write rancher-rke-k8s-versions.txt file", err)
+	if err := writeSliceToFile(filepath.Join(os.Getenv("HOME"), "bin", "ranger-rke-k8s-versions.txt"), k8sVersions); err != nil {
+		return ImageTargetsAndSources{}, fmt.Errorf("%s: %w", "could not write ranger-rke-k8s-versions.txt file", err)
 	}
 
 	k8sVersion1_21_0 := &semver.Version{
@@ -107,7 +107,7 @@ func GatherTargetImagesAndSources(systemChartsPath, chartsPath string, imagesFro
 
 	externalLinuxImages := make(map[string][]string)
 
-	k3sUpgradeImages, err := ext.GetExternalImages(rancherVersion, data.K3S, ext.K3S, k8sVersion1_21_0, img.Linux)
+	k3sUpgradeImages, err := ext.GetExternalImages(rangerVersion, data.K3S, ext.K3S, k8sVersion1_21_0, img.Linux)
 	if err != nil {
 		return ImageTargetsAndSources{}, fmt.Errorf("%s: %w", "could not get external images for K3s", err)
 	}
@@ -117,7 +117,7 @@ func GatherTargetImagesAndSources(systemChartsPath, chartsPath string, imagesFro
 
 	// RKE2 Provisioning will only be supported on Kubernetes v1.21+. In addition, only RKE2
 	// releases corresponding to Kubernetes v1.21+ include the "rke2-images-all.linux-amd64.txt" file that we need.
-	rke2LinuxImages, err := ext.GetExternalImages(rancherVersion, data.RKE2, ext.RKE2, k8sVersion1_21_0, img.Linux)
+	rke2LinuxImages, err := ext.GetExternalImages(rangerVersion, data.RKE2, ext.RKE2, k8sVersion1_21_0, img.Linux)
 	if err != nil {
 		return ImageTargetsAndSources{}, fmt.Errorf("%s: %w", "could not get external images for RKE2", err)
 
@@ -127,9 +127,9 @@ func GatherTargetImagesAndSources(systemChartsPath, chartsPath string, imagesFro
 	}
 
 	sort.Strings(imagesFromArgs)
-	winsIndex := sort.SearchStrings(imagesFromArgs, "rancher/wins")
+	winsIndex := sort.SearchStrings(imagesFromArgs, "ranger/wins")
 	if winsIndex > len(imagesFromArgs)-1 {
-		return ImageTargetsAndSources{}, fmt.Errorf("rancher/wins upgrade image not found")
+		return ImageTargetsAndSources{}, fmt.Errorf("ranger/wins upgrade image not found")
 	}
 
 	winsAgentUpdateImage := imagesFromArgs[winsIndex]
@@ -139,7 +139,7 @@ func GatherTargetImagesAndSources(systemChartsPath, chartsPath string, imagesFro
 		SystemChartsPath: systemChartsPath,
 		ChartsPath:       chartsPath,
 		OsType:           img.Linux,
-		RancherVersion:   rancherVersion,
+		RangerVersion:   rangerVersion,
 	}
 	targetImages, targetImagesAndSources, err := img.GetImages(exportConfig, externalLinuxImages, linuxImagesFromArgs, linuxInfo.RKESystemImages)
 	if err != nil {
@@ -162,7 +162,7 @@ func GatherTargetImagesAndSources(systemChartsPath, chartsPath string, imagesFro
 }
 
 // LoadScript produces executable files for Linux and Windows
-// which will load all images used by Rancher into a given image repository.
+// which will load all images used by Ranger into a given image repository.
 func LoadScript(arch string, targetImages []string) error {
 	loadScriptName := getScriptFilename(arch, "load")
 	log.Printf("Creating %s\n", loadScriptName)
@@ -178,7 +178,7 @@ func LoadScript(arch string, targetImages []string) error {
 }
 
 // SaveScript produces executable files for Linux and Windows
-// which will save all the images used by Rancher using the command
+// which will save all the images used by Ranger using the command
 // `docker save`
 func SaveScript(arch string, targetImages []string) error {
 	filename := getScriptFilename(arch, "save")
@@ -196,7 +196,7 @@ func SaveScript(arch string, targetImages []string) error {
 }
 
 // ImagesText will produce a file containing all the images
-// used by Rancher for a particular arch.
+// used by Ranger for a particular arch.
 func ImagesText(arch string, targetImages []string) error {
 	filename := filenameMap[arch]
 	log.Printf("Creating %s\n", filename)
@@ -241,7 +241,7 @@ func ImagesAndSourcesText(arch string, targetImagesAndSources []string) error {
 }
 
 // MirrorScript creates executable files for Linux and Windows
-// which will perform `docker pull`'s for each image used by Rancher
+// which will perform `docker pull`'s for each image used by Ranger
 func MirrorScript(arch string, targetImages []string) error {
 	filename := getScriptFilename(arch, "mirror")
 	log.Printf("Creating %s\n", filename)
@@ -312,8 +312,8 @@ func checkImage(image string) error {
 	if imageNameTag[1] == "" {
 		return fmt.Errorf("Extracted tag from image [%s] is empty", image)
 	}
-	if !strings.HasPrefix(imageNameTag[0], "rancher/") {
-		return fmt.Errorf("Image [%s] does not start with rancher/", image)
+	if !strings.HasPrefix(imageNameTag[0], "ranger/") {
+		return fmt.Errorf("Image [%s] does not start with ranger/", image)
 	}
 	if strings.HasSuffix(imageNameTag[0], "-") {
 		return fmt.Errorf("Image [%s] has trailing '-', probably an error in image substitution", image)
@@ -346,7 +346,7 @@ func getWindowsAgentImage() string {
 	if !ok {
 		return ""
 	}
-	return fmt.Sprintf("%s/rancher-agent:%s", repo, tag)
+	return fmt.Sprintf("%s/ranger-agent:%s", repo, tag)
 }
 
 func getScript(arch, fileType string) string {
@@ -359,13 +359,13 @@ func getScriptFilename(arch, fileType string) string {
 
 const (
 	linuxLoadScript = `#!/bin/bash
-images="rancher-images.tar.gz"
-list="rancher-images.txt"
+images="ranger-images.tar.gz"
+list="ranger-images.txt"
 windows_image_list=""
 windows_versions="1809"
 source_registry=""
 usage () {
-    echo "USAGE: $0 [--images rancher-images.tar.gz] [--source-registry index.docker.io] --registry my.registry.com:5000"
+    echo "USAGE: $0 [--images ranger-images.tar.gz] [--source-registry index.docker.io] --registry my.registry.com:5000"
     echo "  [-l|--image-list path] text file with list of images; one image per line."
     echo "  [-i|--images path] tar.gz generated by docker save."
     echo "  [-r|--registry registry:port] target private registry in the registry:port format."
@@ -476,7 +476,7 @@ if [[ -n "${windows_image_list}" ]]; then
                 image_name="${target_registry}${i}"
                 ;;
             *)
-                image_name="${target_registry}rancher/${i}"
+                image_name="${target_registry}ranger/${i}"
                 ;;
             esac
             push_manifest "${image_name}"
@@ -499,7 +499,7 @@ for i in "${linux_images[@]}"; do
         image_name="${target_registry}${i}"
         ;;
     *)
-        image_name="${target_registry}rancher/${i}"
+        image_name="${target_registry}ranger/${i}"
         ;;
     esac
 
@@ -512,12 +512,12 @@ for i in "${linux_images[@]}"; do
 done
 `
 	linuxSaveScript = `#!/bin/bash
-list="rancher-images.txt"
-images="rancher-images.tar.gz"
+list="ranger-images.txt"
+images="ranger-images.tar.gz"
 source_registry=""
 
 usage () {
-    echo "USAGE: $0 [--image-list rancher-images.txt] [--images rancher-images.tar.gz]"
+    echo "USAGE: $0 [--image-list ranger-images.txt] [--images ranger-images.tar.gz]"
     echo "  [-s|--source-registry] source registry to pull images from in registry:port format."
     echo "  [-l|--image-list path] text file with list of images; one image per line."
     echo "  [-i|--images path] tar.gz generated by docker save."
@@ -587,8 +587,8 @@ docker save $(echo ${pulled}) | gzip --stdout > ${images}
 	windowsLoadScript = `$ErrorActionPreference = 'Stop'
 
 $script_name = $MyInvocation.InvocationName
-$image_list = "rancher-windows-images.txt"
-$images = "rancher-windows-images.tar.gz"
+$image_list = "ranger-windows-images.txt"
+$images = "ranger-windows-images.tar.gz"
 $os_release_id = $(Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\' | Select-Object -ExpandProperty ReleaseId)
 
 $target_registry = $null
@@ -596,7 +596,7 @@ $source_registry = ""
 $help = $false
 
 function usage {
-    echo "USAGE: $script_name [--images rancher-windows-images.tar.gz] [--source-registry index.docker.io] --registry my.registry.com:5000"
+    echo "USAGE: $script_name [--images ranger-windows-images.tar.gz] [--source-registry index.docker.io] --registry my.registry.com:5000"
     echo "  [-l|--image-list path] text file with list of images; one image per line."
     echo "  [-i|--images path] tar.gz generated by docker save."
     echo "  [-r|--registry registry:port] target private registry in the format registry:port."
@@ -705,7 +705,7 @@ Get-Content -Force -Path $image_list | ForEach-Object {
                 }
             }
             default {
-                $target_image = -join ($target_registry, "rancher/", $fullname_image)
+                $target_image = -join ($target_registry, "ranger/", $fullname_image)
                 echo "Tagging $target_image"
                 docker tag $source_image $target_image
                 if ($?) {
@@ -720,15 +720,15 @@ Get-Content -Force -Path $image_list | ForEach-Object {
 	windowsSaveScript = `$ErrorActionPreference = 'Stop'
 
 $script_name = $MyInvocation.InvocationName
-$image_list = "rancher-windows-images.txt"
-$images = "rancher-windows-images.tar.gz"
+$image_list = "ranger-windows-images.txt"
+$images = "ranger-windows-images.tar.gz"
 $source_registry = ""
 $os_release_id = $(Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\' | Select-Object -ExpandProperty ReleaseId)
 
 $help = $false
 
 function usage {
-    echo "USAGE: $script_name [--image-list rancher-windows-images.txt] [--images rancher-windows-images.tar.gz] [--source-registry index.docker.io]"
+    echo "USAGE: $script_name [--image-list ranger-windows-images.txt] [--images ranger-windows-images.tar.gz] [--source-registry index.docker.io]"
     echo "  [-l|--image-list path] text file with list of images; one image per line."
     echo "  [-i|--images path] tar.gz generated by docker save."
     echo "  [-s|--source-registry registry:port] source registry to pull images from, in the registry:port format."

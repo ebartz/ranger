@@ -8,8 +8,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/rancher/norman/httperror"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
+	"github.com/ranger/norman/httperror"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
 )
 
 // GenerateUserToken is a helper function that generates a bearer token for a specified user using the

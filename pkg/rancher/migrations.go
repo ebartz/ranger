@@ -1,4 +1,4 @@
-package rancher
+package ranger
 
 import (
 	"encoding/json"
@@ -6,19 +6,19 @@ import (
 	"strings"
 
 	"github.com/mcuadros/go-version"
-	"github.com/rancher/norman/condition"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/auth/tokens"
-	"github.com/rancher/rancher/pkg/capr"
-	"github.com/rancher/rancher/pkg/features"
-	v3 "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3"
-	rancherversion "github.com/rancher/rancher/pkg/version"
-	"github.com/rancher/rancher/pkg/wrangler"
-	"github.com/rancher/wrangler/pkg/data"
-	"github.com/rancher/wrangler/pkg/data/convert"
-	controllerapiextv1 "github.com/rancher/wrangler/pkg/generated/controllers/apiextensions.k8s.io/v1"
-	controllerv1 "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
-	"github.com/rancher/wrangler/pkg/summary"
+	"github.com/ranger/norman/condition"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/auth/tokens"
+	"github.com/ranger/ranger/pkg/capr"
+	"github.com/ranger/ranger/pkg/features"
+	v3 "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3"
+	rangerversion "github.com/ranger/ranger/pkg/version"
+	"github.com/ranger/ranger/pkg/wrangler"
+	"github.com/ranger/wrangler/pkg/data"
+	"github.com/ranger/wrangler/pkg/data/convert"
+	controllerapiextv1 "github.com/ranger/wrangler/pkg/generated/controllers/apiextensions.k8s.io/v1"
+	controllerv1 "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
+	"github.com/ranger/wrangler/pkg/summary"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/mod/semver"
 	v1 "k8s.io/api/core/v1"
@@ -40,7 +40,7 @@ const (
 	migrateFromMachineToPlanSecret             = "migratefrommachinetoplanesecret"
 	migrateEncryptionKeyRotationLeaderToStatus = "migrateencryptionkeyrotationleadertostatus"
 	migrateDynamicSchemaToMachinePools         = "migratedynamicschematomachinepools"
-	rancherVersionKey                          = "rancherVersion"
+	rangerVersionKey                          = "rangerVersion"
 	projectsCreatedKey                         = "projectsCreated"
 	namespacesAssignedKey                      = "namespacesAssigned"
 	capiMigratedKey                            = "capiMigrated"
@@ -102,7 +102,7 @@ func getConfigMap(configMapController controllerv1.ConfigMapController, configMa
 	}
 
 	// we do not migrate in development environments
-	if rancherversion.Version == "dev" {
+	if rangerversion.Version == "dev" {
 		return nil, nil
 	}
 
@@ -130,15 +130,15 @@ func forceUpgradeLogout(configMapController controllerv1.ConfigMapController, to
 	}
 
 	// if no last migration is found we always run force logout
-	if lastMigration, ok := cm.Data[rancherVersionKey]; ok {
+	if lastMigration, ok := cm.Data[rangerVersionKey]; ok {
 
 		// if a valid sem ver is found we only migrate if the version is less than the target version
-		if semver.IsValid(lastMigration) && semver.IsValid(rancherversion.Version) && version.Compare(migrationVersion, lastMigration, "<=") {
+		if semver.IsValid(lastMigration) && semver.IsValid(rangerversion.Version) && version.Compare(migrationVersion, lastMigration, "<=") {
 			return nil
 		}
 
 		// if an unknown format is given we migrate any time the current version does not equal the last migration
-		if lastMigration == rancherversion.Version {
+		if lastMigration == rangerversion.Version {
 			return nil
 		}
 	}
@@ -160,7 +160,7 @@ func forceUpgradeLogout(configMapController controllerv1.ConfigMapController, to
 		}
 	}
 
-	cm.Data[rancherVersionKey] = rancherversion.Version
+	cm.Data[rangerVersionKey] = rangerversion.Version
 	return createOrUpdateConfigMap(configMapController, cm)
 }
 
@@ -205,7 +205,7 @@ func forceSystemNamespaceAssignment(configMapController controllerv1.ConfigMapCo
 		return err
 	}
 
-	if cm.Data[namespacesAssignedKey] == rancherversion.Version {
+	if cm.Data[namespacesAssignedKey] == rangerversion.Version {
 		return nil
 	}
 
@@ -218,7 +218,7 @@ func forceSystemNamespaceAssignment(configMapController controllerv1.ConfigMapCo
 		return err
 	}
 
-	cm.Data[namespacesAssignedKey] = rancherversion.Version
+	cm.Data[namespacesAssignedKey] = rangerversion.Version
 	return createOrUpdateConfigMap(configMapController, cm)
 }
 

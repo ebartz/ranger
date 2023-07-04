@@ -1,4 +1,4 @@
-package rancher
+package ranger
 
 import (
 	"context"
@@ -12,38 +12,38 @@ import (
 	"github.com/Masterminds/semver/v3"
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
-	responsewriter "github.com/rancher/apiserver/pkg/middleware"
-	"github.com/rancher/rancher/pkg/api/norman/customization/kontainerdriver"
-	"github.com/rancher/rancher/pkg/api/norman/customization/podsecuritypolicytemplate"
-	steveapi "github.com/rancher/rancher/pkg/api/steve"
-	"github.com/rancher/rancher/pkg/api/steve/aggregation"
-	"github.com/rancher/rancher/pkg/api/steve/proxy"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/auth"
-	"github.com/rancher/rancher/pkg/auth/audit"
-	"github.com/rancher/rancher/pkg/auth/requests"
-	"github.com/rancher/rancher/pkg/controllers/dashboard"
-	"github.com/rancher/rancher/pkg/controllers/dashboard/apiservice"
-	"github.com/rancher/rancher/pkg/controllers/dashboardapi"
-	managementauth "github.com/rancher/rancher/pkg/controllers/management/auth"
-	provisioningv2 "github.com/rancher/rancher/pkg/controllers/provisioningv2/cluster"
-	crds "github.com/rancher/rancher/pkg/crds/dashboard"
-	dashboarddata "github.com/rancher/rancher/pkg/data/dashboard"
-	"github.com/rancher/rancher/pkg/features"
-	mgmntv3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/multiclustermanager"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/tls"
-	"github.com/rancher/rancher/pkg/ui"
-	"github.com/rancher/rancher/pkg/websocket"
-	"github.com/rancher/rancher/pkg/wrangler"
-	aggregation2 "github.com/rancher/steve/pkg/aggregation"
-	steveauth "github.com/rancher/steve/pkg/auth"
-	steveserver "github.com/rancher/steve/pkg/server"
-	"github.com/rancher/wrangler/pkg/generic"
-	"github.com/rancher/wrangler/pkg/k8scheck"
-	"github.com/rancher/wrangler/pkg/unstructured"
+	responsewriter "github.com/ranger/apiserver/pkg/middleware"
+	"github.com/ranger/ranger/pkg/api/norman/customization/kontainerdriver"
+	"github.com/ranger/ranger/pkg/api/norman/customization/podsecuritypolicytemplate"
+	steveapi "github.com/ranger/ranger/pkg/api/steve"
+	"github.com/ranger/ranger/pkg/api/steve/aggregation"
+	"github.com/ranger/ranger/pkg/api/steve/proxy"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/auth"
+	"github.com/ranger/ranger/pkg/auth/audit"
+	"github.com/ranger/ranger/pkg/auth/requests"
+	"github.com/ranger/ranger/pkg/controllers/dashboard"
+	"github.com/ranger/ranger/pkg/controllers/dashboard/apiservice"
+	"github.com/ranger/ranger/pkg/controllers/dashboardapi"
+	managementauth "github.com/ranger/ranger/pkg/controllers/management/auth"
+	provisioningv2 "github.com/ranger/ranger/pkg/controllers/provisioningv2/cluster"
+	crds "github.com/ranger/ranger/pkg/crds/dashboard"
+	dashboarddata "github.com/ranger/ranger/pkg/data/dashboard"
+	"github.com/ranger/ranger/pkg/features"
+	mgmntv3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/multiclustermanager"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/tls"
+	"github.com/ranger/ranger/pkg/ui"
+	"github.com/ranger/ranger/pkg/websocket"
+	"github.com/ranger/ranger/pkg/wrangler"
+	aggregation2 "github.com/ranger/steve/pkg/aggregation"
+	steveauth "github.com/ranger/steve/pkg/auth"
+	steveserver "github.com/ranger/steve/pkg/server"
+	"github.com/ranger/wrangler/pkg/generic"
+	"github.com/ranger/wrangler/pkg/k8scheck"
+	"github.com/ranger/wrangler/pkg/unstructured"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 	v1 "k8s.io/api/core/v1"
@@ -81,7 +81,7 @@ type Options struct {
 	ClusterRegistry   string
 }
 
-type Rancher struct {
+type Ranger struct {
 	Auth     steveauth.Middleware
 	Handler  http.Handler
 	Wrangler *wrangler.Context
@@ -92,7 +92,7 @@ type Rancher struct {
 	opts       *Options
 }
 
-func New(ctx context.Context, clientConfg clientcmd.ClientConfig, opts *Options) (*Rancher, error) {
+func New(ctx context.Context, clientConfg clientcmd.ClientConfig, opts *Options) (*Ranger, error) {
 	var (
 		authServer *auth.Server
 	)
@@ -126,10 +126,10 @@ func New(ctx context.Context, clientConfg clientcmd.ClientConfig, opts *Options)
 	}
 
 	if opts.Embedded {
-		if err := setupRancherService(ctx, restConfig, opts.HTTPSListenPort); err != nil {
+		if err := setupRangerService(ctx, restConfig, opts.HTTPSListenPort); err != nil {
 			return nil, err
 		}
-		if err := bumpRancherWebhookIfNecessary(ctx, restConfig); err != nil {
+		if err := bumpRangerWebhookIfNecessary(ctx, restConfig); err != nil {
 			return nil, err
 		}
 	}
@@ -218,7 +218,7 @@ func New(ctx context.Context, clientConfg clientcmd.ClientConfig, opts *Options)
 	}
 	aggregationMiddleware := aggregation.NewMiddleware(ctx, wranglerContext.Mgmt.APIService(), wranglerContext.TunnelServer)
 
-	return &Rancher{
+	return &Ranger{
 		Auth: authServer.Authenticator.Chain(
 			auditFilter),
 		Handler: responsewriter.Chain{
@@ -243,7 +243,7 @@ func New(ctx context.Context, clientConfg clientcmd.ClientConfig, opts *Options)
 	}, nil
 }
 
-func (r *Rancher) Start(ctx context.Context) error {
+func (r *Ranger) Start(ctx context.Context) error {
 	if err := dashboardapi.Register(ctx, r.Wrangler); err != nil {
 		return err
 	}
@@ -281,7 +281,7 @@ func (r *Rancher) Start(ctx context.Context) error {
 	return r.Wrangler.Start(ctx)
 }
 
-func (r *Rancher) ListenAndServe(ctx context.Context) error {
+func (r *Ranger) ListenAndServe(ctx context.Context) error {
 	if err := r.Start(ctx); err != nil {
 		return err
 	}
@@ -304,7 +304,7 @@ func (r *Rancher) ListenAndServe(ctx context.Context) error {
 	return ctx.Err()
 }
 
-func (r *Rancher) startAggregation(ctx context.Context) {
+func (r *Ranger) startAggregation(ctx context.Context) {
 	aggregation2.Watch(ctx, r.Wrangler.Core.Secret(), namespace.System, "stv-aggregation", r.Handler)
 }
 
@@ -331,17 +331,17 @@ func localClusterEnabled(opts *Options) bool {
 	return false
 }
 
-// setupRancherService will ensure that a Rancher service with a custom endpoint exists that will be used
-// to access Rancher
-func setupRancherService(ctx context.Context, restConfig *rest.Config, httpsListenPort int) error {
+// setupRangerService will ensure that a Ranger service with a custom endpoint exists that will be used
+// to access Ranger
+func setupRangerService(ctx context.Context, restConfig *rest.Config, httpsListenPort int) error {
 	clientset, err := kubernetes.NewForConfig(restConfig)
 	if err != nil {
-		return fmt.Errorf("error setting up kubernetes clientset while setting up rancher service: %w", err)
+		return fmt.Errorf("error setting up kubernetes clientset while setting up ranger service: %w", err)
 	}
 
 	service := v1.Service{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      apiservice.RancherServiceName,
+			Name:      apiservice.RangerServiceName,
 			Namespace: namespace.System,
 		},
 		Spec: v1.ServiceSpec{
@@ -357,12 +357,12 @@ func setupRancherService(ctx context.Context, restConfig *rest.Config, httpsList
 
 	refreshService := false
 
-	s, err := clientset.CoreV1().Services(namespace.System).Get(ctx, apiservice.RancherServiceName, metav1.GetOptions{})
+	s, err := clientset.CoreV1().Services(namespace.System).Get(ctx, apiservice.RangerServiceName, metav1.GetOptions{})
 	if err != nil {
 		if k8serror.IsNotFound(err) {
 			refreshService = true
 		} else {
-			return fmt.Errorf("error looking for rancher service: %w", err)
+			return fmt.Errorf("error looking for ranger service: %w", err)
 		}
 	} else {
 		if s.Spec.String() != service.Spec.String() {
@@ -371,9 +371,9 @@ func setupRancherService(ctx context.Context, restConfig *rest.Config, httpsList
 	}
 
 	if refreshService {
-		logrus.Debugf("setupRancherService refreshing service")
+		logrus.Debugf("setupRangerService refreshing service")
 		if err := retry.RetryOnConflict(retry.DefaultRetry, func() error {
-			if s, err := clientset.CoreV1().Services(namespace.System).Get(ctx, apiservice.RancherServiceName, metav1.GetOptions{}); err != nil {
+			if s, err := clientset.CoreV1().Services(namespace.System).Get(ctx, apiservice.RangerServiceName, metav1.GetOptions{}); err != nil {
 				if k8serror.IsNotFound(err) {
 					if _, err := clientset.CoreV1().Services(namespace.System).Create(ctx, &service, metav1.CreateOptions{}); err != nil {
 						return err
@@ -389,18 +389,18 @@ func setupRancherService(ctx context.Context, restConfig *rest.Config, httpsList
 			}
 			return nil
 		}); err != nil {
-			return fmt.Errorf("setupRancherService error refreshing service: %w", err)
+			return fmt.Errorf("setupRangerService error refreshing service: %w", err)
 		}
 	}
 
 	ip, err := net.ChooseHostInterface()
 	if err != nil {
-		return fmt.Errorf("setupRancherService error getting host IP while setting up rancher service: %w", err)
+		return fmt.Errorf("setupRangerService error getting host IP while setting up ranger service: %w", err)
 	}
 
 	endpoint := v1.Endpoints{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      apiservice.RancherServiceName,
+			Name:      apiservice.RangerServiceName,
 			Namespace: namespace.System,
 		},
 		Subsets: []v1.EndpointSubset{
@@ -420,24 +420,24 @@ func setupRancherService(ctx context.Context, restConfig *rest.Config, httpsList
 	}
 
 	refreshEndpoint := false
-	e, err := clientset.CoreV1().Endpoints(namespace.System).Get(ctx, apiservice.RancherServiceName, metav1.GetOptions{})
+	e, err := clientset.CoreV1().Endpoints(namespace.System).Get(ctx, apiservice.RangerServiceName, metav1.GetOptions{})
 	if err != nil {
 		if k8serror.IsNotFound(err) {
 			refreshEndpoint = true
 		} else {
-			return fmt.Errorf("error looking for rancher endpoint while setting up rancher service: %w", err)
+			return fmt.Errorf("error looking for ranger endpoint while setting up ranger service: %w", err)
 		}
 	} else {
 		if e.Subsets[0].String() != endpoint.Subsets[0].String() && len(e.Subsets) != 1 {
-			logrus.Debugf("setupRancherService subsets did not match, refreshing endpoint (%s vs %s)", e.Subsets[0].String(), endpoint.String())
+			logrus.Debugf("setupRangerService subsets did not match, refreshing endpoint (%s vs %s)", e.Subsets[0].String(), endpoint.String())
 			refreshEndpoint = true
 		}
 	}
 
 	if refreshEndpoint {
-		logrus.Debugf("setupRancherService refreshing endpoint")
+		logrus.Debugf("setupRangerService refreshing endpoint")
 		if err := retry.RetryOnConflict(retry.DefaultRetry, func() error {
-			if e, err := clientset.CoreV1().Endpoints(namespace.System).Get(ctx, apiservice.RancherServiceName, metav1.GetOptions{}); err != nil {
+			if e, err := clientset.CoreV1().Endpoints(namespace.System).Get(ctx, apiservice.RangerServiceName, metav1.GetOptions{}); err != nil {
 				if k8serror.IsNotFound(err) {
 					if _, err := clientset.CoreV1().Endpoints(namespace.System).Create(ctx, &endpoint, metav1.CreateOptions{}); err != nil {
 						return err
@@ -453,17 +453,17 @@ func setupRancherService(ctx context.Context, restConfig *rest.Config, httpsList
 			}
 			return nil
 		}); err != nil {
-			return fmt.Errorf("setupRancherService error refreshing endpoint: %w", err)
+			return fmt.Errorf("setupRangerService error refreshing endpoint: %w", err)
 		}
 	}
 	return nil
 }
 
-// bumpRancherServiceVersion bumps the version of rancher-webhook if it is detected that the version is less than
-// v0.2.2-alpha1. This is because the version of rancher-webhook less than v0.2.2-alpha1 does not support Kubernetes v1.22+
-// This should only be called when Rancher is run in a Docker container because the Kubernetes version and Rancher version
-// are bumped at the same time. In a Kubernetes cluster, usually the Rancher version is bumped when the cluster is upgraded.
-func bumpRancherWebhookIfNecessary(ctx context.Context, restConfig *rest.Config) error {
+// bumpRangerServiceVersion bumps the version of ranger-webhook if it is detected that the version is less than
+// v0.2.2-alpha1. This is because the version of ranger-webhook less than v0.2.2-alpha1 does not support Kubernetes v1.22+
+// This should only be called when Ranger is run in a Docker container because the Kubernetes version and Ranger version
+// are bumped at the same time. In a Kubernetes cluster, usually the Ranger version is bumped when the cluster is upgraded.
+func bumpRangerWebhookIfNecessary(ctx context.Context, restConfig *rest.Config) error {
 	v := os.Getenv("CATTLE_RANCHER_WEBHOOK_MIN_VERSION")
 	if v == "" {
 		v = os.Getenv("CATTLE_RANCHER_WEBHOOK_VERSION")
@@ -480,7 +480,7 @@ func bumpRancherWebhookIfNecessary(ctx context.Context, restConfig *rest.Config)
 		return fmt.Errorf("error setting up kubernetes clientset: %w", err)
 	}
 
-	rancherWebhookDeployment, err := clientset.AppsV1().Deployments(namespace.System).Get(ctx, "rancher-webhook", metav1.GetOptions{})
+	rangerWebhookDeployment, err := clientset.AppsV1().Deployments(namespace.System).Get(ctx, "ranger-webhook", metav1.GetOptions{})
 	if err != nil {
 		if k8serror.IsNotFound(err) {
 			return nil
@@ -488,9 +488,9 @@ func bumpRancherWebhookIfNecessary(ctx context.Context, restConfig *rest.Config)
 		return err
 	}
 
-	for i, c := range rancherWebhookDeployment.Spec.Template.Spec.Containers {
+	for i, c := range rangerWebhookDeployment.Spec.Template.Spec.Containers {
 		imageVersionParts := strings.Split(c.Image, ":")
-		if c.Name != "rancher-webhook" || len(imageVersionParts) != 2 {
+		if c.Name != "ranger-webhook" || len(imageVersionParts) != 2 {
 			continue
 		}
 
@@ -499,11 +499,11 @@ func bumpRancherWebhookIfNecessary(ctx context.Context, restConfig *rest.Config)
 			continue
 		}
 		if semVer.LessThan(semver.MustParse("0.2.2-alpha1")) {
-			rancherWebhookDeployment = rancherWebhookDeployment.DeepCopy()
+			rangerWebhookDeployment = rangerWebhookDeployment.DeepCopy()
 			c.Image = fmt.Sprintf("%s:%s", imageVersionParts[0], webhookVersionParts[1])
-			rancherWebhookDeployment.Spec.Template.Spec.Containers[i] = c
+			rangerWebhookDeployment.Spec.Template.Spec.Containers[i] = c
 
-			_, err = clientset.AppsV1().Deployments(namespace.System).Update(ctx, rancherWebhookDeployment, metav1.UpdateOptions{})
+			_, err = clientset.AppsV1().Deployments(namespace.System).Update(ctx, rangerWebhookDeployment, metav1.UpdateOptions{})
 			return err
 		}
 	}
@@ -514,7 +514,7 @@ func bumpRancherWebhookIfNecessary(ctx context.Context, restConfig *rest.Config)
 // migrateEncryptionConfig uses the dynamic client to get all clusters and then marshals them through the
 // standard go JSON package using the updated backing structs in RKE that include JSON tags. The k8s JSON
 // tools are strict with casing so the fields would be dropped before getting saved back in the proper casing
-// if any controller touches the cluster first. See https://github.com/rancher/rancher/issues/31385
+// if any controller touches the cluster first. See https://github.com/ranger/ranger/issues/31385
 func migrateEncryptionConfig(ctx context.Context, restConfig *rest.Config) error {
 	dynamicClient, err := k8dynamic.NewForConfig(restConfig)
 	if err != nil {
@@ -527,7 +527,7 @@ func migrateEncryptionConfig(ctx context.Context, restConfig *rest.Config) error
 		if !k8serror.IsNotFound(err) {
 			return err
 		}
-		// IsNotFound error means the CRD type doesn't exist in the cluster, indicating this is the first Rancher startup
+		// IsNotFound error means the CRD type doesn't exist in the cluster, indicating this is the first Ranger startup
 		return nil
 	}
 

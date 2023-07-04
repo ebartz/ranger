@@ -3,7 +3,7 @@ package globaldns
 import (
 	"context"
 
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/ranger/pkg/types/config"
 )
 
 func Register(ctx context.Context, management *config.ManagementContext) {

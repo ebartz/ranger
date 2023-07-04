@@ -3,22 +3,22 @@ package image
 import (
 	"testing"
 
-	rketypes "github.com/rancher/rke/types"
+	rketypes "github.com/ranger/rke/types"
 	assertlib "github.com/stretchr/testify/assert"
 )
 
 func TestFetchImagesFromSystem(t *testing.T) {
-	k8sVersion := "v1.17.9-rancher1-2"
+	k8sVersion := "v1.17.9-ranger1-2"
 	linuxRKESystemImages := map[string]rketypes.RKESystemImages{
 		k8sVersion: {
-			NginxProxy: "rancher/rke-tools:v0.1.63",
-			CoreDNS:    "rancher/coredns-coredns:1.6.5",
+			NginxProxy: "ranger/rke-tools:v0.1.63",
+			CoreDNS:    "ranger/coredns-coredns:1.6.5",
 		},
 	}
 	windowsRKESystemImages := map[string]rketypes.RKESystemImages{
 		k8sVersion: {
-			NginxProxy:               "rancher/rke-tools:v0.1.63",
-			WindowsPodInfraContainer: "rancher/kubelet-pause:v0.1.4",
+			NginxProxy:               "ranger/rke-tools:v0.1.63",
+			WindowsPodInfraContainer: "ranger/kubelet-pause:v0.1.4",
 		},
 	}
 	bothImages := []string{

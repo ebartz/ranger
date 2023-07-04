@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/rancher/rke/types"
+	"github.com/ranger/rke/types"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -69,7 +69,7 @@ func TestGetKubeletCertificateFilesFromProcess(t *testing.T) {
 			testName: "successfully find kubelet arg",
 			processes: map[string]types.Process{
 				"kubelet": {
-					// rancher actually passes all args in the 'Command' field, since
+					// ranger actually passes all args in the 'Command' field, since
 					// we use the entrypoint.sh file
 					Command: []string{
 						"--tls-private-key-file=/etc/kubernetes/ssl/a-private-key.pem",
@@ -86,7 +86,7 @@ func TestGetKubeletCertificateFilesFromProcess(t *testing.T) {
 			testName: "unsuccessfully find kubelet arg",
 			processes: map[string]types.Process{
 				"kubelet": {
-					// rancher actually passes all args in the 'Command' field, since
+					// ranger actually passes all args in the 'Command' field, since
 					// we use the entrypoint.sh file
 					Command: []string{},
 				},
@@ -171,7 +171,7 @@ func createTestCert(ipAddress []net.IP, hostname []string, notAfter time.Time) (
 	cert := &x509.Certificate{
 		SerialNumber: big.NewInt(2022),
 		Subject: pkix.Name{
-			Organization:  []string{"Rancher"},
+			Organization:  []string{"Ranger"},
 			Country:       []string{"US"},
 			Province:      []string{""},
 			Locality:      []string{"Green Pastures"},

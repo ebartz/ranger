@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rancher/rancher/pkg/clustermanager"
-	"github.com/rancher/rancher/pkg/controllers/management/rbac"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/ref"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/user"
+	"github.com/ranger/ranger/pkg/clustermanager"
+	"github.com/ranger/ranger/pkg/controllers/management/rbac"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/ref"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/user"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/meta"
@@ -163,7 +163,7 @@ func (mc *MCAppController) sync(key string, mcapp *v3.MultiClusterApp) (runtime.
 	}
 
 	if err := rbac.CreateRoleAndRoleBinding(rbac.MultiClusterAppResource, v3.MultiClusterAppGroupVersionKind.Kind, mcapp.Name, namespace.GlobalNamespace,
-		rbac.RancherManagementAPIVersion, creatorID, []string{rbac.RancherManagementAPIGroup},
+		rbac.RangerManagementAPIVersion, creatorID, []string{rbac.RangerManagementAPIGroup},
 		mcapp.UID,
 		mcapp.Spec.Members, mc.managementContext); err != nil {
 		return nil, err
@@ -177,8 +177,8 @@ func (mc *MCAppController) sync(key string, mcapp *v3.MultiClusterApp) (runtime.
 	}
 	for _, rev := range revisions {
 		if err := rbac.CreateRoleAndRoleBinding(
-			rbac.MultiClusterAppRevisionResource, v3.MultiClusterAppRevisionGroupVersionKind.Kind, rev.Name, namespace.GlobalNamespace, rbac.RancherManagementAPIVersion,
-			creatorID, []string{rbac.RancherManagementAPIGroup}, rev.UID, mcapp.Spec.Members,
+			rbac.MultiClusterAppRevisionResource, v3.MultiClusterAppRevisionGroupVersionKind.Kind, rev.Name, namespace.GlobalNamespace, rbac.RangerManagementAPIVersion,
+			creatorID, []string{rbac.RangerManagementAPIGroup}, rev.UID, mcapp.Spec.Members,
 			mc.managementContext); err != nil {
 			return nil, err
 		}
@@ -215,8 +215,8 @@ func (r *MCAppRevisionController) sync(key string, mcappRevision *v3.MultiCluste
 	}
 
 	if err := rbac.CreateRoleAndRoleBinding(
-		rbac.MultiClusterAppRevisionResource, v3.MultiClusterAppRevisionGroupVersionKind.Kind, mcappRevision.Name, namespace.GlobalNamespace, rbac.RancherManagementAPIVersion,
-		creatorID, []string{rbac.RancherManagementAPIGroup}, mcappRevision.UID, mcapp.Spec.Members,
+		rbac.MultiClusterAppRevisionResource, v3.MultiClusterAppRevisionGroupVersionKind.Kind, mcappRevision.Name, namespace.GlobalNamespace, rbac.RangerManagementAPIVersion,
+		creatorID, []string{rbac.RangerManagementAPIGroup}, mcappRevision.UID, mcapp.Spec.Members,
 		r.managementContext); err != nil {
 		return nil, err
 	}

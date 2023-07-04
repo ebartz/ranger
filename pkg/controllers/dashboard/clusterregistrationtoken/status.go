@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/rancher/norman/types/convert"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/capr/installer"
-	util "github.com/rancher/rancher/pkg/cluster"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/image"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/systemtemplate"
-	rketypes "github.com/rancher/rke/types"
+	"github.com/ranger/norman/types/convert"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/capr/installer"
+	util "github.com/ranger/ranger/pkg/cluster"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/image"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/systemtemplate"
+	rketypes "github.com/ranger/rke/types"
 )
 
 const (
@@ -128,12 +128,12 @@ func (h *handler) assignStatus(crt *v32.ClusterRegistrationToken) (v32.ClusterRe
 			rootURL,
 			token,
 			ca,
-			getWindowsPrefixPathArg(cluster.Spec.RancherKubernetesEngineConfig))
+			getWindowsPrefixPathArg(cluster.Spec.RangerKubernetesEngineConfig))
 	}
 	return *crtStatus, nil
 }
 
-func getWindowsPrefixPathArg(rkeConfig *rketypes.RancherKubernetesEngineConfig) string {
+func getWindowsPrefixPathArg(rkeConfig *rketypes.RangerKubernetesEngineConfig) string {
 	if rkeConfig == nil {
 		return ""
 	}

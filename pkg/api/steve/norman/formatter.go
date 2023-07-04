@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rancher/apiserver/pkg/types"
-	types2 "github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/norman/urlbuilder"
-	v3 "github.com/rancher/rancher/pkg/schemas/cluster.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/wrangler"
+	"github.com/ranger/apiserver/pkg/types"
+	types2 "github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/norman/urlbuilder"
+	v3 "github.com/ranger/ranger/pkg/schemas/cluster.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/wrangler"
 	"github.com/sirupsen/logrus"
 )
 
@@ -83,7 +83,7 @@ type accessControlWrapper struct {
 
 func (a accessControlWrapper) CanDo(apiGroup, resource, verb string, apiContext *types2.APIContext, obj map[string]interface{}, schema *types2.Schema) error {
 	name, namespace := getNameAndNS(obj)
-	// The access control used by this function (schema based - provided by rancher/APIserver), expects the resource in
+	// The access control used by this function (schema based - provided by ranger/APIserver), expects the resource in
 	// the below format. We re-format it here since the original format does not match what is expected by the api server
 	formattedResource := fmt.Sprintf("%s/%s", apiGroup, resource)
 	return a.ac.CanDo(a.apiRequest, formattedResource, verb, namespace, name)

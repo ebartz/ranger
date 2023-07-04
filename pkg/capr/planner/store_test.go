@@ -27,9 +27,9 @@ func TestJoinURLFromAddress(t *testing.T) {
 		},
 		{
 			name:     "hostname",
-			address:  "testing.rancher.io",
+			address:  "testing.ranger.io",
 			port:     9345,
-			expected: "https://testing.rancher.io:9345",
+			expected: "https://testing.ranger.io:9345",
 		},
 	}
 

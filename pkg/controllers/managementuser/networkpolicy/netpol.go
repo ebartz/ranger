@@ -6,13 +6,13 @@ import (
 	"reflect"
 	"sort"
 
-	"github.com/rancher/rancher/pkg/controllers/managementagent/nslabels"
-	cluster2 "github.com/rancher/rancher/pkg/controllers/provisioningv2/cluster"
-	rancherv1 "github.com/rancher/rancher/pkg/generated/controllers/provisioning.cattle.io/v1"
-	typescorev1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	rnetworkingv1 "github.com/rancher/rancher/pkg/generated/norman/networking.k8s.io/v1"
-	rkecluster "github.com/rancher/rke/cluster"
+	"github.com/ranger/ranger/pkg/controllers/managementagent/nslabels"
+	cluster2 "github.com/ranger/ranger/pkg/controllers/provisioningv2/cluster"
+	rangerv1 "github.com/ranger/ranger/pkg/generated/controllers/provisioning.cattle.io/v1"
+	typescorev1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	rnetworkingv1 "github.com/ranger/ranger/pkg/generated/norman/networking.k8s.io/v1"
+	rkecluster "github.com/ranger/rke/cluster"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	knetworkingv1 "k8s.io/api/networking/v1"
@@ -36,7 +36,7 @@ const (
 
 type netpolMgr struct {
 	clusterLister    v3.ClusterLister
-	clusters         rancherv1.ClusterCache
+	clusters         rangerv1.ClusterCache
 	nsLister         typescorev1.NamespaceLister
 	nodeLister       typescorev1.NodeLister
 	pods             typescorev1.PodInterface
@@ -112,7 +112,7 @@ func (npmgr *netpolMgr) programNetworkPolicy(projectID string, clusterNamespace 
 
 		// add an allow all network policy to system project namespaces
 		// this is the same as having no network policy, i.e. it allows all ingress and egress traffic to/from the namespace
-		// this is needed to ensure CIS Scans pass. See: https://github.com/rancher/rancher/issues/30211 for more info
+		// this is needed to ensure CIS Scans pass. See: https://github.com/ranger/ranger/issues/30211 for more info
 		// we also guard against overriding existing network policies, the default network policy for a namespace in the system project
 		// will only be added if there are no other network policies in the namespace (network policies are additive)
 		if systemNamespaces[aNS.Name] {
@@ -291,8 +291,8 @@ func (npmgr *netpolMgr) getClusterCNI(clusterName string) (string, error) {
 		return npmgr.getRKE2ClusterCNI(cluster)
 	}
 
-	if cluster.Spec.RancherKubernetesEngineConfig != nil {
-		return cluster.Spec.RancherKubernetesEngineConfig.Network.Plugin, nil
+	if cluster.Spec.RangerKubernetesEngineConfig != nil {
+		return cluster.Spec.RangerKubernetesEngineConfig.Network.Plugin, nil
 	}
 
 	return "", nil

@@ -3,15 +3,15 @@ package bundledclusters
 import (
 	"github.com/pkg/errors"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	available "github.com/rancher/rancher/tests/framework/extensions/clusters/kubernetesversions"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	available "github.com/ranger/ranger/tests/framework/extensions/clusters/kubernetesversions"
 )
 
 // ListAvailable is a method of BundledCluster that uses list available functions
 // depending on cluster's provider information. Returns versions as slice of strings
 // and error if any.
-func (bc *BundledCluster) ListAvailableVersions(client *rancher.Client) (versions []string, err error) {
+func (bc *BundledCluster) ListAvailableVersions(client *ranger.Client) (versions []string, err error) {
 	switch bc.Meta.Provider {
 	case clusters.KubernetesProviderRKE:
 		versions, err = available.ListRKE1AvailableVersions(client, bc.V3)

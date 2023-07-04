@@ -9,10 +9,10 @@ import time
 import requests
 import ast
 import paramiko
-import rancher
+import ranger
 import pytest
 from urllib.parse import urlparse
-from rancher import ApiError
+from ranger import ApiError
 from lib.aws import AmazonWebServices
 from copy import deepcopy
 from threading import Lock
@@ -44,7 +44,7 @@ HARDENED_CLUSTER = ast.literal_eval(
     os.environ.get('RANCHER_HARDENED_CLUSTER', "False"))
 TEST_OS = os.environ.get('RANCHER_TEST_OS', "linux")
 TEST_IMAGE = os.environ.get(
-    'RANCHER_TEST_IMAGE', "ranchertest/mytestcontainer")
+    'RANCHER_TEST_IMAGE', "rangertest/mytestcontainer")
 TEST_IMAGE_PORT = os.environ.get('RANCHER_TEST_IMAGE_PORT', "80")
 TEST_IMAGE_REDIS = os.environ.get('RANCHER_TEST_IMAGE_REDIS', "redis:latest")
 TEST_IMAGE_OS_BASE = os.environ.get('RANCHER_TEST_IMAGE_OS_BASE', "ubuntu")
@@ -64,7 +64,7 @@ RANCHER_CLEANUP_CLUSTER = \
     ast.literal_eval(os.environ.get('RANCHER_CLEANUP_CLUSTER', "True"))
 env_file = os.path.join(
     os.path.dirname(os.path.realpath(__file__)),
-    "rancher_env.config")
+    "ranger_env.config")
 
 AWS_SSH_KEY_NAME = os.environ.get("AWS_SSH_KEY_NAME")
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
@@ -220,36 +220,36 @@ def is_windows(os_type=TEST_OS):
 
 def get_cluster_client_for_token_v1(cluster_id, token):
     url = CATTLE_TEST_URL + "/k8s/clusters/" + cluster_id + "/v1/schemas"
-    return rancher.Client(url=url, token=token, verify=False)
+    return ranger.Client(url=url, token=token, verify=False)
 
 
 def get_admin_client():
-    return rancher.Client(url=CATTLE_API_URL, token=ADMIN_TOKEN, verify=False)
+    return ranger.Client(url=CATTLE_API_URL, token=ADMIN_TOKEN, verify=False)
 
 
 def get_user_client():
-    return rancher.Client(url=CATTLE_API_URL, token=USER_TOKEN, verify=False)
+    return ranger.Client(url=CATTLE_API_URL, token=USER_TOKEN, verify=False)
 
 
 def get_client_for_token(token, url=CATTLE_API_URL):
-    return rancher.Client(url=url, token=token, verify=False)
+    return ranger.Client(url=url, token=token, verify=False)
 
 
 def get_project_client_for_token(project, token):
     p_url = project.links['self'] + '/schemas'
-    p_client = rancher.Client(url=p_url, token=token, verify=False)
+    p_client = ranger.Client(url=p_url, token=token, verify=False)
     return p_client
 
 
 def get_cluster_client_for_token(cluster, token):
     c_url = cluster.links['self'] + '/schemas'
-    c_client = rancher.Client(url=c_url, token=token, verify=False)
+    c_client = ranger.Client(url=c_url, token=token, verify=False)
     return c_client
 
 
 def up(cluster, token):
     c_url = cluster.links['self'] + '/schemas'
-    c_client = rancher.Client(url=c_url, token=token, verify=False)
+    c_client = ranger.Client(url=c_url, token=token, verify=False)
     return c_client
 
 
@@ -395,7 +395,7 @@ def validate_psp_error_worklaod(p_client, workload, error_message):
     assert error_message in workload.transitioningMessage
 
 
-def validate_all_workload_image_from_rancher(project_client, ns, pod_count=1,
+def validate_all_workload_image_from_ranger(project_client, ns, pod_count=1,
                                              ignore_pod_count=False,
                                              deployment_list=None,
                                              daemonset_list=None,
@@ -425,7 +425,7 @@ def validate_all_workload_image_from_rancher(project_client, ns, pod_count=1,
                                        workload_name, len(workloads))
         for workload in workloads:
             for container in workload.containers:
-                assert str(container.image).startswith("rancher/")
+                assert str(container.image).startswith("ranger/")
             if workload_name in deployment_list:
                 validate_workload(project_client, workload, "deployment",
                                   ns.name, pod_count=pod_count,
@@ -938,7 +938,7 @@ def validate_cluster(client, cluster, intermediate_state="provisioning",
     create_kubeconfig(cluster)
     if k8s_version != "":
         check_cluster_version(cluster, k8s_version)
-    if hasattr(cluster, 'rancherKubernetesEngineConfig'):
+    if hasattr(cluster, 'rangerKubernetesEngineConfig'):
         check_cluster_state(len(get_role_nodes(cluster, "etcd", client)))
     # check all workloads under the system project are active
     # wait for workloads to be active
@@ -985,12 +985,12 @@ def validate_cluster(client, cluster, intermediate_state="provisioning",
 
 def check_cluster_version(cluster, version):
     cluster_k8s_version = \
-        cluster.appliedSpec["rancherKubernetesEngineConfig"][
+        cluster.appliedSpec["rangerKubernetesEngineConfig"][
             "kubernetesVersion"]
     assert cluster_k8s_version == version, \
         "cluster_k8s_version: " + cluster_k8s_version + \
         " Expected: " + version
-    expected_k8s_version = version[:version.find("-rancher")]
+    expected_k8s_version = version[:version.find("-ranger")]
     k8s_version = execute_kubectl_cmd("version")
     kubectl_k8s_version = k8s_version["serverVersion"]["gitVersion"]
     assert kubectl_k8s_version == expected_k8s_version, \
@@ -1234,9 +1234,9 @@ def get_cluster_type(client, cluster):
         "amazonElasticContainerServiceConfig",
         "azureKubernetesServiceConfig",
         "googleKubernetesEngineConfig",
-        "rancherKubernetesEngineConfig"
+        "rangerKubernetesEngineConfig"
     ]
-    if "rancherKubernetesEngineConfig" in cluster:
+    if "rangerKubernetesEngineConfig" in cluster:
         nodes = client.list_node(clusterId=cluster.id).data
         if len(nodes) > 0:
             if nodes[0].nodeTemplateId is None:
@@ -1490,7 +1490,7 @@ def cluster_cleanup(client, cluster, aws_nodes=None):
     if RANCHER_CLEANUP_CLUSTER:
         start = time.time()
         client.delete(cluster)
-        if cluster.rancherKubernetesEngineConfig.cloudProvider.name == "azure":
+        if cluster.rangerKubernetesEngineConfig.cloudProvider.name == "azure":
             time.sleep(20)
             print("-------sleep time after cluster deletion--------", time.time() - start)
         if aws_nodes is not None:
@@ -2144,10 +2144,10 @@ def readDataFile(data_dir, name):
         return f.read()
 
 
-def set_url_password_token(rancher_url, server_url=None, version=""):
+def set_url_password_token(ranger_url, server_url=None, version=""):
     """Returns a ManagementContext for the default global admin user."""
     auth_url = \
-        rancher_url + "/v3-public/localproviders/local?action=login"
+        ranger_url + "/v3-public/localproviders/local?action=login"
     rpassword = 'admin'
     print(auth_url)
     if "master" in version or \
@@ -2173,7 +2173,7 @@ def set_url_password_token(rancher_url, server_url=None, version=""):
     token = r.json()['token']
     print(token)
     # Change admin password
-    client = rancher.Client(url=rancher_url + "/v3",
+    client = ranger.Client(url=ranger_url + "/v3",
                             token=token, verify=False)
     admin_user = client.list_user(username="admin").data
     admin_user[0].setpassword(newPassword=ADMIN_PASSWORD)
@@ -2183,7 +2183,7 @@ def set_url_password_token(rancher_url, server_url=None, version=""):
     if server_url:
         client.update(serverurl[0], value=server_url)
     else:
-        client.update(serverurl[0], value=rancher_url)
+        client.update(serverurl[0], value=ranger_url)
     return token
 
 
@@ -2279,7 +2279,7 @@ def validate_backup_create(namespace, backup_info, backup_mode=None):
     cluster = namespace["cluster"]
     name = random_test_name("default")
 
-    if not hasattr(cluster, 'rancherKubernetesEngineConfig'):
+    if not hasattr(cluster, 'rangerKubernetesEngineConfig'):
         assert False, "Cluster is not of type RKE"
 
     con = [{"name": "test1",
@@ -2379,7 +2379,7 @@ def validate_backup_delete(namespace, backup_info, backup_mode=None):
     assert len(cluster.etcdBackups(name=backup_info["backupname"])) == 0, \
         "backup shouldn't be listed in the Cluster backups"
     if backup_mode == "s3":
-        # Check the backup reference is deleted in Rancher and S3
+        # Check the backup reference is deleted in Ranger and S3
         backup_found = AmazonWebServices().s3_backup_check(
             backup_info["backupfilename"])
         assert_message = "The backup should't exist in the S3 bucket"
@@ -2764,8 +2764,8 @@ def delete_resource_in_AWS_by_prefix(resource_prefix):
     AmazonWebServices().delete_db(db_name)
 
     # delete the route 53 record
-    route53_names = [resource_prefix + ".qa.rancher.space.",
-                     resource_prefix + "-internal.qa.rancher.space."]
+    route53_names = [resource_prefix + ".qa.ranger.space.",
+                     resource_prefix + "-internal.qa.ranger.space."]
     for name in route53_names:
         print("deleting the route53 record (if it exists): {}".format(name))
         AmazonWebServices().delete_route_53_record(name)
@@ -2979,10 +2979,10 @@ def check_v2_app_and_uninstall(client, chart_name):
 
 
 def update_and_validate_kdm(kdm_url, admin_token=ADMIN_TOKEN,
-                            rancher_api_url=CATTLE_API_URL):
+                            ranger_api_url=CATTLE_API_URL):
     print("Updating KDM to use {}".format(kdm_url))
     header = {'Authorization': 'Bearer ' + admin_token}
-    api_url = rancher_api_url + "/settings/rke-metadata-config"
+    api_url = ranger_api_url + "/settings/rke-metadata-config"
     kdm_json = {
         "name": "rke-metadata-config",
         "value": json.dumps({
@@ -2998,7 +2998,7 @@ def update_and_validate_kdm(kdm_url, admin_token=ADMIN_TOKEN,
     time.sleep(2)
 
     # Refresh Kubernetes Metadata
-    kdm_refresh_url = rancher_api_url + "/kontainerdrivers?action=refresh"
+    kdm_refresh_url = ranger_api_url + "/kontainerdrivers?action=refresh"
     response = requests.post(kdm_refresh_url, verify=False, headers=header)
     assert response.ok
 

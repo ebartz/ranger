@@ -6,12 +6,12 @@ import (
 	"reflect"
 	"strings"
 
-	aksv1 "github.com/rancher/aks-operator/pkg/apis/aks.cattle.io/v1"
-	eksv1 "github.com/rancher/eks-operator/pkg/apis/eks.cattle.io/v1"
-	gkev1 "github.com/rancher/gke-operator/pkg/apis/gke.cattle.io/v1"
-	"github.com/rancher/norman/condition"
-	"github.com/rancher/norman/types"
-	rketypes "github.com/rancher/rke/types"
+	aksv1 "github.com/ranger/aks-operator/pkg/apis/aks.cattle.io/v1"
+	eksv1 "github.com/ranger/eks-operator/pkg/apis/eks.cattle.io/v1"
+	gkev1 "github.com/ranger/gke-operator/pkg/apis/gke.cattle.io/v1"
+	"github.com/ranger/norman/condition"
+	"github.com/ranger/norman/types"
+	rketypes "github.com/ranger/rke/types"
 	"github.com/sirupsen/logrus"
 	"k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -79,14 +79,14 @@ const (
 
 	ClusterDriverImported = "imported"
 	ClusterDriverLocal    = "local"
-	ClusterDriverRKE      = "rancherKubernetesEngine"
+	ClusterDriverRKE      = "rangerKubernetesEngine"
 	ClusterDriverK3s      = "k3s"
 	ClusterDriverK3os     = "k3os"
 	ClusterDriverRke2     = "rke2"
 	ClusterDriverAKS      = "AKS"
 	ClusterDriverEKS      = "EKS"
 	ClusterDriverGKE      = "GKE"
-	ClusterDriverRancherD = "rancherd"
+	ClusterDriverRangerD = "rangerd"
 
 	ClusterPrivateRegistrySecret = "PrivateRegistrySecret"
 	ClusterPrivateRegistryURL    = "PrivateRegistryURL"
@@ -114,7 +114,7 @@ type ClusterSpecBase struct {
 	DesiredAuthImage                                     string                                  `json:"desiredAuthImage"`
 	AgentImageOverride                                   string                                  `json:"agentImageOverride"`
 	AgentEnvVars                                         []v1.EnvVar                             `json:"agentEnvVars,omitempty"`
-	RancherKubernetesEngineConfig                        *rketypes.RancherKubernetesEngineConfig `json:"rancherKubernetesEngineConfig,omitempty"`
+	RangerKubernetesEngineConfig                        *rketypes.RangerKubernetesEngineConfig `json:"rangerKubernetesEngineConfig,omitempty"`
 	DefaultPodSecurityAdmissionConfigurationTemplateName string                                  `json:"defaultPodSecurityAdmissionConfigurationTemplateName,omitempty"`
 	DefaultPodSecurityPolicyTemplateName                 string                                  `json:"defaultPodSecurityPolicyTemplateName,omitempty" norman:"type=reference[podSecurityPolicyTemplate]"`
 	DefaultClusterRoleForProjectMembers                  string                                  `json:"defaultClusterRoleForProjectMembers,omitempty" norman:"type=reference[roleTemplate]"`

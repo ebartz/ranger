@@ -8,20 +8,20 @@ import (
 	"strings"
 	"time"
 
-	v32 "github.com/rancher/rancher/pkg/apis/project.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/project.cattle.io/v3"
 
-	"github.com/rancher/norman/api/access"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/norman/types/set"
-	"github.com/rancher/norman/types/values"
-	gaccess "github.com/rancher/rancher/pkg/api/norman/customization/globalnamespaceaccess"
-	"github.com/rancher/rancher/pkg/catalog/manager"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	pv3 "github.com/rancher/rancher/pkg/generated/norman/project.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/ref"
-	managementschema "github.com/rancher/rancher/pkg/schemas/management.cattle.io/v3"
+	"github.com/ranger/norman/api/access"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/norman/types/set"
+	"github.com/ranger/norman/types/values"
+	gaccess "github.com/ranger/ranger/pkg/api/norman/customization/globalnamespaceaccess"
+	"github.com/ranger/ranger/pkg/catalog/manager"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	pv3 "github.com/ranger/ranger/pkg/generated/norman/project.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/ref"
+	managementschema "github.com/ranger/ranger/pkg/schemas/management.cattle.io/v3"
 	"github.com/sirupsen/logrus"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/meta"
@@ -143,7 +143,7 @@ func (w Wrapper) Validator(request *types.APIContext, schema *types.Schema, data
 	}
 	ownerAccess := accessType == gaccess.OwnerAccess
 	// only members and roles list, and templateversion/answers can be edited through PUT, for updating target projects, we need to use actions only
-	// that's why target projects field has been made non updatable in rancher/types
+	// that's why target projects field has been made non updatable in ranger/types
 	if err := gaccess.CheckAccessToUpdateMembers(mcapp.Spec.Members, data, ownerAccess); err != nil {
 		return err
 	}

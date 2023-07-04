@@ -17,7 +17,7 @@ import (
 	"github.com/Azure/go-autorest/autorest/adal"
 	"github.com/Azure/go-autorest/autorest/to"
 	"github.com/mcuadros/go-version"
-	mgmtv3 "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3"
+	mgmtv3 "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3"
 	"github.com/sirupsen/logrus"
 )
 
@@ -420,7 +420,7 @@ func listVMSizesV2(ctx context.Context, cap *Capabilities) ([]byte, int, error) 
 	}
 
 	type VMSizeInfo struct {
-		//Name is synonymous with the size shown in Rancher UI
+		//Name is synonymous with the size shown in Ranger UI
 		Name                           string
 		AcceleratedNetworkingSupported bool
 		AvailabilityZones              []string

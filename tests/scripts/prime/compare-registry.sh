@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RANCHER_IMAGES_PATH="$(pwd)/rancher-images.txt"
+RANCHER_IMAGES_PATH="$(pwd)/ranger-images.txt"
 RANCHER_MISSING_IMAGES_PATH="$(pwd)/missing-images.txt"
 SCAN_REGISTRY_PATH="$(pwd)/scan-registry.sh"
 DOCKER_IMAGES_PATH="$(pwd)/docker-hub-existing-images.txt"
@@ -24,14 +24,14 @@ prereq() {
 }
 
 scanRegistries() {
-    echo -e "\nPulling rancher-images.txt file..."
-    wget https://github.com/rancher/rancher/releases/download/"${RANCHER_VERSION}"/rancher-images.txt
+    echo -e "\nPulling ranger-images.txt file..."
+    wget https://github.com/ranger/ranger/releases/download/"${RANCHER_VERSION}"/ranger-images.txt
 
     echo -e "\nRunning scan-registry.sh against Docker Hub..."
-    "${SCAN_REGISTRY_PATH}" -l "$(pwd)/rancher-images.txt" -r "${DOCKER_REGISTRY}" >> "${DOCKER_IMAGES_PATH}"
+    "${SCAN_REGISTRY_PATH}" -l "$(pwd)/ranger-images.txt" -r "${DOCKER_REGISTRY}" >> "${DOCKER_IMAGES_PATH}"
 
     echo -e "\nRunning scan-registry.sh against specified registry..."
-    "${SCAN_REGISTRY_PATH}" -l "$(pwd)/rancher-images.txt" -r "${USER_REGISTRY}" >> "${USER_REGISTRY_IMAGES_PATH}"
+    "${SCAN_REGISTRY_PATH}" -l "$(pwd)/ranger-images.txt" -r "${USER_REGISTRY}" >> "${USER_REGISTRY_IMAGES_PATH}"
 }
 
 compareResults() {
@@ -56,7 +56,7 @@ This script will run the scan-registry.sh two times; once with the Docker Hub re
 
 registry. Once done, it will compare the results and list the images that are missing in the user specified registry. 
 
-When running the script, specify the Rancher version, prefixed with a leading 'v' and the registry to compare against 
+When running the script, specify the Ranger version, prefixed with a leading 'v' and the registry to compare against 
 
 Docker, suffixed with a trailing slash.
 
@@ -69,7 +69,7 @@ EXAMPLES OF USAGE:
 
 * Run script
 	
-	$ ./$(basename "$0") v<Rancher version> <registry>/
+	$ ./$(basename "$0") v<Ranger version> <registry>/
 
 EOF
 }

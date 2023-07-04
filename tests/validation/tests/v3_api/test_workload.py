@@ -1,7 +1,7 @@
 import pytest
 
 from .common import *  # NOQA
-from rancher import ApiError
+from ranger import ApiError
 
 namespace = {"p_client": None, "ns": None, "cluster": None, "project": None}
 RBAC_ROLES = [CLUSTER_OWNER, PROJECT_MEMBER, PROJECT_OWNER,

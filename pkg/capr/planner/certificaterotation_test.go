@@ -4,11 +4,11 @@ import (
 	"strconv"
 	"testing"
 
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1/plan"
-	"github.com/rancher/rancher/pkg/capr"
-	"github.com/rancher/rancher/pkg/provisioningv2/image"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1/plan"
+	"github.com/ranger/ranger/pkg/capr"
+	"github.com/ranger/ranger/pkg/provisioningv2/image"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -89,7 +89,7 @@ func Test_rotateCertificatesPlan(t *testing.T) {
 					"rm",
 					[]string{
 						"-f",
-						"/var/lib/rancher/k3s/server/tls/kube-controller-manager/kube-controller-manager.crt",
+						"/var/lib/ranger/k3s/server/tls/kube-controller-manager/kube-controller-manager.crt",
 					},
 					[]string{},
 				)}[0],
@@ -114,7 +114,7 @@ func Test_rotateCertificatesPlan(t *testing.T) {
 					"rm",
 					[]string{
 						"-f",
-						"/var/lib/rancher/rke2/server/tls/kube-controller-manager/kube-controller-manager.crt",
+						"/var/lib/ranger/rke2/server/tls/kube-controller-manager/kube-controller-manager.crt",
 					},
 					[]string{},
 				)}[0],
@@ -136,7 +136,7 @@ func Test_rotateCertificatesPlan(t *testing.T) {
 					"rm",
 					[]string{
 						"-f",
-						"/var/lib/rancher/rke2/server/tls/kube-scheduler/kube-scheduler.crt",
+						"/var/lib/ranger/rke2/server/tls/kube-scheduler/kube-scheduler.crt",
 					},
 					[]string{},
 				)}[0],
@@ -158,7 +158,7 @@ func Test_rotateCertificatesPlan(t *testing.T) {
 					"rm",
 					[]string{
 						"-f",
-						"/var/lib/rancher/rke2/server/tls/kube-scheduler/kube-scheduler.crt",
+						"/var/lib/ranger/rke2/server/tls/kube-scheduler/kube-scheduler.crt",
 					},
 					[]string{},
 				)}[0],

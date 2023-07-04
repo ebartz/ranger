@@ -3,10 +3,10 @@ package authprovisioningv2
 import (
 	"strings"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/controllers/management/nodetemplate"
-	"github.com/rancher/rancher/pkg/controllers/management/rbac"
-	"github.com/rancher/wrangler/pkg/data"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/controllers/management/nodetemplate"
+	"github.com/ranger/ranger/pkg/controllers/management/rbac"
+	"github.com/ranger/wrangler/pkg/data"
 	"k8s.io/apimachinery/pkg/api/meta"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"

@@ -6,7 +6,7 @@ import time
 
 logging.getLogger("paramiko").setLevel(logging.CRITICAL)
 DOCKER_INSTALL_CMD = (
-    "curl https://releases.rancher.com/install-docker/{0}.sh | sh")
+    "curl https://releases.ranger.com/install-docker/{0}.sh | sh")
 
 
 class Node(object):

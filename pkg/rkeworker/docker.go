@@ -11,23 +11,23 @@ import (
 	"strings"
 	"time"
 
-	rketypes "github.com/rancher/rke/types"
+	rketypes "github.com/ranger/rke/types"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/client"
 	"github.com/docker/go-connections/nat"
-	"github.com/rancher/rke/hosts"
-	"github.com/rancher/rke/services"
+	"github.com/ranger/rke/hosts"
+	"github.com/ranger/rke/services"
 	"github.com/sirupsen/logrus"
 )
 
 const (
-	RKEContainerNameLabel  = "io.rancher.rke.container.name"
+	RKEContainerNameLabel  = "io.ranger.rke.container.name"
 	CattleProcessNameLabel = "io.cattle.process.name"
 	ShareMntContainerName  = "share-mnt"
-	DummyK8sVersion        = "v1.22.0-rancher1"
+	DummyK8sVersion        = "v1.22.0-ranger1"
 )
 
 type NodeConfig struct {

@@ -4,28 +4,28 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/rancher/rancher/pkg/api/steve/catalog/types"
-	catalogv1 "github.com/rancher/rancher/pkg/apis/catalog.cattle.io/v1"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/defaults"
-	kubenamespaces "github.com/rancher/rancher/tests/framework/extensions/kubeapi/namespaces"
-	"github.com/rancher/rancher/tests/framework/extensions/namespaces"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
+	"github.com/ranger/ranger/pkg/api/steve/catalog/types"
+	catalogv1 "github.com/ranger/ranger/pkg/apis/catalog.cattle.io/v1"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/defaults"
+	kubenamespaces "github.com/ranger/ranger/tests/framework/extensions/kubeapi/namespaces"
+	"github.com/ranger/ranger/tests/framework/extensions/namespaces"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/watch"
 )
 
 const (
-	// Namespace that rancher logging chart is installed in
-	RancherLoggingNamespace = "cattle-logging-system"
-	// Name of the rancher logging chart
-	RancherLoggingName = "rancher-logging"
-	// Name of rancher logging crd chart
-	RancherLoggingCRDName = "rancher-logging-crd"
+	// Namespace that ranger logging chart is installed in
+	RangerLoggingNamespace = "cattle-logging-system"
+	// Name of the ranger logging chart
+	RangerLoggingName = "ranger-logging"
+	// Name of ranger logging crd chart
+	RangerLoggingCRDName = "ranger-logging-crd"
 )
 
-// InstallRancherLoggingChart is a helper function that installs the rancher-logging chart.
-func InstallRancherLoggingChart(client *rancher.Client, installOptions *InstallOptions, rancherLoggingOpts *RancherLoggingOpts) error {
+// InstallRangerLoggingChart is a helper function that installs the ranger-logging chart.
+func InstallRangerLoggingChart(client *ranger.Client, installOptions *InstallOptions, rangerLoggingOpts *RangerLoggingOpts) error {
 	serverSetting, err := client.Management.Setting.ByID(serverURLSettingID)
 	if err != nil {
 		return err
@@ -38,13 +38,13 @@ func InstallRancherLoggingChart(client *rancher.Client, installOptions *InstallO
 
 	loggingChartInstallActionPayload := &payloadOpts{
 		InstallOptions:  *installOptions,
-		Name:            RancherLoggingName,
-		Namespace:       RancherLoggingNamespace,
+		Name:            RangerLoggingName,
+		Namespace:       RangerLoggingNamespace,
 		Host:            serverSetting.Value,
 		DefaultRegistry: registrySetting.Value,
 	}
 
-	chartInstallAction := newLoggingChartInstallAction(loggingChartInstallActionPayload, rancherLoggingOpts)
+	chartInstallAction := newLoggingChartInstallAction(loggingChartInstallActionPayload, rangerLoggingOpts)
 
 	catalogClient, err := client.GetClusterCatalogClient(installOptions.ClusterID)
 	if err != nil {
@@ -53,16 +53,16 @@ func InstallRancherLoggingChart(client *rancher.Client, installOptions *InstallO
 
 	// Cleanup registration
 	client.Session.RegisterCleanupFunc(func() error {
-		// UninstallAction for when uninstalling the rancher-logging chart
+		// UninstallAction for when uninstalling the ranger-logging chart
 		defaultChartUninstallAction := newChartUninstallAction()
 
-		err = catalogClient.UninstallChart(RancherLoggingName, RancherLoggingNamespace, defaultChartUninstallAction)
+		err = catalogClient.UninstallChart(RangerLoggingName, RangerLoggingNamespace, defaultChartUninstallAction)
 		if err != nil {
 			return err
 		}
 
-		watchAppInterface, err := catalogClient.Apps(RancherLoggingNamespace).Watch(context.TODO(), metav1.ListOptions{
-			FieldSelector:  "metadata.name=" + RancherLoggingName,
+		watchAppInterface, err := catalogClient.Apps(RangerLoggingNamespace).Watch(context.TODO(), metav1.ListOptions{
+			FieldSelector:  "metadata.name=" + RangerLoggingName,
 			TimeoutSeconds: &defaults.WatchTimeoutSeconds,
 		})
 		if err != nil {
@@ -71,7 +71,7 @@ func InstallRancherLoggingChart(client *rancher.Client, installOptions *InstallO
 
 		err = wait.WatchWait(watchAppInterface, func(event watch.Event) (ready bool, err error) {
 			if event.Type == watch.Error {
-				return false, fmt.Errorf("there was an error uninstalling rancher logging chart")
+				return false, fmt.Errorf("there was an error uninstalling ranger logging chart")
 			} else if event.Type == watch.Deleted {
 				return true, nil
 			}
@@ -81,13 +81,13 @@ func InstallRancherLoggingChart(client *rancher.Client, installOptions *InstallO
 			return err
 		}
 
-		err = catalogClient.UninstallChart(RancherLoggingCRDName, RancherLoggingNamespace, defaultChartUninstallAction)
+		err = catalogClient.UninstallChart(RangerLoggingCRDName, RangerLoggingNamespace, defaultChartUninstallAction)
 		if err != nil {
 			return err
 		}
 
-		watchAppInterface, err = catalogClient.Apps(RancherLoggingNamespace).Watch(context.TODO(), metav1.ListOptions{
-			FieldSelector:  "metadata.name=" + RancherLoggingCRDName,
+		watchAppInterface, err = catalogClient.Apps(RangerLoggingNamespace).Watch(context.TODO(), metav1.ListOptions{
+			FieldSelector:  "metadata.name=" + RangerLoggingCRDName,
 			TimeoutSeconds: &defaults.WatchTimeoutSeconds,
 		})
 		if err != nil {
@@ -97,7 +97,7 @@ func InstallRancherLoggingChart(client *rancher.Client, installOptions *InstallO
 		err = wait.WatchWait(watchAppInterface, func(event watch.Event) (ready bool, err error) {
 			chart := event.Object.(*catalogv1.App)
 			if event.Type == watch.Error {
-				return false, fmt.Errorf("there was an error uninstalling rancher logging chart")
+				return false, fmt.Errorf("there was an error uninstalling ranger logging chart")
 			} else if event.Type == watch.Deleted {
 				return true, nil
 			} else if chart == nil {
@@ -116,7 +116,7 @@ func InstallRancherLoggingChart(client *rancher.Client, installOptions *InstallO
 
 		namespaceClient := steveclient.SteveType(namespaces.NamespaceSteveType)
 
-		namespace, err := namespaceClient.ByID(RancherLoggingNamespace)
+		namespace, err := namespaceClient.ByID(RangerLoggingNamespace)
 		if err != nil {
 			return err
 		}
@@ -126,7 +126,7 @@ func InstallRancherLoggingChart(client *rancher.Client, installOptions *InstallO
 			return err
 		}
 
-		adminClient, err := rancher.NewClient(client.RancherConfig.AdminToken, client.Session)
+		adminClient, err := ranger.NewClient(client.RangerConfig.AdminToken, client.Session)
 		if err != nil {
 			return err
 		}
@@ -137,7 +137,7 @@ func InstallRancherLoggingChart(client *rancher.Client, installOptions *InstallO
 		adminNamespaceResource := adminDynamicClient.Resource(kubenamespaces.NamespaceGroupVersionResource).Namespace("")
 
 		watchNamespaceInterface, err := adminNamespaceResource.Watch(context.TODO(), metav1.ListOptions{
-			FieldSelector:  "metadata.name=" + RancherLoggingNamespace,
+			FieldSelector:  "metadata.name=" + RangerLoggingNamespace,
 			TimeoutSeconds: &defaults.WatchTimeoutSeconds,
 		})
 
@@ -159,8 +159,8 @@ func InstallRancherLoggingChart(client *rancher.Client, installOptions *InstallO
 	}
 
 	// wait for chart to be full deployed
-	watchAppInterface, err := catalogClient.Apps(RancherLoggingNamespace).Watch(context.TODO(), metav1.ListOptions{
-		FieldSelector:  "metadata.name=" + RancherLoggingName,
+	watchAppInterface, err := catalogClient.Apps(RangerLoggingNamespace).Watch(context.TODO(), metav1.ListOptions{
+		FieldSelector:  "metadata.name=" + RangerLoggingName,
 		TimeoutSeconds: &defaults.WatchTimeoutSeconds,
 	})
 	if err != nil {
@@ -183,10 +183,10 @@ func InstallRancherLoggingChart(client *rancher.Client, installOptions *InstallO
 }
 
 // newLoggingChartInstallAction is a private helper function that returns chart install action with logging and payload options.
-func newLoggingChartInstallAction(p *payloadOpts, rancherLoggingOpts *RancherLoggingOpts) *types.ChartInstallAction {
+func newLoggingChartInstallAction(p *payloadOpts, rangerLoggingOpts *RangerLoggingOpts) *types.ChartInstallAction {
 	loggingValues := map[string]interface{}{
 		"additionalLoggingSources": map[string]interface{}{
-			"enabled": rancherLoggingOpts.AdditionalLoggingSources,
+			"enabled": rangerLoggingOpts.AdditionalLoggingSources,
 		},
 	}
 

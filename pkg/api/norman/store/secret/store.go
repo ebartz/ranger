@@ -4,14 +4,14 @@ import (
 	"context"
 	"strings"
 
-	"github.com/rancher/norman/store/proxy"
-	"github.com/rancher/norman/store/transform"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/rancher/pkg/api/norman/store/cert"
-	"github.com/rancher/rancher/pkg/api/scheme"
-	client "github.com/rancher/rancher/pkg/client/generated/project/v3"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/norman/store/proxy"
+	"github.com/ranger/norman/store/transform"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/ranger/pkg/api/norman/store/cert"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	client "github.com/ranger/ranger/pkg/client/generated/project/v3"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/sirupsen/logrus"
 )
 

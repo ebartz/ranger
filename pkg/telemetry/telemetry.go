@@ -9,11 +9,11 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	localprovider "github.com/rancher/rancher/pkg/auth/providers/local"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/types/config"
-	ruser "github.com/rancher/rancher/pkg/user"
-	"github.com/rancher/wrangler/pkg/ticker"
+	localprovider "github.com/ranger/ranger/pkg/auth/providers/local"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/types/config"
+	ruser "github.com/ranger/ranger/pkg/user"
+	"github.com/ranger/wrangler/pkg/ticker"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/labels"
 )

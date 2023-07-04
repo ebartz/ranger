@@ -24,7 +24,7 @@ def home():
 def get_metadata(path):
     accept_type = request.headers.get('Accept')
     headers = {'Accept': accept_type} if accept_type else None
-    url = "http://rancher-metadata/%s" % path
+    url = "http://ranger-metadata/%s" % path
     try:
         response = requests.get(url=url, headers=headers)
     except Exception as e:

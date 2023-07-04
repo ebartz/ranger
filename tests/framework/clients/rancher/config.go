@@ -1,9 +1,9 @@
-package rancher
+package ranger
 
-// The json/yaml config key for the rancher config
-const ConfigurationFileKey = "rancher"
+// The json/yaml config key for the ranger config
+const ConfigurationFileKey = "ranger"
 
-// Config is configuration need to test against a rancher instance
+// Config is configuration need to test against a ranger instance
 type Config struct {
 	Host          string `yaml:"host"`
 	AdminToken    string `yaml:"adminToken"`

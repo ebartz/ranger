@@ -1,4 +1,4 @@
-package rancherversion
+package rangerversion
 
 import (
 	"encoding/json"
@@ -7,11 +7,11 @@ import (
 	"strconv"
 )
 
-/* Requests the rancher version from the rancher server, parses the returned
+/* Requests the ranger version from the ranger server, parses the returned
  * json and returns a Struct object, or an error.
  */
-func RequestRancherVersion(rancher_url string) (*Config, error) {
-	var http_url = "https://" + rancher_url + "/rancherversion"
+func RequestRangerVersion(ranger_url string) (*Config, error) {
+	var http_url = "https://" + ranger_url + "/rangerversion"
 	req, err := http.Get(http_url)
 	if err != nil {
 		return nil, err
@@ -26,8 +26,8 @@ func RequestRancherVersion(rancher_url string) (*Config, error) {
 		return nil, err
 	}
 	config_object := new(Config)
-	config_object.IsPrime, _ = strconv.ParseBool(jsonObject["RancherPrime"].(string))
-	config_object.RancherVersion = jsonObject["Version"].(string)
+	config_object.IsPrime, _ = strconv.ParseBool(jsonObject["RangerPrime"].(string))
+	config_object.RangerVersion = jsonObject["Version"].(string)
 	config_object.GitCommit = jsonObject["GitCommit"].(string)
 	return config_object, nil
 }

@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rancher/norman/types/convert"
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1/plan"
-	"github.com/rancher/rancher/pkg/capr"
-	"github.com/rancher/wrangler/pkg/kv"
+	"github.com/ranger/norman/types/convert"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1/plan"
+	"github.com/ranger/ranger/pkg/capr"
+	"github.com/ranger/wrangler/pkg/kv"
 )
 
 func getRestartStamp(plan *plan.NodePlan) string {

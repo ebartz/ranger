@@ -5,19 +5,19 @@ import (
 	"fmt"
 	"strings"
 
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/types/config"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/sirupsen/logrus"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 
-	"github.com/rancher/rancher/pkg/ingresswrapper"
+	"github.com/ranger/ranger/pkg/ingresswrapper"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
 const (
-	annotationGlobalDNS         = "rancher.io/globalDNS.hostname"
+	annotationGlobalDNS         = "ranger.io/globalDNS.hostname"
 	appSelectorLabel            = "io.cattle.field/appId"
 	projectSelectorLabel        = "field.cattle.io/projectId"
 	UserIngressControllerName   = "globaldns-useringress-controller"

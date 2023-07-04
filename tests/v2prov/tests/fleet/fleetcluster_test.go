@@ -4,9 +4,9 @@ import (
 	"testing"
 	"time"
 
-	fleetv1api "github.com/rancher/fleet/pkg/apis/fleet.cattle.io/v1alpha1"
-	mgmt "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/tests/v2prov/clients"
+	fleetv1api "github.com/ranger/fleet/pkg/apis/fleet.cattle.io/v1alpha1"
+	mgmt "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/tests/v2prov/clients"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

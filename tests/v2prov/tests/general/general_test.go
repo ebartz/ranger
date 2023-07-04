@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/rancher/rancher/tests/v2prov/clients"
+	"github.com/ranger/ranger/tests/v2prov/clients"
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

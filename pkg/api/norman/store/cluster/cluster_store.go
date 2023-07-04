@@ -14,39 +14,39 @@ import (
 	"github.com/blang/semver"
 	mVersion "github.com/mcuadros/go-version"
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/api/access"
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/parse/builder"
-	"github.com/rancher/norman/store/transform"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/norman/types/definition"
-	"github.com/rancher/norman/types/slice"
-	"github.com/rancher/norman/types/values"
-	ccluster "github.com/rancher/rancher/pkg/api/norman/customization/cluster"
-	"github.com/rancher/rancher/pkg/api/norman/customization/clustertemplate"
-	apimgmtv3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	managementv3 "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	"github.com/rancher/rancher/pkg/clustermanager"
-	"github.com/rancher/rancher/pkg/controllers/management/clusterprovisioner"
-	"github.com/rancher/rancher/pkg/controllers/management/clusterstatus"
-	"github.com/rancher/rancher/pkg/controllers/management/etcdbackup"
-	"github.com/rancher/rancher/pkg/controllers/management/rkeworkerupgrader"
-	"github.com/rancher/rancher/pkg/controllers/management/secretmigrator"
-	"github.com/rancher/rancher/pkg/controllers/management/secretmigrator/assemblers"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/namespace"
-	nodehelper "github.com/rancher/rancher/pkg/node"
-	"github.com/rancher/rancher/pkg/ref"
-	managementschema "github.com/rancher/rancher/pkg/schemas/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/types/config/dialer"
-	rkedefaults "github.com/rancher/rke/cluster"
-	"github.com/rancher/rke/k8s"
-	rkeservices "github.com/rancher/rke/services"
-	rketypes "github.com/rancher/rke/types"
+	"github.com/ranger/norman/api/access"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/parse/builder"
+	"github.com/ranger/norman/store/transform"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/norman/types/definition"
+	"github.com/ranger/norman/types/slice"
+	"github.com/ranger/norman/types/values"
+	ccluster "github.com/ranger/ranger/pkg/api/norman/customization/cluster"
+	"github.com/ranger/ranger/pkg/api/norman/customization/clustertemplate"
+	apimgmtv3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	managementv3 "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	"github.com/ranger/ranger/pkg/clustermanager"
+	"github.com/ranger/ranger/pkg/controllers/management/clusterprovisioner"
+	"github.com/ranger/ranger/pkg/controllers/management/clusterstatus"
+	"github.com/ranger/ranger/pkg/controllers/management/etcdbackup"
+	"github.com/ranger/ranger/pkg/controllers/management/rkeworkerupgrader"
+	"github.com/ranger/ranger/pkg/controllers/management/secretmigrator"
+	"github.com/ranger/ranger/pkg/controllers/management/secretmigrator/assemblers"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/namespace"
+	nodehelper "github.com/ranger/ranger/pkg/node"
+	"github.com/ranger/ranger/pkg/ref"
+	managementschema "github.com/ranger/ranger/pkg/schemas/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/types/config/dialer"
+	rkedefaults "github.com/ranger/rke/cluster"
+	"github.com/ranger/rke/k8s"
+	rkeservices "github.com/ranger/rke/services"
+	rketypes "github.com/ranger/rke/types"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -104,7 +104,7 @@ func (t *transformer) TransformerFunc(_ *types.APIContext, _ *types.Schema, data
 	return t.transposeGenericConfigToDynamicField(data)
 }
 
-// transposeGenericConfigToDynamicField converts a genericConfig to one usable by rancher and maps a kontainer id to a kontainer name
+// transposeGenericConfigToDynamicField converts a genericConfig to one usable by ranger and maps a kontainer id to a kontainer name
 func (t *transformer) transposeGenericConfigToDynamicField(data map[string]interface{}) (map[string]interface{}, error) {
 	if data["genericEngineConfig"] != nil {
 		drivers, err := t.KontainerDriverLister.List("", labels.Everything())
@@ -189,21 +189,21 @@ func transformSetNilSnapshotFalse(data map[string]interface{}) map[string]interf
 		found bool
 	)
 
-	etcd, found = values.GetValue(data, "appliedSpec", "rancherKubernetesEngineConfig", "services", "etcd")
+	etcd, found = values.GetValue(data, "appliedSpec", "rangerKubernetesEngineConfig", "services", "etcd")
 	if found {
 		etcd := convert.ToMapInterface(etcd)
 		val, found := values.GetValue(etcd, "snapshot")
 		if !found || val == nil {
-			values.PutValue(data, false, "appliedSpec", "rancherKubernetesEngineConfig", "services", "etcd", "snapshot")
+			values.PutValue(data, false, "appliedSpec", "rangerKubernetesEngineConfig", "services", "etcd", "snapshot")
 		}
 	}
 
-	etcd, found = values.GetValue(data, "rancherKubernetesEngineConfig", "services", "etcd")
+	etcd, found = values.GetValue(data, "rangerKubernetesEngineConfig", "services", "etcd")
 	if found {
 		etcd := convert.ToMapInterface(etcd)
 		val, found := values.GetValue(etcd, "snapshot")
 		if !found || val == nil {
-			values.PutValue(data, false, "rancherKubernetesEngineConfig", "services", "etcd", "snapshot")
+			values.PutValue(data, false, "rangerKubernetesEngineConfig", "services", "etcd", "snapshot")
 		}
 	}
 
@@ -415,7 +415,7 @@ func loadDataFromTemplate(clusterTemplateRevision *apimgmtv3.ClusterTemplateRevi
 
 	// The key in the map is used to preserve the order of registries
 	registryMap := make(map[int]map[string]interface{})
-	existingRegistries := convert.ToMapSlice(convert.ToMapInterface(existingCluster[managementv3.ClusterSpecFieldRancherKubernetesEngineConfig])[managementv3.RancherKubernetesEngineConfigFieldPrivateRegistries])
+	existingRegistries := convert.ToMapSlice(convert.ToMapInterface(existingCluster[managementv3.ClusterSpecFieldRangerKubernetesEngineConfig])[managementv3.RangerKubernetesEngineConfigFieldPrivateRegistries])
 	privateRegistryOverride := false
 	for i, registry := range existingRegistries {
 		registryMap[i] = registry
@@ -424,9 +424,9 @@ func loadDataFromTemplate(clusterTemplateRevision *apimgmtv3.ClusterTemplateRevi
 	for _, question := range clusterTemplateRevision.Spec.Questions {
 		if question.Default == "" {
 			if secretmigrator.MatchesQuestionPath(question.Variable) {
-				if strings.HasPrefix(question.Variable, "rancherKubernetesEngineConfig.privateRegistries") {
+				if strings.HasPrefix(question.Variable, "rangerKubernetesEngineConfig.privateRegistries") {
 
-					registries, ok := values.GetSlice(dataFromTemplate, "rancherKubernetesEngineConfig", "privateRegistries")
+					registries, ok := values.GetSlice(dataFromTemplate, "rangerKubernetesEngineConfig", "privateRegistries")
 					if !ok {
 						return nil, httperror.WrapAPIError(err, httperror.ServerError, processingError)
 					}
@@ -435,8 +435,8 @@ func loadDataFromTemplate(clusterTemplateRevision *apimgmtv3.ClusterTemplateRevi
 						return nil, httperror.WrapAPIError(err, httperror.ServerError, processingError)
 					}
 					question.Default = registries[index]["password"].(string)
-				} else if strings.HasPrefix(question.Variable, "rancherKubernetesEngineConfig.cloudProvider.vsphereCloudProvider.virtualCenter") {
-					vcenters, ok := values.GetValue(dataFromTemplate, "rancherKubernetesEngineConfig", "cloudProvider", "vsphereCloudProvider", "virtualCenter")
+				} else if strings.HasPrefix(question.Variable, "rangerKubernetesEngineConfig.cloudProvider.vsphereCloudProvider.virtualCenter") {
+					vcenters, ok := values.GetValue(dataFromTemplate, "rangerKubernetesEngineConfig", "cloudProvider", "vsphereCloudProvider", "virtualCenter")
 					if !ok {
 						return nil, httperror.WrapAPIError(err, httperror.ServerError, processingError)
 					}
@@ -463,9 +463,9 @@ func loadDataFromTemplate(clusterTemplateRevision *apimgmtv3.ClusterTemplateRevi
 			answer = question.Default
 			defaultedAnswers[question.Variable] = question.Default
 		}
-		if existingCluster != nil && strings.EqualFold(question.Variable, "rancherKubernetesEngineConfig.kubernetesVersion") {
+		if existingCluster != nil && strings.EqualFold(question.Variable, "rangerKubernetesEngineConfig.kubernetesVersion") {
 			if convert.ToString(answer) == convert.ToString(existingAnswers[question.Variable]) {
-				answer = values.GetValueN(existingCluster, "rancherKubernetesEngineConfig", "kubernetesVersion")
+				answer = values.GetValueN(existingCluster, "rangerKubernetesEngineConfig", "kubernetesVersion")
 			}
 		}
 		val, err := builder.ConvertSimple(question.Type, answer, builder.Create)
@@ -473,9 +473,9 @@ func loadDataFromTemplate(clusterTemplateRevision *apimgmtv3.ClusterTemplateRevi
 			return nil, httperror.WrapAPIError(err, httperror.ServerError, processingError)
 		}
 		keyParts := strings.Split(question.Variable, ".")
-		if strings.HasPrefix(question.Variable, "rancherKubernetesEngineConfig.privateRegistries") {
+		if strings.HasPrefix(question.Variable, "rangerKubernetesEngineConfig.privateRegistries") {
 			privateRegistryOverride = true
-			// for example: question.Variable = rancherKubernetesEngineConfig.privateRegistries[0].url
+			// for example: question.Variable = rangerKubernetesEngineConfig.privateRegistries[0].url
 			index, err := getIndexFromQuestion(question.Variable)
 			if err != nil {
 				return nil, httperror.WrapAPIError(err, httperror.ServerError, "Error processing clusterTemplate answers to private registry")
@@ -503,8 +503,8 @@ func loadDataFromTemplate(clusterTemplateRevision *apimgmtv3.ClusterTemplateRevi
 		if err != nil {
 			return nil, httperror.WrapAPIError(err, httperror.ServerError, "Error processing clusterTemplate answers to private registry")
 		}
-		// save privateRegistries back to rancherKubernetesEngineConfig
-		values.PutValue(dataFromTemplate, registries, managementv3.ClusterSpecFieldRancherKubernetesEngineConfig, managementv3.RancherKubernetesEngineConfigFieldPrivateRegistries)
+		// save privateRegistries back to rangerKubernetesEngineConfig
+		values.PutValue(dataFromTemplate, registries, managementv3.ClusterSpecFieldRangerKubernetesEngineConfig, managementv3.RangerKubernetesEngineConfigFieldPrivateRegistries)
 	}
 	// save defaultAnswers to answer
 	if allAnswers == nil {
@@ -598,9 +598,9 @@ func hasTemplate(data map[string]interface{}) bool {
 func (r *Store) validateTemplateInput(apiContext *types.APIContext, data map[string]interface{}, isUpdate bool) (*apimgmtv3.ClusterTemplateRevision, *apimgmtv3.ClusterTemplate, error) {
 	if !isUpdate {
 		// if data also has rkeconfig, error out on create
-		rkeConfig, ok := values.GetValue(data, "rancherKubernetesEngineConfig")
+		rkeConfig, ok := values.GetValue(data, "rangerKubernetesEngineConfig")
 		if ok && rkeConfig != nil {
-			return nil, nil, fmt.Errorf("cannot set rancherKubernetesEngineConfig and clusterTemplateRevision both")
+			return nil, nil, fmt.Errorf("cannot set rangerKubernetesEngineConfig and clusterTemplateRevision both")
 		}
 	}
 
@@ -789,10 +789,10 @@ func (r *Store) Update(apiContext *types.APIContext, schema *types.Schema, data 
 		return nil, err
 	}
 
-	// When any rancherKubernetesEngineConfig.cloudProvider.vsphereCloudProvider.virtualCenter has been removed, updating cluster using k8s dynamic client to properly
-	// replace cluster spec. This is required due to r.Store.Update is merging this data instead of replacing it, https://github.com/rancher/rancher/issues/27306
-	if newVCenter, ok := values.GetValue(data, "rancherKubernetesEngineConfig", "cloudProvider", "vsphereCloudProvider", "virtualCenter"); ok && newVCenter != nil {
-		if oldVCenter, ok := values.GetValue(existingCluster, "rancherKubernetesEngineConfig", "cloudProvider", "vsphereCloudProvider", "virtualCenter"); ok && oldVCenter != nil {
+	// When any rangerKubernetesEngineConfig.cloudProvider.vsphereCloudProvider.virtualCenter has been removed, updating cluster using k8s dynamic client to properly
+	// replace cluster spec. This is required due to r.Store.Update is merging this data instead of replacing it, https://github.com/ranger/ranger/issues/27306
+	if newVCenter, ok := values.GetValue(data, "rangerKubernetesEngineConfig", "cloudProvider", "vsphereCloudProvider", "virtualCenter"); ok && newVCenter != nil {
+		if oldVCenter, ok := values.GetValue(existingCluster, "rangerKubernetesEngineConfig", "cloudProvider", "vsphereCloudProvider", "virtualCenter"); ok && oldVCenter != nil {
 			if oldVCenterMap, oldOk := oldVCenter.(map[string]interface{}); oldOk && oldVCenterMap != nil {
 				if newVCenterMap, newOk := newVCenter.(map[string]interface{}); newOk && newVCenterMap != nil {
 					for k := range oldVCenterMap {
@@ -975,7 +975,7 @@ func (r *Store) getDynamicField(data map[string]interface{}) (string, error) {
 		}
 
 		if data[driverName] != nil {
-			if !(driver.Status.DisplayName == "rancherKubernetesEngine" || driver.Status.DisplayName == "import") {
+			if !(driver.Status.DisplayName == "rangerKubernetesEngine" || driver.Status.DisplayName == "import") {
 				return driverName, nil
 			}
 		}
@@ -1154,7 +1154,7 @@ func (r *Store) migrateSecrets(ctx context.Context, data, existingCluster map[st
 		}
 	}
 
-	data["rancherKubernetesEngineConfig"], err = convert.EncodeToMap(rkeConfig)
+	data["rangerKubernetesEngineConfig"], err = convert.EncodeToMap(rkeConfig)
 	if err != nil {
 		return secrets{}, err
 	}
@@ -1179,21 +1179,21 @@ func canUseClusterName(apiContext *types.APIContext, requestedName string) error
 }
 
 func setKubernetesVersion(data map[string]interface{}, create bool) error {
-	rkeConfig, ok := values.GetValue(data, "rancherKubernetesEngineConfig")
+	rkeConfig, ok := values.GetValue(data, "rangerKubernetesEngineConfig")
 	if ok && rkeConfig != nil {
-		k8sVersion := values.GetValueN(data, "rancherKubernetesEngineConfig", "kubernetesVersion")
+		k8sVersion := values.GetValueN(data, "rangerKubernetesEngineConfig", "kubernetesVersion")
 		if k8sVersion == nil || k8sVersion == "" {
 			// Only set when its a new cluster
 			if create {
 				// set k8s version to system default on the spec
 				defaultVersion := settings.KubernetesVersion.Get()
-				values.PutValue(data, defaultVersion, "rancherKubernetesEngineConfig", "kubernetesVersion")
+				values.PutValue(data, defaultVersion, "rangerKubernetesEngineConfig", "kubernetesVersion")
 			}
 		} else {
-			// if k8s version is already of rancher version form, noop
+			// if k8s version is already of ranger version form, noop
 			// if k8s version is of form 1.14.x, figure out the latest
 			k8sVersionRequested := convert.ToString(k8sVersion)
-			if strings.Contains(k8sVersionRequested, "-rancher") {
+			if strings.Contains(k8sVersionRequested, "-ranger") {
 				deprecated, err := isDeprecated(k8sVersionRequested)
 				if err != nil {
 					return err
@@ -1210,7 +1210,7 @@ func setKubernetesVersion(data map[string]interface{}, create bool) error {
 			if translatedVersion == "" {
 				return httperror.NewAPIError(httperror.ServerError, fmt.Sprintf("Requested kubernetesVersion %v is not supported currently", k8sVersionRequested))
 			}
-			values.PutValue(data, translatedVersion, "rancherKubernetesEngineConfig", "kubernetesVersion")
+			values.PutValue(data, translatedVersion, "rangerKubernetesEngineConfig", "kubernetesVersion")
 		}
 	}
 	return nil
@@ -1240,7 +1240,7 @@ func getSupportedK8sVersion(k8sVersionRequest string) (string, error) {
 	}
 
 	for _, v := range supportedVersions {
-		semv, err := semver.ParseTolerant(strings.Split(v, "-rancher")[0])
+		semv, err := semver.ParseTolerant(strings.Split(v, "-ranger")[0])
 		if err != nil {
 			return "", httperror.NewAPIError(httperror.ServerError, fmt.Sprintf("Semver translation failed for the current K8bernetes Version %v, err: %v", v, err))
 		}
@@ -1271,13 +1271,13 @@ func validateNetworkFlag(data map[string]interface{}, create bool) error {
 }
 
 func setNodeUpgradeStrategy(newData, oldData map[string]interface{}) error {
-	rkeConfig := values.GetValueN(newData, "rancherKubernetesEngineConfig")
+	rkeConfig := values.GetValueN(newData, "rangerKubernetesEngineConfig")
 	if rkeConfig == nil {
 		return nil
 	}
 	rkeConfigMap := convert.ToMapInterface(rkeConfig)
 	upgradeStrategy := rkeConfigMap["upgradeStrategy"]
-	oldUpgradeStrategy := values.GetValueN(oldData, "rancherKubernetesEngineConfig", "upgradeStrategy")
+	oldUpgradeStrategy := values.GetValueN(oldData, "rangerKubernetesEngineConfig", "upgradeStrategy")
 	if upgradeStrategy == nil {
 		if oldUpgradeStrategy != nil {
 			upgradeStrategy = oldUpgradeStrategy
@@ -1288,7 +1288,7 @@ func setNodeUpgradeStrategy(newData, oldData map[string]interface{}) error {
 				Drain:                      func() *bool { b := false; return &b }(),
 			}
 		}
-		values.PutValue(newData, upgradeStrategy, "rancherKubernetesEngineConfig", "upgradeStrategy")
+		values.PutValue(newData, upgradeStrategy, "rangerKubernetesEngineConfig", "upgradeStrategy")
 		return nil
 	}
 	upgradeStrategyMap := convert.ToMapInterface(upgradeStrategy)
@@ -1297,14 +1297,14 @@ func setNodeUpgradeStrategy(newData, oldData map[string]interface{}) error {
 			return fmt.Errorf("maxUnavailableControlplane is invalid: %v", err)
 		}
 	} else {
-		values.PutValue(newData, rkedefaults.DefaultMaxUnavailableControlplane, "rancherKubernetesEngineConfig", "upgradeStrategy", "maxUnavailableControlplane")
+		values.PutValue(newData, rkedefaults.DefaultMaxUnavailableControlplane, "rangerKubernetesEngineConfig", "upgradeStrategy", "maxUnavailableControlplane")
 	}
 	if worker, ok := upgradeStrategyMap["maxUnavailableWorker"]; ok && worker != "" {
 		if err := validateUnavailable(convert.ToString(worker)); err != nil {
 			return fmt.Errorf("maxUnavailableWorker is invalid: %v", err)
 		}
 	} else {
-		values.PutValue(newData, rkedefaults.DefaultMaxUnavailableWorker, "rancherKubernetesEngineConfig", "upgradeStrategy", "maxUnavailableWorker")
+		values.PutValue(newData, rkedefaults.DefaultMaxUnavailableWorker, "rangerKubernetesEngineConfig", "upgradeStrategy", "maxUnavailableWorker")
 	}
 
 	nodeDrainInput := upgradeStrategyMap["nodeDrainInput"]
@@ -1320,7 +1320,7 @@ func setNodeUpgradeStrategy(newData, oldData map[string]interface{}) error {
 				Timeout:          120,
 			}
 		}
-		values.PutValue(newData, nodeDrainInput, "rancherKubernetesEngineConfig", "upgradeStrategy", "nodeDrainInput")
+		values.PutValue(newData, nodeDrainInput, "rangerKubernetesEngineConfig", "upgradeStrategy", "nodeDrainInput")
 	}
 	return nil
 }
@@ -1342,14 +1342,14 @@ func validateUnavailable(input string) error {
 }
 
 func enableLocalBackup(data map[string]interface{}) {
-	rkeConfig, ok := values.GetValue(data, "rancherKubernetesEngineConfig")
+	rkeConfig, ok := values.GetValue(data, "rangerKubernetesEngineConfig")
 
 	if ok && rkeConfig != nil {
-		legacyConfig := values.GetValueN(data, "rancherKubernetesEngineConfig", "services", "etcd", "snapshot")
-		if legacyConfig != nil && legacyConfig.(bool) { //  don't enable rancher backup if legacy is enabled.
+		legacyConfig := values.GetValueN(data, "rangerKubernetesEngineConfig", "services", "etcd", "snapshot")
+		if legacyConfig != nil && legacyConfig.(bool) { //  don't enable ranger backup if legacy is enabled.
 			return
 		}
-		backupConfig := values.GetValueN(data, "rancherKubernetesEngineConfig", "services", "etcd", "backupConfig")
+		backupConfig := values.GetValueN(data, "rangerKubernetesEngineConfig", "services", "etcd", "backupConfig")
 
 		if backupConfig == nil {
 			enabled := true
@@ -1358,51 +1358,51 @@ func enableLocalBackup(data map[string]interface{}) {
 				IntervalHours: DefaultBackupIntervalHours,
 				Retention:     DefaultBackupRetention,
 			}
-			// enable rancher etcd backup
-			values.PutValue(data, backupConfig, "rancherKubernetesEngineConfig", "services", "etcd", "backupConfig")
+			// enable ranger etcd backup
+			values.PutValue(data, backupConfig, "rangerKubernetesEngineConfig", "services", "etcd", "backupConfig")
 		}
 	}
 }
 
 func setInstanceMetadataHostname(data map[string]interface{}) {
-	rkeConfig, ok := values.GetValue(data, "rancherKubernetesEngineConfig")
+	rkeConfig, ok := values.GetValue(data, "rangerKubernetesEngineConfig")
 	if ok && rkeConfig != nil {
-		cloudProviderName := convert.ToString(values.GetValueN(data, "rancherKubernetesEngineConfig", "cloudProvider", "name"))
+		cloudProviderName := convert.ToString(values.GetValueN(data, "rangerKubernetesEngineConfig", "cloudProvider", "name"))
 		if cloudProviderName == k8s.AWSCloudProvider {
-			_, ok := values.GetValue(data, "rancherKubernetesEngineConfig", "cloudProvider", "useInstanceMetadataHostname")
+			_, ok := values.GetValue(data, "rangerKubernetesEngineConfig", "cloudProvider", "useInstanceMetadataHostname")
 			if !ok {
 				// set default false for aws cloud provider
-				values.PutValue(data, false, "rancherKubernetesEngineConfig", "cloudProvider", "useInstanceMetadataHostname")
+				values.PutValue(data, false, "rangerKubernetesEngineConfig", "cloudProvider", "useInstanceMetadataHostname")
 			}
 		}
 	}
 }
 
 func enableCRIDockerd(data map[string]interface{}) {
-	rkeConfig, ok := values.GetValue(data, "rancherKubernetesEngineConfig")
+	rkeConfig, ok := values.GetValue(data, "rangerKubernetesEngineConfig")
 	if ok && rkeConfig != nil {
-		k8sVersion := convert.ToString(values.GetValueN(data, "rancherKubernetesEngineConfig", "kubernetesVersion"))
-		if mVersion.Compare(k8sVersion, "v1.24.0-rancher1-1", ">=") {
+		k8sVersion := convert.ToString(values.GetValueN(data, "rangerKubernetesEngineConfig", "kubernetesVersion"))
+		if mVersion.Compare(k8sVersion, "v1.24.0-ranger1-1", ">=") {
 			annotation, _ := values.GetValue(data, managementv3.ClusterFieldAnnotations)
 			m := toMap(annotation)
 			var enableCRIDockerd124 bool
 			if enable, ok := m[clusterCRIDockerdAnn]; ok && convert.ToString(enable) == "false" {
-				values.PutValue(data, enableCRIDockerd124, "rancherKubernetesEngineConfig", "enableCriDockerd")
+				values.PutValue(data, enableCRIDockerd124, "rangerKubernetesEngineConfig", "enableCriDockerd")
 				return
 			}
 			enableCRIDockerd124 = true
-			values.PutValue(data, enableCRIDockerd124, "rancherKubernetesEngineConfig", "enableCriDockerd")
+			values.PutValue(data, enableCRIDockerd124, "rangerKubernetesEngineConfig", "enableCriDockerd")
 		}
 	}
 }
 
 func validateUpdatedS3Credentials(oldData, newData map[string]interface{}, dialer dialer.Dialer) error {
-	newConfig := convert.ToMapInterface(values.GetValueN(newData, "rancherKubernetesEngineConfig", "services", "etcd", "backupConfig", "s3BackupConfig"))
+	newConfig := convert.ToMapInterface(values.GetValueN(newData, "rangerKubernetesEngineConfig", "services", "etcd", "backupConfig", "s3BackupConfig"))
 	if newConfig == nil {
 		return nil
 	}
 
-	oldConfig := convert.ToMapInterface(values.GetValueN(oldData, "rancherKubernetesEngineConfig", "services", "etcd", "backupConfig", "s3BackupConfig"))
+	oldConfig := convert.ToMapInterface(values.GetValueN(oldData, "rangerKubernetesEngineConfig", "services", "etcd", "backupConfig", "s3BackupConfig"))
 	if oldConfig == nil {
 		return validateS3Credentials(newData, dialer)
 	}
@@ -1415,7 +1415,7 @@ func validateUpdatedS3Credentials(oldData, newData map[string]interface{}, diale
 }
 
 func validateS3Credentials(data map[string]interface{}, dialer dialer.Dialer) error {
-	s3BackupConfig := values.GetValueN(data, "rancherKubernetesEngineConfig", "services", "etcd", "backupConfig", "s3BackupConfig")
+	s3BackupConfig := values.GetValueN(data, "rangerKubernetesEngineConfig", "services", "etcd", "backupConfig", "s3BackupConfig")
 	if s3BackupConfig == nil {
 		return nil
 	}
@@ -1450,7 +1450,7 @@ func validateS3Credentials(data map[string]interface{}, dialer dialer.Dialer) er
 }
 
 func cleanPrivateRegistry(data map[string]interface{}) {
-	registries, ok := values.GetSlice(data, "rancherKubernetesEngineConfig", "privateRegistries")
+	registries, ok := values.GetSlice(data, "rangerKubernetesEngineConfig", "privateRegistries")
 	if !ok || registries == nil {
 		return
 	}
@@ -1466,7 +1466,7 @@ func cleanPrivateRegistry(data map[string]interface{}) {
 		}
 		updatedRegistries = append(updatedRegistries, registry)
 	}
-	values.PutValue(data, updatedRegistries, "rancherKubernetesEngineConfig", "privateRegistries")
+	values.PutValue(data, updatedRegistries, "rangerKubernetesEngineConfig", "privateRegistries")
 }
 
 func (r *Store) validateUnavailableNodes(data, existingData map[string]interface{}, id string) error {
@@ -1498,8 +1498,8 @@ func (r *Store) validateUnavailableNodes(data, existingData map[string]interface
 	return canUpgrade(nodes, spec.UpgradeStrategy)
 }
 
-func getRkeConfig(data map[string]interface{}) (*rketypes.RancherKubernetesEngineConfig, error) {
-	rkeConfig := values.GetValueN(data, "rancherKubernetesEngineConfig")
+func getRkeConfig(data map[string]interface{}) (*rketypes.RangerKubernetesEngineConfig, error) {
+	rkeConfig := values.GetValueN(data, "rangerKubernetesEngineConfig")
 	if rkeConfig == nil {
 		return nil, nil
 	}
@@ -1507,7 +1507,7 @@ func getRkeConfig(data map[string]interface{}) (*rketypes.RancherKubernetesEngin
 	if err != nil {
 		return nil, errors.Wrapf(err, "error marshaling rkeConfig")
 	}
-	var spec *rketypes.RancherKubernetesEngineConfig
+	var spec *rketypes.RangerKubernetesEngineConfig
 	if err = json.Unmarshal(config, &spec); err != nil {
 		return nil, errors.Wrapf(err, "error reading rkeConfig")
 	}
@@ -1560,8 +1560,8 @@ func canUpgrade(nodes []*apimgmtv3.Node, upgradeStrategy *rketypes.NodeUpgradeSt
 }
 
 func validateKeyRotation(data map[string]interface{}) error {
-	secretsEncryptionEnabled, _ := values.GetValue(data, "rancherKubernetesEngineConfig", "services", "kubeApi", "secretsEncryptionConfig", "enabled")
-	rotateEncryptionKeyEnabled, _ := values.GetValue(data, "rancherKubernetesEngineConfig", "rotateEncryptionKey")
+	secretsEncryptionEnabled, _ := values.GetValue(data, "rangerKubernetesEngineConfig", "services", "kubeApi", "secretsEncryptionConfig", "enabled")
+	rotateEncryptionKeyEnabled, _ := values.GetValue(data, "rangerKubernetesEngineConfig", "rotateEncryptionKey")
 	if rotateEncryptionKeyEnabled != nil && rotateEncryptionKeyEnabled == true {
 		if secretsEncryptionEnabled != nil && secretsEncryptionEnabled == false {
 			return fmt.Errorf("unable to rotate encryption key when encryption configuration is disabled")
@@ -1595,7 +1595,7 @@ func cleanQuestions(data map[string]interface{}) map[string]interface{} {
 			}
 			values.RemoveValue(data, "answers", "values", key)
 		}
-		vcenters, ok := values.GetValue(data, "rancherKubernetesEngineConfig", "cloudProvider", "vsphereCloudProvider", "virtualCenter")
+		vcenters, ok := values.GetValue(data, "rangerKubernetesEngineConfig", "cloudProvider", "vsphereCloudProvider", "virtualCenter")
 		if ok {
 			for k := range vcenters.(map[string]interface{}) {
 				key := fmt.Sprintf(secretmigrator.VcenterAnswersPath, k)

@@ -1,7 +1,7 @@
 package v3
 
 import (
-	"github.com/rancher/norman/condition"
+	"github.com/ranger/norman/condition"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -22,7 +22,7 @@ type ComposeConfig struct {
 }
 
 type ComposeSpec struct {
-	RancherCompose string `json:"rancherCompose,omitempty"`
+	RangerCompose string `json:"rangerCompose,omitempty"`
 }
 
 type ComposeStatus struct {

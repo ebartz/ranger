@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/httperror"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/norman/httperror"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 	"github.com/sirupsen/logrus"
 )
 

@@ -3,11 +3,11 @@ package token
 import (
 	"testing"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	fv3 "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	"github.com/rancher/rancher/tests/framework/extensions/kubeapi/tokens"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	fv3 "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/extensions/kubeapi/tokens"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -20,7 +20,7 @@ const (
 
 type TokenTestSuite struct {
 	suite.Suite
-	client  *rancher.Client
+	client  *ranger.Client
 	session *session.Session
 	cluster *management.Cluster
 }
@@ -33,7 +33,7 @@ func (t *TokenTestSuite) SetupSuite() {
 	testSession := session.NewSession()
 	t.session = testSession
 
-	client, err := rancher.NewClient("", t.session)
+	client, err := ranger.NewClient("", t.session)
 	require.NoError(t.T(), err)
 
 	t.client = client
@@ -46,7 +46,7 @@ func (t *TokenTestSuite) TestPatchToken() {
 
 	assert.Equal(t.T(), initialTokenDesc, createdToken.Description)
 
-	patchedToken, unstructuredRes, err := tokens.PatchToken(t.client, t.client.RancherConfig.ClusterName, createdToken.Name, "replace", "/description", updatedTokenDesc)
+	patchedToken, unstructuredRes, err := tokens.PatchToken(t.client, t.client.RangerConfig.ClusterName, createdToken.Name, "replace", "/description", updatedTokenDesc)
 	require.NoError(t.T(), err)
 
 	assert.Equal(t.T(), updatedTokenDesc, patchedToken.Description)

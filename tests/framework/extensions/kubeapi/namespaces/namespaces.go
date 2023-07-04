@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -29,7 +29,7 @@ func ContainerDefaultResourceLimit(limitsCPU, limitsMemory, requestsCPU, request
 }
 
 // GetNamespaceByName is a helper function that returns the namespace by name in a specific cluster, uses ListNamespaces to get the namespace.
-func GetNamespaceByName(client *rancher.Client, clusterID, namespaceName string) (*corev1.Namespace, error) {
+func GetNamespaceByName(client *ranger.Client, clusterID, namespaceName string) (*corev1.Namespace, error) {
 	namespace := new(corev1.Namespace)
 
 	dynamicClient, err := client.GetDownStreamClusterClient(clusterID)

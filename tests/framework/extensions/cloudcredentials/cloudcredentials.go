@@ -1,7 +1,7 @@
 package cloudcredentials
 
 import (
-	"github.com/rancher/norman/types"
+	"github.com/ranger/norman/types"
 )
 
 // CloudCredential is the main struct needed to create a cloud credential depending on the outside cloud service provider

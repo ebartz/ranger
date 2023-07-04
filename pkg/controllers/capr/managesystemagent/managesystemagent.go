@@ -10,23 +10,23 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/rancher/fleet/pkg/apis/fleet.cattle.io/v1alpha1"
-	rancherv1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/capr"
-	fleetconst "github.com/rancher/rancher/pkg/fleet"
-	fleetcontrollers "github.com/rancher/rancher/pkg/generated/controllers/fleet.cattle.io/v1alpha1"
-	v3 "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3"
-	rocontrollers "github.com/rancher/rancher/pkg/generated/controllers/provisioning.cattle.io/v1"
-	v1 "github.com/rancher/rancher/pkg/generated/controllers/rke.cattle.io/v1"
-	namespaces "github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/provisioningv2/image"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/systemtemplate"
-	"github.com/rancher/rancher/pkg/wrangler"
-	upgradev1 "github.com/rancher/system-upgrade-controller/pkg/apis/upgrade.cattle.io/v1"
-	"github.com/rancher/wrangler/pkg/generic"
-	"github.com/rancher/wrangler/pkg/gvk"
-	"github.com/rancher/wrangler/pkg/name"
+	"github.com/ranger/fleet/pkg/apis/fleet.cattle.io/v1alpha1"
+	rangerv1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/capr"
+	fleetconst "github.com/ranger/ranger/pkg/fleet"
+	fleetcontrollers "github.com/ranger/ranger/pkg/generated/controllers/fleet.cattle.io/v1alpha1"
+	v3 "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3"
+	rocontrollers "github.com/ranger/ranger/pkg/generated/controllers/provisioning.cattle.io/v1"
+	v1 "github.com/ranger/ranger/pkg/generated/controllers/rke.cattle.io/v1"
+	namespaces "github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/provisioningv2/image"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/systemtemplate"
+	"github.com/ranger/ranger/pkg/wrangler"
+	upgradev1 "github.com/ranger/system-upgrade-controller/pkg/apis/upgrade.cattle.io/v1"
+	"github.com/ranger/wrangler/pkg/generic"
+	"github.com/ranger/wrangler/pkg/gvk"
+	"github.com/ranger/wrangler/pkg/name"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 	"k8s.io/apimachinery/pkg/api/meta"
@@ -76,7 +76,7 @@ func Register(ctx context.Context, clients *wrangler.Context) {
 		"", "manage-system-upgrade-controller", h.OnChangeInstallSUC, nil)
 }
 
-func (h *handler) OnChange(cluster *rancherv1.Cluster, status rancherv1.ClusterStatus) ([]runtime.Object, rancherv1.ClusterStatus, error) {
+func (h *handler) OnChange(cluster *rangerv1.Cluster, status rangerv1.ClusterStatus) ([]runtime.Object, rangerv1.ClusterStatus, error) {
 	if cluster.Spec.RKEConfig == nil || settings.SystemAgentUpgradeImage.Get() == "" {
 		return nil, status, nil
 	}
@@ -151,7 +151,7 @@ func (h *handler) OnChange(cluster *rancherv1.Cluster, status rancherv1.ClusterS
 	return result, status, nil
 }
 
-func installer(cluster *rancherv1.Cluster, secretName string) []runtime.Object {
+func installer(cluster *rangerv1.Cluster, secretName string) []runtime.Object {
 	upgradeImage := strings.SplitN(settings.SystemAgentUpgradeImage.Get(), ":", 2)
 	version := "latest"
 	if len(upgradeImage) == 2 {

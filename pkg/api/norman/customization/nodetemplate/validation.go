@@ -3,9 +3,9 @@ package nodetemplate
 import (
 	"strings"
 
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
 )
 
 func Validator(request *types.APIContext, schema *types.Schema, data map[string]interface{}) error {

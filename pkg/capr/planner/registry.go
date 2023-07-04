@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"sort"
 
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1/plan"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1/plan"
 	corev1 "k8s.io/api/core/v1"
 )
 
@@ -94,7 +94,7 @@ func (p *Planner) renderRegistries(runtime, namespace string, registry *rkev1.Re
 func toFile(runtime, path string, content []byte) plan.File {
 	return plan.File{
 		Content: base64.StdEncoding.EncodeToString(content),
-		Path:    fmt.Sprintf("/var/lib/rancher/%s/etc/%s", runtime, path),
+		Path:    fmt.Sprintf("/var/lib/ranger/%s/etc/%s", runtime, path),
 	}
 }
 

@@ -13,10 +13,10 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/rancher/pkg/controllers/managementuserlegacy/helm/common"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/project.cattle.io/v3"
-	helmlib "github.com/rancher/rancher/pkg/helm"
-	"github.com/rancher/rancher/pkg/jailer"
+	"github.com/ranger/ranger/pkg/controllers/managementuserlegacy/helm/common"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/project.cattle.io/v3"
+	helmlib "github.com/ranger/ranger/pkg/helm"
+	"github.com/ranger/ranger/pkg/jailer"
 	"github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

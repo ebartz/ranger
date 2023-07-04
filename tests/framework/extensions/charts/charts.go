@@ -6,13 +6,13 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	catalogv1 "github.com/rancher/rancher/pkg/apis/catalog.cattle.io/v1"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/defaults"
-	"github.com/rancher/rancher/tests/framework/extensions/kubeapi/workloads/daemonsets"
-	"github.com/rancher/rancher/tests/framework/extensions/kubeapi/workloads/deployments"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	catalogv1 "github.com/ranger/ranger/pkg/apis/catalog.cattle.io/v1"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/defaults"
+	"github.com/ranger/ranger/tests/framework/extensions/kubeapi/workloads/daemonsets"
+	"github.com/ranger/ranger/tests/framework/extensions/kubeapi/workloads/deployments"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
 	appv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -44,8 +44,8 @@ type payloadOpts struct {
 	DefaultRegistry string
 }
 
-// RancherIstioOpts is a struct of the required options to install Rancher Istio with desired chart values.
-type RancherIstioOpts struct {
+// RangerIstioOpts is a struct of the required options to install Ranger Istio with desired chart values.
+type RangerIstioOpts struct {
 	IngressGateways bool
 	EgressGateways  bool
 	Pilot           bool
@@ -55,8 +55,8 @@ type RancherIstioOpts struct {
 	CNI             bool
 }
 
-// RancherMonitoringOpts is a struct of the required options to install Rancher Monitoring with desired chart values.
-type RancherMonitoringOpts struct {
+// RangerMonitoringOpts is a struct of the required options to install Ranger Monitoring with desired chart values.
+type RangerMonitoringOpts struct {
 	IngressNginx         bool
 	RKEControllerManager bool
 	RKEEtcd              bool
@@ -64,8 +64,8 @@ type RancherMonitoringOpts struct {
 	RKEScheduler         bool
 }
 
-// RancherLoggingOpts is a struct of the required options to install Rancher Logging with desired chart values.
-type RancherLoggingOpts struct {
+// RangerLoggingOpts is a struct of the required options to install Ranger Logging with desired chart values.
+type RangerLoggingOpts struct {
 	AdditionalLoggingSources bool
 }
 
@@ -85,8 +85,8 @@ type ChartStatus struct {
 
 // GetChartStatus is a helper function that takes client, clusterID, chartNamespace and chartName as args,
 // uses admin catalog client to check if chart is already installed, if the chart is already installed returns chart information.
-func GetChartStatus(client *rancher.Client, clusterID, chartNamespace, chartName string) (*ChartStatus, error) {
-	adminClient, err := rancher.NewClient(client.RancherConfig.AdminToken, client.Session)
+func GetChartStatus(client *ranger.Client, clusterID, chartNamespace, chartName string) (*ChartStatus, error) {
+	adminClient, err := ranger.NewClient(client.RangerConfig.AdminToken, client.Session)
 	if err != nil {
 		return nil, err
 	}
@@ -117,8 +117,8 @@ func GetChartStatus(client *rancher.Client, clusterID, chartNamespace, chartName
 
 // WatchAndWaitDeployments is a helper function that watches the deployments
 // sequentially in a specific namespace and waits until number of expected replicas is equal to number of available replicas.
-func WatchAndWaitDeployments(client *rancher.Client, clusterID, namespace string, listOptions metav1.ListOptions) error {
-	adminClient, err := rancher.NewClient(client.RancherConfig.AdminToken, client.Session)
+func WatchAndWaitDeployments(client *ranger.Client, clusterID, namespace string, listOptions metav1.ListOptions) error {
+	adminClient, err := ranger.NewClient(client.RangerConfig.AdminToken, client.Session)
 	if err != nil {
 		return err
 	}
@@ -175,8 +175,8 @@ func WatchAndWaitDeployments(client *rancher.Client, clusterID, namespace string
 
 // WatchAndWaitDeploymentForAnnotation is a helper function that watches the deployment
 // in a specific namespace and waits until expected annotation key and its value.
-func WatchAndWaitDeploymentForAnnotation(client *rancher.Client, clusterID, namespace, deploymentName, annotationKey, annotationValue string) error {
-	adminClient, err := rancher.NewClient(client.RancherConfig.AdminToken, client.Session)
+func WatchAndWaitDeploymentForAnnotation(client *ranger.Client, clusterID, namespace, deploymentName, annotationKey, annotationValue string) error {
+	adminClient, err := ranger.NewClient(client.RangerConfig.AdminToken, client.Session)
 	if err != nil {
 		return err
 	}
@@ -214,8 +214,8 @@ func WatchAndWaitDeploymentForAnnotation(client *rancher.Client, clusterID, name
 
 // WatchAndWaitDaemonSets is a helper function that watches the DaemonSets
 // sequentially in a specific namespace and waits until number of available DeamonSets is equal to number of desired scheduled Daemonsets.
-func WatchAndWaitDaemonSets(client *rancher.Client, clusterID, namespace string, listOptions metav1.ListOptions) error {
-	adminClient, err := rancher.NewClient(client.RancherConfig.AdminToken, client.Session)
+func WatchAndWaitDaemonSets(client *ranger.Client, clusterID, namespace string, listOptions metav1.ListOptions) error {
+	adminClient, err := ranger.NewClient(client.RangerConfig.AdminToken, client.Session)
 	if err != nil {
 		return err
 	}
@@ -272,8 +272,8 @@ func WatchAndWaitDaemonSets(client *rancher.Client, clusterID, namespace string,
 
 // WatchAndWaitStatefulSets is a helper function that watches the StatefulSets
 // sequentially in a specific namespace and waits until number of expected replicas is equal to number of ready replicas.
-func WatchAndWaitStatefulSets(client *rancher.Client, clusterID, namespace string, listOptions metav1.ListOptions) error {
-	adminClient, err := rancher.NewClient(client.RancherConfig.AdminToken, client.Session)
+func WatchAndWaitStatefulSets(client *ranger.Client, clusterID, namespace string, listOptions metav1.ListOptions) error {
+	adminClient, err := ranger.NewClient(client.RangerConfig.AdminToken, client.Session)
 	if err != nil {
 		return err
 	}
@@ -330,7 +330,7 @@ func WatchAndWaitStatefulSets(client *rancher.Client, clusterID, namespace strin
 
 // GetChartCaseEndpoint is a helper function that takes host path and TLS option as args,
 // applies TLS option and authorization to management client' method that returns a boolean for healthy response and the request body.
-func GetChartCaseEndpoint(client *rancher.Client, host, path string, isWithTLS bool) (*GetChartCaseEndpointResult, error) {
+func GetChartCaseEndpoint(client *ranger.Client, host, path string, isWithTLS bool) (*GetChartCaseEndpointResult, error) {
 	protocol := "http"
 
 	if isWithTLS {
@@ -344,7 +344,7 @@ func GetChartCaseEndpoint(client *rancher.Client, host, path string, isWithTLS b
 		return nil, err
 	}
 
-	req.Header.Add("Authorization", "Bearer "+client.RancherConfig.AdminToken)
+	req.Header.Add("Authorization", "Bearer "+client.RangerConfig.AdminToken)
 
 	resp, err := client.Management.APIBaseClient.Ops.Client.Do(req)
 	if err != nil {

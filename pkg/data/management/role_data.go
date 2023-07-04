@@ -8,12 +8,12 @@ import (
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/features"
-	"github.com/rancher/rancher/pkg/rbac"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/wrangler"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/features"
+	"github.com/ranger/ranger/pkg/rbac"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/wrangler"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 	corev1 "k8s.io/api/core/v1"
@@ -82,8 +82,8 @@ func addRoles(wrangler *wrangler.Context, management *config.ManagementContext) 
 		addRule().apiGroups("management.cattle.io").resources("clustertemplates").verbs("create")
 	rb.addRole("Create RKE Template Revisions", "clustertemplaterevisions-create").
 		addRule().apiGroups("management.cattle.io").resources("clustertemplaterevisions").verbs("create")
-	rb.addRole("View Rancher Metrics", "view-rancher-metrics").
-		addRule().apiGroups("management.cattle.io").resources("ranchermetrics").verbs("get")
+	rb.addRole("View Ranger Metrics", "view-ranger-metrics").
+		addRule().apiGroups("management.cattle.io").resources("rangermetrics").verbs("get")
 
 	rb.addRole("Admin", "admin").
 		addRule().apiGroups("*").resources("*").verbs("*").
@@ -106,7 +106,7 @@ func addRoles(wrangler *wrangler.Context, management *config.ManagementContext) 
 		addRule().apiGroups("management.cattle.io").resources("roletemplates").verbs("*").
 		addRule().apiGroups("management.cattle.io").resources("catalogs", "templates", "templateversions").verbs("*")
 
-	// restricted-admin can edit settings if rancher is bootstrapped with restricted-admin role
+	// restricted-admin can edit settings if ranger is bootstrapped with restricted-admin role
 	if settings.RestrictedDefaultAdmin.Get() == "true" {
 		restrictedAdminRole.
 			addRule().apiGroups("management.cattle.io").resources("settings").verbs("*")
@@ -124,7 +124,7 @@ func addRoles(wrangler *wrangler.Context, management *config.ManagementContext) 
 		addRule().apiGroups("management.cattle.io").resources("features").verbs("get", "list", "watch").
 		addRule().apiGroups("project.cattle.io").resources("sourcecodecredentials").verbs("*").
 		addRule().apiGroups("project.cattle.io").resources("sourcecoderepositories").verbs("*").
-		addRule().apiGroups("management.cattle.io").resources("rancherusernotifications").verbs("get", "list", "watch")
+		addRule().apiGroups("management.cattle.io").resources("rangerusernotifications").verbs("get", "list", "watch")
 
 	// TODO user should be dynamically authorized to only see herself
 	// TODO enable when groups are "in". they need to be self-service
@@ -479,12 +479,12 @@ func addUserRules(role *roleBuilder) *roleBuilder {
 		addRule().apiGroups("project.cattle.io").resources("sourcecoderepositories").verbs("*").
 		addRule().apiGroups("provisioning.cattle.io").resources("clusters").verbs("create").
 		addRule().apiGroups("rke-machine-config.cattle.io").resources("*").verbs("create").
-		addRule().apiGroups("management.cattle.io").resources("rancherusernotifications").verbs("get", "list", "watch")
+		addRule().apiGroups("management.cattle.io").resources("rangerusernotifications").verbs("get", "list", "watch")
 
 	return role
 }
 
-// BootstrapAdmin checks if the bootstrapAdminConfig exists, if it does this indicates rancher has
+// BootstrapAdmin checks if the bootstrapAdminConfig exists, if it does this indicates ranger has
 // already created the admin user and should not attempt it again. Otherwise attempt to create the admin.
 func BootstrapAdmin(management *wrangler.Context) (string, error) {
 	adminCreateLock.Lock()
@@ -559,7 +559,7 @@ func BootstrapAdmin(management *wrangler.Context) (string, error) {
 
 			logrus.Infof("")
 			logrus.Infof("-----------------------------------------")
-			logrus.Infof("Welcome to Rancher")
+			logrus.Infof("Welcome to Ranger")
 			if bootstrapPasswordIsGenerated {
 				logrus.Infof("A bootstrap password has been generated for your admin user.")
 				logrus.Infof("")

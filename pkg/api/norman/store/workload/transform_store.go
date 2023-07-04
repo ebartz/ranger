@@ -3,12 +3,12 @@ package workload
 import (
 	"strings"
 
-	"github.com/rancher/norman/store/transform"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/norman/types/definition"
-	"github.com/rancher/norman/types/values"
-	"github.com/rancher/rancher/pkg/api/norman/store/pod"
+	"github.com/ranger/norman/store/transform"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/norman/types/definition"
+	"github.com/ranger/norman/types/values"
+	"github.com/ranger/ranger/pkg/api/norman/store/pod"
 	"github.com/sirupsen/logrus"
 )
 

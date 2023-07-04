@@ -8,7 +8,7 @@ drone_cli_help()
     echo ""
     echo "  To test if Drone CLI is properly configured type:"
     echo ""
-    echo "     drone build ls rancher/rancher"
+    echo "     drone build ls ranger/ranger"
     echo ""
     echo "  This will show the last 25 builds"
 }
@@ -26,10 +26,10 @@ if ! drone -v; then
     exit 1
 fi
 
-build_number=$(drone build ls rancher/rancher --event tag --format "{{.Number}},{{.Ref}}"| grep ${1}$ |cut -d',' -f1|head -1)
+build_number=$(drone build ls ranger/ranger --event tag --format "{{.Number}},{{.Ref}}"| grep ${1}$ |cut -d',' -f1|head -1)
 
 if [[ -n ${build_number} ]];then 
-  drone build promote rancher/rancher ${build_number} promote-stable
+  drone build promote ranger/ranger ${build_number} promote-stable
   exit 0
 fi
 

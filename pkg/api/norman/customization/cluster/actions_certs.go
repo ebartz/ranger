@@ -6,13 +6,13 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	rketypes "github.com/rancher/rke/types"
+	rketypes "github.com/ranger/rke/types"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/api/access"
-	"github.com/rancher/norman/types"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	mgmtv3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/norman/api/access"
+	"github.com/ranger/norman/types"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	mgmtv3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -56,7 +56,7 @@ func (a ActionHandler) RotateCertificates(actionName string, action *types.Actio
 		CACertificates: input.CACertificates,
 		Services:       []string{input.Services},
 	}
-	cluster.Spec.RancherKubernetesEngineConfig.RotateCertificates = rotateCerts
+	cluster.Spec.RangerKubernetesEngineConfig.RotateCertificates = rotateCerts
 	if _, err := a.ClusterClient.Update(cluster); err != nil {
 		rtn["message"] = "failed to update cluster object"
 		apiContext.WriteResponse(http.StatusInternalServerError, rtn)

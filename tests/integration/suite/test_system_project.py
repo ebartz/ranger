@@ -1,5 +1,5 @@
 import pytest
-from rancher import ApiError
+from ranger import ApiError
 from kubernetes.client import CoreV1Api
 from .conftest import wait_for
 
@@ -13,7 +13,7 @@ initial_system_namespaces = set(["kube-node-lease",
                                  "cattle-global-nt",
                                  "cattle-fleet-system"])
 loggingNamespace = "cattle-logging"
-operatorNamespace = "rancher-operator-system"
+operatorNamespace = "ranger-operator-system"
 
 
 def test_system_project_created(admin_cc):

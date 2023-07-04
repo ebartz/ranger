@@ -8,7 +8,7 @@ import (
 	"text/template"
 
 	"github.com/ghodss/yaml"
-	managementv3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
+	managementv3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
 )
 
 var (
@@ -104,7 +104,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: apiserver
     cluster-graph: kube-component
@@ -130,7 +130,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: apiserver
     cluster-graph: kube-component
@@ -157,7 +157,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: cluster
   name: cluster-cpu-usage
@@ -181,7 +181,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: cluster
   name: cluster-cpu-load
@@ -205,7 +205,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: cluster
   name: cluster-memory-usage
@@ -229,7 +229,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: cluster
   name: cluster-fs-usage-percent
@@ -254,7 +254,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: cluster
   name: cluster-disk-io
@@ -279,7 +279,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: cluster
   name: cluster-network-io
@@ -304,7 +304,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: cluster
   name: cluster-network-packet
@@ -331,7 +331,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: controllermanager
     cluster-graph: kube-component
@@ -358,7 +358,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: etcd
   name: etcd-server-leader-sum
@@ -384,7 +384,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: etcd
   name: etcd-server-failed-proposal
@@ -410,7 +410,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: etcd
   name: etcd-leader-change
@@ -436,7 +436,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: etcd
   name: etcd-grpc-client
@@ -461,7 +461,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: etcd
     metric: db-bytes-sum 
@@ -487,7 +487,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: etcd
   name: etcd-stream
@@ -512,7 +512,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: etcd
   name: etcd-peer-traffic
@@ -537,7 +537,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: etcd
   name: etcd-raft-proposals
@@ -562,7 +562,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: etcd
   name: etcd-rpc-rate
@@ -587,7 +587,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: etcd
   name: etcd-disk-operate
@@ -612,7 +612,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: etcd
   name: etcd-sync-duration
@@ -638,14 +638,14 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: fluentd
-    cluster-graph: rancher-component
+    cluster-graph: ranger-component
   name: fluentd-input-record-number
 spec:
   resourceType: fluentd
-  displayResourceType: rancher-component
+  displayResourceType: ranger-component
   priority: 300
   title: fluentd-input-record-number
   metricsSelector:
@@ -664,14 +664,14 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: fluentd
-    cluster-graph: rancher-component
+    cluster-graph: ranger-component
   name: fluentd-output-record-number
 spec:
   resourceType: fluentd
-  displayResourceType: rancher-component
+  displayResourceType: ranger-component
   priority: 301
   title: fluentd-output-record-number
   metricsSelector:
@@ -690,14 +690,14 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: fluentd
-    cluster-graph: rancher-component
+    cluster-graph: ranger-component
   name: fluentd-output-errors
 spec:
   resourceType: fluentd
-  displayResourceType: rancher-component
+  displayResourceType: ranger-component
   priority: 301
   title: fluentd-output-errors
   metricsSelector:
@@ -716,14 +716,14 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: fluentd
-    cluster-graph: rancher-component
+    cluster-graph: ranger-component
   name: fluentd-buffer-queue-length
 spec:
   resourceType: fluentd
-  displayResourceType: rancher-component
+  displayResourceType: ranger-component
   priority: 301
   title: fluentd-buffer-queue-length
   metricsSelector:
@@ -743,7 +743,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: ingresscontroller
     cluster-graph: kube-component
@@ -769,7 +769,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: ingresscontroller
     cluster-graph: kube-component
@@ -796,7 +796,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: node
   name: node-cpu-usage
@@ -820,7 +820,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: node
   name: node-cpu-load
@@ -844,7 +844,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: node
   name: node-memory-usage
@@ -868,7 +868,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: node
   name: node-fs-usage-percent
@@ -893,7 +893,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: node
   name: node-disk-io
@@ -918,7 +918,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: node
   name: node-network-io
@@ -943,7 +943,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: node
   name: node-network-packet
@@ -969,7 +969,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: scheduler
     cluster-graph: kube-component
@@ -996,7 +996,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: scheduler
     cluster-graph: kube-component
@@ -1023,7 +1023,7 @@ kind: ClusterMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: cluster
     component: scheduler
     cluster-graph: kube-component
@@ -1059,7 +1059,7 @@ metadata:
     details: "false"
     level: cluster
     metric: request-latency-milliseconds-avg
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: avg(apiserver_request_latencies_sum / apiserver_request_latencies_count)
     by (instance) /1e+06
@@ -1076,7 +1076,7 @@ metadata:
     details: "true"
     level: cluster
     metric: request-latency-milliseconds-avg
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: avg(apiserver_request_latencies_sum / apiserver_request_latencies_count)
     by (instance, verb) /1e+06
@@ -1094,7 +1094,7 @@ metadata:
     graph: request-count
     level: cluster
     metric: request-count-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(apiserver_request_count[5m])) by (instance)
   legendFormat: '[[instance]]'
@@ -1111,7 +1111,7 @@ metadata:
     graph: request-count
     level: cluster
     metric: request-count-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(apiserver_request_count[5m])) by (instance,
     code)
@@ -1129,7 +1129,7 @@ metadata:
     graph: request-count
     level: cluster
     metric: request-error-count-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(apiserver_request_count{instance=~"$instance", code!~"2.."}[5m]))
     by (instance)
@@ -1147,7 +1147,7 @@ metadata:
     graph: request-count
     level: cluster
     metric: request-error-count-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(apiserver_request_count{instance=~"$instance", code!~"2.."}[5m]))
     by (instance, code)
@@ -1168,7 +1168,7 @@ metadata:
     graph: disk-io
     level: cluster
     metric: disk-io-reads-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_disk_read_bytes_total[5m]))
   legendFormat: Read
@@ -1185,7 +1185,7 @@ metadata:
     graph: disk-io
     level: cluster
     metric: disk-io-reads-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_disk_read_bytes_total[5m])) by
     (instance)
@@ -1203,7 +1203,7 @@ metadata:
     graph: network-io
     level: cluster
     metric: network-transmit-bytes-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_transmit_bytes_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*"}[5m]))
   legendFormat: Transmit
@@ -1220,7 +1220,7 @@ metadata:
     graph: network-io
     level: cluster
     metric: network-transmit-bytes-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_transmit_bytes_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*"}[5m]))
     by (instance)
@@ -1238,7 +1238,7 @@ metadata:
     graph: cpu-load
     level: cluster
     metric: cpu-load-5
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(node_load5) by (instance)
   legendFormat: Load5([[instance]])
@@ -1255,7 +1255,7 @@ metadata:
     graph: cpu-load
     level: cluster
     metric: cpu-load-5
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(node_load5) by (instance)
   legendFormat: Load5([[instance]])
@@ -1272,7 +1272,7 @@ metadata:
     graph: cpu-load
     level: cluster
     metric: cpu-load-1
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(node_load1) by (instance)
   legendFormat: Load1([[instance]])
@@ -1289,7 +1289,7 @@ metadata:
     graph: cpu-load
     level: cluster
     metric: cpu-load-1
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(node_load1) by (instance)
   legendFormat: Load1([[instance]])
@@ -1306,7 +1306,7 @@ metadata:
     graph: disk-io
     level: cluster
     metric: disk-io-writes-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_disk_written_bytes_total[5m]))
   legendFormat: Write
@@ -1323,7 +1323,7 @@ metadata:
     graph: disk-io
     level: cluster
     metric: disk-io-writes-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_disk_written_bytes_total[5m]))
     by (instance)
@@ -1340,7 +1340,7 @@ metadata:
     details: "false"
     level: cluster
     metric: fs-usage-percent
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: (sum(node_filesystem_size_bytes{device!~"rootfs|HarddiskVolume.+"})
      - sum(node_filesystem_free_bytes{device!~"rootfs|HarddiskVolume.+"})
@@ -1358,7 +1358,7 @@ metadata:
     details: "true"
     level: cluster
     metric: fs-usage-percent
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: (sum(node_filesystem_size_bytes{device!~"rootfs|HarddiskVolume.+"})
     by (instance) - sum(node_filesystem_free_bytes{device!~"rootfs|HarddiskVolume.+"})
@@ -1378,7 +1378,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-receive-errors-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_receive_errs_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*"}[5m]))
   legendFormat: Receive errors
@@ -1395,7 +1395,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-receive-errors-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_receive_errs_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*"}[5m]))
     by (instance)
@@ -1413,7 +1413,7 @@ metadata:
     graph: cpu-load
     level: cluster
     metric: cpu-load-15
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(node_load15) by (instance) 
   legendFormat: Load15([[instance]])
@@ -1430,7 +1430,7 @@ metadata:
     graph: cpu-load
     level: cluster
     metric: cpu-load-15
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(node_load15) by (instance)
   legendFormat: Load15([[instance]])
@@ -1447,7 +1447,7 @@ metadata:
     graph: network-io
     level: cluster
     metric: network-receive-bytes-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_receive_bytes_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*"}[5m]))
   legendFormat: Receive
@@ -1464,7 +1464,7 @@ metadata:
     graph: network-io
     level: cluster
     metric: network-receive-bytes-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_receive_bytes_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*"}[5m]))
     by (instance)
@@ -1482,7 +1482,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-receive-packets-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_receive_packets_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*"}[5m]))
   legendFormat: Receive packets
@@ -1499,7 +1499,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-receive-packets-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_receive_packets_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*"}[5m]))
     by (instance)
@@ -1517,7 +1517,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-transmit-errors-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_transmit_errs_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*"}[5m]))
   legendFormat: Transmit errors
@@ -1534,7 +1534,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-transmit-errors-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_transmit_errs_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*"}[5m]))
     by (instance)
@@ -1552,7 +1552,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-receive-packets-dropped-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_receive_drop_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*"}[5m]))
   legendFormat: Receive dropped
@@ -1569,7 +1569,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-receive-packets-dropped-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_receive_drop_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*"}[5m]))
     by (instance)
@@ -1587,7 +1587,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-transmit-packets-dropped-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_transmit_drop_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*"}[5m]))
   legendFormat: Transmit dropped
@@ -1604,7 +1604,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-transmit-packets-dropped-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_transmit_drop_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*"}[5m]))
     by (instance)
@@ -1622,7 +1622,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-transmit-packets-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_transmit_packets_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*"}[5m]))
   legendFormat: Transmit packets
@@ -1639,7 +1639,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-transmit-packets-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_transmit_packets_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*"}[5m]))
     by (instance)
@@ -1656,7 +1656,7 @@ metadata:
     details: "false"
     level: cluster
     metric: cpu-usage-seconds-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: 1 - (avg(irate(node_cpu_seconds_total{mode="idle"}[5m])))
   legendFormat: CPU usage
@@ -1672,7 +1672,7 @@ metadata:
     details: "true"
     level: cluster
     metric: cpu-usage-seconds-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: 1 - (avg(irate(node_cpu_seconds_total{mode="idle"}[5m])) by (instance))
   legendFormat: '[[instance]]'
@@ -1688,7 +1688,7 @@ metadata:
     details: "false"
     level: cluster
     metric: memory-usage-percent
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: 1 - sum(node_memory_MemAvailable_bytes) 
     / sum(node_memory_MemTotal_bytes) 
@@ -1705,7 +1705,7 @@ metadata:
     details: "true"
     level: cluster
     metric: memory-usage-percent
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: 1 - sum(node_memory_MemAvailable_bytes) by (instance)
     / sum(node_memory_MemTotal_bytes) by (instance)
@@ -1725,7 +1725,7 @@ metadata:
     details: "true"
     graph: cpu-usage
     level: project
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_cpu_cfs_throttled_seconds_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name=~"$containerName"}[5m]))
@@ -1742,7 +1742,7 @@ metadata:
     details: "true"
     graph: cpu-usage
     level: project
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_cpu_usage_seconds_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name=~"$containerName"}[5m]))
@@ -1759,7 +1759,7 @@ metadata:
     details: "true"
     graph: cpu-usage
     level: project
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_cpu_system_seconds_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name=~"$containerName"}[5m]))
@@ -1776,7 +1776,7 @@ metadata:
     details: "true"
     graph: cpu-usage
     level: project
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_cpu_user_seconds_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name=~"$containerName"}[5m]))
@@ -1793,7 +1793,7 @@ metadata:
     details: "true"
     level: project
     metric: memory-usage-bytes-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(container_memory_working_set_bytes{name!~"POD", namespace=~"$namespace",pod_name=~"$podName",
     container_name=~"$containerName"})
@@ -1811,7 +1811,7 @@ metadata:
     graph: disk-io
     level: project
     metric: disk-io-writes-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_fs_writes_bytes_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name=~"$containerName"}[5m]))
@@ -1829,7 +1829,7 @@ metadata:
     graph: disk-io
     level: project
     metric: disk-io-reads-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_fs_reads_bytes_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name=~"$containerName"}[5m]))
@@ -1849,7 +1849,7 @@ metadata:
     details: "false"
     level: cluster
     metric: volumes-depth
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(volumes_depth) 
   legendFormat: Volumes depth
@@ -1865,7 +1865,7 @@ metadata:
     details: "true"
     level: cluster
     metric: volumes-depth
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(volumes_depth) by (instance)
   legendFormat: Volumes depth([[instance]])
@@ -1881,7 +1881,7 @@ metadata:
     details: "false"
     level: cluster
     metric: deployment-depth
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(deployment_depth) 
   legendFormat: Deployment depth
@@ -1897,7 +1897,7 @@ metadata:
     details: "true"
     level: cluster
     metric: deployment-depth
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(deployment_depth) by (instance)
   legendFormat: Deployment depth([[instance]])
@@ -1913,7 +1913,7 @@ metadata:
     details: "false"
     level: cluster
     metric: replicaset-depth
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(replicaset_depth) 
   legendFormat: Replicaset depth
@@ -1929,7 +1929,7 @@ metadata:
     details: "true"
     level: cluster
     metric: replicaset-depth
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(replicaset_depth) by (instance)
   legendFormat: Replicaset depth([[instance]])
@@ -1945,7 +1945,7 @@ metadata:
     details: "false"
     level: cluster
     metric: service-depth
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(service_depth) 
   legendFormat: Service depth
@@ -1961,7 +1961,7 @@ metadata:
     details: "true"
     level: cluster
     metric: service-depth
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(service_depth) by (instance)
   legendFormat: Service depth([[instance]])
@@ -1977,7 +1977,7 @@ metadata:
     details: "false"
     level: cluster
     metric: serviceaccount-depth
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(serviceaccount_depth) 
   legendFormat: Serviceaccount depth
@@ -1993,7 +1993,7 @@ metadata:
     details: "true"
     level: cluster
     metric: serviceaccount-depth
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(serviceaccount_depth) by (instance)
   legendFormat: Serviceaccount depth([[instance]])
@@ -2009,7 +2009,7 @@ metadata:
     details: "false"
     level: cluster
     metric: endpoint-depth
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(endpoint_depth) 
   legendFormat: Endpoint depth
@@ -2025,7 +2025,7 @@ metadata:
     details: "true"
     level: cluster
     metric: endpoint-depth
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(endpoint_depth) by (instance)
   legendFormat: Endpoint depth([[instance]])
@@ -2041,7 +2041,7 @@ metadata:
     details: "false"
     level: cluster
     metric: daemonset-depth
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(daemonset_depth) 
   legendFormat: Daemonset depth
@@ -2057,7 +2057,7 @@ metadata:
     details: "true"
     level: cluster
     metric: daemonset-depth
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(daemonset_depth) by (instance)
   legendFormat: Daemonset depth([[instance]])
@@ -2073,7 +2073,7 @@ metadata:
     details: "false"
     level: cluster
     metric: deployment-depth
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(deployment_depth) 
   legendFormat: Deployment depth
@@ -2089,7 +2089,7 @@ metadata:
     details: "true"
     level: cluster
     metric: deployment-depth
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(deployment_depth) by (instance)
   legendFormat: Deployment depth([[instance]])
@@ -2105,7 +2105,7 @@ metadata:
     details: "false"
     level: cluster
     metric: statefulset-depth
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(statefulset_depth) 
   legendFormat: Statefulset depth
@@ -2121,7 +2121,7 @@ metadata:
     details: "true"
     level: cluster
     metric: statefulset-depth
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(statefulset_depth) by (instance)
   legendFormat: Statefulset depth([[instance]])
@@ -2137,7 +2137,7 @@ metadata:
     details: "false"
     level: cluster
     metric: replicationmanager-depth
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(replicationmanager_depth) 
   legendFormat: ReplicationManager depth
@@ -2153,7 +2153,7 @@ metadata:
     details: "true"
     level: cluster
     metric: replicationmanager-depth
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(replicationmanager_depth) by (instance)
   legendFormat: ReplicationManager depth([[instance]])
@@ -2172,7 +2172,7 @@ metadata:
     details: "false"
     level: cluster
     metric: server-failed-proposal
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(etcd_server_proposals_failed_total)
   legendFormat: Failed proposal
@@ -2188,7 +2188,7 @@ metadata:
     details: "true"
     level: cluster
     metric: server-failed-proposal
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(etcd_server_proposals_failed_total)
   legendFormat: Failed proposal
@@ -2204,7 +2204,7 @@ metadata:
     details: "false"
     level: cluster
     metric: server-leader-changes-seen-sum-increase
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: max(etcd_server_leader_changes_seen_total)
   legendFormat: Number of leader changes per hour
@@ -2220,7 +2220,7 @@ metadata:
     details: "true"
     level: cluster
     metric: server-leader-changes-seen-sum-increase
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: max(etcd_server_leader_changes_seen_total)
   legendFormat: Number of leader changes per hour
@@ -2237,7 +2237,7 @@ metadata:
     graph: rpc-client-traffic
     level: cluster
     metric: grpc-client-receive-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(etcd_network_client_grpc_received_bytes_total[5m]))
   legendFormat: Client traffic in
@@ -2254,7 +2254,7 @@ metadata:
     graph: rpc-client-traffic
     level: cluster
     metric: grpc-client-receive-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(etcd_network_client_grpc_received_bytes_total[5m])) by (instance)
   legendFormat: Client traffic in([[instance]])
@@ -2270,7 +2270,7 @@ metadata:
     details: "false"
     level: cluster
     metric: db-bytes-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(etcd_debugging_mvcc_db_total_size_in_bytes) 
   legendFormat: DB size
@@ -2286,7 +2286,7 @@ metadata:
     details: "true"
     level: cluster
     metric: db-bytes-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(etcd_debugging_mvcc_db_total_size_in_bytes) by (instance)
   legendFormat: DB size([[instance]])
@@ -2303,7 +2303,7 @@ metadata:
     graph: rpc-client-traffic
     level: cluster
     metric: grpc-client-transmit-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(etcd_network_client_grpc_sent_bytes_total[5m])) 
   legendFormat: Client traffic out
@@ -2320,7 +2320,7 @@ metadata:
     graph: rpc-client-traffic
     level: cluster
     metric: grpc-client-transmit-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(etcd_network_client_grpc_sent_bytes_total[5m])) by (instance)
   legendFormat: Client traffic out([[instance]])
@@ -2336,7 +2336,7 @@ metadata:
     details: "false"
     level: cluster
     metric: server-leader-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: max(etcd_server_has_leader)
   legendFormat: Has leader
@@ -2352,7 +2352,7 @@ metadata:
     details: "true"
     level: cluster
     metric: server-leader-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: max(etcd_server_has_leader)
   legendFormat: Has leader
@@ -2369,7 +2369,7 @@ metadata:
     graph: proposal
     level: cluster
     metric: server-proposals-committed-sum-increase
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(etcd_server_proposals_committed_total[5m])) 
   legendFormat: Proposal commit rate
@@ -2386,7 +2386,7 @@ metadata:
     graph: proposal
     level: cluster
     metric: server-proposals-committed-sum-increase
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(etcd_server_proposals_committed_total[5m])) by (instance)
   legendFormat: Proposal commit rate([[instance]])
@@ -2403,7 +2403,7 @@ metadata:
     graph: proposal
     level: cluster
     metric: server-proposals-applied-sum-increase
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(etcd_server_proposals_applied_total[5m])) 
   legendFormat: Proposal applied
@@ -2420,7 +2420,7 @@ metadata:
     graph: proposal
     level: cluster
     metric: server-proposals-applied-sum-increase
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(etcd_server_proposals_applied_total[5m])) by (instance)
   legendFormat: Proposal applied([[instance]])
@@ -2437,7 +2437,7 @@ metadata:
     graph: proposal
     level: cluster
     metric: server-proposals-failed-sum-increase
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(etcd_server_proposals_failed_total[5m])) 
   legendFormat: Proposal failed
@@ -2454,7 +2454,7 @@ metadata:
     graph: proposal
     level: cluster
     metric: server-proposals-failed-sum-increase
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(etcd_server_proposals_failed_total[5m])) by (instance)
   legendFormat: Proposal failed([[instance]])
@@ -2471,7 +2471,7 @@ metadata:
     graph: proposal
     level: cluster
     metric: server-proposals-pending-sum-increase
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(etcd_server_proposals_pending) 
   legendFormat: Proposal pending
@@ -2488,7 +2488,7 @@ metadata:
     graph: proposal
     level: cluster
     metric: server-proposals-pending-sum-increase
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(etcd_server_proposals_pending) by (instance)
   legendFormat: Proposal pending([[instance]])
@@ -2505,7 +2505,7 @@ metadata:
     graph: sync-duration
     level: cluster
     metric: disk-wal-fsync-duration-seconds-sum-quantile
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(histogram_quantile(0.99, sum(rate(etcd_disk_wal_fsync_duration_seconds_bucket[5m])) by (instance, le)))
   legendFormat: WAL fsync
@@ -2522,7 +2522,7 @@ metadata:
     graph: sync-duration
     level: cluster
     metric: disk-wal-fsync-duration-seconds-sum-quantile
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: histogram_quantile(0.99, sum(rate(etcd_disk_wal_fsync_duration_seconds_bucket[5m])) by (instance, le))
   legendFormat: WAL fsync([[instance]])
@@ -2538,7 +2538,7 @@ metadata:
     details: "false"
     level: cluster
     metric: grpc-request-error-percent
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(grpc_server_handled_total{grpc_code!="OK"}[5m]))  / sum(rate(grpc_server_handled_total[5m]))
   legendFormat: Rpc failed rate
@@ -2554,7 +2554,7 @@ metadata:
     details: "true"
     level: cluster
     metric: grpc-request-error-percent
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(grpc_server_handled_total{grpc_code!="OK"}[5m])) by (instance)
     / sum(rate(grpc_server_handled_total[5m])) by (instance)
@@ -2572,7 +2572,7 @@ metadata:
     graph: sync-duration
     level: cluster
     metric: disk-commit-duration-seconds-sum-quantile
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(histogram_quantile(0.99, sum(rate(etcd_disk_backend_commit_duration_seconds_bucket[5m])) by (instance, le)))
   legendFormat: DB fsync
@@ -2589,7 +2589,7 @@ metadata:
     graph: sync-duration
     level: cluster
     metric: disk-commit-duration-seconds-sum-quantile
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: histogram_quantile(0.99, sum(rate(etcd_disk_backend_commit_duration_seconds_bucket[5m])) by (instance, le))
   legendFormat: DB fsync([[instance]])
@@ -2605,7 +2605,7 @@ metadata:
     details: "false"
     level: cluster
     metric: grpc-request-slow-quantile
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(histogram_quantile(0.99, sum(rate(grpc_server_handling_seconds_bucket{grpc_service=~"etcdserverpb.*",grpc_type="unary"}[5m])) by (instance,le)))
   legendFormat: Request slow"
@@ -2621,7 +2621,7 @@ metadata:
     details: "true"
     level: cluster
     metric: grpc-request-slow-quantile
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: histogram_quantile(0.99, sum(rate(grpc_server_handling_seconds_bucket{grpc_service=~"etcdserverpb.*",grpc_type="unary"}[5m])) by (instance,le))
   legendFormat: Request slow([[instance]])
@@ -2638,7 +2638,7 @@ metadata:
     graph: etcd-stream
     level: cluster
     metric: active-watch-stream
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(grpc_server_started_total{grpc_service="etcdserverpb.Watch",grpc_type="bidi_stream"})
      - sum(grpc_server_handled_total{grpc_service="etcdserverpb.Watch",grpc_type="bidi_stream"})
@@ -2656,7 +2656,7 @@ metadata:
     graph: etcd-stream
     level: cluster
     metric: active-watch-stream
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(grpc_server_started_total{grpc_service="etcdserverpb.Watch",grpc_type="bidi_stream"})
     by (instance) - sum(grpc_server_handled_total{grpc_service="etcdserverpb.Watch",grpc_type="bidi_stream"})
@@ -2675,7 +2675,7 @@ metadata:
     graph: etcd-stream
     level: cluster
     metric: lease-watch-stream
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(grpc_server_started_total{grpc_service="etcdserverpb.Lease",grpc_type="bidi_stream"})
      - sum(grpc_server_handled_total{grpc_service="etcdserverpb.Lease",grpc_type="bidi_stream"})
@@ -2693,7 +2693,7 @@ metadata:
     graph: etcd-stream
     level: cluster
     metric: lease-watch-stream
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(grpc_server_started_total{grpc_service="etcdserverpb.Lease",grpc_type="bidi_stream"})
     by (instance) - sum(grpc_server_handled_total{grpc_service="etcdserverpb.Lease",grpc_type="bidi_stream"})
@@ -2712,7 +2712,7 @@ metadata:
     graph: etcd-peer-traffic
     level: cluster
     metric: peer-traffic-in
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(etcd_network_peer_received_bytes_total[5m]))
   legendFormat: Traffic in"
@@ -2729,7 +2729,7 @@ metadata:
     graph: etcd-peer-traffic
     level: cluster
     metric: peer-traffic-in
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(etcd_network_peer_received_bytes_total[5m])) by (instance)
   legendFormat: Traffic in([[instance]])
@@ -2746,7 +2746,7 @@ metadata:
     graph: etcd-peer-traffic
     level: cluster
     metric: peer-traffic-out
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(etcd_network_peer_sent_bytes_total[5m])) 
   legendFormat: Traffic out"
@@ -2763,7 +2763,7 @@ metadata:
     graph: etcd-peer-traffic
     level: cluster
     metric: peer-traffic-out
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(etcd_network_peer_sent_bytes_total[5m])) by (instance)
   legendFormat: Traffic out([[instance]])
@@ -2779,7 +2779,7 @@ metadata:
     details: "false"
     graph: rpc-rate
     level: cluster
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(grpc_server_started_total{grpc_type="unary"}[5m])) 
   legendFormat: RPC rate
@@ -2795,7 +2795,7 @@ metadata:
     details: "true"
     graph: rpc-rate
     level: cluster
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(grpc_server_started_total{grpc_type="unary"}[5m])) by (instance)
   legendFormat: Rpc rate([[instance]])
@@ -2811,7 +2811,7 @@ metadata:
     details: "false"
     graph: rpc-rate
     level: cluster
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(grpc_server_handled_total{grpc_type="unary",grpc_code!="OK"}[5m]))
   legendFormat: Rpc failed rate
@@ -2827,7 +2827,7 @@ metadata:
     details: "true"
     graph: rpc-rate
     level: cluster
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(grpc_server_handled_total{grpc_type="unary",grpc_code!="OK"}[5m])) by (instance)
   legendFormat: Rpc failed rate([[instance]])
@@ -2843,7 +2843,7 @@ metadata:
     details: "false"
     graph: disk-operate
     level: cluster
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(etcd_disk_backend_commit_duration_seconds_sum[1m])) 
   legendFormat: Commit latency called by backend
@@ -2859,7 +2859,7 @@ metadata:
     details: "true"
     graph: disk-operate
     level: cluster
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(etcd_disk_backend_commit_duration_seconds_sum[1m])) by (instance)
   legendFormat: Commit latency called by backend([[instance]])
@@ -2875,7 +2875,7 @@ metadata:
     details: "false"
     graph: disk-operate
     level: cluster
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(etcd_disk_wal_fsync_duration_seconds_sum[1m])) 
   legendFormat: Fsync latency called by wal
@@ -2891,7 +2891,7 @@ metadata:
     details: "true"
     graph: disk-operate
     level: cluster
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(etcd_disk_wal_fsync_duration_seconds_sum[1m])) by (instance)
   legendFormat: Fsync latency called by wal([[instance]])
@@ -2910,7 +2910,7 @@ metadata:
     details: "false"
     level: cluster
     metric: input-record
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(fluentd_input_status_num_records_total[5m])) 
   legendFormat: Input record number
@@ -2926,7 +2926,7 @@ metadata:
     details: "true"
     level: cluster
     metric: input-record
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(fluentd_input_status_num_records_total[5m])) by (instance)
   legendFormat: Input record number([[instance]])
@@ -2942,7 +2942,7 @@ metadata:
     details: "false"
     level: cluster
     metric: output-record
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(fluentd_output_status_num_records_total[5m])) 
   legendFormat: Output record number
@@ -2958,7 +2958,7 @@ metadata:
     details: "true"
     level: cluster
     metric: output-record
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(fluentd_output_status_num_records_total[5m])) by (instance)
   legendFormat: Output record number([[instance]])
@@ -2974,7 +2974,7 @@ metadata:
     details: "false"
     level: cluster
     metric: output-errors
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(fluentd_output_status_num_errors[5m])) 
   legendFormat: Plugin Output errors
@@ -2990,7 +2990,7 @@ metadata:
     details: "true"
     level: cluster
     metric: output-errors
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(fluentd_output_status_num_errors[5m])) by (type)
   legendFormat: Plugin([[type]])
@@ -3006,7 +3006,7 @@ metadata:
     details: "false"
     level: cluster
     metric: buffer-queue-length
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(fluentd_output_status_buffer_queue_length[5m])) 
   legendFormat: Buffer queue
@@ -3022,7 +3022,7 @@ metadata:
     details: "true"
     level: cluster
     metric: buffer-queue-length
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(fluentd_output_status_buffer_queue_length[5m])) by (instance)
   legendFormat: '[[instance]]'
@@ -3041,7 +3041,7 @@ metadata:
     details: "false"
     graph: nginx-connection
     level: cluster
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(nginx_ingress_controller_nginx_process_connections{state="reading"})
   legendFormat: Reading
@@ -3057,7 +3057,7 @@ metadata:
     details: "true"
     graph: nginx-connection
     level: cluster
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(nginx_ingress_controller_nginx_process_connections{state="reading"}) by (instance)
   legendFormat: Reading([[instance]])
@@ -3073,7 +3073,7 @@ metadata:
     details: "false"
     graph: nginx-connection
     level: cluster
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(nginx_ingress_controller_nginx_process_connections{state="waiting"})
   legendFormat: Waiting
@@ -3089,7 +3089,7 @@ metadata:
     details: "true"
     graph: nginx-connection
     level: cluster
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(nginx_ingress_controller_nginx_process_connections{state="waiting"}) by (instance)
   legendFormat: Waiting([[instance]])
@@ -3105,7 +3105,7 @@ metadata:
     details: "false"
     graph: nginx-connection
     level: cluster
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(nginx_ingress_controller_nginx_process_connections{state="writing"})
   legendFormat: Writing
@@ -3121,7 +3121,7 @@ metadata:
     details: "true"
     graph: nginx-connection
     level: cluster
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(nginx_ingress_controller_nginx_process_connections{state="writing"}) by (instance)
   legendFormat: Writing([[instance]])
@@ -3137,7 +3137,7 @@ metadata:
     details: "false"
     graph: nginx-connection
     level: cluster
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(ceil(increase(nginx_ingress_controller_nginx_process_connections_total{state="accepted"}[5m])))
   legendFormat: Accepted
@@ -3153,7 +3153,7 @@ metadata:
     details: "true"
     graph: nginx-connection
     level: cluster
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(ceil(increase(nginx_ingress_controller_nginx_process_connections_total{state="accepted"}[5m]))) by (instance)
   legendFormat: Accepted([[instance]])
@@ -3169,7 +3169,7 @@ metadata:
     details: "false"
     graph: nginx-connection
     level: cluster
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(ceil(increase(nginx_ingress_controller_nginx_process_connections_total{state="active"}[5m])))
   legendFormat: Active
@@ -3185,7 +3185,7 @@ metadata:
     details: "true"
     graph: nginx-connection
     level: cluster
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(ceil(increase(nginx_ingress_controller_nginx_process_connections_total{state="active"}[5m]))) by (instance)
   legendFormat: Active([[instance]])
@@ -3201,7 +3201,7 @@ metadata:
     details: "false"
     graph: nginx-connection
     level: cluster
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(ceil(increase(nginx_ingress_controller_nginx_process_connections_total{state="handled"}[5m])))
   legendFormat: Handled
@@ -3217,7 +3217,7 @@ metadata:
     details: "true"
     graph: nginx-connection
     level: cluster
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(ceil(increase(nginx_ingress_controller_nginx_process_connections_total{state="handled"}[5m]))) by (instance)
   legendFormat: Handled([[instance]])
@@ -3233,7 +3233,7 @@ metadata:
     details: "false"
     level: cluster
     metric: request-process-seconds
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: topk(10, histogram_quantile(0.95,sum by (le, host)(rate(nginx_ingress_controller_request_duration_seconds_bucket{host!="_"}[5m]))))
   legendFormat: Request duration(host:[[host]])
@@ -3249,7 +3249,7 @@ metadata:
     details: "true"
     level: cluster
     metric: request-process-seconds
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression:  topk(10, histogram_quantile(0.95,sum by (le, host, path)(rate(nginx_ingress_controller_request_duration_seconds_bucket{host!="_"}[5m]))))
   legendFormat: Request duration(host:[[host]] path:[[path]])
@@ -3269,7 +3269,7 @@ metadata:
     graph: network-io
     level: cluster
     metric: network-transmit-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_transmit_bytes_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*",instance=~"$instance"}[5m]))
   legendFormat: Transmit
@@ -3286,7 +3286,7 @@ metadata:
     graph: network-io
     level: cluster
     metric: network-transmit-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_transmit_bytes_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*",instance=~"$instance"}[5m]))
     by (device)
@@ -3304,7 +3304,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-receive-packets-dropped-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_receive_drop_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*",instance=~"$instance"}[5m]))
   legendFormat: Receive packets
@@ -3321,7 +3321,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-receive-packets-dropped-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_receive_drop_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*",instance=~"$instance"}[5m]))
     by (device)
@@ -3339,7 +3339,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-transmit-packets-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_transmit_packets_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*",instance=~"$instance"}[5m]))
   legendFormat: Transmit packets
@@ -3356,7 +3356,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-transmit-packets-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_transmit_packets_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*",instance=~"$instance"}[5m]))
     by (device)
@@ -3374,7 +3374,7 @@ metadata:
     graph: disk-io
     level: cluster
     metric: disk-io-writes-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_disk_written_bytes_total{instance=~"$instance", device!~"HarddiskVolume.+"}[5m]))
   legendFormat: Write
@@ -3391,7 +3391,7 @@ metadata:
     graph: disk-io
     level: cluster
     metric: disk-io-writes-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_disk_written_bytes_total{instance=~"$instance", device!~"HarddiskVolume.+"}[5m]))
     by (device)
@@ -3409,7 +3409,7 @@ metadata:
     graph: disk-io
     level: cluster
     metric: disk-io-reads-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_disk_read_bytes_total{instance=~"$instance", device!~"HarddiskVolume.+"}[5m]))
   legendFormat: Read
@@ -3426,7 +3426,7 @@ metadata:
     graph: disk-io
     level: cluster
     metric: disk-io-reads-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_disk_read_bytes_total{instance=~"$instance", device!~"HarddiskVolume.+"}[5m])) by
     (device)
@@ -3443,7 +3443,7 @@ metadata:
     details: "false"
     level: cluster
     metric: fs-usage-percent
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: (sum(node_filesystem_size_bytes{device!~"rootfs|HarddiskVolume.+",instance=~"$instance"})
      - sum(node_filesystem_free_bytes{device!~"rootfs|HarddiskVolume.+",instance=~"$instance"})
@@ -3461,7 +3461,7 @@ metadata:
     details: "true"
     level: cluster
     metric: fs-usage-percent
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: (sum(node_filesystem_size_bytes{device!~"rootfs|HarddiskVolume.+",instance=~"$instance"})
     by (device) - sum(node_filesystem_free_bytes{device!~"rootfs|HarddiskVolume.+",instance=~"$instance"})
@@ -3481,7 +3481,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-receive-packets-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_receive_packets_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*",instance=~"$instance"}[5m]))
   legendFormat: Receive packets
@@ -3498,7 +3498,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-receive-packets-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_receive_packets_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*",instance=~"$instance"}[5m]))
     by (device)
@@ -3516,7 +3516,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-transmit-errors-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_transmit_errs_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*",instance=~"$instance"}[5m]))
   legendFormat: Transmit errors
@@ -3533,7 +3533,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-transmit-errors-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_transmit_errs_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*",instance=~"$instance"}[5m]))
     by (device)
@@ -3551,7 +3551,7 @@ metadata:
     graph: cpu-load
     level: cluster
     metric: cpu-load-1
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(node_load1{instance=~"$instance"})
   legendFormat: Load1
@@ -3568,7 +3568,7 @@ metadata:
     graph: cpu-load
     level: cluster
     metric: cpu-load-1
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(node_load1{instance=~"$instance"})
   legendFormat: Load1
@@ -3585,7 +3585,7 @@ metadata:
     graph: cpu-load
     level: cluster
     metric: cpu-load-15
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(node_load15{instance=~"$instance"})
   legendFormat: Load15
@@ -3602,7 +3602,7 @@ metadata:
     graph: cpu-load
     level: cluster
     metric: cpu-load-15
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(node_load15{instance=~"$instance"})
   legendFormat: Load15
@@ -3618,7 +3618,7 @@ metadata:
     details: "false"
     level: cluster
     metric: cpu-usage-seconds-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: 1 - (avg(irate(node_cpu_seconds_total{mode="idle", instance=~"$instance"}[5m])) by (instance))
   legendFormat: CPU
@@ -3634,7 +3634,7 @@ metadata:
     details: "true"
     level: cluster
     metric: cpu-usage-seconds-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: avg(irate(node_cpu_seconds_total{mode!="idle", instance=~"$instance"}[5m]))by (mode) 
   legendFormat: '[[mode]]'
@@ -3650,7 +3650,7 @@ metadata:
     details: "false"
     level: cluster
     metric: memory-usage-percent
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: 1 - sum(node_memory_MemAvailable_bytes{instance=~"$instance"}) 
     / sum(node_memory_MemTotal_bytes{instance=~"$instance"}) 
@@ -3667,7 +3667,7 @@ metadata:
     details: "true"
     level: cluster
     metric: memory-usage-percent
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: 1 - sum(node_memory_MemAvailable_bytes{instance=~"$instance"}) 
     / sum(node_memory_MemTotal_bytes{instance=~"$instance"}) 
@@ -3685,7 +3685,7 @@ metadata:
     graph: network-io
     level: cluster
     metric: network-receive-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_receive_bytes_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*",instance=~"$instance"}[5m]))
   legendFormat: Receive
@@ -3702,7 +3702,7 @@ metadata:
     graph: network-io
     level: cluster
     metric: network-receive-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_receive_bytes_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*",instance=~"$instance"}[5m]))
     by (device)
@@ -3720,7 +3720,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-receive-errors-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_receive_errs_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*",instance=~"$instance"}[5m]))
   legendFormat: Receive packets
@@ -3737,7 +3737,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-receive-errors-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_receive_errs_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*",instance=~"$instance"}[5m]))
     by (device)
@@ -3755,7 +3755,7 @@ metadata:
     graph: cpu-load
     level: cluster
     metric: cpu-load-5
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(node_load5{instance=~"$instance"})
   legendFormat: Load5
@@ -3772,7 +3772,7 @@ metadata:
     graph: cpu-load
     level: cluster
     metric: cpu-load-5
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(node_load5{instance=~"$instance"})
   legendFormat: Load5
@@ -3789,7 +3789,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-transmit-packets-dropped-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_transmit_drop_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*",instance=~"$instance"}[5m]))
   legendFormat: Transmit dropped
@@ -3806,7 +3806,7 @@ metadata:
     graph: network-packet
     level: cluster
     metric: network-transmit-packets-dropped-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(node_network_transmit_drop_total{device!~"lo|veth.*|docker.*|flannel.*|cali.*|cbr.*",instance=~"$instance"}[5m]))
     by (device)
@@ -3826,7 +3826,7 @@ metadata:
     details: "false"
     graph: cpu-usage
     level: project
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_cpu_cfs_throttled_seconds_total{container_name!="POD",namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) 
@@ -3843,7 +3843,7 @@ metadata:
     details: "true"
     graph: cpu-usage
     level: project
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_cpu_cfs_throttled_seconds_total{container_name!="POD",namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) by (container_name)
@@ -3860,7 +3860,7 @@ metadata:
     details: "false"
     level: project
     metric: fs-bytes-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(container_fs_usage_bytes{namespace=~"$namespace", pod_name=~"$podName",
     container_name!=""}) 
@@ -3877,7 +3877,7 @@ metadata:
     details: "true"
     level: project
     metric: fs-bytes-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(container_fs_usage_bytes{namespace=~"$namespace", pod_name=~"$podName",
     container_name!=""}) by (container_name)
@@ -3895,7 +3895,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-receive-packets-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_receive_packets_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) 
@@ -3913,7 +3913,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-receive-packets-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_receive_packets_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m]))
@@ -3931,7 +3931,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-transmit-packets-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_transmit_packets_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) 
@@ -3949,7 +3949,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-transmit-packets-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_transmit_packets_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m]))
@@ -3966,7 +3966,7 @@ metadata:
     details: "false"
     graph: cpu-usage
     level: project
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_cpu_user_seconds_total{container_name!="POD",namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) 
@@ -3983,7 +3983,7 @@ metadata:
     details: "true"
     graph: cpu-usage
     level: project
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_cpu_user_seconds_total{container_name!="POD",namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) by (container_name)
@@ -4001,7 +4001,7 @@ metadata:
     graph: disk-io
     level: project
     metric: disk-io-reads-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_fs_reads_bytes_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m]))
@@ -4019,7 +4019,7 @@ metadata:
     graph: disk-io
     level: project
     metric: disk-io-reads-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_fs_reads_bytes_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) by (container_name)
@@ -4037,7 +4037,7 @@ metadata:
     graph: network-io
     level: project
     metric: network-receive-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_receive_bytes_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m]))
@@ -4055,7 +4055,7 @@ metadata:
     graph: network-io
     level: project
     metric: network-receive-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_receive_bytes_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m]))
@@ -4073,7 +4073,7 @@ metadata:
     graph: network-io
     level: project
     metric: network-transmit-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_transmit_bytes_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m]))
@@ -4091,7 +4091,7 @@ metadata:
     graph: network-io
     level: project
     metric: network-transmit-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_transmit_bytes_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m]))
@@ -4109,7 +4109,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-receive-packets-dropped-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_receive_packets_dropped_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) 
@@ -4127,7 +4127,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-receive-packets-dropped-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_receive_packets_dropped_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m]))
@@ -4144,7 +4144,7 @@ metadata:
     details: "false"
     level: project
     metric: memory-usage-bytes-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(container_memory_working_set_bytes{container_name!="POD",namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}) 
@@ -4161,7 +4161,7 @@ metadata:
     details: "true"
     level: project
     metric: memory-usage-bytes-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(container_memory_working_set_bytes{container_name!="POD",namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}) by (container_name)
@@ -4179,7 +4179,7 @@ metadata:
     graph: disk-io
     level: project
     metric: disk-io-writes-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_fs_writes_bytes_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m]))
@@ -4197,7 +4197,7 @@ metadata:
     graph: disk-io
     level: project
     metric: disk-io-writes-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_fs_writes_bytes_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) by (container_name)
@@ -4215,7 +4215,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-receive-errors-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_receive_errors_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) 
@@ -4233,7 +4233,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-receive-errors-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_receive_errors_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m]))
@@ -4250,7 +4250,7 @@ metadata:
     details: "false"
     graph: cpu-usage
     level: project
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_cpu_usage_seconds_total{container_name!="POD",namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) 
@@ -4267,7 +4267,7 @@ metadata:
     details: "true"
     graph: cpu-usage
     level: project
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_cpu_usage_seconds_total{container_name!="POD",namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) by (container_name)
@@ -4285,7 +4285,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-transmit-errors-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_transmit_errors_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) 
@@ -4303,7 +4303,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-transmit-errors-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_transmit_errors_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m]))
@@ -4321,7 +4321,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-transmit-packets-dropped-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_transmit_packets_dropped_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) 
@@ -4339,7 +4339,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-transmit-packets-dropped-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_transmit_packets_dropped_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m]))
@@ -4356,7 +4356,7 @@ metadata:
     details: "false"
     graph: cpu-usage
     level: project
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_cpu_system_seconds_total{container_name!="POD",namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) 
@@ -4373,7 +4373,7 @@ metadata:
     details: "true"
     graph: cpu-usage
     level: project
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_cpu_system_seconds_total{container_name!="POD",namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) by (container_name)
@@ -4393,7 +4393,7 @@ metadata:
     details: "false"
     level: cluster
     metric: e-2-e-scheduling-latency-seconds-quantile
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(histogram_quantile(0.99, sum(scheduler_e2e_scheduling_latency_microseconds_bucket) by (le, instance)) / 1e+06)
   legendFormat: E2E latency
@@ -4409,7 +4409,7 @@ metadata:
     details: "true"
     level: cluster
     metric: e-2-e-scheduling-latency-seconds-quantile
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: histogram_quantile(0.99, sum(scheduler_e2e_scheduling_latency_microseconds_bucket) by (le, instance)) / 1e+06
   legendFormat: E2E latency([[instance]])
@@ -4425,7 +4425,7 @@ metadata:
     details: "false"
     level: cluster
     metric: total-preemption-attempts
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(scheduler_total_preemption_attempts[5m])) by (instance)
   legendFormat: Preemption attempts
@@ -4441,7 +4441,7 @@ metadata:
     details: "true"
     level: cluster
     metric: total-preemption-attempts
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(scheduler_total_preemption_attempts[5m])) by (instance)
   legendFormat: Preemption attempts([[instance]])
@@ -4457,7 +4457,7 @@ metadata:
     details: "false"
     level: cluster
     metric: pod-unscheduler
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(kube_pod_status_scheduled{condition="false"})
   legendFormat: Scheduling failed pods
@@ -4473,7 +4473,7 @@ metadata:
     details: "true"
     level: cluster
     metric: pod-unscheduler
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(kube_pod_status_scheduled{condition="false"})
   legendFormat: Scheduling failed pods
@@ -4493,7 +4493,7 @@ metadata:
     graph: disk-io
     level: project
     metric: disk-io-writes-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_fs_writes_bytes_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m]))
@@ -4511,7 +4511,7 @@ metadata:
     graph: disk-io
     level: project
     metric: disk-io-writes-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_fs_writes_bytes_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) by (pod_name)
@@ -4529,7 +4529,7 @@ metadata:
     graph: disk-io
     level: project
     metric: disk-io-reads-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_fs_reads_bytes_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m]))
@@ -4547,7 +4547,7 @@ metadata:
     graph: disk-io
     level: project
     metric: disk-io-reads-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_fs_reads_bytes_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) by (pod_name)
@@ -4564,7 +4564,7 @@ metadata:
     details: "false"
     level: project
     metric: fs-bytes-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(container_fs_usage_bytes{namespace=~"$namespace", pod_name=~"$podName",
     container_name!=""}) 
@@ -4581,7 +4581,7 @@ metadata:
     details: "true"
     level: project
     metric: fs-bytes-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(container_fs_usage_bytes{namespace=~"$namespace", pod_name=~"$podName",
     container_name!=""}) by (pod_name)
@@ -4599,7 +4599,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-transmit-packets-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_transmit_packets_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) 
@@ -4617,7 +4617,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-transmit-packets-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_transmit_packets_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) by (pod_name)
@@ -4635,7 +4635,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-receive-packets-dropped-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_receive_packets_dropped_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) 
@@ -4653,7 +4653,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-receive-packets-dropped-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_receive_packets_dropped_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) by (pod_name)
@@ -4671,7 +4671,7 @@ metadata:
     graph: cpu-usage
     level: project
     metric: cpu-usage-seconds-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_cpu_usage_seconds_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) 
@@ -4689,7 +4689,7 @@ metadata:
     graph: cpu-usage
     level: project
     metric: cpu-usage-seconds-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_cpu_usage_seconds_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) by (pod_name)
@@ -4707,7 +4707,7 @@ metadata:
     graph: cpu-usage
     level: project
     metric: cpu-system-seconds-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_cpu_system_seconds_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) 
@@ -4725,7 +4725,7 @@ metadata:
     graph: cpu-usage
     level: project
     metric: cpu-system-seconds-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_cpu_system_seconds_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) by (pod_name)
@@ -4743,7 +4743,7 @@ metadata:
     graph: network-io
     level: project
     metric: network-receive-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_receive_bytes_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m]))
@@ -4761,7 +4761,7 @@ metadata:
     graph: network-io
     level: project
     metric: network-receive-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_receive_bytes_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) by (pod_name)
@@ -4779,7 +4779,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-receive-errors-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_receive_errors_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) 
@@ -4797,7 +4797,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-receive-errors-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_receive_errors_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) by (pod_name)
@@ -4815,7 +4815,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-receive-packets-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_receive_packets_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) 
@@ -4833,7 +4833,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-receive-packets-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_receive_packets_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) by (pod_name)
@@ -4850,7 +4850,7 @@ metadata:
     details: "false"
     level: project
     metric: memory-usage-bytes-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(container_memory_working_set_bytes{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}) 
@@ -4867,7 +4867,7 @@ metadata:
     details: "true"
     level: project
     metric: memory-usage-bytes-sum
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(container_memory_working_set_bytes{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}) by (pod_name)
@@ -4885,7 +4885,7 @@ metadata:
     graph: network-io
     level: project
     metric: network-transmit-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_transmit_bytes_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m]))
@@ -4903,7 +4903,7 @@ metadata:
     graph: network-io
     level: project
     metric: network-transmit-bytes-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_transmit_bytes_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) by (pod_name)
@@ -4921,7 +4921,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-transmit-errors-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_transmit_errors_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) 
@@ -4939,7 +4939,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-transmit-errors-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_transmit_errors_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) by (pod_name)
@@ -4957,7 +4957,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-transmit-packets-dropped-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_transmit_packets_dropped_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) 
@@ -4975,7 +4975,7 @@ metadata:
     graph: network-packet
     level: project
     metric: network-transmit-packets-dropped-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_network_transmit_packets_dropped_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) by (pod_name)
@@ -4993,7 +4993,7 @@ metadata:
     graph: cpu-usage
     level: project
     metric: cpu-user-seconds-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_cpu_user_seconds_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) 
@@ -5011,7 +5011,7 @@ metadata:
     graph: cpu-usage
     level: project
     metric: cpu-user-seconds-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_cpu_user_seconds_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) by (pod_name)
@@ -5029,7 +5029,7 @@ metadata:
     graph: cpu-usage
     level: project
     metric: cpu-cfs-throttled-seconds-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_cpu_cfs_throttled_seconds_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) 
@@ -5047,7 +5047,7 @@ metadata:
     graph: cpu-usage
     level: project
     metric: cpu-cfs-throttled-seconds-sum-rate
-    source: rancher-monitoring
+    source: ranger-monitoring
 spec:
   expression: sum(rate(container_cpu_cfs_throttled_seconds_total{namespace=~"$namespace",pod_name=~"$podName",
     container_name!=""}[5m])) by (pod_name)
@@ -5062,7 +5062,7 @@ kind: ProjectMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: project
     component: container
   name: container-cpu-usage
@@ -5082,7 +5082,7 @@ kind: ProjectMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: project
     component: container
   name: container-memory-usage-bytes-sum
@@ -5102,7 +5102,7 @@ kind: ProjectMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: project
     component: container
   name: container-disk-io
@@ -5122,7 +5122,7 @@ kind: ProjectMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: project
     component: pod
   name: pod-cpu-usage
@@ -5146,7 +5146,7 @@ kind: ProjectMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: project
     component: pod
   name: pod-memory-usage-bytes-sum
@@ -5170,7 +5170,7 @@ kind: ProjectMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: project
     component: pod
   name: pod-network-io
@@ -5194,7 +5194,7 @@ kind: ProjectMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: project
     component: pod
   name: pod-network-packet
@@ -5218,7 +5218,7 @@ kind: ProjectMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: project
     component: pod
   name: pod-disk-io
@@ -5242,7 +5242,7 @@ kind: ProjectMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: project
     component: workload
   name: workload-cpu-usage
@@ -5266,7 +5266,7 @@ kind: ProjectMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: project
     component: workload
   name: workload-memory-usage-bytes-sum
@@ -5290,7 +5290,7 @@ kind: ProjectMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: project
     component: workload
   name: workload-network-io
@@ -5314,7 +5314,7 @@ kind: ProjectMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: project
     component: workload
   name: workload-network-packet
@@ -5338,7 +5338,7 @@ kind: ProjectMonitorGraph
 metadata:
   labels:
     app: metric-expression
-    source: rancher-monitoring
+    source: ranger-monitoring
     level: project
     component: workload
   name: workload-disk-io

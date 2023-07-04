@@ -1,5 +1,5 @@
 import pytest
-from rancher import ApiError
+from ranger import ApiError
 
 
 # no one should be able to create features via the api

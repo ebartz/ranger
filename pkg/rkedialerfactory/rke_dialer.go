@@ -7,11 +7,11 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/rancher/norman/types/slice"
-	"github.com/rancher/rancher/pkg/ref"
-	"github.com/rancher/rancher/pkg/types/config/dialer"
-	"github.com/rancher/rke/hosts"
-	rketypes "github.com/rancher/rke/types"
+	"github.com/ranger/norman/types/slice"
+	"github.com/ranger/ranger/pkg/ref"
+	"github.com/ranger/ranger/pkg/types/config/dialer"
+	"github.com/ranger/rke/hosts"
+	rketypes "github.com/ranger/rke/types"
 	"k8s.io/client-go/transport"
 )
 
@@ -49,7 +49,7 @@ func (t *RKEDialerFactory) Build(h *hosts.Host) (func(network, address string) (
 	}, nil
 }
 
-func (t *RKEDialerFactory) WrapTransport(config *rketypes.RancherKubernetesEngineConfig) transport.WrapperFunc {
+func (t *RKEDialerFactory) WrapTransport(config *rketypes.RangerKubernetesEngineConfig) transport.WrapperFunc {
 	translateAddress := map[string]string{}
 
 	for _, node := range config.Nodes {

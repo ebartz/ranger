@@ -8,15 +8,15 @@ import (
 	"strings"
 	"time"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/catalog/manager"
-	"github.com/rancher/rancher/pkg/catalog/utils"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/catalog/manager"
+	"github.com/ranger/ranger/pkg/catalog/utils"
 
-	"github.com/rancher/rancher/pkg/controllers/managementuserlegacy/helm/common"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/helm"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/ranger/pkg/controllers/managementuserlegacy/helm/common"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/helm"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/types/config"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	utilerrors "k8s.io/apimachinery/pkg/util/errors"
@@ -24,16 +24,16 @@ import (
 )
 
 const (
-	libraryURL    = "https://git.rancher.io/charts"
+	libraryURL    = "https://git.ranger.io/charts"
 	libraryBranch = "master"
 	libraryName   = "library"
 
-	systemLibraryURL    = "https://git.rancher.io/system-charts"
+	systemLibraryURL    = "https://git.ranger.io/system-charts"
 	systemLibraryBranch = "master"
 	systemLibraryName   = "system-library"
 	defSystemChartVer   = "management.cattle.io/default-system-chart-version"
 
-	helm3LibraryURL    = "https://git.rancher.io/helm3-charts"
+	helm3LibraryURL    = "https://git.ranger.io/helm3-charts"
 	helm3LibraryBranch = "master"
 	helm3LibraryName   = "helm3-library"
 	helm3HelmVersion   = common.HelmV3
@@ -143,7 +143,7 @@ func syncCatalogs(management *config.ManagementContext) error {
 			}
 			return doAddCatalogs(management, helm3LibraryName, helm3LibraryURL, helm3LibraryBranch, helm3HelmVersion, bundledMode)
 		},
-		// add rancher-charts
+		// add ranger-charts
 		func() error {
 			if err := doAddCatalogs(management, systemLibraryName, systemLibraryURL, systemLibraryBranch, "", bundledMode); err != nil {
 				return err
@@ -205,7 +205,7 @@ func doAddCatalogs(management *config.ManagementContext, name, url, branch, helm
 
 	if bundledMode && obj.Name == utils.SystemLibraryName {
 		// force update the catalog cache on every startup; this ensures that setups using bundledMode can load new image
-		// into the ConfigMap when the bundled system-chart is updated (e.g. during Rancher upgrades) upon restarting Rancher
+		// into the ConfigMap when the bundled system-chart is updated (e.g. during Ranger upgrades) upon restarting Ranger
 		configMapInterface := management.Core.ConfigMaps("")
 		configMapLister := configMapInterface.Controller().Lister()
 		return manager.CreateOrUpdateSystemCatalogImageCache(obj, configMapInterface, configMapLister, true, true)

@@ -4,14 +4,14 @@ import (
 	"context"
 	"time"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/clustermanager"
-	"github.com/rancher/rancher/pkg/controllers/management/imported"
-	"github.com/rancher/rancher/pkg/controllers/managementagent/nslabels"
-	"github.com/rancher/rancher/pkg/controllers/managementuserlegacy/helm"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/types/config"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/clustermanager"
+	"github.com/ranger/ranger/pkg/controllers/management/imported"
+	"github.com/ranger/ranger/pkg/controllers/managementagent/nslabels"
+	"github.com/ranger/ranger/pkg/controllers/managementuserlegacy/helm"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/sirupsen/logrus"
 	batchV1 "k8s.io/api/batch/v1"
 	coreV1 "k8s.io/api/core/v1"
@@ -24,8 +24,8 @@ import (
 )
 
 const (
-	WebhookClusterRoleBindingName = "rancher-webhook"
-	WebhookConfigurationName      = "rancher.cattle.io"
+	WebhookClusterRoleBindingName = "ranger-webhook"
+	WebhookConfigurationName      = "ranger.cattle.io"
 )
 
 var (
@@ -49,7 +49,7 @@ var (
 )
 
 /*
-RegisterEarly registers ClusterLifecycleCleanup controller which is responsible for stopping rancher agent in user cluster,
+RegisterEarly registers ClusterLifecycleCleanup controller which is responsible for stopping ranger agent in user cluster,
 and de-registering k8s controllers, on cluster.remove
 */
 func RegisterEarly(ctx context.Context, management *config.ManagementContext, manager *clustermanager.Manager) {
@@ -90,7 +90,7 @@ func (c *ClusterLifecycleCleanup) Remove(obj *v3.Cluster) (runtime.Object, error
 		} else if obj.Status.Driver == v32.ClusterDriverK3s ||
 			obj.Status.Driver == v32.ClusterDriverK3os ||
 			obj.Status.Driver == v32.ClusterDriverRke2 ||
-			obj.Status.Driver == v32.ClusterDriverRancherD ||
+			obj.Status.Driver == v32.ClusterDriverRangerD ||
 			(obj.Status.Driver == v32.ClusterDriverImported && !imported.IsAdministratedByProvisioningCluster(obj)) ||
 			(obj.Status.AKSStatus.UpstreamSpec != nil && obj.Status.AKSStatus.UpstreamSpec.Imported) ||
 			(obj.Status.EKSStatus.UpstreamSpec != nil && obj.Status.EKSStatus.UpstreamSpec.Imported) ||
@@ -228,12 +228,12 @@ func (c *ClusterLifecycleCleanup) createCleanupClusterRole(userContext *config.U
 			APIGroups: []string{"batch"},
 			Resources: []string{"jobs"},
 		},
-		// The job checks for the presence of the rancher service first
+		// The job checks for the presence of the ranger service first
 		{
 			Verbs:         []string{"get"},
 			APIGroups:     []string{""},
 			Resources:     []string{"services"},
-			ResourceNames: []string{"rancher"},
+			ResourceNames: []string{"ranger"},
 		},
 		{
 			Verbs:         []string{"delete"},

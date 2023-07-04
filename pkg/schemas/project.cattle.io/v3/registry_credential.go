@@ -4,8 +4,8 @@ import (
 	"encoding/base64"
 	"fmt"
 
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
 )
 
 type RegistryCredentialMapper struct {

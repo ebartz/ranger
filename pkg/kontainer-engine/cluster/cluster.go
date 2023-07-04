@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/rancher/rancher/pkg/kontainer-engine/logstream"
-	"github.com/rancher/rancher/pkg/kontainer-engine/types"
+	"github.com/ranger/ranger/pkg/kontainer-engine/logstream"
+	"github.com/ranger/ranger/pkg/kontainer-engine/types"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/api/errors"
 )
@@ -24,7 +24,7 @@ const (
 )
 
 var (
-	// ErrClusterExists This error is checked in rancher, don't change the string
+	// ErrClusterExists This error is checked in ranger, don't change the string
 	ErrClusterExists = errors2.New("cluster already exists")
 )
 

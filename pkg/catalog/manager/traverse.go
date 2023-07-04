@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"strings"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/controller"
-	cutils "github.com/rancher/rancher/pkg/catalog/utils"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	helmlib "github.com/rancher/rancher/pkg/helm"
-	"github.com/rancher/rancher/pkg/namespace"
+	"github.com/ranger/norman/controller"
+	cutils "github.com/ranger/ranger/pkg/catalog/utils"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	helmlib "github.com/ranger/ranger/pkg/helm"
+	"github.com/ranger/ranger/pkg/namespace"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -119,8 +119,8 @@ func (m *Manager) traverseAndUpdate(helm *helmlib.Helm, commit string, cmt *Cata
 							errs = append(errs, err)
 							continue
 						}
-						v.RancherMinVersion = value.RancherMin
-						v.RancherMaxVersion = value.RancherMax
+						v.RangerMinVersion = value.RangerMin
+						v.RangerMaxVersion = value.RangerMax
 						v.RequiredNamespace = value.Namespace
 						label = labels.Merge(label, value.Labels)
 						for _, category := range value.Categories {
@@ -358,8 +358,8 @@ func hasChartChanged(existingTemplate *v3.CatalogTemplate, desiredChartVersions 
 var supportedFiles = []string{"catalog.yml", "catalog.yaml", "questions.yml", "questions.yaml"}
 
 type catalogYml struct {
-	RancherMin string            `yaml:"rancher_min_version,omitempty"`
-	RancherMax string            `yaml:"rancher_max_version,omitempty"`
+	RangerMin string            `yaml:"ranger_min_version,omitempty"`
+	RangerMax string            `yaml:"ranger_max_version,omitempty"`
 	Categories []string          `yaml:"categories,omitempty"`
 	Namespace  string            `yaml:"namespace,omitempty"`
 	Labels     map[string]string `yaml:"labels,omitempty"`

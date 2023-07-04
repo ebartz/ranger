@@ -1,8 +1,8 @@
 package v3
 
 import (
-	"github.com/rancher/norman/condition"
-	"github.com/rancher/norman/types"
+	"github.com/ranger/norman/condition"
+	"github.com/ranger/norman/types"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

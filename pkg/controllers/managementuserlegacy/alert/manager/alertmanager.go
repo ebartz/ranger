@@ -10,12 +10,12 @@ import (
 	"time"
 
 	"github.com/prometheus/common/model"
-	alertconfig "github.com/rancher/rancher/pkg/controllers/managementuserlegacy/alert/config"
-	monitorutil "github.com/rancher/rancher/pkg/monitoring"
+	alertconfig "github.com/ranger/ranger/pkg/controllers/managementuserlegacy/alert/config"
+	monitorutil "github.com/ranger/ranger/pkg/monitoring"
 
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/types/config/dialer"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/types/config/dialer"
 	"github.com/sirupsen/logrus"
 )
 
@@ -137,7 +137,7 @@ func GetAlertManagerDefaultConfig() *alertconfig.Config {
 
 	receivers := []*alertconfig.Receiver{}
 	initReceiver := &alertconfig.Receiver{
-		Name:         "rancherlabs",
+		Name:         "rangerlabs",
 		SlackConfigs: slackConfigs,
 	}
 	receivers = append(receivers, initReceiver)
@@ -149,7 +149,7 @@ func GetAlertManagerDefaultConfig() *alertconfig.Config {
 	repeatInterval, _ := model.ParseDuration("1h")
 
 	config.Route = &alertconfig.Route{
-		Receiver:       "rancherlabs",
+		Receiver:       "rangerlabs",
 		GroupWait:      &groupWait,
 		GroupInterval:  &groupInterval,
 		RepeatInterval: &repeatInterval,
@@ -230,7 +230,7 @@ func (m *AlertManager) AddSilenceRule(matcherName, matcherValue string) error {
 		StartsAt:  now,
 		EndsAt:    endsAt,
 		CreatedAt: now,
-		CreatedBy: "rancherlabs",
+		CreatedBy: "rangerlabs",
 		Comment:   "silence",
 	}
 

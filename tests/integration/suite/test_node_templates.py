@@ -3,8 +3,8 @@ import time
 
 from .common import random_str
 from .conftest import wait_for
-from rancher import ApiError
-from rancher import RestObject
+from ranger import ApiError
+from ranger import RestObject
 from kubernetes.client import CustomObjectsApi
 from kubernetes.client.rest import ApiException
 

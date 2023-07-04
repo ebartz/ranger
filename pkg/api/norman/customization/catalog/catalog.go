@@ -7,23 +7,23 @@ import (
 	"strings"
 	"time"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 
 	"github.com/ghodss/yaml"
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	"github.com/rancher/rancher/pkg/generated/compose"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/rbac"
-	"github.com/rancher/rancher/pkg/ref"
-	"github.com/rancher/rancher/pkg/settings"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	"github.com/ranger/ranger/pkg/generated/compose"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/rbac"
+	"github.com/ranger/ranger/pkg/ref"
+	"github.com/ranger/ranger/pkg/settings"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
-	SystemLibraryURL            = "https://git.rancher.io/system-charts"
+	SystemLibraryURL            = "https://git.ranger.io/system-charts"
 	SystemCatalogName           = "system-library"
 	embededSystemCatalogSetting = "system-catalog"
 )

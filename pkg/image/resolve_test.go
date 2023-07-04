@@ -15,8 +15,8 @@ func TestConvertMirroredImages(t *testing.T) {
 		{
 			caseName: "normalize images",
 			inputRawImages: map[string]map[string]struct{}{
-				"rancher/rke-tools:v0.1.48": {"system": struct{}{}},
-				"rancher/rke-tools:v0.1.49": {"system": struct{}{}},
+				"ranger/rke-tools:v0.1.48": {"system": struct{}{}},
+				"ranger/rke-tools:v0.1.49": {"system": struct{}{}},
 				// for mirror
 				"prom/prometheus:v2.0.1":                           {"system": struct{}{}},
 				"quay.io/coreos/flannel:v1.2.3":                    {"system": struct{}{}},
@@ -24,11 +24,11 @@ func TestConvertMirroredImages(t *testing.T) {
 				"test.io/test:v0.0.1":                              {"test": struct{}{}}, // not in mirror list
 			},
 			outputImagesShouldEqual: map[string]map[string]struct{}{
-				"rancher/coreos-flannel:v1.2.3":   {"system": struct{}{}},
-				"rancher/k8s-dns-kube-dns:1.15.0": {"system": struct{}{}},
-				"rancher/prom-prometheus:v2.0.1":  {"system": struct{}{}},
-				"rancher/rke-tools:v0.1.48":       {"system": struct{}{}},
-				"rancher/rke-tools:v0.1.49":       {"system": struct{}{}},
+				"ranger/coreos-flannel:v1.2.3":   {"system": struct{}{}},
+				"ranger/k8s-dns-kube-dns:1.15.0": {"system": struct{}{}},
+				"ranger/prom-prometheus:v2.0.1":  {"system": struct{}{}},
+				"ranger/rke-tools:v0.1.48":       {"system": struct{}{}},
+				"ranger/rke-tools:v0.1.49":       {"system": struct{}{}},
 				"test.io/test:v0.0.1":             {"test": struct{}{}},
 			},
 		},

@@ -5,12 +5,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rancher/norman/lifecycle"
-	"github.com/rancher/norman/resource"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/wrangler/pkg/generic"
+	"github.com/ranger/norman/lifecycle"
+	"github.com/ranger/norman/resource"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/wrangler/pkg/generic"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -107,7 +107,7 @@ func (c *gcLifecycle) Remove(cluster *v3.Cluster) (runtime.Object, error) {
 		return nil, err
 	}
 	decodedMap := resource.GetClusterScopedTypes()
-	//if map is empty, fall back to checking all Rancher types
+	//if map is empty, fall back to checking all Ranger types
 	if len(decodedMap) == 0 {
 		decodedMap = resource.Get()
 	}

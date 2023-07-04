@@ -23,22 +23,22 @@ tests:
 - it: should set provided service annotation correctly
   set:
     service.annotations:
-      beta.cloud.google.com/backend-config: '{"default": "rancher-config"}'
+      beta.cloud.google.com/backend-config: '{"default": "ranger-config"}'
   asserts:
   - equal:
       path: metadata.annotations
       value:
-        beta.cloud.google.com/backend-config: '{"default": "rancher-config"}'
+        beta.cloud.google.com/backend-config: '{"default": "ranger-config"}'
 - it: should set multiple provided service annotations correctly
   set:
     service.annotations:
-      beta.cloud.google.com/backend-config: '{"default": "rancher-config"}'
+      beta.cloud.google.com/backend-config: '{"default": "ranger-config"}'
       cloud.google.com/neg: '{"ingress": true}'
   asserts:
   - equal:
       path: metadata.annotations
       value:
-        beta.cloud.google.com/backend-config: '{"default": "rancher-config"}'
+        beta.cloud.google.com/backend-config: '{"default": "ranger-config"}'
         cloud.google.com/neg: '{"ingress": true}'
 - it: should not include service annotations if none are provided
   asserts:

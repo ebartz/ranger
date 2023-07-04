@@ -5,13 +5,13 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	catalog "github.com/rancher/rancher/pkg/apis/catalog.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/controllers/dashboard/chart"
-	"github.com/rancher/rancher/pkg/controllers/dashboard/chart/fake"
-	"github.com/rancher/rancher/pkg/features"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/settings"
-	corev1 "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
+	catalog "github.com/ranger/ranger/pkg/apis/catalog.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/controllers/dashboard/chart"
+	"github.com/ranger/ranger/pkg/controllers/dashboard/chart/fake"
+	"github.com/ranger/ranger/pkg/features"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/settings"
+	corev1 "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -20,8 +20,8 @@ import (
 var (
 	errUnimplemented  = fmt.Errorf("unimplemented")
 	errNotFound       = fmt.Errorf("not found")
-	priorityClassName = "rancher-critical"
-	operatorNamespace = "rancher-operator-system"
+	priorityClassName = "ranger-critical"
+	operatorNamespace = "ranger-operator-system"
 )
 
 // Test_ChartInstallation test that all expected charts are installed or uninstalled with expected configuration
@@ -32,7 +32,7 @@ func Test_ChartInstallation(t *testing.T) {
 		},
 	}
 	h := &handler{
-		chartsConfig: chart.RancherConfigGetter{ConfigCache: &mockCache{}},
+		chartsConfig: chart.RangerConfigGetter{ConfigCache: &mockCache{}},
 	}
 	tests := []struct {
 		name             string
@@ -44,7 +44,7 @@ func Test_ChartInstallation(t *testing.T) {
 			name: "normal installation",
 			setup: func(ctrl *gomock.Controller) chart.Manager {
 				settings.ConfigMapName.Set("pass")
-				settings.RancherWebhookVersion.Set("2.0.0")
+				settings.RangerWebhookVersion.Set("2.0.0")
 				manager := fake.NewMockManager(ctrl)
 				expectedValues := map[string]interface{}{
 					"priorityClassName": priorityClassName,
@@ -63,7 +63,7 @@ func Test_ChartInstallation(t *testing.T) {
 				var b bool
 				manager.EXPECT().Ensure(
 					namespace.System,
-					"rancher-webhook",
+					"ranger-webhook",
 					"",
 					"2.0.0",
 					expectedValues,
@@ -71,7 +71,7 @@ func Test_ChartInstallation(t *testing.T) {
 					"",
 				).Return(nil)
 
-				manager.EXPECT().Uninstall(operatorNamespace, "rancher-operator").Return(nil)
+				manager.EXPECT().Uninstall(operatorNamespace, "ranger-operator").Return(nil)
 				return manager
 			},
 		},
@@ -79,7 +79,7 @@ func Test_ChartInstallation(t *testing.T) {
 			name: "installation without webhook priority class",
 			setup: func(ctrl *gomock.Controller) chart.Manager {
 				settings.ConfigMapName.Set("fail")
-				settings.RancherWebhookVersion.Set("2.0.0")
+				settings.RangerWebhookVersion.Set("2.0.0")
 				manager := fake.NewMockManager(ctrl)
 				expectedValues := map[string]interface{}{
 					"capi": map[string]interface{}{
@@ -97,7 +97,7 @@ func Test_ChartInstallation(t *testing.T) {
 				var b bool
 				manager.EXPECT().Ensure(
 					namespace.System,
-					"rancher-webhook",
+					"ranger-webhook",
 					"",
 					"2.0.0",
 					expectedValues,
@@ -105,7 +105,7 @@ func Test_ChartInstallation(t *testing.T) {
 					"",
 				).Return(nil)
 
-				manager.EXPECT().Uninstall(operatorNamespace, "rancher-operator").Return(nil)
+				manager.EXPECT().Uninstall(operatorNamespace, "ranger-operator").Return(nil)
 				return manager
 
 			},
@@ -114,7 +114,7 @@ func Test_ChartInstallation(t *testing.T) {
 			name: "installation with image override",
 			setup: func(ctrl *gomock.Controller) chart.Manager {
 				settings.ConfigMapName.Set("fail")
-				settings.RancherWebhookVersion.Set("2.0.1")
+				settings.RangerWebhookVersion.Set("2.0.1")
 				manager := fake.NewMockManager(ctrl)
 				expectedValues := map[string]interface{}{
 					"capi": map[string]interface{}{
@@ -129,31 +129,31 @@ func Test_ChartInstallation(t *testing.T) {
 						},
 					},
 					"image": map[string]interface{}{
-						"repository": "rancher-test.io/rancher/rancher-webhook",
+						"repository": "ranger-test.io/ranger/ranger-webhook",
 					},
 				}
 				var b bool
 				manager.EXPECT().Ensure(
 					namespace.System,
-					"rancher-webhook",
+					"ranger-webhook",
 					"",
 					"2.0.1",
 					expectedValues,
 					gomock.AssignableToTypeOf(b),
-					"rancher-test.io/"+settings.ShellImage.Get(),
+					"ranger-test.io/"+settings.ShellImage.Get(),
 				).Return(nil)
 
-				manager.EXPECT().Uninstall(operatorNamespace, "rancher-operator").Return(nil)
+				manager.EXPECT().Uninstall(operatorNamespace, "ranger-operator").Return(nil)
 				return manager
 			},
-			registryOverride: "rancher-test.io",
+			registryOverride: "ranger-test.io",
 		},
 		{
 			name: "installation with min version override",
 			setup: func(ctrl *gomock.Controller) chart.Manager {
 				settings.ConfigMapName.Set("fail")
-				settings.RancherWebhookMinVersion.Set("2.0.1")
-				settings.RancherWebhookVersion.Set("2.0.4")
+				settings.RangerWebhookMinVersion.Set("2.0.1")
+				settings.RangerWebhookVersion.Set("2.0.4")
 				manager := fake.NewMockManager(ctrl)
 				expectedValues := map[string]interface{}{
 					"capi": map[string]interface{}{
@@ -168,24 +168,24 @@ func Test_ChartInstallation(t *testing.T) {
 						},
 					},
 					"image": map[string]interface{}{
-						"repository": "rancher-test.io/rancher/rancher-webhook",
+						"repository": "ranger-test.io/ranger/ranger-webhook",
 					},
 				}
 				var b bool
 				manager.EXPECT().Ensure(
 					namespace.System,
-					"rancher-webhook",
+					"ranger-webhook",
 					"2.0.1",
 					"",
 					expectedValues,
 					gomock.AssignableToTypeOf(b),
-					"rancher-test.io/"+settings.ShellImage.Get(),
+					"ranger-test.io/"+settings.ShellImage.Get(),
 				).Return(nil)
 
-				manager.EXPECT().Uninstall(operatorNamespace, "rancher-operator").Return(nil)
+				manager.EXPECT().Uninstall(operatorNamespace, "ranger-operator").Return(nil)
 				return manager
 			},
-			registryOverride: "rancher-test.io",
+			registryOverride: "ranger-test.io",
 		},
 	}
 	for _, tt := range tests {

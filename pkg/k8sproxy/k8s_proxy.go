@@ -3,11 +3,11 @@ package k8sproxy
 import (
 	"net/http"
 
-	"github.com/rancher/rancher/pkg/clusterrouter"
-	"github.com/rancher/rancher/pkg/clusterrouter/proxy"
-	"github.com/rancher/rancher/pkg/k8slookup"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/types/config/dialer"
+	"github.com/ranger/ranger/pkg/clusterrouter"
+	"github.com/ranger/ranger/pkg/clusterrouter/proxy"
+	"github.com/ranger/ranger/pkg/k8slookup"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/types/config/dialer"
 )
 
 func New(scaledContext *config.ScaledContext, dialer dialer.Factory, clusterContextGetter proxy.ClusterContextGetter) http.Handler {

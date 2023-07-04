@@ -8,15 +8,15 @@ import (
 
 	"github.com/blang/semver"
 	"github.com/pkg/errors"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/catalog/utils"
-	"github.com/rancher/rancher/pkg/controllers/managementuserlegacy/helm/common"
-	corev1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	projectv3 "github.com/rancher/rancher/pkg/generated/norman/project.cattle.io/v3"
-	helmlib "github.com/rancher/rancher/pkg/helm"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/settings"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/catalog/utils"
+	"github.com/ranger/ranger/pkg/controllers/managementuserlegacy/helm/common"
+	corev1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	projectv3 "github.com/ranger/ranger/pkg/generated/norman/project.cattle.io/v3"
+	helmlib "github.com/ranger/ranger/pkg/helm"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/settings"
 	"github.com/sirupsen/logrus"
 	kerrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -49,7 +49,7 @@ type Manager struct {
 type CatalogManager interface {
 	ValidateChartCompatibility(template *v3.CatalogTemplateVersion, clusterName, currentAppVersion string) error
 	ValidateKubeVersion(template *v3.CatalogTemplateVersion, clusterName string) error
-	ValidateRancherVersion(template *v3.CatalogTemplateVersion, currentAppVersion string) error
+	ValidateRangerVersion(template *v3.CatalogTemplateVersion, currentAppVersion string) error
 	LatestAvailableTemplateVersion(template *v3.CatalogTemplate, clusterName string) (*v32.TemplateVersionSpec, error)
 	GetSystemAppCatalogID(templateVersionID, clusterName string) (string, error)
 }
@@ -210,7 +210,7 @@ func (m *Manager) deleteBadCatalogTemplates() []error {
 }
 
 func (m *Manager) ValidateChartCompatibility(template *v3.CatalogTemplateVersion, clusterName, currentAppVersion string) error {
-	if err := m.ValidateRancherVersion(template, currentAppVersion); err != nil {
+	if err := m.ValidateRangerVersion(template, currentAppVersion); err != nil {
 		return err
 	}
 	return m.ValidateKubeVersion(template, clusterName)
@@ -245,7 +245,7 @@ func (m *Manager) ValidateKubeVersion(template *v3.CatalogTemplateVersion, clust
 	return nil
 }
 
-func (m *Manager) ValidateRancherVersion(template *v3.CatalogTemplateVersion, currentAppVersion string) error {
+func (m *Manager) ValidateRangerVersion(template *v3.CatalogTemplateVersion, currentAppVersion string) error {
 	if currentAppVersion != "" && currentAppVersion == template.Spec.Version {
 		// if current app version is provided and the version in the update is equal to it then the
 		// version is deemed okay as it is already installed. This ensures the app can continue to
@@ -263,27 +263,27 @@ func (m *Manager) ValidateRancherVersion(template *v3.CatalogTemplateVersion, cu
 	serverVersion = strings.TrimPrefix(serverVersion, "v")
 
 	versionRange := ""
-	if template.Spec.RancherMinVersion != "" {
-		versionRange += " >=" + strings.TrimPrefix(template.Spec.RancherMinVersion, "v")
+	if template.Spec.RangerMinVersion != "" {
+		versionRange += " >=" + strings.TrimPrefix(template.Spec.RangerMinVersion, "v")
 	}
-	if template.Spec.RancherMaxVersion != "" {
-		versionRange += " <=" + strings.TrimPrefix(template.Spec.RancherMaxVersion, "v")
+	if template.Spec.RangerMaxVersion != "" {
+		versionRange += " <=" + strings.TrimPrefix(template.Spec.RangerMaxVersion, "v")
 	}
 	if versionRange == "" {
 		return nil
 	}
 	constraint, err := semver.ParseRange(versionRange)
 	if err != nil {
-		logrus.Errorf("failed to parse constraint for rancher version %s: %v", versionRange, err)
+		logrus.Errorf("failed to parse constraint for ranger version %s: %v", versionRange, err)
 		return nil
 	}
 
-	rancherVersion, err := semver.Parse(serverVersion)
+	rangerVersion, err := semver.Parse(serverVersion)
 	if err != nil {
 		return err
 	}
-	if !constraint(rancherVersion) {
-		return IncompatibleTemplateVersionErr(fmt.Errorf("incompatible rancher version [%s] for template [%s]", serverVersion, template.Name))
+	if !constraint(rangerVersion) {
+		return IncompatibleTemplateVersionErr(fmt.Errorf("incompatible ranger version [%s] for template [%s]", serverVersion, template.Name))
 	}
 	return nil
 }
@@ -318,7 +318,7 @@ func (m *Manager) LatestAvailableTemplateVersion(template *v3.CatalogTemplate, c
 		}
 	}
 
-	return nil, IncompatibleTemplateVersionErr(errors.Errorf("template %s incompatible with rancher version or cluster's [%s] kubernetes version", template.Name, clusterName))
+	return nil, IncompatibleTemplateVersionErr(errors.Errorf("template %s incompatible with ranger version or cluster's [%s] kubernetes version", template.Name, clusterName))
 }
 
 func (m *Manager) GetSystemAppCatalogID(templateVersionID, clusterName string) (string, error) {

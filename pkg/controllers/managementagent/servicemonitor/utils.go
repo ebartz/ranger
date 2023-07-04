@@ -7,18 +7,18 @@ import (
 	"sort"
 	"strings"
 
-	v32 "github.com/rancher/rancher/pkg/apis/project.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/project.cattle.io/v3"
 
 	monitoringv1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
-	util "github.com/rancher/rancher/pkg/controllers/managementagent/workload"
-	rmonitoringv1 "github.com/rancher/rancher/pkg/generated/norman/monitoring.coreos.com/v1"
+	util "github.com/ranger/ranger/pkg/controllers/managementagent/workload"
+	rmonitoringv1 "github.com/ranger/ranger/pkg/generated/norman/monitoring.coreos.com/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/util/intstr"
 )
 
-func filterRancherLabels(l map[string]string) labels.Set {
+func filterRangerLabels(l map[string]string) labels.Set {
 	rtn := map[string]string{}
 	for k, v := range l {
 		if !strings.Contains(k, "cattle.io/") {

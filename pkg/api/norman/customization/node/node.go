@@ -13,19 +13,19 @@ import (
 	"strings"
 	"time"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 
 	"github.com/mitchellh/mapstructure"
-	"github.com/rancher/norman/api/access"
-	"github.com/rancher/norman/api/handler"
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/norman/types/values"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	"github.com/rancher/rancher/pkg/encryptedstore"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	managementschema "github.com/rancher/rancher/pkg/schemas/management.cattle.io/v3"
+	"github.com/ranger/norman/api/access"
+	"github.com/ranger/norman/api/handler"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/norman/types/values"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	"github.com/ranger/ranger/pkg/encryptedstore"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	managementschema "github.com/ranger/ranger/pkg/schemas/management.cattle.io/v3"
 )
 
 var toIgnoreErrs = []string{"--ignore-daemonsets", "--delete-local-data", "--force", "did not complete within"}

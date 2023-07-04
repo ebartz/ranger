@@ -1,5 +1,5 @@
 import pytest
-from rancher import ApiError
+from ranger import ApiError
 
 from .common import random_str
 from .conftest import wait_for
@@ -91,7 +91,7 @@ def test_only_admin_can_crud_global_roles(admin_mc, user_mc, remove_resource):
 
 
 def test_admin_can_only_edit_builtin_global_roles(admin_mc, remove_resource):
-    """Asserts admins can edit builtin global roles created by rancher but
+    """Asserts admins can edit builtin global roles created by ranger but
     cannot delete them"""
     admin_client = admin_mc.client
 

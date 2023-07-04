@@ -9,18 +9,18 @@ import (
 	"time"
 
 	"github.com/mitchellh/mapstructure"
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/auth/providers/common"
-	"github.com/rancher/rancher/pkg/auth/tokens"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	publicclient "github.com/rancher/rancher/pkg/client/generated/management/v3public"
-	corev1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/user"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/auth/providers/common"
+	"github.com/ranger/ranger/pkg/auth/tokens"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	publicclient "github.com/ranger/ranger/pkg/client/generated/management/v3public"
+	corev1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/user"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -111,7 +111,7 @@ func (g *googleOauthProvider) loginUser(c context.Context, googleOAuthCredential
 		return userPrincipal, groupPrincipals, "", err
 	}
 
-	logrus.Debugf("[Google OAuth] loginuser: Checking user's access to Rancher")
+	logrus.Debugf("[Google OAuth] loginuser: Checking user's access to Ranger")
 	allowed, err := g.userMGR.CheckAccess(config.AccessMode, config.AllowedPrincipalIDs, userPrincipal.Name, groupPrincipals)
 	if err != nil {
 		return userPrincipal, groupPrincipals, "", err
@@ -437,7 +437,7 @@ func (g *googleOauthProvider) GetUserExtraAttributes(userPrincipal v3.Principal)
 	return extras
 }
 
-// IsDisabledProvider checks if the Google auth provider is currently disabled in Rancher.
+// IsDisabledProvider checks if the Google auth provider is currently disabled in Ranger.
 func (g *googleOauthProvider) IsDisabledProvider() (bool, error) {
 	googleOauthConfig, err := g.getGoogleOAuthConfigCR()
 	if err != nil {

@@ -4,17 +4,17 @@ import (
 	"context"
 	"strconv"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/kubeapi/storageclasses"
-	"github.com/rancher/rancher/tests/framework/extensions/unstructured"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/kubeapi/storageclasses"
+	"github.com/ranger/ranger/tests/framework/extensions/unstructured"
 	storagev1 "k8s.io/api/storage/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // CreateAWSEBSPersistentVolume is a helper function that uses the dynamic client to create an aws ebs persistent volume for a specific cluster.
 // It registers a delete fuction. `iopsPerGB` and `encryptionKey` are optional parameters, and can just take ""
-func CreateAWSEBSStorageClass(client *rancher.Client, clusterName, fsType, encryptionKey, iopsPerGB string, volumeType VolumeType, encryption bool, storageClass *storagev1.StorageClass) (*storagev1.StorageClass, error) {
+func CreateAWSEBSStorageClass(client *ranger.Client, clusterName, fsType, encryptionKey, iopsPerGB string, volumeType VolumeType, encryption bool, storageClass *storagev1.StorageClass) (*storagev1.StorageClass, error) {
 	storageClass.Provisioner = "kubernetes.io/aws-ebs"
 	storageClass.Parameters = map[string]string{
 		"encrypted": strconv.FormatBool(encryption),

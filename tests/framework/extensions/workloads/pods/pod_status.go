@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	kwait "k8s.io/apimachinery/pkg/util/wait"
@@ -17,7 +17,7 @@ const (
 
 // StatusPods is a helper function that uses the steve client to list pods on a namespace for a specific cluster
 // and return the statuses in a list of strings
-func StatusPods(client *rancher.Client, clusterID string) ([]string, []error) {
+func StatusPods(client *ranger.Client, clusterID string) ([]string, []error) {
 	downstreamClient, err := client.Steve.ProxyDownstream(clusterID)
 	if err != nil {
 		return nil, []error{err}

@@ -7,11 +7,11 @@ import (
 	"fmt"
 	"sync"
 
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/catalogv2/system"
-	"github.com/rancher/rancher/pkg/managedcharts/cspadapter"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/wrangler"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/catalogv2/system"
+	"github.com/ranger/ranger/pkg/managedcharts/cspadapter"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/wrangler"
 )
 
 // Register registers a setting controller which watches the CSPAdapterMinVersion setting for changes so an installed CSP

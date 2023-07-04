@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1/plan"
-	"github.com/rancher/rancher/pkg/capr"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1/plan"
+	"github.com/ranger/ranger/pkg/capr"
 )
 
 const (
@@ -103,7 +103,7 @@ func (p *Planner) addInitNodePeriodicInstruction(nodePlan plan.NodePlan, control
 				"-c",
 				// the grep here is to make the command fail if we don't get the output we expect, like empty string.
 				fmt.Sprintf("curl -f --retry 100 --retry-delay 5 --cacert "+
-					"/var/lib/rancher/%s/server/tls/server-ca.crt https://localhost:%d/db/info | grep 'clientURLs'",
+					"/var/lib/ranger/%s/server/tls/server-ca.crt https://localhost:%d/db/info | grep 'clientURLs'",
 					capr.GetRuntime(controlPlane.Spec.KubernetesVersion),
 					capr.GetRuntimeSupervisorPort(controlPlane.Spec.KubernetesVersion)),
 			},
@@ -114,7 +114,7 @@ func (p *Planner) addInitNodePeriodicInstruction(nodePlan plan.NodePlan, control
 			Command: "sh",
 			Args: []string{
 				"-c",
-				fmt.Sprintf("cat /var/lib/rancher/%s/server/db/etcd/name", capr.GetRuntime(controlPlane.Spec.KubernetesVersion)),
+				fmt.Sprintf("cat /var/lib/ranger/%s/server/db/etcd/name", capr.GetRuntime(controlPlane.Spec.KubernetesVersion)),
 			},
 			PeriodSeconds: 600,
 		},

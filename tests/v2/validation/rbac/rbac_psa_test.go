@@ -5,14 +5,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/namespaces"
-	"github.com/rancher/rancher/tests/framework/extensions/users"
-	namegen "github.com/rancher/rancher/tests/framework/pkg/namegenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/namespaces"
+	"github.com/ranger/ranger/tests/framework/extensions/users"
+	namegen "github.com/ranger/ranger/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
 	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -26,9 +26,9 @@ const (
 
 type PSATestSuite struct {
 	suite.Suite
-	client              *rancher.Client
+	client              *ranger.Client
 	nonAdminUser        *management.User
-	nonAdminUserClient  *rancher.Client
+	nonAdminUserClient  *ranger.Client
 	session             *session.Session
 	cluster             *management.Cluster
 	adminProject        *management.Project
@@ -48,11 +48,11 @@ func (rb *PSATestSuite) SetupSuite() {
 	testSession := session.NewSession()
 	rb.session = testSession
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(rb.T(), err)
 
 	rb.client = client
-	clusterName := client.RancherConfig.ClusterName
+	clusterName := client.RangerConfig.ClusterName
 	require.NotEmptyf(rb.T(), clusterName, "Cluster name to install should be set")
 	clusterID, err := clusters.GetClusterIDByName(rb.client, clusterName)
 	require.NoError(rb.T(), err, "Error getting cluster ID")

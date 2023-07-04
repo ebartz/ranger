@@ -4,10 +4,10 @@ import (
 	"errors"
 	"fmt"
 
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1/plan"
-	"github.com/rancher/rancher/pkg/capr"
-	"github.com/rancher/wrangler/pkg/generic"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1/plan"
+	"github.com/ranger/ranger/pkg/capr"
+	"github.com/ranger/wrangler/pkg/generic"
 	"github.com/sirupsen/logrus"
 )
 
@@ -41,7 +41,7 @@ func (p *Planner) setInitNodeMark(entry *planEntry) error {
 	return generic.ErrSkip
 }
 
-// findAndDesignateFixedInitNode is used for rancherd where an exact machine (determined by labeling the
+// findAndDesignateFixedInitNode is used for rangerd where an exact machine (determined by labeling the
 // rkecontrolplane object) is desired to be the init node
 func (p *Planner) findAndDesignateFixedInitNode(rkeControlPlane *rkev1.RKEControlPlane, plan *plan.Plan) (bool, string, *planEntry, error) {
 	logrus.Debugf("rkecluster %s/%s: finding and designating fixed init node", rkeControlPlane.Namespace, rkeControlPlane.Spec.ClusterName)

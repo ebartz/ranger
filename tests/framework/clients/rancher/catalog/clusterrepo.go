@@ -5,22 +5,22 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/rancher/rancher/pkg/api/steve/catalog/types"
-	scheme "github.com/rancher/rancher/pkg/generated/clientset/versioned/scheme"
+	"github.com/ranger/ranger/pkg/api/steve/catalog/types"
+	scheme "github.com/ranger/ranger/pkg/generated/clientset/versioned/scheme"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
 	ClusterRepoSteveResourceType = "catalog.cattle.io.clusterrepo"
 
-	rancherChartsURL = "v1/catalog.cattle.io.clusterrepos/rancher-charts"
-	rancherAppsURL   = "v1/catalog.cattle.io.apps/"
+	rangerChartsURL = "v1/catalog.cattle.io.clusterrepos/ranger-charts"
+	rangerAppsURL   = "v1/catalog.cattle.io.apps/"
 )
 
 // GetListChartVersions is used to get the list of versions of `chartName`
 func (c *Client) GetListChartVersions(chartName string) ([]string, error) {
 	result, err := c.RESTClient().Get().
-		AbsPath(rancherChartsURL).Param("link", "index").
+		AbsPath(rangerChartsURL).Param("link", "index").
 		VersionedParams(&metav1.GetOptions{}, scheme.ParameterCodec).
 		Do(context.TODO()).Raw()
 
@@ -67,7 +67,7 @@ func (c *Client) InstallChart(chart *types.ChartInstallAction) error {
 	}
 
 	result := c.RESTClient().Post().
-		AbsPath(rancherChartsURL).Param("action", "install").
+		AbsPath(rangerChartsURL).Param("action", "install").
 		VersionedParams(&metav1.CreateOptions{}, scheme.ParameterCodec).
 		Body(bodyContent).
 		Do(context.TODO())
@@ -83,7 +83,7 @@ func (c *Client) UpgradeChart(chart *types.ChartUpgradeAction) error {
 	}
 
 	result := c.RESTClient().Post().
-		AbsPath(rancherChartsURL).Param("action", "upgrade").
+		AbsPath(rangerChartsURL).Param("action", "upgrade").
 		VersionedParams(&metav1.CreateOptions{}, scheme.ParameterCodec).
 		Body(bodyContent).
 		Do(context.TODO())
@@ -98,7 +98,7 @@ func (c *Client) UninstallChart(chartName, chartNamespace string, uninstallActio
 		return err
 	}
 
-	url := rancherAppsURL + chartNamespace
+	url := rangerAppsURL + chartNamespace
 	result := c.RESTClient().Post().
 		Name(chartName).
 		AbsPath(url).Param("action", "uninstall").

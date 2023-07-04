@@ -18,7 +18,7 @@ import (
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/client"
-	"github.com/rancher/rke/hosts"
+	"github.com/ranger/rke/hosts"
 	"github.com/sirupsen/logrus"
 	"github.com/vishvananda/netlink"
 )
@@ -134,7 +134,7 @@ func Node(ctx context.Context) error {
 	}
 
 	if err := containers(ctx, c); err != nil {
-		return fmt.Errorf("error trying to stop all rancher containers: %s", err)
+		return fmt.Errorf("error trying to stop all ranger containers: %s", err)
 	}
 
 	if err := docker(ctx, c); err != nil {
@@ -232,7 +232,7 @@ func umountTmpfs() error {
 func getAgentImage() string {
 	agentImage := os.Getenv("AGENT_IMAGE")
 	if agentImage == "" {
-		agentImage = "rancher/rancher-agent:master"
+		agentImage = "ranger/ranger-agent:master"
 	}
 	return agentImage
 }
@@ -282,7 +282,7 @@ func containers(ctx context.Context, c *client.Client) error {
 		if err != nil {
 			return err
 		}
-		if strings.HasPrefix(config.Config.Image, "rancher/") {
+		if strings.HasPrefix(config.Config.Image, "ranger/") {
 			if err := c.ContainerKill(ctx, config.ID, "SIGKILL"); err != nil {
 				return err
 			}
@@ -395,18 +395,18 @@ func usage() string {
 	return `agent clean usage for linux:
 Using the clean commands can be run directly from the agent with proper flags, to clean everything you can run the following:
 
-docker run --privileged --network host -v /:/host -v /var/run/docker.sock:/var/run/docker.sock rancher/rancher-agent:master -- agent clean node
+docker run --privileged --network host -v /:/host -v /var/run/docker.sock:/var/run/docker.sock ranger/ranger-agent:master -- agent clean node
 
 The above mounts and grants access to everything the node cleaner will need to complete
 Note: If your cluster was created with a prefixPath use the env param -e PREFIX_PATH=/my/prefix
 
 Running individual cleanup sub commands
-docker run --privileged -v /:/host rancher/rancher-agent:master -- agent clean paths
+docker run --privileged -v /:/host ranger/ranger-agent:master -- agent clean paths
 
 commands:
 	node - cleans the entire node and performs all actions below and is the default command, requires docker socket to clean up dockerd
 	links - clean the interface links created on the host, requires --privileged and --network host
-	paths - clean the paths added by the host like /etc/rancher, /var/lib/rancher, etc. requires -v /:/host 
+	paths - clean the paths added by the host like /etc/ranger, /var/lib/ranger, etc. requires -v /:/host 
 	firewall - clean the iptables firewall rules, needs --privileged and --network host to work 
 	script - prints a bash script you can run to clean up the node from the cli
 	help - print this help message
@@ -420,7 +420,7 @@ func script() string {
 	return `#!/bin/bash
 
 # Directories to cleanup
-CLEANUP_DIRS=(/etc/ceph /etc/cni /etc/kubernetes /opt/cni /opt/rke /run/secrets/kubernetes.io /run/calico /run/flannel /var/lib/calico /var/lib/weave /var/lib/etcd /var/lib/cni /var/lib/kubelet/* /var/lib/rancher/rke/log /var/log/containers /var/log/pods /var/run/calico)
+CLEANUP_DIRS=(/etc/ceph /etc/cni /etc/kubernetes /opt/cni /opt/rke /run/secrets/kubernetes.io /run/calico /run/flannel /var/lib/calico /var/lib/weave /var/lib/etcd /var/lib/cni /var/lib/kubelet/* /var/lib/ranger/rke/log /var/log/containers /var/log/pods /var/run/calico)
 
 # Interfaces to cleanup
 CLEANUP_INTERFACES=(flannel.1 cni0 tunl0 weave datapath vxlan-6784)
@@ -534,8 +534,8 @@ flush-iptables() {
 
 help() {
 
-  echo "Rancher 2.x extended cleanup
-  Usage: bash extended-cleanup-rancher2.sh [ -f -i ]
+  echo "Ranger 2.x extended cleanup
+  Usage: bash extended-cleanup-ranger2.sh [ -f -i ]
 
   All flags are optional
 
@@ -543,7 +543,7 @@ help() {
   -i | --flush-images       Cleanup all container images
   -h                        This help menu
 
-  !! Warning, this script removes containers and all data specific to Kubernetes and Rancher
+  !! Warning, this script removes containers and all data specific to Kubernetes and Ranger
   !! Backup data as needed before running this script, and use at your own risk."
 
 }

@@ -52,7 +52,7 @@ def validate_deployment(client, deployment):
     name = res["metadata"]["name"]
     namespace = res["metadata"]["namespace"]
     replicas = res["spec"]["replicas"]
-    # Rancher Dashboard gets pods by passing the label selector
+    # Ranger Dashboard gets pods by passing the label selector
     target_label = 'workload.user.cattle.io/workloadselector=apps.deployment-{}-{}'
     pods = client.list_pod(
         labelSelector=target_label.format(namespace, name))

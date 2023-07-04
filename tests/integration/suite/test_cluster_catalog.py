@@ -1,5 +1,5 @@
 from .conftest import wait_until, wait_until_available
-from rancher import ApiError
+from ranger import ApiError
 from .common import random_str
 import time
 

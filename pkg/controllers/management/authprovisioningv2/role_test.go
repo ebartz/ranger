@@ -3,7 +3,7 @@ package authprovisioningv2
 import (
 	"testing"
 
-	"github.com/rancher/wrangler/pkg/generic"
+	"github.com/ranger/wrangler/pkg/generic"
 	v1 "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

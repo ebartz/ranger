@@ -4,14 +4,14 @@ import (
 	"context"
 	"time"
 
-	manager2 "github.com/rancher/rancher/pkg/catalog/manager"
-	"github.com/rancher/rancher/pkg/clustermanager"
-	wranglerv3 "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	projectv3 "github.com/rancher/rancher/pkg/generated/norman/project.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/systemaccount"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/wrangler"
+	manager2 "github.com/ranger/ranger/pkg/catalog/manager"
+	"github.com/ranger/ranger/pkg/clustermanager"
+	wranglerv3 "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	projectv3 "github.com/ranger/ranger/pkg/generated/norman/project.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/systemaccount"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/wrangler"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -31,9 +31,9 @@ type handler struct {
 
 const (
 	systemUpgradeNS        = "cattle-system"
-	rancherManagedPlan     = "rancher-managed"
+	rangerManagedPlan     = "ranger-managed"
 	upgradeDisableLabelKey = "upgrade.cattle.io/disable"
-	k3sUpgraderCatalogName = "system-library-rancher-k3s-upgrader"
+	k3sUpgraderCatalogName = "system-library-ranger-k3s-upgrader"
 )
 
 func Register(ctx context.Context, wContext *wrangler.Context, mgmtCtx *config.ManagementContext, manager *clustermanager.Manager) {

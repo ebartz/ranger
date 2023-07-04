@@ -7,17 +7,17 @@ import (
 	"time"
 
 	"github.com/moby/locker"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/controllers/management/clusterprovisioner"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	nodehelper "github.com/rancher/rancher/pkg/node"
-	nodeserver "github.com/rancher/rancher/pkg/rkenodeconfigserver"
-	"github.com/rancher/rancher/pkg/systemaccount"
-	"github.com/rancher/rancher/pkg/types/config"
-	rkedefaults "github.com/rancher/rke/cluster"
-	rketypes "github.com/rancher/rke/types"
-	"github.com/rancher/rke/util"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/controllers/management/clusterprovisioner"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	nodehelper "github.com/ranger/ranger/pkg/node"
+	nodeserver "github.com/ranger/ranger/pkg/rkenodeconfigserver"
+	"github.com/ranger/ranger/pkg/systemaccount"
+	"github.com/ranger/ranger/pkg/types/config"
+	rkedefaults "github.com/ranger/rke/cluster"
+	rketypes "github.com/ranger/rke/types"
+	"github.com/ranger/rke/util"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -75,7 +75,7 @@ func (uh *upgradeHandler) Sync(key string, node *v3.Node) (runtime.Object, error
 		if err != nil {
 			return nil, err
 		}
-		if cluster.DeletionTimestamp != nil || cluster.Status.AppliedSpec.RancherKubernetesEngineConfig == nil {
+		if cluster.DeletionTimestamp != nil || cluster.Status.AppliedSpec.RangerKubernetesEngineConfig == nil {
 			return nil, nil
 		}
 
@@ -106,7 +106,7 @@ func (uh *upgradeHandler) Sync(key string, node *v3.Node) (runtime.Object, error
 		return nil, err
 	}
 
-	if cluster.DeletionTimestamp != nil || cluster.Status.AppliedSpec.RancherKubernetesEngineConfig == nil {
+	if cluster.DeletionTimestamp != nil || cluster.Status.AppliedSpec.RangerKubernetesEngineConfig == nil {
 		return node, nil
 	}
 
@@ -252,11 +252,11 @@ func (uh *upgradeHandler) upgradeCluster(cluster *v3.Cluster, nodeName string, p
 		v32.ClusterConditionUpgraded.Message(clusterCopy, "updating worker nodes")
 		clusterCopy.Status.NodeVersion++
 	}
-	if cluster.Status.AppliedSpec.RancherKubernetesEngineConfig.UpgradeStrategy == nil {
+	if cluster.Status.AppliedSpec.RangerKubernetesEngineConfig.UpgradeStrategy == nil {
 		if clusterCopy == nil {
 			clusterCopy = cluster.DeepCopy()
 		}
-		clusterCopy.Status.AppliedSpec.RancherKubernetesEngineConfig.UpgradeStrategy = &rketypes.NodeUpgradeStrategy{
+		clusterCopy.Status.AppliedSpec.RangerKubernetesEngineConfig.UpgradeStrategy = &rketypes.NodeUpgradeStrategy{
 			MaxUnavailableWorker:       rkedefaults.DefaultMaxUnavailableWorker,
 			MaxUnavailableControlplane: rkedefaults.DefaultMaxUnavailableControlplane,
 			Drain:                      func() *bool { b := false; return &b }(),
@@ -268,7 +268,7 @@ func (uh *upgradeHandler) upgradeCluster(cluster *v3.Cluster, nodeName string, p
 			return err
 		}
 		logrus.Infof("cluster [%s] worker-upgrade: updated cluster nodeVersion [%v] upgradeStrategy [%v] ", clusterName,
-			clusterCopy.Status.NodeVersion, cluster.Status.AppliedSpec.RancherKubernetesEngineConfig.UpgradeStrategy)
+			clusterCopy.Status.NodeVersion, cluster.Status.AppliedSpec.RangerKubernetesEngineConfig.UpgradeStrategy)
 	}
 
 	logrus.Debugf("cluster [%s] worker-upgrade cluster status node version [%v]", clusterName, cluster.Status.NodeVersion)
@@ -277,7 +277,7 @@ func (uh *upgradeHandler) upgradeCluster(cluster *v3.Cluster, nodeName string, p
 		return err
 	}
 
-	upgradeStrategy := cluster.Status.AppliedSpec.RancherKubernetesEngineConfig.UpgradeStrategy
+	upgradeStrategy := cluster.Status.AppliedSpec.RangerKubernetesEngineConfig.UpgradeStrategy
 	toDrain := upgradeStrategy.Drain != nil && *upgradeStrategy.Drain
 
 	// get current upgrade status of nodes

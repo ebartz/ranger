@@ -16,11 +16,11 @@ import (
 	"github.com/Azure/go-autorest/autorest/adal"
 	"github.com/Azure/go-autorest/autorest/azure"
 	"github.com/Azure/go-autorest/autorest/to"
-	"github.com/rancher/aks-operator/pkg/aks"
-	"github.com/rancher/aks-operator/pkg/aks/services"
-	"github.com/rancher/rancher/pkg/kontainer-engine/drivers/options"
-	"github.com/rancher/rancher/pkg/kontainer-engine/drivers/util"
-	"github.com/rancher/rancher/pkg/kontainer-engine/types"
+	"github.com/ranger/aks-operator/pkg/aks"
+	"github.com/ranger/aks-operator/pkg/aks/services"
+	"github.com/ranger/ranger/pkg/kontainer-engine/drivers/options"
+	"github.com/ranger/ranger/pkg/kontainer-engine/drivers/util"
+	"github.com/ranger/ranger/pkg/kontainer-engine/types"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/ssh"
 	"gopkg.in/yaml.v2"
@@ -129,9 +129,9 @@ type state struct {
 	TenantID string `json:"tenantId,omitempty"`
 
 	/**
-	Rancher Parameters
+	Ranger Parameters
 	*/
-	// DisplayName specifies cluster name displayed in Rancher UI. [optional only when creating]
+	// DisplayName specifies cluster name displayed in Ranger UI. [optional only when creating]
 	DisplayName string `json:"displayName,omitempty"`
 
 	ClusterInfo types.ClusterInfo `json:"-"`
@@ -168,7 +168,7 @@ func (d *Driver) GetDriverCreateOptions(ctx context.Context) (*types.DriverFlags
 	}
 	driverFlag.Options["name"] = &types.Flag{
 		Type:  types.StringType,
-		Usage: "The name of the 'Cluster' resource, and the internal name of the cluster in Rancher.",
+		Usage: "The name of the 'Cluster' resource, and the internal name of the cluster in Ranger.",
 	}
 
 	driverFlag.Options["aad-client-app-id"] = &types.Flag{
@@ -341,7 +341,7 @@ func (d *Driver) GetDriverCreateOptions(ctx context.Context) (*types.DriverFlags
 
 	driverFlag.Options["display-name"] = &types.Flag{
 		Type:  types.StringType,
-		Usage: "The displayed name of the cluster in the Rancher UI.",
+		Usage: "The displayed name of the cluster in the Ranger UI.",
 	}
 
 	return &driverFlag, nil

@@ -11,7 +11,7 @@ def test_cluster_node_count(admin_mc, remove_resource,
     client = admin_mc.client
     cluster = client.create_cluster(
         name=random_str(),
-        rancherKubernetesEngineConfig={
+        rangerKubernetesEngineConfig={
             "accessKey": "junk"
         }
     )

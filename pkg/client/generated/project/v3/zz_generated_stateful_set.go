@@ -1,7 +1,7 @@
 package client
 
 import (
-	"github.com/rancher/norman/types"
+	"github.com/ranger/norman/types"
 
 	"k8s.io/apimachinery/pkg/util/intstr"
 )

@@ -23,7 +23,7 @@ AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 AWS_SSH_KEY_NAME = os.environ.get("AWS_SSH_KEY_NAME")
 AWS_CICD_INSTANCE_TAG = os.environ.get("AWS_CICD_INSTANCE_TAG",
-                                       'rancher-validation')
+                                       'ranger-validation')
 AWS_IAM_PROFILE = os.environ.get("AWS_IAM_PROFILE", "")
 # by default the public Ubuntu 20.04 AMI is used
 AWS_DEFAULT_AMI = "ami-012fd49f6b0c404c7"

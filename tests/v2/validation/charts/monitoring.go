@@ -9,15 +9,15 @@ import (
 
 	"github.com/pkg/errors"
 	monitoringv1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
-	"github.com/rancher/rancher/pkg/controllers/managementuserlegacy/alert/config"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/charts"
-	"github.com/rancher/rancher/tests/framework/extensions/clusterrolebindings"
-	"github.com/rancher/rancher/tests/framework/extensions/configmaps"
-	"github.com/rancher/rancher/tests/framework/extensions/serviceaccounts"
-	"github.com/rancher/rancher/tests/framework/extensions/workloads"
-	"github.com/rancher/rancher/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/pkg/controllers/managementuserlegacy/alert/config"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/charts"
+	"github.com/ranger/ranger/tests/framework/extensions/clusterrolebindings"
+	"github.com/ranger/ranger/tests/framework/extensions/configmaps"
+	"github.com/ranger/ranger/tests/framework/extensions/serviceaccounts"
+	"github.com/ranger/ranger/tests/framework/extensions/workloads"
+	"github.com/ranger/ranger/tests/framework/pkg/namegenerator"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -31,7 +31,7 @@ const (
 	// Secret path that contains encoded alert manager config
 	secretPath = "alertmanager.yaml"
 	// Secret ID that points alert manager secret
-	alertManagerSecretId = charts.RancherMonitoringNamespace + "/" + charts.RancherMonitoringAlertSecret
+	alertManagerSecretId = charts.RangerMonitoringNamespace + "/" + charts.RangerMonitoringAlertSecret
 	// Default random string length for random name generation
 	defaultRandStringLength = 5
 	// Webhook deployment annotation key that is being watched
@@ -40,8 +40,8 @@ const (
 	webhookReceiverAnnotationValue = "true"
 	// Steve type for prometheus rules for schema
 	prometheusRulesSteveType = "monitoring.coreos.com.prometheusrule"
-	// rancherShellSettingID is the setting ID that used to grab rancher/shell image
-	rancherShellSettingID = "shell-image"
+	// rangerShellSettingID is the setting ID that used to grab ranger/shell image
+	rangerShellSettingID = "shell-image"
 	// Kubeconfig that linked to webhook deployment
 	kubeConfig = `
 apiVersion: v1
@@ -65,19 +65,19 @@ users:
 )
 
 var (
-	// Rancher monitoring chart alert manager path
-	alertManagerPath = "api/v1/namespaces/cattle-monitoring-system/services/http:rancher-monitoring-alertmanager:9093/proxy/#/alerts"
-	// Rancher monitoring chart grafana path
-	grafanaPath = "api/v1/namespaces/cattle-monitoring-system/services/http:rancher-monitoring-grafana:80/proxy"
-	// Rancher monitoring chart prometheus path
-	prometheusPath = "api/v1/namespaces/cattle-monitoring-system/services/http:rancher-monitoring-prometheus:9090/proxy"
-	// Rancher monitoring chart prometheus graph path
+	// Ranger monitoring chart alert manager path
+	alertManagerPath = "api/v1/namespaces/cattle-monitoring-system/services/http:ranger-monitoring-alertmanager:9093/proxy/#/alerts"
+	// Ranger monitoring chart grafana path
+	grafanaPath = "api/v1/namespaces/cattle-monitoring-system/services/http:ranger-monitoring-grafana:80/proxy"
+	// Ranger monitoring chart prometheus path
+	prometheusPath = "api/v1/namespaces/cattle-monitoring-system/services/http:ranger-monitoring-prometheus:9090/proxy"
+	// Ranger monitoring chart prometheus graph path
 	prometheusGraphPath = prometheusPath + "/graph"
-	// Rancher monitoring chart prometheus rules path
+	// Ranger monitoring chart prometheus rules path
 	prometheusRulesPath = prometheusPath + "/rules"
-	// Rancher monitoring chart prometheus targets path
+	// Ranger monitoring chart prometheus targets path
 	prometheusTargetsPath = prometheusPath + "/targets"
-	// Rancher monitoring chart prometheus targets API path
+	// Ranger monitoring chart prometheus targets API path
 	prometheusTargetsPathAPI = prometheusPath + "/api/v1/targets"
 	// Webhook receiver kubernetes object names
 	webhookReceiverNamespaceName  = "webhook-namespace-" + namegenerator.RandStringLower(defaultRandStringLength)
@@ -89,11 +89,11 @@ var (
 
 // waitUnknownPrometheusTargets is a private helper function
 // that awaits the unknown Prometheus targets to be resolved until the timeout by using Prometheus API.
-func waitUnknownPrometheusTargets(client *rancher.Client) error {
+func waitUnknownPrometheusTargets(client *ranger.Client) error {
 	checkUnknownPrometheusTargets := func() (bool, error) {
 		var statusInit bool
 		var unknownTargets []string
-		resultAPI, err := charts.GetChartCaseEndpoint(client, client.RancherConfig.Host, prometheusTargetsPathAPI, true)
+		resultAPI, err := charts.GetChartCaseEndpoint(client, client.RangerConfig.Host, prometheusTargetsPathAPI, true)
 		if err != nil {
 			return statusInit, err
 		}
@@ -138,7 +138,7 @@ func waitUnknownPrometheusTargets(client *rancher.Client) error {
 
 // checkPrometheusTargets is a private helper function
 // that checks if all active prometheus targets are healthy by using prometheus API.
-func checkPrometheusTargets(client *rancher.Client) (bool, error) {
+func checkPrometheusTargets(client *ranger.Client) (bool, error) {
 	var statusInit bool
 	var downTargets []string
 
@@ -147,7 +147,7 @@ func checkPrometheusTargets(client *rancher.Client) (bool, error) {
 		return statusInit, err
 	}
 
-	resultAPI, err := charts.GetChartCaseEndpoint(client, client.RancherConfig.Host, prometheusTargetsPathAPI, true)
+	resultAPI, err := charts.GetChartCaseEndpoint(client, client.RangerConfig.Host, prometheusTargetsPathAPI, true)
 	if err != nil {
 		return statusInit, err
 	}
@@ -242,7 +242,7 @@ func editAlertRoute(alertConfigByte []byte, origin string, originURL *url.URL) (
 
 // createPrometheusRule is a private helper function
 // that creates a prometheus rule to be used by the webhook receiver.
-func createPrometheusRule(client *rancher.Client, clusterID string) error {
+func createPrometheusRule(client *ranger.Client, clusterID string) error {
 	ruleName := "webhook-rule-" + namegenerator.RandStringLower(defaultRandStringLength)
 	alertName := "alert-" + namegenerator.RandStringLower(defaultRandStringLength)
 
@@ -256,7 +256,7 @@ func createPrometheusRule(client *rancher.Client, clusterID string) error {
 	prometheusRule := &monitoringv1.PrometheusRule{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      ruleName,
-			Namespace: charts.RancherMonitoringNamespace,
+			Namespace: charts.RangerMonitoringNamespace,
 		},
 		Spec: monitoringv1.PrometheusRuleSpec{
 			Groups: []monitoringv1.RuleGroup{
@@ -284,9 +284,9 @@ func createPrometheusRule(client *rancher.Client, clusterID string) error {
 
 // createWebhookReceiverDeployment is a private helper function that creates a service account, cluster role binding, and deployment for webhook receiver.
 // The deployment has two different containers with a shared volume, one for kubectl commands, and the other one to receive requests and write access logs to the shared empty dir volume.
-// Container that uses rancher/shell has a mounted volume to use the kubeconfig of the cluster. And it watches the access logs until a request from "alermanager" is received.
+// Container that uses ranger/shell has a mounted volume to use the kubeconfig of the cluster. And it watches the access logs until a request from "alermanager" is received.
 // When the request is received it sets its deployment annotation "didReceiveRequestFromAlertmanager" to "true" while the annotations being watched by the test itself.
-func createAlertWebhookReceiverDeployment(client *rancher.Client, clusterID, namespace, deploymentName string) (*v1.SteveAPIObject, error) {
+func createAlertWebhookReceiverDeployment(client *ranger.Client, clusterID, namespace, deploymentName string) (*v1.SteveAPIObject, error) {
 	serviceAccountName := "alert-receiver-sa-" + namegenerator.RandStringLower(defaultRandStringLength)
 	clusterRoleBindingName := "alert-receiver-cluster-admin-" + namegenerator.RandStringLower(defaultRandStringLength)
 	configMapName := "alert-receiver-cm-" + namegenerator.RandStringLower(defaultRandStringLength)
@@ -352,7 +352,7 @@ func createAlertWebhookReceiverDeployment(client *rancher.Client, clusterID, nam
 	labels := map[string]string{}
 	labels["workload.user.cattle.io/workloadselector"] = fmt.Sprintf("apps.deployment-%v-%v", namespace, deploymentName)
 
-	imageSetting, err := client.Management.Setting.ByID(rancherShellSettingID)
+	imageSetting, err := client.Management.Setting.ByID(rangerShellSettingID)
 	if err != nil {
 		return nil, err
 	}

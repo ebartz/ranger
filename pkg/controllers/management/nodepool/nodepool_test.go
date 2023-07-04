@@ -3,10 +3,10 @@ package nodepool
 import (
 	"testing"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rke/services"
-	rketypes "github.com/rancher/rke/types"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/rke/services"
+	rketypes "github.com/ranger/rke/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

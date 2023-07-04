@@ -19,7 +19,7 @@ RANCHER_K3S_NO_OF_WORKER_NODES = \
     os.environ.get("RANCHER_K3S_NO_OF_WORKER_NODES", 0)
 RANCHER_K3S_SERVER_FLAGS = os.environ.get("RANCHER_K3S_SERVER_FLAGS", "")
 RANCHER_K3S_WORKER_FLAGS = os.environ.get("RANCHER_K3S_WORKER_FLAGS", "agent")
-RANCHER_QA_SPACE = os.environ.get("RANCHER_QA_SPACE", "qa.rancher.space.")
+RANCHER_QA_SPACE = os.environ.get("RANCHER_QA_SPACE", "qa.ranger.space.")
 RANCHER_EC2_INSTANCE_CLASS = os.environ.get("AWS_INSTANCE_TYPE", "t3a.medium")
 
 RANCHER_EXTERNAL_DB = os.environ.get("RANCHER_EXTERNAL_DB", "mysql")
@@ -53,14 +53,14 @@ def test_create_k3s_multiple_control_cluster():
 
 def test_import_k3s_single_control_cluster():
     aws_nodes, client, k3s_clusterfilepath = create_single_control_cluster()
-    cluster = create_rancher_cluster(client, k3s_clusterfilepath)
+    cluster = create_ranger_cluster(client, k3s_clusterfilepath)
     cluster_cleanup(client, cluster, aws_nodes)
 
 
 def test_import_k3s_multiple_control_cluster():
     client = get_user_client()
     k3s_clusterfilepath = create_multiple_control_cluster()
-    cluster = create_rancher_cluster(client, k3s_clusterfilepath)
+    cluster = create_ranger_cluster(client, k3s_clusterfilepath)
 
 
 def test_delete_k3s():
@@ -216,7 +216,7 @@ def create_multiple_control_cluster():
     return k3s_clusterfilepath
 
 
-def create_rancher_cluster(client, k3s_clusterfilepath):
+def create_ranger_cluster(client, k3s_clusterfilepath):
     if CLUSTER_NAME:
         clustername = CLUSTER_NAME
     else:
@@ -263,13 +263,13 @@ def install_k3s_master_node(master):
     print(install_result)
 
     # Get node token from master
-    cmd = "sudo cat /var/lib/rancher/k3s/server/node-token"
+    cmd = "sudo cat /var/lib/ranger/k3s/server/node-token"
     print(cmd)
     node_token = master.execute_command(cmd)
     print(node_token)
 
     # Get kube_config from master
-    cmd = "sudo cat /etc/rancher/k3s/k3s.yaml"
+    cmd = "sudo cat /etc/ranger/k3s/k3s.yaml"
     kubeconfig = master.execute_command(cmd)
     print(kubeconfig)
     print("NO OF WORKER NODES: {}".format(RANCHER_K3S_NO_OF_WORKER_NODES))

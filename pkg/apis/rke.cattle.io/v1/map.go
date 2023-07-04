@@ -3,7 +3,7 @@ package v1
 import (
 	"encoding/json"
 
-	"github.com/rancher/wrangler/pkg/data/convert"
+	"github.com/ranger/wrangler/pkg/data/convert"
 )
 
 type GenericMap struct {

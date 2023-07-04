@@ -2,7 +2,7 @@
 
 // RANCHER_VERSION resolution is first via Jenkins Build Parameter RANCHER_VERSION fed in from console,
 // then from $DOCKER_TRIGGER_TAG which is sourced from the Docker Hub Jenkins plugin webhook.
-def rancher_version() {
+def ranger_version() {
   try { if ('' != RANCHER_VERSION) { return RANCHER_VERSION } }
   catch (MissingPropertyException e) {}
 
@@ -29,21 +29,21 @@ def via_webhook() {
 
 // Filter out Docker Hub tags like 'latest', 'master', 'enterprise'.
 // Just want things like v1.2*
-def rancher_version = rancher_version()
-def String rancher_version_regex = "^v[\\d]\\.[\\d]\\.[\\d][\\-rc\\d]+\$"
+def ranger_version = ranger_version()
+def String ranger_version_regex = "^v[\\d]\\.[\\d]\\.[\\d][\\-rc\\d]+\$"
 
-if ( true == via_webhook() && (!(rancher_version ==~ rancher_version_regex)) ) {
-  println("Received RANCHER_VERSION \'${rancher_version}\' via webhook which does not match regex \'${rancher_version_regex}\'.")
+if ( true == via_webhook() && (!(ranger_version ==~ ranger_version_regex)) ) {
+  println("Received RANCHER_VERSION \'${ranger_version}\' via webhook which does not match regex \'${ranger_version_regex}\'.")
   println("** This will **not** result in a pipeline run.")
   currentBuild.result = lastBuildResult()
 } else {
   def branch = "v2.1"
-  if (rancher_version.startsWith("v2.2") || rancher_version == "master" ) {
+  if (ranger_version.startsWith("v2.2") || ranger_version == "master" ) {
     branch = "release/v2.6"
   }
   try {
     node {
-      def rootPath = "/src/rancher-validation/"
+      def rootPath = "/src/ranger-validation/"
       def job_name = "${JOB_NAME}"
       if (job_name.contains('/')) { 
         job_names = job_name.split('/')
@@ -53,15 +53,15 @@ if ( true == via_webhook() && (!(rancher_version ==~ rancher_version_regex)) ) {
       def setupContainer = "${job_name}${env.BUILD_NUMBER}_setup"
       def testContainer = "${job_name}${env.BUILD_NUMBER}_test"
 
-      def deployPytestOptions = "-k test_deploy_rancher_server"
+      def deployPytestOptions = "-k test_deploy_ranger_server"
 
       def setupResultsOut = "setup-results.xml"
       def testResultsOut = "results.xml"
-      def imageName = "rancher-validation-${job_name}${env.BUILD_NUMBER}"
+      def imageName = "ranger-validation-${job_name}${env.BUILD_NUMBER}"
       def testsDir = "tests/v3_api/"
 
       def envFile = ".env"
-      def rancherConfig = "rancher_env.config"
+      def rangerConfig = "ranger_env.config"
 
       wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm', 'defaultFg': 2, 'defaultBg':1]) {
         withFolderProperties {
@@ -90,15 +90,15 @@ if ( true == via_webhook() && (!(rancher_version ==~ rancher_version_regex)) ) {
             try {
               stage('Run Validation Tests') {
                 try {
-                  // deploy rancher server
+                  // deploy ranger server
                   sh "docker run --name ${setupContainer} -t --env-file ${envFile} " +
-                    "${imageName} /bin/bash -c \'export RANCHER_SERVER_VERSION=${rancher_version} && " +
+                    "${imageName} /bin/bash -c \'export RANCHER_SERVER_VERSION=${ranger_version} && " +
                     "pytest -v -s --junit-xml=${setupResultsOut} " +
                     "${deployPytestOptions} ${testsDir}\'"
 
                   // copy file containing CATTLE_TEST_URL, ADMIN_TOKEN, USER_TOKEN and load into environment variables
-                  sh "docker cp ${setupContainer}:${rootPath}${testsDir}${rancherConfig} ."
-                  load rancherConfig
+                  sh "docker cp ${setupContainer}:${rootPath}${testsDir}${rangerConfig} ."
+                  load rangerConfig
 
                   // run tests
                   sh "docker run --name ${testContainer} -t --env-file ${envFile} " +

@@ -1,7 +1,7 @@
 suite: Test Issuers
 templates:
 - issuer-letsEncrypt.yaml
-- issuer-rancher.yaml
+- issuer-ranger.yaml
 tests:
 - it: should not render issuers - tls=external
   set:
@@ -12,7 +12,7 @@ tests:
     template: issuer-letsEncrypt.yaml
   - hasDocuments:
       count: 0
-    template: issuer-rancher.yaml
+    template: issuer-ranger.yaml
 - it: should not render issuers - ingress.tls.source=secret
   set:
     ingress.tls.source: secret
@@ -22,8 +22,8 @@ tests:
     template: issuer-letsEncrypt.yaml
   - hasDocuments:
       count: 0
-    template: issuer-rancher.yaml
-- it: should render letsEncrypt but not rancher with default cert-manager
+    template: issuer-ranger.yaml
+- it: should render letsEncrypt but not ranger with default cert-manager
   set:
     ingress.tls.source: letsEncrypt
   asserts:
@@ -32,8 +32,8 @@ tests:
     template: issuer-letsEncrypt.yaml
   - hasDocuments:
       count: 0
-    template: issuer-rancher.yaml
-- it: should render letsEncrypt but not rancher with cert-manager < 0.11.0 using capabilities
+    template: issuer-ranger.yaml
+- it: should render letsEncrypt but not ranger with cert-manager < 0.11.0 using capabilities
   capabilities:
     apiVersions:
     - certmanager.k8s.io/v1alpha1
@@ -45,8 +45,8 @@ tests:
     template: issuer-letsEncrypt.yaml
   - hasDocuments:
       count: 0
-    template: issuer-rancher.yaml
-- it: should render letsEncrypt but not rancher with cert-manager < 0.11.0 using parameter
+    template: issuer-ranger.yaml
+- it: should render letsEncrypt but not ranger with cert-manager < 0.11.0 using parameter
   set:
     certmanager.version: 0.9.0
     ingress.tls.source: letsEncrypt
@@ -56,41 +56,41 @@ tests:
     template: issuer-letsEncrypt.yaml
   - hasDocuments:
       count: 0
-    template: issuer-rancher.yaml
-- it: should render rancher but not letsEncrypt with default cert-manager
+    template: issuer-ranger.yaml
+- it: should render ranger but not letsEncrypt with default cert-manager
   set:
-    ingress.tls.source: rancher
+    ingress.tls.source: ranger
   asserts:
   - hasDocuments:
       count: 0
     template: issuer-letsEncrypt.yaml
   - hasDocuments:
       count: 1
-    template: issuer-rancher.yaml
-- it: should render rancher but not letsEncrypt with cert-manager < 0.11.0 using capabilities
+    template: issuer-ranger.yaml
+- it: should render ranger but not letsEncrypt with cert-manager < 0.11.0 using capabilities
   capabilities:
     apiVersions:
     - certmanager.k8s.io/v1alpha1
   set:
-    ingress.tls.source: rancher
+    ingress.tls.source: ranger
   asserts:
   - hasDocuments:
       count: 0
     template: issuer-letsEncrypt.yaml
   - hasDocuments:
       count: 1
-    template: issuer-rancher.yaml
-- it: should render rancher but not letsEncrypt with cert-manager < 0.11.0 using parameter
+    template: issuer-ranger.yaml
+- it: should render ranger but not letsEncrypt with cert-manager < 0.11.0 using parameter
   set:
     certmanager.version: 0.9.0
-    ingress.tls.source: rancher
+    ingress.tls.source: ranger
   asserts:
   - hasDocuments:
       count: 0
     template: issuer-letsEncrypt.yaml
   - hasDocuments:
       count: 1
-    template: issuer-rancher.yaml
+    template: issuer-ranger.yaml
 - it: should set letsEncrypt apiVersion with default cert-manager
   set:
     ingress.tls.source: letsEncrypt
@@ -159,74 +159,74 @@ tests:
       path: apiVersion
       value: certmanager.k8s.io/v1alpha1
     template: issuer-letsEncrypt.yaml
-- it: should set rancher apiVersion with default cert-manager
+- it: should set ranger apiVersion with default cert-manager
   set:
-    ingress.tls.source: rancher
+    ingress.tls.source: ranger
   asserts:
   - equal:
       path: apiVersion
       value: cert-manager.io/v1
-    template: issuer-rancher.yaml
-- it: should set rancher apiVersion with cert-manager >= 0.16.0 using capabilities
+    template: issuer-ranger.yaml
+- it: should set ranger apiVersion with cert-manager >= 0.16.0 using capabilities
   capabilities:
     apiVersions:
     - cert-manager.io/v1beta1
   set:
-    ingress.tls.source: rancher
+    ingress.tls.source: ranger
   asserts:
   - equal:
       path: apiVersion
       value: cert-manager.io/v1beta1
-    template: issuer-rancher.yaml
-- it: should set rancher apiVersion with cert-manager >= 0.11.0 using capabilities
+    template: issuer-ranger.yaml
+- it: should set ranger apiVersion with cert-manager >= 0.11.0 using capabilities
   capabilities:
     apiVersions:
     - cert-manager.io/v1alpha2
   set:
-    ingress.tls.source: rancher
+    ingress.tls.source: ranger
   asserts:
   - equal:
       path: apiVersion
       value: cert-manager.io/v1alpha2
-    template: issuer-rancher.yaml
-- it: should set rancher apiVersion with cert-manager < 0.11.0 using capabilities
+    template: issuer-ranger.yaml
+- it: should set ranger apiVersion with cert-manager < 0.11.0 using capabilities
   capabilities:
     apiVersions:
     - certmanager.k8s.io/v1alpha1
   set:
-    ingress.tls.source: rancher
+    ingress.tls.source: ranger
   asserts:
   - equal:
       path: apiVersion
       value: certmanager.k8s.io/v1alpha1
-    template: issuer-rancher.yaml
-- it: should set rancher apiVersion with cert-manager >= 0.16.0 using parameter
+    template: issuer-ranger.yaml
+- it: should set ranger apiVersion with cert-manager >= 0.16.0 using parameter
   set:
     certmanager.version: 0.16.0
-    ingress.tls.source: rancher
+    ingress.tls.source: ranger
   asserts:
   - equal:
       path: apiVersion
       value: cert-manager.io/v1beta1
-    template: issuer-rancher.yaml
-- it: should set rancher apiVersion with cert-manager >= 0.11.0 using parameter
+    template: issuer-ranger.yaml
+- it: should set ranger apiVersion with cert-manager >= 0.11.0 using parameter
   set:
     certmanager.version: 0.11.0
-    ingress.tls.source: rancher
+    ingress.tls.source: ranger
   asserts:
   - equal:
       path: apiVersion
       value: cert-manager.io/v1alpha2
-    template: issuer-rancher.yaml
-- it: should set rancher apiVersion with cert-manager < 0.11.0 using parameter
+    template: issuer-ranger.yaml
+- it: should set ranger apiVersion with cert-manager < 0.11.0 using parameter
   set:
     certmanager.version: 0.9.0
-    ingress.tls.source: rancher
+    ingress.tls.source: ranger
   asserts:
   - equal:
       path: apiVersion
       value: certmanager.k8s.io/v1alpha1
-    template: issuer-rancher.yaml
+    template: issuer-ranger.yaml
 - it: should set letsEncrypt production by default with default cert-manager
   set:
     ingress.tls.source: letsEncrypt

@@ -4,11 +4,11 @@ import (
 	"context"
 	"net/url"
 
-	"github.com/rancher/norman/types"
-	"github.com/rancher/rancher/pkg/auth/requests"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	managementSchema "github.com/rancher/rancher/pkg/schemas/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/ranger/pkg/auth/requests"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	managementSchema "github.com/ranger/ranger/pkg/schemas/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
 )
 
 func Schema(ctx context.Context, clusterRouter requests.ClusterRouter, management *config.ScaledContext, schemas *types.Schemas) error {

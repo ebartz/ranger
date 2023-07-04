@@ -4,14 +4,14 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/urlbuilder"
-	apimgmtv3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/image"
-	schema "github.com/rancher/rancher/pkg/schemas/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/systemtemplate"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/urlbuilder"
+	apimgmtv3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/image"
+	schema "github.com/ranger/ranger/pkg/schemas/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/systemtemplate"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 

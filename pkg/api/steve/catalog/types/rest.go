@@ -20,7 +20,7 @@ allowing for a structured approach to managing Helm charts through the API.
 package types
 
 import (
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 

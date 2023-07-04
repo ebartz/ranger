@@ -6,13 +6,13 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/rancher/norman/types"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/catalog/manager"
-	cutils "github.com/rancher/rancher/pkg/catalog/utils"
-	mgmtv3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	ns "github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/ref"
+	"github.com/ranger/norman/types"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/catalog/manager"
+	cutils "github.com/ranger/ranger/pkg/catalog/utils"
+	mgmtv3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	ns "github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/ref"
 	"github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -63,11 +63,11 @@ const (
 
 	//CattlePrometheusRuleLabelKey The label info of PrometheusRule
 	CattlePrometheusRuleLabelKey             = "source"
-	CattleAlertingPrometheusRuleLabelValue   = "rancher-alert"
-	CattleMonitoringPrometheusRuleLabelValue = "rancher-monitoring"
-	RancherMonitoringTemplateName            = "system-library-rancher-monitoring"
+	CattleAlertingPrometheusRuleLabelValue   = "ranger-alert"
+	CattleMonitoringPrometheusRuleLabelValue = "ranger-monitoring"
+	RangerMonitoringTemplateName            = "system-library-ranger-monitoring"
 
-	monitoringTemplateName = "rancher-monitoring"
+	monitoringTemplateName = "ranger-monitoring"
 	webhookSecreteName     = "webhook-receiver"
 )
 
@@ -249,7 +249,7 @@ func resolveSpecialAnswersKeys(rawAnswers, answers map[string]string) {
 
 func GetMonitoringCatalogID(version string, catalogTemplateLister mgmtv3.CatalogTemplateLister, catalogManager manager.CatalogManager, clusterName string) (string, error) {
 	if version == "" {
-		template, err := catalogTemplateLister.Get(ns.GlobalNamespace, RancherMonitoringTemplateName)
+		template, err := catalogTemplateLister.Get(ns.GlobalNamespace, RangerMonitoringTemplateName)
 		if err != nil {
 			return "", err
 		}

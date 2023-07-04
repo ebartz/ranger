@@ -2,7 +2,7 @@ package clusters
 
 import (
 	"github.com/pkg/errors"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
 )
 
 // KubernetesProvider is a string type to determine cluster's provider.
@@ -41,7 +41,7 @@ type ClusterMeta struct {
 }
 
 // NewClusterMeta is a function to initialize new ClusterMeta for a specific cluster.
-func NewClusterMeta(client *rancher.Client, clusterName string) (clusterMeta *ClusterMeta, err error) {
+func NewClusterMeta(client *ranger.Client, clusterName string) (clusterMeta *ClusterMeta, err error) {
 	clusterMeta = new(ClusterMeta)
 	clusterMeta.Name = clusterName
 
@@ -66,7 +66,7 @@ func NewClusterMeta(client *rancher.Client, clusterName string) (clusterMeta *Cl
 }
 
 // GetClusterProvider is a function to get cluster's KubernetesProvider.
-func GetClusterProvider(client *rancher.Client, clusterID string) (provider KubernetesProvider, err error) {
+func GetClusterProvider(client *ranger.Client, clusterID string) (provider KubernetesProvider, err error) {
 	cluster, err := client.Management.Cluster.ByID(clusterID)
 	if err != nil {
 		return

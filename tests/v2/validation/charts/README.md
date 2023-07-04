@@ -4,9 +4,9 @@ You can find the correct suite name in the below by checking the test file you p
 In your config file, set the following:
 
 ```json
-"rancher": { 
-  "host": "<rancher-server-host>",
-  "adminToken": "<rancher-admin-token>",
+"ranger": { 
+  "host": "<ranger-server-host>",
+  "adminToken": "<ranger-admin-token>",
   "insecure": true/optional,
   "cleanup": false/optional,
   "clusterName": "<cluster-to-run-test>"

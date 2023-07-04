@@ -16,7 +16,7 @@ from .common import random_test_name
 from .common import wait_for_app_to_active
 
 # Skipping this test module because library-fluentd-aggregator from library catalog is not supported on latest
-# rancher versions
+# ranger versions
 pytest.skip(allow_module_level=True)
 
 namespace = {"p_client": None, "ns": None, "cluster": None, "project": None,
@@ -37,7 +37,7 @@ fluentd_aggregator_answers = {"defaultImage": "true",
 FLUENTD_AGGREGATOR_CATALOG_ID = "catalog://?catalog=library&template=fluentd-aggregator&version=0.3.1"
 
 
-fluentd_app_name = "rancher-logging"
+fluentd_app_name = "ranger-logging"
 endpoint_port = "24224"
 weight = 100
 

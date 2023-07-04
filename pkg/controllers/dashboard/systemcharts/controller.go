@@ -3,15 +3,15 @@ package systemcharts
 import (
 	"context"
 
-	catalog "github.com/rancher/rancher/pkg/apis/catalog.cattle.io/v1"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/controllers/dashboard/chart"
-	"github.com/rancher/rancher/pkg/features"
-	namespace "github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/wrangler"
-	corecontrollers "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
-	"github.com/rancher/wrangler/pkg/relatedresource"
+	catalog "github.com/ranger/ranger/pkg/apis/catalog.cattle.io/v1"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/controllers/dashboard/chart"
+	"github.com/ranger/ranger/pkg/features"
+	namespace "github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/wrangler"
+	corecontrollers "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
+	"github.com/ranger/wrangler/pkg/relatedresource"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/api/errors"
 	apierror "k8s.io/apimachinery/pkg/api/errors"
@@ -19,16 +19,16 @@ import (
 )
 
 const (
-	repoName         = "rancher-charts"
-	webhookChartName = "rancher-webhook"
-	webhookImage     = "rancher/rancher-webhook"
+	repoName         = "ranger-charts"
+	webhookChartName = "ranger-webhook"
+	webhookImage     = "ranger/ranger-webhook"
 )
 
 func Register(ctx context.Context, wContext *wrangler.Context, registryOverride string) error {
 	h := &handler{
 		manager:          wContext.SystemChartsManager,
 		namespaces:       wContext.Core.Namespace(),
-		chartsConfig:     chart.RancherConfigGetter{ConfigCache: wContext.Core.ConfigMap().Cache()},
+		chartsConfig:     chart.RangerConfigGetter{ConfigCache: wContext.Core.ConfigMap().Cache()},
 		registryOverride: registryOverride,
 	}
 
@@ -40,7 +40,7 @@ func Register(ctx context.Context, wContext *wrangler.Context, registryOverride 
 	}, wContext.Catalog.ClusterRepo(), wContext.Mgmt.Feature())
 
 	relatedresource.WatchClusterScoped(ctx, "bootstrap-settings-charts", func(namespace, name string, obj runtime.Object) ([]relatedresource.Key, error) {
-		if s, ok := obj.(*v3.Setting); ok && (s.Name == "rancher-webhook-version" || s.Name == "rancher-webhook-min-version") {
+		if s, ok := obj.(*v3.Setting); ok && (s.Name == "ranger-webhook-version" || s.Name == "ranger-webhook-min-version") {
 			return []relatedresource.Key{{
 				Name: repoName,
 			}}, nil
@@ -53,7 +53,7 @@ func Register(ctx context.Context, wContext *wrangler.Context, registryOverride 
 type handler struct {
 	manager          chart.Manager
 	namespaces       corecontrollers.NamespaceController
-	chartsConfig     chart.RancherConfigGetter
+	chartsConfig     chart.RangerConfigGetter
 	registryOverride string
 }
 
@@ -129,8 +129,8 @@ func (h *handler) getChartsToInstall() []*chart.Definition {
 		{
 			ReleaseNamespace:    namespace.System,
 			ChartName:           webhookChartName,
-			MinVersionSetting:   settings.RancherWebhookMinVersion,
-			ExactVersionSetting: settings.RancherWebhookVersion,
+			MinVersionSetting:   settings.RangerWebhookMinVersion,
+			ExactVersionSetting: settings.RangerWebhookVersion,
 			Values: func() map[string]interface{} {
 				values := map[string]interface{}{
 					"capi": map[string]interface{}{
@@ -143,7 +143,7 @@ func (h *handler) getChartsToInstall() []*chart.Definition {
 				// add priority class value.
 				if priorityClassName, err := h.chartsConfig.GetPriorityClassName(); err != nil {
 					if !apierror.IsNotFound(err) {
-						logrus.Warnf("Failed to get rancher priorityClassName for 'rancher-webhook': %v", err)
+						logrus.Warnf("Failed to get ranger priorityClassName for 'ranger-webhook': %v", err)
 					}
 				} else {
 					values[chart.PriorityClassKey] = priorityClassName
@@ -153,8 +153,8 @@ func (h *handler) getChartsToInstall() []*chart.Definition {
 			Enabled: func() bool { return true },
 		},
 		{
-			ReleaseNamespace: "rancher-operator-system",
-			ChartName:        "rancher-operator",
+			ReleaseNamespace: "ranger-operator-system",
+			ChartName:        "ranger-operator",
 			Uninstall:        true,
 			RemoveNamespace:  true,
 		},

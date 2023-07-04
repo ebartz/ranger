@@ -10,8 +10,8 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/rancher/norman/types"
-	"github.com/rancher/rancher/pkg/rkecerts"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/ranger/pkg/rkecerts"
 	"github.com/sirupsen/logrus"
 )
 

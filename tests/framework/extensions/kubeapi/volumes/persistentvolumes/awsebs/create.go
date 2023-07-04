@@ -4,10 +4,10 @@ import (
 	"context"
 	"strconv"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/kubeapi/volumes/persistentvolumes"
-	"github.com/rancher/rancher/tests/framework/extensions/unstructured"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/kubeapi/volumes/persistentvolumes"
+	"github.com/ranger/ranger/tests/framework/extensions/unstructured"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -15,7 +15,7 @@ import (
 
 // CreateAWSEBSPersistentVolume is a helper function that uses the dynamic client to create an aws ebs persistent volume for a specific cluster.
 // It registers a delete fuction.
-func CreateAWSEBSPersistentVolume(client *rancher.Client, clusterName, fsType, volumeID string, storage int, partition int32, readOnly bool, accessModes []corev1.PersistentVolumeAccessMode, persistentVolume *corev1.PersistentVolume) (*corev1.PersistentVolume, error) {
+func CreateAWSEBSPersistentVolume(client *ranger.Client, clusterName, fsType, volumeID string, storage int, partition int32, readOnly bool, accessModes []corev1.PersistentVolumeAccessMode, persistentVolume *corev1.PersistentVolume) (*corev1.PersistentVolume, error) {
 	stringStorage := strconv.Itoa(storage) + "Gi"
 	unstructuredPersistentVolume := unstructured.MustToUnstructured(persistentVolume)
 

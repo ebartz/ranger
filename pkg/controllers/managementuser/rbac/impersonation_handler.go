@@ -1,7 +1,7 @@
 package rbac
 
 import (
-	"github.com/rancher/rancher/pkg/impersonation"
+	"github.com/ranger/ranger/pkg/impersonation"
 	"github.com/sirupsen/logrus"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

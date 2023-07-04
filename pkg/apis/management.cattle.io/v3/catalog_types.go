@@ -3,8 +3,8 @@ package v3
 import (
 	"strings"
 
-	"github.com/rancher/norman/condition"
-	"github.com/rancher/norman/types"
+	"github.com/ranger/norman/condition"
+	"github.com/ranger/norman/types"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -170,13 +170,13 @@ type CatalogTemplateVersion struct {
 type TemplateVersionSpec struct {
 	ExternalID          string            `json:"externalId,omitempty"`
 	Version             string            `json:"version,omitempty"`
-	RancherVersion      string            `json:"rancherVersion,omitempty"`
+	RangerVersion      string            `json:"rangerVersion,omitempty"`
 	RequiredNamespace   string            `json:"requiredNamespace,omitempty"`
 	KubeVersion         string            `json:"kubeVersion,omitempty"`
 	UpgradeVersionLinks map[string]string `json:"upgradeVersionLinks,omitempty"`
 	Digest              string            `json:"digest,omitempty"`
-	RancherMinVersion   string            `json:"rancherMinVersion,omitempty"`
-	RancherMaxVersion   string            `json:"rancherMaxVersion,omitempty"`
+	RangerMinVersion   string            `json:"rangerMinVersion,omitempty"`
+	RangerMaxVersion   string            `json:"rangerMaxVersion,omitempty"`
 
 	// Deprecated: Do not use
 	Files map[string]string `json:"files,omitempty" norman:"nocreate,noupdate"`

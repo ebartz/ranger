@@ -16,7 +16,7 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/types"
+	"github.com/ranger/norman/types"
 )
 
 const (
@@ -391,6 +391,6 @@ func (a *APIBaseClient) Action(schemaType string, action string,
 func init() {
 	Debug = os.Getenv("RANCHER_CLIENT_DEBUG") == "true"
 	if Debug {
-		fmt.Println("Rancher client debug on")
+		fmt.Println("Ranger client debug on")
 	}
 }

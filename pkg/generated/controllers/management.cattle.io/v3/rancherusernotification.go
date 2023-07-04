@@ -1,5 +1,5 @@
 /*
-Copyright 2023 Rancher Labs, Inc.
+Copyright 2023 Ranger Labs, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,10 +22,10 @@ import (
 	"context"
 	"time"
 
-	"github.com/rancher/lasso/pkg/client"
-	"github.com/rancher/lasso/pkg/controller"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/wrangler/pkg/generic"
+	"github.com/ranger/lasso/pkg/client"
+	"github.com/ranger/lasso/pkg/controller"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/wrangler/pkg/generic"
 	"k8s.io/apimachinery/pkg/api/equality"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -38,51 +38,51 @@ import (
 	"k8s.io/client-go/tools/cache"
 )
 
-type RancherUserNotificationHandler func(string, *v3.RancherUserNotification) (*v3.RancherUserNotification, error)
+type RangerUserNotificationHandler func(string, *v3.RangerUserNotification) (*v3.RangerUserNotification, error)
 
-type RancherUserNotificationController interface {
+type RangerUserNotificationController interface {
 	generic.ControllerMeta
-	RancherUserNotificationClient
+	RangerUserNotificationClient
 
-	OnChange(ctx context.Context, name string, sync RancherUserNotificationHandler)
-	OnRemove(ctx context.Context, name string, sync RancherUserNotificationHandler)
+	OnChange(ctx context.Context, name string, sync RangerUserNotificationHandler)
+	OnRemove(ctx context.Context, name string, sync RangerUserNotificationHandler)
 	Enqueue(name string)
 	EnqueueAfter(name string, duration time.Duration)
 
-	Cache() RancherUserNotificationCache
+	Cache() RangerUserNotificationCache
 }
 
-type RancherUserNotificationClient interface {
-	Create(*v3.RancherUserNotification) (*v3.RancherUserNotification, error)
-	Update(*v3.RancherUserNotification) (*v3.RancherUserNotification, error)
+type RangerUserNotificationClient interface {
+	Create(*v3.RangerUserNotification) (*v3.RangerUserNotification, error)
+	Update(*v3.RangerUserNotification) (*v3.RangerUserNotification, error)
 
 	Delete(name string, options *metav1.DeleteOptions) error
-	Get(name string, options metav1.GetOptions) (*v3.RancherUserNotification, error)
-	List(opts metav1.ListOptions) (*v3.RancherUserNotificationList, error)
+	Get(name string, options metav1.GetOptions) (*v3.RangerUserNotification, error)
+	List(opts metav1.ListOptions) (*v3.RangerUserNotificationList, error)
 	Watch(opts metav1.ListOptions) (watch.Interface, error)
-	Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v3.RancherUserNotification, err error)
+	Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v3.RangerUserNotification, err error)
 }
 
-type RancherUserNotificationCache interface {
-	Get(name string) (*v3.RancherUserNotification, error)
-	List(selector labels.Selector) ([]*v3.RancherUserNotification, error)
+type RangerUserNotificationCache interface {
+	Get(name string) (*v3.RangerUserNotification, error)
+	List(selector labels.Selector) ([]*v3.RangerUserNotification, error)
 
-	AddIndexer(indexName string, indexer RancherUserNotificationIndexer)
-	GetByIndex(indexName, key string) ([]*v3.RancherUserNotification, error)
+	AddIndexer(indexName string, indexer RangerUserNotificationIndexer)
+	GetByIndex(indexName, key string) ([]*v3.RangerUserNotification, error)
 }
 
-type RancherUserNotificationIndexer func(obj *v3.RancherUserNotification) ([]string, error)
+type RangerUserNotificationIndexer func(obj *v3.RangerUserNotification) ([]string, error)
 
-type rancherUserNotificationController struct {
+type rangerUserNotificationController struct {
 	controller    controller.SharedController
 	client        *client.Client
 	gvk           schema.GroupVersionKind
 	groupResource schema.GroupResource
 }
 
-func NewRancherUserNotificationController(gvk schema.GroupVersionKind, resource string, namespaced bool, controller controller.SharedControllerFactory) RancherUserNotificationController {
+func NewRangerUserNotificationController(gvk schema.GroupVersionKind, resource string, namespaced bool, controller controller.SharedControllerFactory) RangerUserNotificationController {
 	c := controller.ForResourceKind(gvk.GroupVersion().WithResource(resource), gvk.Kind, namespaced)
-	return &rancherUserNotificationController{
+	return &rangerUserNotificationController{
 		controller: c,
 		client:     c.Client(),
 		gvk:        gvk,
@@ -93,13 +93,13 @@ func NewRancherUserNotificationController(gvk schema.GroupVersionKind, resource 
 	}
 }
 
-func FromRancherUserNotificationHandlerToHandler(sync RancherUserNotificationHandler) generic.Handler {
+func FromRangerUserNotificationHandlerToHandler(sync RangerUserNotificationHandler) generic.Handler {
 	return func(key string, obj runtime.Object) (ret runtime.Object, err error) {
-		var v *v3.RancherUserNotification
+		var v *v3.RangerUserNotification
 		if obj == nil {
 			v, err = sync(key, nil)
 		} else {
-			v, err = sync(key, obj.(*v3.RancherUserNotification))
+			v, err = sync(key, obj.(*v3.RangerUserNotification))
 		}
 		if v == nil {
 			return nil, err
@@ -108,9 +108,9 @@ func FromRancherUserNotificationHandlerToHandler(sync RancherUserNotificationHan
 	}
 }
 
-func (c *rancherUserNotificationController) Updater() generic.Updater {
+func (c *rangerUserNotificationController) Updater() generic.Updater {
 	return func(obj runtime.Object) (runtime.Object, error) {
-		newObj, err := c.Update(obj.(*v3.RancherUserNotification))
+		newObj, err := c.Update(obj.(*v3.RangerUserNotification))
 		if newObj == nil {
 			return nil, err
 		}
@@ -118,7 +118,7 @@ func (c *rancherUserNotificationController) Updater() generic.Updater {
 	}
 }
 
-func UpdateRancherUserNotificationDeepCopyOnChange(client RancherUserNotificationClient, obj *v3.RancherUserNotification, handler func(obj *v3.RancherUserNotification) (*v3.RancherUserNotification, error)) (*v3.RancherUserNotification, error) {
+func UpdateRangerUserNotificationDeepCopyOnChange(client RangerUserNotificationClient, obj *v3.RangerUserNotification, handler func(obj *v3.RangerUserNotification) (*v3.RangerUserNotification, error)) (*v3.RangerUserNotification, error) {
 	if obj == nil {
 		return obj, nil
 	}
@@ -135,87 +135,87 @@ func UpdateRancherUserNotificationDeepCopyOnChange(client RancherUserNotificatio
 	return copyObj, err
 }
 
-func (c *rancherUserNotificationController) AddGenericHandler(ctx context.Context, name string, handler generic.Handler) {
+func (c *rangerUserNotificationController) AddGenericHandler(ctx context.Context, name string, handler generic.Handler) {
 	c.controller.RegisterHandler(ctx, name, controller.SharedControllerHandlerFunc(handler))
 }
 
-func (c *rancherUserNotificationController) AddGenericRemoveHandler(ctx context.Context, name string, handler generic.Handler) {
+func (c *rangerUserNotificationController) AddGenericRemoveHandler(ctx context.Context, name string, handler generic.Handler) {
 	c.AddGenericHandler(ctx, name, generic.NewRemoveHandler(name, c.Updater(), handler))
 }
 
-func (c *rancherUserNotificationController) OnChange(ctx context.Context, name string, sync RancherUserNotificationHandler) {
-	c.AddGenericHandler(ctx, name, FromRancherUserNotificationHandlerToHandler(sync))
+func (c *rangerUserNotificationController) OnChange(ctx context.Context, name string, sync RangerUserNotificationHandler) {
+	c.AddGenericHandler(ctx, name, FromRangerUserNotificationHandlerToHandler(sync))
 }
 
-func (c *rancherUserNotificationController) OnRemove(ctx context.Context, name string, sync RancherUserNotificationHandler) {
-	c.AddGenericHandler(ctx, name, generic.NewRemoveHandler(name, c.Updater(), FromRancherUserNotificationHandlerToHandler(sync)))
+func (c *rangerUserNotificationController) OnRemove(ctx context.Context, name string, sync RangerUserNotificationHandler) {
+	c.AddGenericHandler(ctx, name, generic.NewRemoveHandler(name, c.Updater(), FromRangerUserNotificationHandlerToHandler(sync)))
 }
 
-func (c *rancherUserNotificationController) Enqueue(name string) {
+func (c *rangerUserNotificationController) Enqueue(name string) {
 	c.controller.Enqueue("", name)
 }
 
-func (c *rancherUserNotificationController) EnqueueAfter(name string, duration time.Duration) {
+func (c *rangerUserNotificationController) EnqueueAfter(name string, duration time.Duration) {
 	c.controller.EnqueueAfter("", name, duration)
 }
 
-func (c *rancherUserNotificationController) Informer() cache.SharedIndexInformer {
+func (c *rangerUserNotificationController) Informer() cache.SharedIndexInformer {
 	return c.controller.Informer()
 }
 
-func (c *rancherUserNotificationController) GroupVersionKind() schema.GroupVersionKind {
+func (c *rangerUserNotificationController) GroupVersionKind() schema.GroupVersionKind {
 	return c.gvk
 }
 
-func (c *rancherUserNotificationController) Cache() RancherUserNotificationCache {
-	return &rancherUserNotificationCache{
+func (c *rangerUserNotificationController) Cache() RangerUserNotificationCache {
+	return &rangerUserNotificationCache{
 		indexer:  c.Informer().GetIndexer(),
 		resource: c.groupResource,
 	}
 }
 
-func (c *rancherUserNotificationController) Create(obj *v3.RancherUserNotification) (*v3.RancherUserNotification, error) {
-	result := &v3.RancherUserNotification{}
+func (c *rangerUserNotificationController) Create(obj *v3.RangerUserNotification) (*v3.RangerUserNotification, error) {
+	result := &v3.RangerUserNotification{}
 	return result, c.client.Create(context.TODO(), "", obj, result, metav1.CreateOptions{})
 }
 
-func (c *rancherUserNotificationController) Update(obj *v3.RancherUserNotification) (*v3.RancherUserNotification, error) {
-	result := &v3.RancherUserNotification{}
+func (c *rangerUserNotificationController) Update(obj *v3.RangerUserNotification) (*v3.RangerUserNotification, error) {
+	result := &v3.RangerUserNotification{}
 	return result, c.client.Update(context.TODO(), "", obj, result, metav1.UpdateOptions{})
 }
 
-func (c *rancherUserNotificationController) Delete(name string, options *metav1.DeleteOptions) error {
+func (c *rangerUserNotificationController) Delete(name string, options *metav1.DeleteOptions) error {
 	if options == nil {
 		options = &metav1.DeleteOptions{}
 	}
 	return c.client.Delete(context.TODO(), "", name, *options)
 }
 
-func (c *rancherUserNotificationController) Get(name string, options metav1.GetOptions) (*v3.RancherUserNotification, error) {
-	result := &v3.RancherUserNotification{}
+func (c *rangerUserNotificationController) Get(name string, options metav1.GetOptions) (*v3.RangerUserNotification, error) {
+	result := &v3.RangerUserNotification{}
 	return result, c.client.Get(context.TODO(), "", name, result, options)
 }
 
-func (c *rancherUserNotificationController) List(opts metav1.ListOptions) (*v3.RancherUserNotificationList, error) {
-	result := &v3.RancherUserNotificationList{}
+func (c *rangerUserNotificationController) List(opts metav1.ListOptions) (*v3.RangerUserNotificationList, error) {
+	result := &v3.RangerUserNotificationList{}
 	return result, c.client.List(context.TODO(), "", result, opts)
 }
 
-func (c *rancherUserNotificationController) Watch(opts metav1.ListOptions) (watch.Interface, error) {
+func (c *rangerUserNotificationController) Watch(opts metav1.ListOptions) (watch.Interface, error) {
 	return c.client.Watch(context.TODO(), "", opts)
 }
 
-func (c *rancherUserNotificationController) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (*v3.RancherUserNotification, error) {
-	result := &v3.RancherUserNotification{}
+func (c *rangerUserNotificationController) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (*v3.RangerUserNotification, error) {
+	result := &v3.RangerUserNotification{}
 	return result, c.client.Patch(context.TODO(), "", name, pt, data, result, metav1.PatchOptions{}, subresources...)
 }
 
-type rancherUserNotificationCache struct {
+type rangerUserNotificationCache struct {
 	indexer  cache.Indexer
 	resource schema.GroupResource
 }
 
-func (c *rancherUserNotificationCache) Get(name string) (*v3.RancherUserNotification, error) {
+func (c *rangerUserNotificationCache) Get(name string) (*v3.RangerUserNotification, error) {
 	obj, exists, err := c.indexer.GetByKey(name)
 	if err != nil {
 		return nil, err
@@ -223,34 +223,34 @@ func (c *rancherUserNotificationCache) Get(name string) (*v3.RancherUserNotifica
 	if !exists {
 		return nil, errors.NewNotFound(c.resource, name)
 	}
-	return obj.(*v3.RancherUserNotification), nil
+	return obj.(*v3.RangerUserNotification), nil
 }
 
-func (c *rancherUserNotificationCache) List(selector labels.Selector) (ret []*v3.RancherUserNotification, err error) {
+func (c *rangerUserNotificationCache) List(selector labels.Selector) (ret []*v3.RangerUserNotification, err error) {
 
 	err = cache.ListAll(c.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v3.RancherUserNotification))
+		ret = append(ret, m.(*v3.RangerUserNotification))
 	})
 
 	return ret, err
 }
 
-func (c *rancherUserNotificationCache) AddIndexer(indexName string, indexer RancherUserNotificationIndexer) {
+func (c *rangerUserNotificationCache) AddIndexer(indexName string, indexer RangerUserNotificationIndexer) {
 	utilruntime.Must(c.indexer.AddIndexers(map[string]cache.IndexFunc{
 		indexName: func(obj interface{}) (strings []string, e error) {
-			return indexer(obj.(*v3.RancherUserNotification))
+			return indexer(obj.(*v3.RangerUserNotification))
 		},
 	}))
 }
 
-func (c *rancherUserNotificationCache) GetByIndex(indexName, key string) (result []*v3.RancherUserNotification, err error) {
+func (c *rangerUserNotificationCache) GetByIndex(indexName, key string) (result []*v3.RangerUserNotification, err error) {
 	objs, err := c.indexer.ByIndex(indexName, key)
 	if err != nil {
 		return nil, err
 	}
-	result = make([]*v3.RancherUserNotification, 0, len(objs))
+	result = make([]*v3.RangerUserNotification, 0, len(objs))
 	for _, obj := range objs {
-		result = append(result, obj.(*v3.RancherUserNotification))
+		result = append(result, obj.(*v3.RangerUserNotification))
 	}
 	return result, nil
 }

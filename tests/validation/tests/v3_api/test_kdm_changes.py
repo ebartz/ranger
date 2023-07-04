@@ -44,9 +44,9 @@ def test_clusters_for_kdm():
     Helper function - validate_custom_cluster_kdm() to create the AWS nodes
     and add to the cluster
     """
-    rancher_version = get_setting_value_by_name('server-version')
+    ranger_version = get_setting_value_by_name('server-version')
     if K8S_VERSION == "":
-        if str(rancher_version).startswith('v2.2'):
+        if str(ranger_version).startswith('v2.2'):
             k8s_v = get_setting_value_by_name('k8s-version-to-images')
             default_k8s_versions = json.loads(k8s_v).keys()
         else:
@@ -184,8 +184,8 @@ def create_kdm_clusters(cluster_name, rke_config_new,
                         aws_nodes, aws_nodes_index, list_process):
     client = get_user_client()
     cluster = client.create_cluster(name=cluster_name,
-                                    driver="rancherKubernetesEngine",
-                                    rancherKubernetesEngineConfig=
+                                    driver="rangerKubernetesEngine",
+                                    rangerKubernetesEngineConfig=
                                     rke_config_new)
     p1 = multiprocessing.Process(
         target=validate_custom_cluster_kdm,
@@ -203,12 +203,12 @@ def create_kdm_clusters(cluster_name, rke_config_new,
 def save_cluster_details(cluster_detail, cluster):
     cluster_detail[cluster.name] = {}
     cluster_detail[cluster.name]["k8s"] = \
-        cluster["rancherKubernetesEngineConfig"]["kubernetesVersion"]
+        cluster["rangerKubernetesEngineConfig"]["kubernetesVersion"]
     cluster_detail[cluster.name]["network"] = \
-        cluster["rancherKubernetesEngineConfig"]["network"]["plugin"]
+        cluster["rangerKubernetesEngineConfig"]["network"]["plugin"]
     if DNS_MATRIX:
         cluster_detail[cluster.name]["dns"] = \
-            cluster["rancherKubernetesEngineConfig"]["dns"]["provider"]
+            cluster["rangerKubernetesEngineConfig"]["dns"]["provider"]
         if "-nodelocaldns" in cluster.name:
             cluster_detail[cluster.name]["nodelocaldns"] = \
                 "enabled"

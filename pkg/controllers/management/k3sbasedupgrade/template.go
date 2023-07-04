@@ -3,8 +3,8 @@ package k3sbasedupgrade
 import (
 	"strings"
 
-	"github.com/rancher/system-upgrade-controller/pkg/apis/upgrade.cattle.io"
-	planv1 "github.com/rancher/system-upgrade-controller/pkg/apis/upgrade.cattle.io/v1"
+	"github.com/ranger/system-upgrade-controller/pkg/apis/upgrade.cattle.io"
+	planv1 "github.com/ranger/system-upgrade-controller/pkg/apis/upgrade.cattle.io/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/kubectl/pkg/describe"
@@ -13,8 +13,8 @@ import (
 const k3sMasterPlanName = "k3s-master-plan"
 const k3sWorkerPlanName = "k3s-worker-plan"
 const systemUpgradeServiceAccount = "system-upgrade-controller"
-const k3supgradeImage = "rancher/k3s-upgrade"
-const rke2upgradeImage = "rancher/rke2-upgrade"
+const k3supgradeImage = "ranger/k3s-upgrade"
+const rke2upgradeImage = "ranger/rke2-upgrade"
 const rke2MasterPlanName = "rke2-master-plan"
 const rke2WorkerPlanName = "rke2-worker-plan"
 
@@ -25,7 +25,7 @@ var genericPlan = planv1.Plan{
 	},
 	ObjectMeta: metav1.ObjectMeta{
 		Namespace: systemUpgradeNS,
-		Labels:    map[string]string{rancherManagedPlan: "true"},
+		Labels:    map[string]string{rangerManagedPlan: "true"},
 	},
 	Spec: planv1.PlanSpec{
 		Concurrency:        0,

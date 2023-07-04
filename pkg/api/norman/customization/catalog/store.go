@@ -5,18 +5,18 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/rancher/norman/store/proxy"
-	"github.com/rancher/norman/store/transform"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/pkg/catalog/manager"
-	catUtil "github.com/rancher/rancher/pkg/catalog/utils"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	hcommon "github.com/rancher/rancher/pkg/controllers/managementuserlegacy/helm/common"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	managementschema "github.com/rancher/rancher/pkg/schemas/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/norman/store/proxy"
+	"github.com/ranger/norman/store/transform"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/pkg/catalog/manager"
+	catUtil "github.com/ranger/ranger/pkg/catalog/utils"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	hcommon "github.com/ranger/ranger/pkg/controllers/managementuserlegacy/helm/common"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	managementschema "github.com/ranger/ranger/pkg/schemas/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/sirupsen/logrus"
 )
 
@@ -85,13 +85,13 @@ func (t *templateStore) extractVersionLinks(apiContext *types.APIContext, resour
 	return r
 }
 
-// templateVersionForRancherVersion indicates if a templateVersion works with the rancher server version
-// In the error case it will always return true - if a template is actually invalid for that rancher version
+// templateVersionForRangerVersion indicates if a templateVersion works with the ranger server version
+// In the error case it will always return true - if a template is actually invalid for that ranger version
 // API validation will handle the rejection
 func (t *templateStore) isTemplateVersionCompatible(clusterName, externalID string) bool {
-	rancherVersion := settings.ServerVersion.Get()
+	rangerVersion := settings.ServerVersion.Get()
 
-	if !catUtil.ReleaseServerVersion(rancherVersion) {
+	if !catUtil.ReleaseServerVersion(rangerVersion) {
 		return true
 	}
 
@@ -105,7 +105,7 @@ func (t *templateStore) isTemplateVersionCompatible(clusterName, externalID stri
 		return true
 	}
 
-	err = t.CatalogManager.ValidateRancherVersion(template, "")
+	err = t.CatalogManager.ValidateRangerVersion(template, "")
 	if err != nil {
 		return false
 	}

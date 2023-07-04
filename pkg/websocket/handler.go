@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/rancher/norman/httperror"
+	"github.com/ranger/norman/httperror"
 )
 
 const (

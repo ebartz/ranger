@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # note: requires helm-unittest (https://github.com/helm-unittest/helm-unittest) to be installed beforehand
-# run in root of rancher - i.e. bash dev-scripts/helm-unittest.sh
+# run in root of ranger - i.e. bash dev-scripts/helm-unittest.sh
 # change automated parts of templates
-test_image="rancher/rancher"
+test_image="ranger/ranger"
 test_image_tag="v2.7.0"
 sed -i -e "s/%VERSION%/${test_image_tag}/g" ./chart/Chart.yaml
 sed -i -e "s/%APP_VERSION%/${test_image_tag}/g" ./chart/Chart.yaml

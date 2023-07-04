@@ -14,10 +14,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rancher/rancher/pkg/agent/node"
-	"github.com/rancher/rancher/pkg/rkenodeconfigserver"
-	"github.com/rancher/rancher/pkg/rkeworker"
-	"github.com/rancher/rke/types"
+	"github.com/ranger/ranger/pkg/agent/node"
+	"github.com/ranger/ranger/pkg/rkenodeconfigserver"
+	"github.com/ranger/ranger/pkg/rkeworker"
+	"github.com/ranger/rke/types"
 	"github.com/sirupsen/logrus"
 )
 
@@ -54,14 +54,14 @@ func newErrNodeOrClusterNotFound(msg, occursType string) *ErrNodeOrClusterNotFou
 	}
 }
 
-// ConfigClient executes a GET request against the rancher servers node-server API in an attempt to get the most recent node-config.
+// ConfigClient executes a GET request against the ranger servers node-server API in an attempt to get the most recent node-config.
 // It continues to do so until a node-config is returned within the response body, or the retry limit of 3 attempts is exceeded. Upon
 // receiving a valid node-config this function inspects any kubelet serving certificates present on the host to determine if they need to be refreshed.
 // If kubelet certificates need to be regenerated, a second GET request will be made so that the node config holds valid certificates. Once all kubelet certificates
 // are deemed valid, ConfigClient will execute the node config, writing files and executing processes as directed. The passed
 // url and header values are used when crafting the GET request, and the writeCertOnly parameter is used to denote if the agent should disregard
 // all aspects of the received node-config except any delivered certificates. Upon a successful execution of the node config, this function
-// will return a polling interval which should be used to query the rancher server for the next node-config and any encountered errors.
+// will return a polling interval which should be used to query the ranger server for the next node-config and any encountered errors.
 func ConfigClient(ctx context.Context, url string, header http.Header, writeCertOnly bool) (int, error) {
 	// try a few more times because there is a delay after registering a new node
 	nodeOrClusterNotFoundRetryLimit := 3
@@ -226,7 +226,7 @@ func findCommandValue(flag string, commandsFlags []string) string {
 //
 // While the agent may denote it needs a new kubelet certificate
 // in its connection request, a new certificate will only be
-// delivered by Rancher if the generate_serving_certificate property
+// delivered by Ranger if the generate_serving_certificate property
 // is set to 'true' for the clusters kubelet service.
 func kubeletNeedsNewCertificate(nc *rkeworker.NodeConfig) (bool, error) {
 	kubeletCertKeyFile, kubeletCertFile := getKubeletCertificateFilesFromProcess(nc.Processes)

@@ -1,7 +1,7 @@
 #!groovy
 
 node {
-  def rootPath = "/src/rancher-validation/"
+  def rootPath = "/src/ranger-validation/"
 
   def job_name = "${JOB_NAME}"
   if (job_name.contains('/')) { 
@@ -13,17 +13,17 @@ node {
   def testContainer = "${job_name}${env.BUILD_NUMBER}_test"
   def deleteContainer = "${job_name}${env.BUILD_NUMBER}_delete"
 
-  def deployPytestOptions = "-k test_deploy_rancher_server"
-  def deletePytestOptions = "-k test_delete_rancher_server"
+  def deployPytestOptions = "-k test_deploy_ranger_server"
+  def deletePytestOptions = "-k test_delete_ranger_server"
 
   def setupResultsOut = "setup-results.xml"
   def testResultsOut = "results.xml"
   def deleteResultsOut = "delete-results.xml"
-  def imageName = "rancher-validation-${job_name}${env.BUILD_NUMBER}"
+  def imageName = "ranger-validation-${job_name}${env.BUILD_NUMBER}"
   def testsDir = "tests/v3_api/"
 
   def envFile = ".env"
-  def rancherConfig = "rancher_env.config"
+  def rangerConfig = "ranger_env.config"
 
   def branch = "release/v2.6"
   if ("${env.branch}" != "null" && "${env.branch}" != "") {
@@ -107,23 +107,23 @@ node {
               sh "./tests/v3_api/scripts/build.sh"
             }
           
-            stage('Deploy Rancher Server') {
+            stage('Deploy Ranger Server') {
               try {
               if (!env.CATTLE_TEST_URL || !env.ADMIN_TOKEN || !env.USER_TOKEN ||
                 (env.CATTLE_TEST_URL == "" && env.ADMIN_TOKEN == "" && env.USER_TOKEN == "")) {
-                // deploy rancher server
+                // deploy ranger server
                 sh "docker run --name ${setupContainer} -t --env-file ${envFile} " +
                   "${imageName} /bin/bash -c \'pytest -v -s --junit-xml=${setupResultsOut} " +
                   "${deployPytestOptions} ${testsDir}\'"
                 RANCHER_DEPLOYED = true
 
                 // copy file containing CATTLE_TEST_URL, ADMIN_TOKEN, USER_TOKEN and load into environment variables
-                sh "docker cp ${setupContainer}:${rootPath}${testsDir}${rancherConfig} ."
-                load rancherConfig
+                sh "docker cp ${setupContainer}:${rootPath}${testsDir}${rangerConfig} ."
+                load rangerConfig
                 
               }
               else {
-                  echo "User Provided Rancher Server"
+                  echo "User Provided Ranger Server"
                   RANCHER_DEPLOYED = false
                }
                }
@@ -153,7 +153,7 @@ node {
           } catch(err) {
             echo "Error: " + err
           } finally {
-            stage('Delete Rancher Server') {
+            stage('Delete Ranger Server') {
               try {
                 if (env.RANCHER_DELETE_SERVER.toLowerCase() == "true" && RANCHER_DEPLOYED) {
                   sh "docker run --name ${deleteContainer} -t --env-file ${envFile} " +
@@ -165,7 +165,7 @@ node {
                   step([$class: 'JUnitResultArchiver', testResults: "**/${deleteResultsOut}"])
                 }
                 else {
-                  echo "Rancher server not deployed, skipping delete."
+                  echo "Ranger server not deployed, skipping delete."
                 }
               } catch(err) {
                 echo "Error: " + err

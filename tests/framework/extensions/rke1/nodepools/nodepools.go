@@ -3,9 +3,9 @@ package rke1
 import (
 	"strconv"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	nodestat "github.com/rancher/rancher/tests/framework/extensions/nodes"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	nodestat "github.com/ranger/ranger/tests/framework/extensions/nodes"
 	"github.com/sirupsen/logrus"
 )
 
@@ -33,7 +33,7 @@ type NodeRoles struct {
 //		   Quantity:     1,
 //	  },
 //	 }
-func NodePoolSetup(client *rancher.Client, nodeRoles []NodeRoles, ClusterID, NodeTemplateID string) (*management.NodePool, error) {
+func NodePoolSetup(client *ranger.Client, nodeRoles []NodeRoles, ClusterID, NodeTemplateID string) (*management.NodePool, error) {
 	nodePoolConfig := management.NodePool{
 		ClusterID:               ClusterID,
 		DeleteNotReadyAfterSecs: 0,
@@ -59,7 +59,7 @@ func NodePoolSetup(client *rancher.Client, nodeRoles []NodeRoles, ClusterID, Nod
 
 // ScaleWorkerNodePool is a helper method that will add a worker node pool to the existing RKE1 cluster. Once done, it will scale
 // the worker node pool to add a worker node, scale it back down to remove the worker node, and then delete the worker node pool.
-func ScaleWorkerNodePool(client *rancher.Client, nodeRoles []NodeRoles, ClusterID, NodeTemplateID string) error {
+func ScaleWorkerNodePool(client *ranger.Client, nodeRoles []NodeRoles, ClusterID, NodeTemplateID string) error {
 	nodePoolConfig := management.NodePool{
 		ClusterID:               ClusterID,
 		ControlPlane:            false,

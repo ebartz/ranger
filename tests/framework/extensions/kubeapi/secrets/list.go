@@ -3,8 +3,8 @@ package secrets
 import (
 	"context"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -15,7 +15,7 @@ type SecretList struct {
 }
 
 // ListSecrets is a helper function that uses the dynamic client to list secrets in a cluster with its list options.
-func ListSecrets(client *rancher.Client, clusterID, namespace string, listOpts metav1.ListOptions) (*SecretList, error) {
+func ListSecrets(client *ranger.Client, clusterID, namespace string, listOpts metav1.ListOptions) (*SecretList, error) {
 	secretList := new(SecretList)
 
 	dynamicClient, err := client.GetDownStreamClusterClient(clusterID)

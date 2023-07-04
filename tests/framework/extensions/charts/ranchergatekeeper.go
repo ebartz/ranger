@@ -4,28 +4,28 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/rancher/rancher/pkg/api/steve/catalog/types"
-	catalogv1 "github.com/rancher/rancher/pkg/apis/catalog.cattle.io/v1"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/defaults"
-	kubenamespaces "github.com/rancher/rancher/tests/framework/extensions/kubeapi/namespaces"
-	"github.com/rancher/rancher/tests/framework/extensions/namespaces"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
+	"github.com/ranger/ranger/pkg/api/steve/catalog/types"
+	catalogv1 "github.com/ranger/ranger/pkg/apis/catalog.cattle.io/v1"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/defaults"
+	kubenamespaces "github.com/ranger/ranger/tests/framework/extensions/kubeapi/namespaces"
+	"github.com/ranger/ranger/tests/framework/extensions/namespaces"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/watch"
 )
 
 const (
-	// Namespace that rancher gatekeeper chart is installed in
-	RancherGatekeeperNamespace = "cattle-gatekeeper-system"
-	// Name of the rancher gatekeeper chart
-	RancherGatekeeperName = "rancher-gatekeeper"
-	// Name of rancher gatekeeper crd chart
-	RancherGatekeeperCRDName = "rancher-gatekeeper-crd"
+	// Namespace that ranger gatekeeper chart is installed in
+	RangerGatekeeperNamespace = "cattle-gatekeeper-system"
+	// Name of the ranger gatekeeper chart
+	RangerGatekeeperName = "ranger-gatekeeper"
+	// Name of ranger gatekeeper crd chart
+	RangerGatekeeperCRDName = "ranger-gatekeeper-crd"
 )
 
-// InstallRancherGatekeeperChart installs the OPA gatekeeper chart
-func InstallRancherGatekeeperChart(client *rancher.Client, installOptions *InstallOptions) error {
+// InstallRangerGatekeeperChart installs the OPA gatekeeper chart
+func InstallRangerGatekeeperChart(client *ranger.Client, installOptions *InstallOptions) error {
 	serverSetting, err := client.Management.Setting.ByID(serverURLSettingID)
 	if err != nil {
 		return err
@@ -38,8 +38,8 @@ func InstallRancherGatekeeperChart(client *rancher.Client, installOptions *Insta
 
 	gatekeeperChartInstallActionPayload := &payloadOpts{
 		InstallOptions:  *installOptions,
-		Name:            RancherGatekeeperName,
-		Namespace:       RancherGatekeeperNamespace,
+		Name:            RangerGatekeeperName,
+		Namespace:       RangerGatekeeperNamespace,
 		Host:            serverSetting.Value,
 		DefaultRegistry: registrySetting.Value,
 	}
@@ -53,18 +53,18 @@ func InstallRancherGatekeeperChart(client *rancher.Client, installOptions *Insta
 
 	// Cleanup registration
 
-	// register uninstall rancher-gatekeeper as a cleanup function
+	// register uninstall ranger-gatekeeper as a cleanup function
 	client.Session.RegisterCleanupFunc(func() error {
-		// UninstallAction for when uninstalling the rancher-gatekeeper chart
+		// UninstallAction for when uninstalling the ranger-gatekeeper chart
 		defaultChartUninstallAction := newChartUninstallAction()
 
-		err := catalogClient.UninstallChart(RancherGatekeeperName, RancherGatekeeperNamespace, defaultChartUninstallAction)
+		err := catalogClient.UninstallChart(RangerGatekeeperName, RangerGatekeeperNamespace, defaultChartUninstallAction)
 		if err != nil {
 			return err
 		}
 
-		watchAppInterface, err := catalogClient.Apps(RancherGatekeeperNamespace).Watch(context.TODO(), metav1.ListOptions{
-			FieldSelector:  "metadata.name=" + RancherGatekeeperName,
+		watchAppInterface, err := catalogClient.Apps(RangerGatekeeperNamespace).Watch(context.TODO(), metav1.ListOptions{
+			FieldSelector:  "metadata.name=" + RangerGatekeeperName,
 			TimeoutSeconds: &defaults.WatchTimeoutSeconds,
 		})
 		if err != nil {
@@ -74,7 +74,7 @@ func InstallRancherGatekeeperChart(client *rancher.Client, installOptions *Insta
 		err = wait.WatchWait(watchAppInterface, func(event watch.Event) (ready bool, err error) {
 			chart := event.Object.(*catalogv1.App)
 			if event.Type == watch.Error {
-				return false, fmt.Errorf("there was an error uninstalling rancher gatekeeper chart")
+				return false, fmt.Errorf("there was an error uninstalling ranger gatekeeper chart")
 			} else if event.Type == watch.Deleted {
 				return true, nil
 			} else if chart == nil {
@@ -86,13 +86,13 @@ func InstallRancherGatekeeperChart(client *rancher.Client, installOptions *Insta
 			return err
 		}
 
-		err = catalogClient.UninstallChart(RancherGatekeeperCRDName, RancherGatekeeperNamespace, defaultChartUninstallAction)
+		err = catalogClient.UninstallChart(RangerGatekeeperCRDName, RangerGatekeeperNamespace, defaultChartUninstallAction)
 		if err != nil {
 			return err
 		}
 
-		watchAppInterface, err = catalogClient.Apps(RancherGatekeeperNamespace).Watch(context.TODO(), metav1.ListOptions{
-			FieldSelector:  "metadata.name=" + RancherGatekeeperCRDName,
+		watchAppInterface, err = catalogClient.Apps(RangerGatekeeperNamespace).Watch(context.TODO(), metav1.ListOptions{
+			FieldSelector:  "metadata.name=" + RangerGatekeeperCRDName,
 			TimeoutSeconds: &defaults.WatchTimeoutSeconds,
 		})
 		if err != nil {
@@ -102,7 +102,7 @@ func InstallRancherGatekeeperChart(client *rancher.Client, installOptions *Insta
 		err = wait.WatchWait(watchAppInterface, func(event watch.Event) (ready bool, err error) {
 			chart := event.Object.(*catalogv1.App)
 			if event.Type == watch.Error {
-				return false, fmt.Errorf("there was an error uninstalling rancher gatekeeper chart")
+				return false, fmt.Errorf("there was an error uninstalling ranger gatekeeper chart")
 			} else if event.Type == watch.Deleted {
 				return true, nil
 			} else if chart == nil {
@@ -121,7 +121,7 @@ func InstallRancherGatekeeperChart(client *rancher.Client, installOptions *Insta
 
 		namespaceClient := steveclient.SteveType(namespaces.NamespaceSteveType)
 
-		namespace, err := namespaceClient.ByID(RancherGatekeeperNamespace)
+		namespace, err := namespaceClient.ByID(RangerGatekeeperNamespace)
 		if err != nil {
 			return err
 		}
@@ -131,7 +131,7 @@ func InstallRancherGatekeeperChart(client *rancher.Client, installOptions *Insta
 			return err
 		}
 
-		adminClient, err := rancher.NewClient(client.RancherConfig.AdminToken, client.Session)
+		adminClient, err := ranger.NewClient(client.RangerConfig.AdminToken, client.Session)
 		if err != nil {
 			return err
 		}
@@ -142,7 +142,7 @@ func InstallRancherGatekeeperChart(client *rancher.Client, installOptions *Insta
 		adminNamespaceResource := adminDynamicClient.Resource(kubenamespaces.NamespaceGroupVersionResource).Namespace("")
 
 		watchNamespaceInterface, err := adminNamespaceResource.Watch(context.TODO(), metav1.ListOptions{
-			FieldSelector:  "metadata.name=" + RancherGatekeeperNamespace,
+			FieldSelector:  "metadata.name=" + RangerGatekeeperNamespace,
 			TimeoutSeconds: &defaults.WatchTimeoutSeconds,
 		})
 
@@ -164,8 +164,8 @@ func InstallRancherGatekeeperChart(client *rancher.Client, installOptions *Insta
 	}
 
 	// wait for chart to be fully deployed
-	watchAppInterface, err := catalogClient.Apps(RancherGatekeeperNamespace).Watch(context.TODO(), metav1.ListOptions{
-		FieldSelector:  "metadata.name=" + RancherGatekeeperName,
+	watchAppInterface, err := catalogClient.Apps(RangerGatekeeperNamespace).Watch(context.TODO(), metav1.ListOptions{
+		FieldSelector:  "metadata.name=" + RangerGatekeeperName,
 		TimeoutSeconds: &defaults.WatchTimeoutSeconds,
 	})
 	if err != nil {
@@ -199,8 +199,8 @@ func newGatekeeperChartInstallAction(p *payloadOpts) *types.ChartInstallAction {
 	return chartInstallAction
 }
 
-// UpgradeRanchergatekeeperChart is a helper function that upgrades the rancher-gatekeeper chart.
-func UpgradeRancherGatekeeperChart(client *rancher.Client, installOptions *InstallOptions) error {
+// UpgradeRangergatekeeperChart is a helper function that upgrades the ranger-gatekeeper chart.
+func UpgradeRangerGatekeeperChart(client *ranger.Client, installOptions *InstallOptions) error {
 	serverSetting, err := client.Management.Setting.ByID(serverURLSettingID)
 	if err != nil {
 		return err
@@ -213,8 +213,8 @@ func UpgradeRancherGatekeeperChart(client *rancher.Client, installOptions *Insta
 
 	gatekeeperChartUpgradeActionPayload := &payloadOpts{
 		InstallOptions:  *installOptions,
-		Name:            RancherGatekeeperName,
-		Namespace:       RancherGatekeeperNamespace,
+		Name:            RangerGatekeeperName,
+		Namespace:       RangerGatekeeperNamespace,
 		Host:            serverSetting.Value,
 		DefaultRegistry: registrySetting.Value,
 	}
@@ -231,7 +231,7 @@ func UpgradeRancherGatekeeperChart(client *rancher.Client, installOptions *Insta
 		return err
 	}
 
-	adminClient, err := rancher.NewClient(client.RancherConfig.AdminToken, client.Session)
+	adminClient, err := ranger.NewClient(client.RangerConfig.AdminToken, client.Session)
 	if err != nil {
 		return err
 	}
@@ -241,8 +241,8 @@ func UpgradeRancherGatekeeperChart(client *rancher.Client, installOptions *Insta
 	}
 
 	// wait for chart to be in status pending upgrade
-	watchAppInterface, err := adminCatalogClient.Apps(RancherGatekeeperNamespace).Watch(context.TODO(), metav1.ListOptions{
-		FieldSelector:  "metadata.name=" + RancherGatekeeperName,
+	watchAppInterface, err := adminCatalogClient.Apps(RangerGatekeeperNamespace).Watch(context.TODO(), metav1.ListOptions{
+		FieldSelector:  "metadata.name=" + RangerGatekeeperName,
 		TimeoutSeconds: &defaults.WatchTimeoutSeconds,
 	})
 	if err != nil {
@@ -263,8 +263,8 @@ func UpgradeRancherGatekeeperChart(client *rancher.Client, installOptions *Insta
 	}
 
 	// wait for chart to be full deployed
-	watchAppInterface, err = adminCatalogClient.Apps(RancherGatekeeperNamespace).Watch(context.TODO(), metav1.ListOptions{
-		FieldSelector:  "metadata.name=" + RancherGatekeeperName,
+	watchAppInterface, err = adminCatalogClient.Apps(RangerGatekeeperNamespace).Watch(context.TODO(), metav1.ListOptions{
+		FieldSelector:  "metadata.name=" + RangerGatekeeperName,
 		TimeoutSeconds: &defaults.WatchTimeoutSeconds,
 	})
 	if err != nil {

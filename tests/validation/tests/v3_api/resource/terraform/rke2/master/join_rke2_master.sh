@@ -3,8 +3,8 @@
 set -x
 echo $@
 hostname=`hostname -f`
-mkdir -p /etc/rancher/rke2
-cat <<EOF >>/etc/rancher/rke2/config.yaml
+mkdir -p /etc/ranger/rke2
+cat <<EOF >>/etc/ranger/rke2/config.yaml
 write-kubeconfig-mode: "0644"
 tls-san:
   - ${2}
@@ -16,14 +16,14 @@ EOF
 if [ ! -z "${9}" ] && [[ "${9}" == *":"* ]]
 then
    echo "${9}"
-   echo -e "${9}" >> /etc/rancher/rke2/config.yaml
+   echo -e "${9}" >> /etc/ranger/rke2/config.yaml
    if [[ "${9}" != *"cloud-provider-name"* ]]
    then
-     echo -e "node-external-ip: ${6}" >> /etc/rancher/rke2/config.yaml
+     echo -e "node-external-ip: ${6}" >> /etc/ranger/rke2/config.yaml
    fi
-   cat /etc/rancher/rke2/config.yaml
+   cat /etc/ranger/rke2/config.yaml
 else
-  echo -e "node-external-ip: ${6}" >> /etc/rancher/rke2/config.yaml
+  echo -e "node-external-ip: ${6}" >> /etc/ranger/rke2/config.yaml
 fi
 
 if [[ ${1} = "rhel" ]]
@@ -74,7 +74,7 @@ then
    sudo systemctl enable rke2-server
    sudo systemctl start rke2-server
 else
-   curl -sfL https://get.rancher.io | INSTALL_RANCHERD_VERSION=${5} sh -
-   sudo systemctl enable rancherd-server
-   sudo systemctl start rancherd-server
+   curl -sfL https://get.ranger.io | INSTALL_RANCHERD_VERSION=${5} sh -
+   sudo systemctl enable rangerd-server
+   sudo systemctl start rangerd-server
 fi

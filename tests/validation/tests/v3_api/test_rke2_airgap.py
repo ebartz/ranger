@@ -6,7 +6,7 @@ from .test_airgap import (AG_HOST_NAME, NUMBER_OF_INSTANCES, TARBALL_TYPE,
                           run_command_on_airgap_node, deploy_airgap_cluster,
                           prepare_private_registry, copy_certs_to_node,
                           trust_certs_on_node, add_tarball_to_node,
-                          optionally_add_cluster_to_rancher)
+                          optionally_add_cluster_to_ranger)
 
 RANCHER_RKE2_VERSION = os.environ.get("RANCHER_RKE2_VERSION", "")
 RKE2_SERVER_OPTIONS = os.environ.get("RKE2_SERVER_OPTIONS", "")
@@ -32,7 +32,7 @@ def test_deploy_airgap_rke2_all():
         noauth_bastion_node.host_name)
     deploy_airgap_cluster(noauth_bastion_node, ag_nodes, "rke2",
                           server_ops, agent_ops)
-    optionally_add_cluster_to_rancher(noauth_bastion_node, ag_nodes)
+    optionally_add_cluster_to_ranger(noauth_bastion_node, ag_nodes)
 
 
 def test_deploy_airgap_rke2_system_default_registry():
@@ -55,7 +55,7 @@ def test_deploy_airgap_rke2_private_registry():
                                    'private_registry')
     deploy_airgap_cluster(bastion_node, ag_nodes, "rke2",
                           RKE2_SERVER_OPTIONS, RKE2_AGENT_OPTIONS)
-    optionally_add_cluster_to_rancher(bastion_node, ag_nodes)
+    optionally_add_cluster_to_ranger(bastion_node, ag_nodes)
 
 
 def test_deploy_airgap_rke2_tarball():
@@ -69,29 +69,29 @@ def test_deploy_airgap_rke2_tarball():
 
 def add_rke2_tarball_to_bastion(bastion_node, rke2_version):
     get_tarball_command = \
-        'wget -O rke2-airgap-images.{1} https://github.com/rancher/rke2/' \
+        'wget -O rke2-airgap-images.{1} https://github.com/ranger/rke2/' \
         'releases/download/{0}/rke2-images.linux-amd64.{1} && ' \
-        'wget -O rke2 https://github.com/rancher/rke2/releases/' \
+        'wget -O rke2 https://github.com/ranger/rke2/releases/' \
         'download/{0}/rke2.linux-amd64'.format(rke2_version, TARBALL_TYPE)
     bastion_node.execute_command(get_tarball_command)
     if 'calico' in RKE2_SERVER_OPTIONS:
         get_calico_tarball_command = \
             'wget -O rke2-airgap-images-calico.{1} ' \
-            'https://github.com/rancher/rke2/releases/download/{0}/' \
+            'https://github.com/ranger/rke2/releases/download/{0}/' \
             'rke2-images-calico.linux-amd64.{1}'.format(rke2_version,
                                                         TARBALL_TYPE)
         bastion_node.execute_command(get_calico_tarball_command)
     if 'cilium' in RKE2_SERVER_OPTIONS:
         get_cilium_tarball_command = \
             'wget -O rke2-airgap-images-cilium.{1} ' \
-            'https://github.com/rancher/rke2/releases/download/{0}/' \
+            'https://github.com/ranger/rke2/releases/download/{0}/' \
             'rke2-images-cilium.linux-amd64.{1}'.format(rke2_version,
                                                         TARBALL_TYPE)
         bastion_node.execute_command(get_cilium_tarball_command)
     if 'multus' in RKE2_SERVER_OPTIONS:
         get_multus_tarball_command = \
             'wget -O rke2-airgap-images-multus.{1} ' \
-            'https://github.com/rancher/rke2/releases/download/{0}/' \
+            'https://github.com/ranger/rke2/releases/download/{0}/' \
             'rke2-images-multus.linux-amd64.{1}'.format(rke2_version,
                                                         TARBALL_TYPE)
         bastion_node.execute_command(get_multus_tarball_command)

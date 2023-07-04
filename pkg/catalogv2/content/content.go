@@ -12,16 +12,16 @@ import (
 	"sync"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/rancher/rancher/pkg/api/steve/catalog/types"
-	v1 "github.com/rancher/rancher/pkg/apis/catalog.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/catalogv2"
-	"github.com/rancher/rancher/pkg/catalogv2/git"
-	"github.com/rancher/rancher/pkg/catalogv2/helm"
-	helmhttp "github.com/rancher/rancher/pkg/catalogv2/http"
-	catalogcontrollers "github.com/rancher/rancher/pkg/generated/controllers/catalog.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/settings"
-	corecontrollers "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
-	"github.com/rancher/wrangler/pkg/schemas/validation"
+	"github.com/ranger/ranger/pkg/api/steve/catalog/types"
+	v1 "github.com/ranger/ranger/pkg/apis/catalog.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/catalogv2"
+	"github.com/ranger/ranger/pkg/catalogv2/git"
+	"github.com/ranger/ranger/pkg/catalogv2/helm"
+	helmhttp "github.com/ranger/ranger/pkg/catalogv2/http"
+	catalogcontrollers "github.com/ranger/ranger/pkg/generated/controllers/catalog.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/settings"
+	corecontrollers "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
+	"github.com/ranger/wrangler/pkg/schemas/validation"
 	"github.com/sirupsen/logrus"
 	"helm.sh/helm/v3/pkg/repo"
 	corev1 "k8s.io/api/core/v1"
@@ -201,12 +201,12 @@ func (c *Manager) filterReleases(index *repo.IndexFile, k8sVersion *semver.Versi
 		return index
 	}
 
-	rancherVersion, err := semver.NewVersion(settings.ServerVersion.Get())
+	rangerVersion, err := semver.NewVersion(settings.ServerVersion.Get())
 	if err != nil {
 		logrus.Errorf("failed to parse server version %s: %v", settings.ServerVersion.Get(), err)
 		return index
 	}
-	rancherVersionWithoutPrerelease, err := rancherVersion.SetPrerelease("")
+	rangerVersionWithoutPrerelease, err := rangerVersion.SetPrerelease("")
 	if err != nil {
 		logrus.Errorf("failed to remove prerelease from %s: %v", settings.ServerVersion.Get(), err)
 		return index
@@ -215,9 +215,9 @@ func (c *Manager) filterReleases(index *repo.IndexFile, k8sVersion *semver.Versi
 	for rel, versions := range index.Entries {
 		newVersions := make([]*repo.ChartVersion, 0, len(versions))
 		for _, version := range versions {
-			if constraintStr, ok := version.Annotations["catalog.cattle.io/rancher-version"]; ok {
+			if constraintStr, ok := version.Annotations["catalog.cattle.io/ranger-version"]; ok {
 				if constraint, err := semver.NewConstraint(constraintStr); err == nil {
-					satisfiesConstraint, errs := constraint.Validate(rancherVersion)
+					satisfiesConstraint, errs := constraint.Validate(rangerVersion)
 					// Check if the reason for failure is because it is ignroing prereleases
 					constraintDoesNotMatchPrereleases := false
 					for _, err := range errs {
@@ -228,7 +228,7 @@ func (c *Manager) filterReleases(index *repo.IndexFile, k8sVersion *semver.Versi
 						}
 					}
 					if constraintDoesNotMatchPrereleases {
-						satisfiesConstraint = constraint.Check(&rancherVersionWithoutPrerelease)
+						satisfiesConstraint = constraint.Check(&rangerVersionWithoutPrerelease)
 					}
 					if !satisfiesConstraint {
 						continue

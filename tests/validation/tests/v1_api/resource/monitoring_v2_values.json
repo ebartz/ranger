@@ -1,9 +1,9 @@
 {
    "charts":[
       {
-         "chartName":"rancher-monitoring-crd",
+         "chartName":"ranger-monitoring-crd",
          "version":"",
-         "releaseName":"rancher-monitoring-crd",
+         "releaseName":"ranger-monitoring-crd",
          "projectId":"",
          "values":{
             "global":{
@@ -17,16 +17,16 @@
          },
          "annotations":{
             "catalog.cattle.io/ui-source-repo-type":"cluster",
-            "catalog.cattle.io/ui-source-repo":"rancher-charts"
+            "catalog.cattle.io/ui-source-repo":"ranger-charts"
          }
       },
       {
-         "chartName":"rancher-monitoring",
+         "chartName":"ranger-monitoring",
          "version":"",
-         "releaseName":"rancher-monitoring",
+         "releaseName":"ranger-monitoring",
          "annotations":{
             "catalog.cattle.io/ui-source-repo-type":"cluster",
-            "catalog.cattle.io/ui-source-repo":"rancher-charts"
+            "catalog.cattle.io/ui-source-repo":"ranger-charts"
          },
          "values":{
             "prometheus":{

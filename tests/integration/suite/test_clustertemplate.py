@@ -1,5 +1,5 @@
 from .common import random_str, check_subject_in_rb
-from rancher import ApiError
+from ranger import ApiError
 from .conftest import wait_until, wait_for, DEFAULT_TIMEOUT
 import pytest
 import time
@@ -44,7 +44,7 @@ def test_create_template_revision_k8s_translation(admin_mc, remove_resource):
     client = admin_mc.client
 
     cconfig = {
-        "rancherKubernetesEngineConfig": {
+        "rangerKubernetesEngineConfig": {
             "kubernetesVersion": "1.15"
         }
     }
@@ -56,7 +56,7 @@ def test_create_template_revision_k8s_translation(admin_mc, remove_resource):
 
     # template k8s question needed if using generic version
     cconfig = {
-        "rancherKubernetesEngineConfig": {
+        "rangerKubernetesEngineConfig": {
             "kubernetesVersion": "1.15.x"
         }
     }
@@ -85,7 +85,7 @@ def test_default_pod_sec(admin_mc, list_remove_resource):
     tId = cluster_template.id
     client = admin_mc.client
     cconfig = {
-        "rancherKubernetesEngineConfig": {
+        "rangerKubernetesEngineConfig": {
             "services": {
                 "type": "rkeConfigServices",
                 "kubeApi": {
@@ -129,7 +129,7 @@ def test_cron_schedule(admin_mc, list_remove_resource):
         "labels": {},
         "clusterTemplateRevisionId": "cattle-global-data:ctr-xxxxx",
         "name": "testclusterfromtemplate",
-        "rancherKubernetesEngineConfig": {},
+        "rangerKubernetesEngineConfig": {},
         "scheduledClusterScan": {
             "enabled": "true",
             "scanConfig": {
@@ -190,7 +190,7 @@ def test_create_cluster_with_template(admin_mc, list_remove_resource):
     answers = {
                 "values": {
                     "dockerRootDir": "/var/lib/docker123",
-                    "rancherKubernetesEngineConfig.ignoreDockerVersion":
+                    "rangerKubernetesEngineConfig.ignoreDockerVersion":
                     "false"
                 }
               }
@@ -206,7 +206,7 @@ def test_create_cluster_with_template(admin_mc, list_remove_resource):
     assert cluster.conditions[0].type == 'Pending'
     assert cluster.conditions[0].status == 'True'
     assert cluster.questions is not None
-    k8s_version = cluster.rancherKubernetesEngineConfig.kubernetesVersion
+    k8s_version = cluster.rangerKubernetesEngineConfig.kubernetesVersion
     assert k8s_version != "v1.15.x"
 
     # edit cluster should not fail
@@ -242,7 +242,7 @@ def test_create_cluster_validations(admin_mc, remove_resource):
         wait_for_cluster_create(client, name=random_str(),
                                 clusterTemplateRevisionId=revId,
                                 description="template from cluster",
-                                rancherKubernetesEngineConfig=rConfig)
+                                rangerKubernetesEngineConfig=rConfig)
 
     except ApiError as e:
         assert e.error.status == 500
@@ -331,7 +331,7 @@ def test_check_enforcement(admin_mc, remove_resource,
 
     # a globaladmin can create a rke cluster without a template
     cluster = client.create_cluster(
-            name=random_str(), rancherKubernetesEngineConfig={
+            name=random_str(), rangerKubernetesEngineConfig={
                 "accessKey": "asdfsd"})
     remove_list.insert(0, cluster)
 
@@ -348,7 +348,7 @@ def test_check_enforcement(admin_mc, remove_resource,
     user_client = user.client
     with pytest.raises(ApiError) as e:
         user_client.create_cluster(name=random_str(),
-                                   rancherKubernetesEngineConfig={
+                                   rangerKubernetesEngineConfig={
                                         "accessKey": "asdfsd"})
     assert e.value.error.status == 422
 
@@ -503,7 +503,7 @@ def test_required_template_question(admin_mc, remove_resource):
     client = admin_mc.client
 
     cconfig = {
-        "rancherKubernetesEngineConfig": {
+        "rangerKubernetesEngineConfig": {
             "services": {
                 "type": "rkeConfigServices",
                 "kubeApi": {
@@ -524,7 +524,7 @@ def test_required_template_question(admin_mc, remove_resource):
                  },
                  {
                   "variable":
-                  "rancherKubernetesEngineConfig.ignoreDockerVersion",
+                  "rangerKubernetesEngineConfig.ignoreDockerVersion",
                   "required": "false",
                   "type": "boolean",
                   "default": "true"
@@ -539,7 +539,7 @@ def test_required_template_question(admin_mc, remove_resource):
     # creating a cluster with this template with no answer should fail
     answers = {
                 "values": {
-                    "rancherKubernetesEngineConfig.ignoreDockerVersion":
+                    "rangerKubernetesEngineConfig.ignoreDockerVersion":
                     "false"
                 }
               }
@@ -563,7 +563,7 @@ def test_secret_template_answers(admin_mc, remove_resource,
     client = admin_mc.client
 
     cconfig = {
-        "rancherKubernetesEngineConfig": {
+        "rangerKubernetesEngineConfig": {
             "services": {
                 "type": "rkeConfigServices",
                 "kubeApi": {
@@ -576,9 +576,9 @@ def test_secret_template_answers(admin_mc, remove_resource,
         },
         "defaultPodSecurityPolicyTemplateId": "restricted",
     }
-    azureClientId = "rancherKubernetesEngineConfig.cloudProvider.\
+    azureClientId = "rangerKubernetesEngineConfig.cloudProvider.\
 azureCloudProvider.aadClientId"
-    azureClientSecret = "rancherKubernetesEngineConfig.cloudProvider.\
+    azureClientSecret = "rangerKubernetesEngineConfig.cloudProvider.\
 azureCloudProvider.aadClientSecret"
 
     questions = [{
@@ -673,7 +673,7 @@ def test_create_cluster_with_invalid_revision(admin_mc, remove_resource):
 
     # templaterevision with question with invalid format
     cconfig = {
-        "rancherKubernetesEngineConfig": {
+        "rangerKubernetesEngineConfig": {
             "services": {
                 "type": "rkeConfigServices",
                 "kubeApi": {
@@ -862,7 +862,7 @@ def test_update_cluster_monitoring(admin_mc, list_remove_resource):
     tId = cluster_template.id
     client = admin_mc.client
     cconfig = {
-        "rancherKubernetesEngineConfig": {
+        "rangerKubernetesEngineConfig": {
             "services": {
                 "type": "rkeConfigServices",
                 "kubeApi": {
@@ -881,7 +881,7 @@ def test_update_cluster_monitoring(admin_mc, list_remove_resource):
                                                    clusterTemplateId=tId,
                                                    enabled="true")
     cconfig2 = {
-        "rancherKubernetesEngineConfig": {
+        "rangerKubernetesEngineConfig": {
             "services": {
                 "type": "rkeConfigServices",
                 "kubeApi": {
@@ -970,7 +970,7 @@ def create_cluster_template_revision(client, clusterTemplateId):
             "enabled": "true",
             "type": "localClusterAuthEndpoint"
         },
-        "rancherKubernetesEngineConfig": rke_config
+        "rangerKubernetesEngineConfig": rke_config
     }
 
     questions = [{
@@ -981,14 +981,14 @@ def create_cluster_template_revision(client, clusterTemplateId):
                  },
                  {
                   "variable":
-                  "rancherKubernetesEngineConfig.ignoreDockerVersion",
+                  "rangerKubernetesEngineConfig.ignoreDockerVersion",
                   "required": "false",
                   "type": "boolean",
                   "default": "true"
                  },
                  {
                   "variable":
-                  "rancherKubernetesEngineConfig.kubernetesVersion",
+                  "rangerKubernetesEngineConfig.kubernetesVersion",
                   "required": "false",
                   "type": "string",
                   "default": "1.24.x"
@@ -1013,7 +1013,7 @@ def getRKEConfig():
         "addonJobTimeout": 30,
         "ignoreDockerVersion": "true",
         "sshAgentAuth": "false",
-        "type": "rancherKubernetesEngineConfig",
+        "type": "rangerKubernetesEngineConfig",
         "kubernetesVersion": "1.15.x",
         "authentication": {
             "strategy": "x509",
@@ -1118,7 +1118,7 @@ def wait_for_clusterTemplate_update_failure(client, revision, timeout=45):
     start = time.time()
     interval = 0.5
     cconfig = {
-        "rancherKubernetesEngineConfig": {
+        "rangerKubernetesEngineConfig": {
         }
     }
     while updateWorks:

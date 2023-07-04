@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rancher/norman/types/convert"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	rke "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/norman/types/convert"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	rke "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 )

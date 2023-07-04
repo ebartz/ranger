@@ -3,11 +3,11 @@ package cronjobs
 import (
 	"context"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/defaults"
-	"github.com/rancher/rancher/tests/framework/extensions/unstructured"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/defaults"
+	"github.com/ranger/ranger/tests/framework/extensions/unstructured"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
 	batchv1 "k8s.io/api/batch/v1"
 	"k8s.io/api/batch/v1beta1"
 	corev1 "k8s.io/api/core/v1"
@@ -27,7 +27,7 @@ var CronJobGroupVersionResource = schema.GroupVersionResource{
 
 // CreateCronJob is a helper function that uses the dynamic client to create a cronjob on a namespace for a specific cluster.
 // It registers a delete fuction a wait.WatchWait to ensure the cronjob is deleted cleanly.
-func CreateCronJob(client *rancher.Client, clusterName, cronJobName, namespace, schedule string, template corev1.PodTemplateSpec) (*v1beta1.CronJob, error) {
+func CreateCronJob(client *ranger.Client, clusterName, cronJobName, namespace, schedule string, template corev1.PodTemplateSpec) (*v1beta1.CronJob, error) {
 	dynamicClient, err := client.GetDownStreamClusterClient(clusterName)
 	if err != nil {
 		return nil, err

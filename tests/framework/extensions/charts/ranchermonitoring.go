@@ -4,30 +4,30 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/rancher/rancher/pkg/api/steve/catalog/types"
-	catalogv1 "github.com/rancher/rancher/pkg/apis/catalog.cattle.io/v1"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/defaults"
-	kubenamespaces "github.com/rancher/rancher/tests/framework/extensions/kubeapi/namespaces"
-	"github.com/rancher/rancher/tests/framework/extensions/namespaces"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
+	"github.com/ranger/ranger/pkg/api/steve/catalog/types"
+	catalogv1 "github.com/ranger/ranger/pkg/apis/catalog.cattle.io/v1"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/defaults"
+	kubenamespaces "github.com/ranger/ranger/tests/framework/extensions/kubeapi/namespaces"
+	"github.com/ranger/ranger/tests/framework/extensions/namespaces"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/watch"
 )
 
 const (
-	// Namespace that rancher monitoring chart is installed in
-	RancherMonitoringNamespace = "cattle-monitoring-system"
-	// Name of the rancher monitoring chart
-	RancherMonitoringName = "rancher-monitoring"
-	// Name of the rancher monitoring alert config secret
-	RancherMonitoringAlertSecret = "alertmanager-rancher-monitoring-alertmanager"
-	// Name of rancher monitoring crd chart
-	RancherMonitoringCRDName = "rancher-monitoring-crd"
+	// Namespace that ranger monitoring chart is installed in
+	RangerMonitoringNamespace = "cattle-monitoring-system"
+	// Name of the ranger monitoring chart
+	RangerMonitoringName = "ranger-monitoring"
+	// Name of the ranger monitoring alert config secret
+	RangerMonitoringAlertSecret = "alertmanager-ranger-monitoring-alertmanager"
+	// Name of ranger monitoring crd chart
+	RangerMonitoringCRDName = "ranger-monitoring-crd"
 )
 
-// InstallRancherMonitoringChart is a helper function that installs the rancher-monitoring chart.
-func InstallRancherMonitoringChart(client *rancher.Client, installOptions *InstallOptions, rancherMonitoringOpts *RancherMonitoringOpts) error {
+// InstallRangerMonitoringChart is a helper function that installs the ranger-monitoring chart.
+func InstallRangerMonitoringChart(client *ranger.Client, installOptions *InstallOptions, rangerMonitoringOpts *RangerMonitoringOpts) error {
 	serverSetting, err := client.Management.Setting.ByID(serverURLSettingID)
 	if err != nil {
 		return err
@@ -40,13 +40,13 @@ func InstallRancherMonitoringChart(client *rancher.Client, installOptions *Insta
 
 	monitoringChartInstallActionPayload := &payloadOpts{
 		InstallOptions:  *installOptions,
-		Name:            RancherMonitoringName,
-		Namespace:       RancherMonitoringNamespace,
+		Name:            RangerMonitoringName,
+		Namespace:       RangerMonitoringNamespace,
 		Host:            serverSetting.Value,
 		DefaultRegistry: registrySetting.Value,
 	}
 
-	chartInstallAction := newMonitoringChartInstallAction(monitoringChartInstallActionPayload, rancherMonitoringOpts)
+	chartInstallAction := newMonitoringChartInstallAction(monitoringChartInstallActionPayload, rangerMonitoringOpts)
 
 	catalogClient, err := client.GetClusterCatalogClient(installOptions.ClusterID)
 	if err != nil {
@@ -55,16 +55,16 @@ func InstallRancherMonitoringChart(client *rancher.Client, installOptions *Insta
 
 	// Cleanup registration
 	client.Session.RegisterCleanupFunc(func() error {
-		// UninstallAction for when uninstalling the rancher-monitoring chart
+		// UninstallAction for when uninstalling the ranger-monitoring chart
 		defaultChartUninstallAction := newChartUninstallAction()
 
-		err = catalogClient.UninstallChart(RancherMonitoringName, RancherMonitoringNamespace, defaultChartUninstallAction)
+		err = catalogClient.UninstallChart(RangerMonitoringName, RangerMonitoringNamespace, defaultChartUninstallAction)
 		if err != nil {
 			return err
 		}
 
-		watchAppInterface, err := catalogClient.Apps(RancherMonitoringNamespace).Watch(context.TODO(), metav1.ListOptions{
-			FieldSelector:  "metadata.name=" + RancherMonitoringName,
+		watchAppInterface, err := catalogClient.Apps(RangerMonitoringNamespace).Watch(context.TODO(), metav1.ListOptions{
+			FieldSelector:  "metadata.name=" + RangerMonitoringName,
 			TimeoutSeconds: &defaults.WatchTimeoutSeconds,
 		})
 		if err != nil {
@@ -73,7 +73,7 @@ func InstallRancherMonitoringChart(client *rancher.Client, installOptions *Insta
 
 		err = wait.WatchWait(watchAppInterface, func(event watch.Event) (ready bool, err error) {
 			if event.Type == watch.Error {
-				return false, fmt.Errorf("there was an error uninstalling rancher monitoring chart")
+				return false, fmt.Errorf("there was an error uninstalling ranger monitoring chart")
 			} else if event.Type == watch.Deleted {
 				return true, nil
 			}
@@ -83,13 +83,13 @@ func InstallRancherMonitoringChart(client *rancher.Client, installOptions *Insta
 			return err
 		}
 
-		err = catalogClient.UninstallChart(RancherMonitoringCRDName, RancherMonitoringNamespace, defaultChartUninstallAction)
+		err = catalogClient.UninstallChart(RangerMonitoringCRDName, RangerMonitoringNamespace, defaultChartUninstallAction)
 		if err != nil {
 			return err
 		}
 
-		watchAppInterface, err = catalogClient.Apps(RancherMonitoringNamespace).Watch(context.TODO(), metav1.ListOptions{
-			FieldSelector:  "metadata.name=" + RancherMonitoringCRDName,
+		watchAppInterface, err = catalogClient.Apps(RangerMonitoringNamespace).Watch(context.TODO(), metav1.ListOptions{
+			FieldSelector:  "metadata.name=" + RangerMonitoringCRDName,
 			TimeoutSeconds: &defaults.WatchTimeoutSeconds,
 		})
 		if err != nil {
@@ -99,7 +99,7 @@ func InstallRancherMonitoringChart(client *rancher.Client, installOptions *Insta
 		err = wait.WatchWait(watchAppInterface, func(event watch.Event) (ready bool, err error) {
 			chart := event.Object.(*catalogv1.App)
 			if event.Type == watch.Error {
-				return false, fmt.Errorf("there was an error uninstalling rancher monitoring chart")
+				return false, fmt.Errorf("there was an error uninstalling ranger monitoring chart")
 			} else if event.Type == watch.Deleted {
 				return true, nil
 			} else if chart == nil {
@@ -118,7 +118,7 @@ func InstallRancherMonitoringChart(client *rancher.Client, installOptions *Insta
 
 		namespaceClient := steveclient.SteveType(namespaces.NamespaceSteveType)
 
-		namespace, err := namespaceClient.ByID(RancherMonitoringNamespace)
+		namespace, err := namespaceClient.ByID(RangerMonitoringNamespace)
 		if err != nil {
 			return err
 		}
@@ -128,7 +128,7 @@ func InstallRancherMonitoringChart(client *rancher.Client, installOptions *Insta
 			return err
 		}
 
-		adminClient, err := rancher.NewClient(client.RancherConfig.AdminToken, client.Session)
+		adminClient, err := ranger.NewClient(client.RangerConfig.AdminToken, client.Session)
 		if err != nil {
 			return err
 		}
@@ -139,7 +139,7 @@ func InstallRancherMonitoringChart(client *rancher.Client, installOptions *Insta
 		adminNamespaceResource := adminDynamicClient.Resource(kubenamespaces.NamespaceGroupVersionResource).Namespace("")
 
 		watchNamespaceInterface, err := adminNamespaceResource.Watch(context.TODO(), metav1.ListOptions{
-			FieldSelector:  "metadata.name=" + RancherMonitoringNamespace,
+			FieldSelector:  "metadata.name=" + RangerMonitoringNamespace,
 			TimeoutSeconds: &defaults.WatchTimeoutSeconds,
 		})
 
@@ -161,8 +161,8 @@ func InstallRancherMonitoringChart(client *rancher.Client, installOptions *Insta
 	}
 
 	// wait for chart to be full deployed
-	watchAppInterface, err := catalogClient.Apps(RancherMonitoringNamespace).Watch(context.TODO(), metav1.ListOptions{
-		FieldSelector:  "metadata.name=" + RancherMonitoringName,
+	watchAppInterface, err := catalogClient.Apps(RangerMonitoringNamespace).Watch(context.TODO(), metav1.ListOptions{
+		FieldSelector:  "metadata.name=" + RangerMonitoringName,
 		TimeoutSeconds: &defaults.WatchTimeoutSeconds,
 	})
 	if err != nil {
@@ -185,10 +185,10 @@ func InstallRancherMonitoringChart(client *rancher.Client, installOptions *Insta
 }
 
 // newMonitoringChartInstallAction is a private helper function that returns chart install action with monitoring and payload options.
-func newMonitoringChartInstallAction(p *payloadOpts, rancherMonitoringOpts *RancherMonitoringOpts) *types.ChartInstallAction {
+func newMonitoringChartInstallAction(p *payloadOpts, rangerMonitoringOpts *RangerMonitoringOpts) *types.ChartInstallAction {
 	monitoringValues := map[string]interface{}{
 		"ingressNgnix": map[string]interface{}{
-			"enabled": rancherMonitoringOpts.IngressNginx,
+			"enabled": rangerMonitoringOpts.IngressNginx,
 		},
 		"prometheus": map[string]interface{}{
 			"prometheusSpec": map[string]interface{}{
@@ -198,16 +198,16 @@ func newMonitoringChartInstallAction(p *payloadOpts, rancherMonitoringOpts *Ranc
 			},
 		},
 		"rkeControllerManager": map[string]interface{}{
-			"enabled": rancherMonitoringOpts.RKEControllerManager,
+			"enabled": rangerMonitoringOpts.RKEControllerManager,
 		},
 		"rkeEtcd": map[string]interface{}{
-			"enabled": rancherMonitoringOpts.RKEEtcd,
+			"enabled": rangerMonitoringOpts.RKEEtcd,
 		},
 		"rkeProxy": map[string]interface{}{
-			"enabled": rancherMonitoringOpts.RKEProxy,
+			"enabled": rangerMonitoringOpts.RKEProxy,
 		},
 		"rkeScheduler": map[string]interface{}{
-			"enabled": rancherMonitoringOpts.RKEScheduler,
+			"enabled": rangerMonitoringOpts.RKEScheduler,
 		},
 	}
 
@@ -220,8 +220,8 @@ func newMonitoringChartInstallAction(p *payloadOpts, rancherMonitoringOpts *Ranc
 	return chartInstallAction
 }
 
-// UpgradeMonitoringChart is a helper function that upgrades the rancher-monitoring chart.
-func UpgradeRancherMonitoringChart(client *rancher.Client, installOptions *InstallOptions, rancherMonitoringOpts *RancherMonitoringOpts) error {
+// UpgradeMonitoringChart is a helper function that upgrades the ranger-monitoring chart.
+func UpgradeRangerMonitoringChart(client *ranger.Client, installOptions *InstallOptions, rangerMonitoringOpts *RangerMonitoringOpts) error {
 	serverSetting, err := client.Management.Setting.ByID(serverURLSettingID)
 	if err != nil {
 		return err
@@ -234,13 +234,13 @@ func UpgradeRancherMonitoringChart(client *rancher.Client, installOptions *Insta
 
 	monitoringChartUpgradeActionPayload := &payloadOpts{
 		InstallOptions:  *installOptions,
-		Name:            RancherMonitoringName,
-		Namespace:       RancherMonitoringNamespace,
+		Name:            RangerMonitoringName,
+		Namespace:       RangerMonitoringNamespace,
 		Host:            serverSetting.Value,
 		DefaultRegistry: registrySetting.Value,
 	}
 
-	chartUpgradeAction := newMonitoringChartUpgradeAction(monitoringChartUpgradeActionPayload, rancherMonitoringOpts)
+	chartUpgradeAction := newMonitoringChartUpgradeAction(monitoringChartUpgradeActionPayload, rangerMonitoringOpts)
 
 	catalogClient, err := client.GetClusterCatalogClient(installOptions.ClusterID)
 	if err != nil {
@@ -252,7 +252,7 @@ func UpgradeRancherMonitoringChart(client *rancher.Client, installOptions *Insta
 		return err
 	}
 
-	adminClient, err := rancher.NewClient(client.RancherConfig.AdminToken, client.Session)
+	adminClient, err := ranger.NewClient(client.RangerConfig.AdminToken, client.Session)
 	if err != nil {
 		return err
 	}
@@ -262,8 +262,8 @@ func UpgradeRancherMonitoringChart(client *rancher.Client, installOptions *Insta
 	}
 
 	// wait for chart to be in status pending upgrade
-	watchAppInterface, err := adminCatalogClient.Apps(RancherMonitoringNamespace).Watch(context.TODO(), metav1.ListOptions{
-		FieldSelector:  "metadata.name=" + RancherMonitoringName,
+	watchAppInterface, err := adminCatalogClient.Apps(RangerMonitoringNamespace).Watch(context.TODO(), metav1.ListOptions{
+		FieldSelector:  "metadata.name=" + RangerMonitoringName,
 		TimeoutSeconds: &defaults.WatchTimeoutSeconds,
 	})
 	if err != nil {
@@ -284,8 +284,8 @@ func UpgradeRancherMonitoringChart(client *rancher.Client, installOptions *Insta
 	}
 
 	// wait for chart to be full deployed
-	watchAppInterface, err = adminCatalogClient.Apps(RancherMonitoringNamespace).Watch(context.TODO(), metav1.ListOptions{
-		FieldSelector:  "metadata.name=" + RancherMonitoringName,
+	watchAppInterface, err = adminCatalogClient.Apps(RangerMonitoringNamespace).Watch(context.TODO(), metav1.ListOptions{
+		FieldSelector:  "metadata.name=" + RangerMonitoringName,
 		TimeoutSeconds: &defaults.WatchTimeoutSeconds,
 	})
 	if err != nil {
@@ -309,10 +309,10 @@ func UpgradeRancherMonitoringChart(client *rancher.Client, installOptions *Insta
 }
 
 // newMonitoringChartUpgradeAction is a private helper function that returns chart upgrade action with monitoring and payload options.
-func newMonitoringChartUpgradeAction(p *payloadOpts, rancherMonitoringOpts *RancherMonitoringOpts) *types.ChartUpgradeAction {
+func newMonitoringChartUpgradeAction(p *payloadOpts, rangerMonitoringOpts *RangerMonitoringOpts) *types.ChartUpgradeAction {
 	monitoringValues := map[string]interface{}{
 		"ingressNgnix": map[string]interface{}{
-			"enabled": rancherMonitoringOpts.IngressNginx,
+			"enabled": rangerMonitoringOpts.IngressNginx,
 		},
 		"prometheus": map[string]interface{}{
 			"prometheusSpec": map[string]interface{}{
@@ -322,16 +322,16 @@ func newMonitoringChartUpgradeAction(p *payloadOpts, rancherMonitoringOpts *Ranc
 			},
 		},
 		"rkeControllerManager": map[string]interface{}{
-			"enabled": rancherMonitoringOpts.RKEControllerManager,
+			"enabled": rangerMonitoringOpts.RKEControllerManager,
 		},
 		"rkeEtcd": map[string]interface{}{
-			"enabled": rancherMonitoringOpts.RKEEtcd,
+			"enabled": rangerMonitoringOpts.RKEEtcd,
 		},
 		"rkeProxy": map[string]interface{}{
-			"enabled": rancherMonitoringOpts.RKEProxy,
+			"enabled": rangerMonitoringOpts.RKEProxy,
 		},
 		"rkeScheduler": map[string]interface{}{
-			"enabled": rancherMonitoringOpts.RKEScheduler,
+			"enabled": rangerMonitoringOpts.RKEScheduler,
 		},
 	}
 	chartUpgrade := newChartUpgrade(p.Name, p.InstallOptions.Version, p.InstallOptions.ClusterID, p.InstallOptions.ClusterName, p.Host, p.DefaultRegistry, monitoringValues)

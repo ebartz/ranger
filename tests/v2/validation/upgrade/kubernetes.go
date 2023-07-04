@@ -6,11 +6,11 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	apiv1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters/bundledclusters"
+	apiv1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters/bundledclusters"
 )
 
 const (
@@ -45,7 +45,7 @@ func getVersion(t *testing.T, clusterName string, versions []string, isLatestVer
 // validateKubernetesVersions is a test helper function to validate kubernetes version of a cluster.
 // if isUsingCluster provided, checks with a new get method to validate with updated cluster.
 // if isUsingCluster not provided, checks payload.
-func validateKubernetesVersions(t *testing.T, client *rancher.Client, bc *bundledclusters.BundledCluster, versionToUpgrade *string, isUsingCurrentCluster bool) {
+func validateKubernetesVersions(t *testing.T, client *ranger.Client, bc *bundledclusters.BundledCluster, versionToUpgrade *string, isUsingCurrentCluster bool) {
 	t.Helper()
 
 	cluster, err := bc.Get(client)
@@ -57,7 +57,7 @@ func validateKubernetesVersions(t *testing.T, client *rancher.Client, bc *bundle
 
 	switch cluster.Meta.Provider {
 	case clusters.KubernetesProviderRKE:
-		assert.Equalf(t, *versionToUpgrade, cluster.V3.RancherKubernetesEngineConfig.Version, "[%v]: %v", cluster.Meta.Name, logMessageKubernetesVersion)
+		assert.Equalf(t, *versionToUpgrade, cluster.V3.RangerKubernetesEngineConfig.Version, "[%v]: %v", cluster.Meta.Name, logMessageKubernetesVersion)
 	case clusters.KubernetesProviderRKE2:
 		if cluster.Meta.IsImported {
 			clusterSpec := &apiv1.ClusterSpec{}
@@ -90,7 +90,7 @@ func validateKubernetesVersions(t *testing.T, client *rancher.Client, bc *bundle
 // validateNodepoolVersions is a test helper function to validate node pool versions of a cluster.
 // if isUsingCluster provided, checks with a new get method to validate with updated cluster.
 // if isUsingCluster not provided, checks the payload.
-func validateNodepoolVersions(t *testing.T, client *rancher.Client, bc *bundledclusters.BundledCluster, versionToUpgrade *string, isUsingCurrentCluster bool) {
+func validateNodepoolVersions(t *testing.T, client *ranger.Client, bc *bundledclusters.BundledCluster, versionToUpgrade *string, isUsingCurrentCluster bool) {
 	t.Helper()
 
 	cluster, err := bc.Get(client)

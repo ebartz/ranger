@@ -3,8 +3,8 @@ package daemonsets
 import (
 	"context"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
 	appv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -19,7 +19,7 @@ var DaemonSetGroupVersionResource = schema.GroupVersionResource{
 }
 
 // GetDaemonsetByName is a helper function that uses the dynamic client to get a specific daemonset on a namespace for a specific cluster.
-func GetDaemonsetByName(client *rancher.Client, clusterID, namespace, daemonsetName string) (*appv1.DaemonSet, error) {
+func GetDaemonsetByName(client *ranger.Client, clusterID, namespace, daemonsetName string) (*appv1.DaemonSet, error) {
 	dynamicClient, err := client.GetDownStreamClusterClient(clusterID)
 	if err != nil {
 		return nil, err

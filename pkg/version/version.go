@@ -20,7 +20,7 @@ const primeEnv = "RANCHER_PRIME"
 type Info struct {
 	Version      string
 	GitCommit    string
-	RancherPrime string
+	RangerPrime string
 }
 
 // FriendlyVersion returns a human-readable string that can be included in log output.
@@ -35,11 +35,11 @@ type versionHandler struct {
 // NewVersionHandler checks the runtime environment for the RANCHER_PRIME environment variable
 // and uses that along with build-time version information to create an HTTP handler.
 func NewVersionHandler() http.Handler {
-	var rancherPrime = "false"
+	var rangerPrime = "false"
 	if isPrime, ok := os.LookupEnv(primeEnv); ok && isPrime == "true" {
-		rancherPrime = "true"
+		rangerPrime = "true"
 	}
-	return &versionHandler{info: Info{Version, GitCommit, rancherPrime}}
+	return &versionHandler{info: Info{Version, GitCommit, rangerPrime}}
 }
 
 // ServeHTTP handles GET requests for version information.

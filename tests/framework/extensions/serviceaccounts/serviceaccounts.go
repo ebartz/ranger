@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
 	kwait "k8s.io/apimachinery/pkg/util/wait"
 )
 
@@ -13,9 +13,9 @@ const (
 	ServiceAccountSteveType = "serviceaccount"
 )
 
-func IsServiceAccountReady(rancherClient *rancher.Client, clusterId, namespace, serviceAccountName string) error {
+func IsServiceAccountReady(rangerClient *ranger.Client, clusterId, namespace, serviceAccountName string) error {
 	userAccountID := fmt.Sprintf("%s/%s", namespace, serviceAccountName)
-	steveClient, err := rancherClient.Steve.ProxyDownstream(clusterId)
+	steveClient, err := rangerClient.Steve.ProxyDownstream(clusterId)
 	if err != nil {
 		return err
 	}

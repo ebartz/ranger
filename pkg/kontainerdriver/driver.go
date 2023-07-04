@@ -1,8 +1,8 @@
 package kontainerdriver
 
 import (
-	apimgmtv3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
+	apimgmtv3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
 )
 
 func GetDriver(cluster *v3.Cluster, driverLister v3.KontainerDriverLister) (string, error) {
@@ -29,7 +29,7 @@ func GetDriver(cluster *v3.Cluster, driverLister v3.KontainerDriverLister) (stri
 		return apimgmtv3.ClusterDriverGKE, nil
 	}
 
-	if cluster.Spec.RancherKubernetesEngineConfig != nil {
+	if cluster.Spec.RangerKubernetesEngineConfig != nil {
 		return apimgmtv3.ClusterDriverRKE, nil
 	}
 

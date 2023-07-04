@@ -24,9 +24,9 @@ import (
 	"github.com/aws/aws-sdk-go/service/eks"
 	"github.com/aws/aws-sdk-go/service/iam"
 	heptio "github.com/heptio/authenticator/pkg/token"
-	"github.com/rancher/rancher/pkg/kontainer-engine/drivers/options"
-	"github.com/rancher/rancher/pkg/kontainer-engine/drivers/util"
-	"github.com/rancher/rancher/pkg/kontainer-engine/types"
+	"github.com/ranger/ranger/pkg/kontainer-engine/drivers/options"
+	"github.com/ranger/ranger/pkg/kontainer-engine/drivers/util"
+	"github.com/ranger/ranger/pkg/kontainer-engine/types"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 	v1 "k8s.io/api/core/v1"
@@ -329,7 +329,7 @@ func (d *Driver) GetDriverCreateOptions(ctx context.Context) (*types.DriverFlags
 	}
 	driverFlag.Options["display-name"] = &types.Flag{
 		Type:  types.StringType,
-		Usage: "The displayed name of the cluster in the Rancher UI",
+		Usage: "The displayed name of the cluster in the Ranger UI",
 	}
 	driverFlag.Options["access-key"] = &types.Flag{
 		Type:  types.StringType,
@@ -533,7 +533,7 @@ func (state *state) validate() error {
 		// If the custom AMI ID is set, then assume they are trying to spin up in a region we don't have knowledge of
 		// and try to create anyway
 		if amiForRegion[state.Region] == "" && state.AMI == "" {
-			return fmt.Errorf("rancher does not support region %v, no entry for ami lookup", state.Region)
+			return fmt.Errorf("ranger does not support region %v, no entry for ami lookup", state.Region)
 		}
 	}
 

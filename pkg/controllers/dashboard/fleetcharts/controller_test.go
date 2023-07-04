@@ -6,13 +6,13 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/controllers/dashboard/chart"
-	"github.com/rancher/rancher/pkg/controllers/dashboard/chart/fake"
-	"github.com/rancher/rancher/pkg/features"
-	fleetconst "github.com/rancher/rancher/pkg/fleet"
-	"github.com/rancher/rancher/pkg/settings"
-	corev1 "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/controllers/dashboard/chart"
+	"github.com/ranger/ranger/pkg/controllers/dashboard/chart/fake"
+	"github.com/ranger/ranger/pkg/features"
+	fleetconst "github.com/ranger/ranger/pkg/fleet"
+	"github.com/ranger/ranger/pkg/settings"
+	corev1 "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
 	"github.com/stretchr/testify/assert"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -22,7 +22,7 @@ import (
 var (
 	errUnimplemented  = fmt.Errorf("unimplemented")
 	errNotFound       = fmt.Errorf("not found")
-	priorityClassName = "rancher-critical"
+	priorityClassName = "ranger-critical"
 )
 
 // Test_ChartInstallation test that all expected charts are installed or uninstalled with expected configuration
@@ -41,7 +41,7 @@ func Test_ChartInstallation(t *testing.T) {
 		},
 	}
 	h := &handler{
-		chartsConfig: chart.RancherConfigGetter{ConfigCache: &mockCache{}},
+		chartsConfig: chart.RangerConfigGetter{ConfigCache: &mockCache{}},
 	}
 
 	tests := []struct {

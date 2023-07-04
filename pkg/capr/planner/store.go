@@ -16,12 +16,12 @@ import (
 	"strconv"
 	"strings"
 
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1/plan"
-	"github.com/rancher/rancher/pkg/capr"
-	capicontrollers "github.com/rancher/rancher/pkg/generated/controllers/cluster.x-k8s.io/v1beta1"
-	corecontrollers "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
-	"github.com/rancher/wrangler/pkg/generic"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1/plan"
+	"github.com/ranger/ranger/pkg/capr"
+	capicontrollers "github.com/ranger/ranger/pkg/generated/controllers/cluster.x-k8s.io/v1beta1"
+	corecontrollers "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
+	"github.com/ranger/wrangler/pkg/generic"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/equality"
 	apierror "k8s.io/apimachinery/pkg/api/errors"
@@ -194,7 +194,7 @@ func SecretToNode(secret *corev1.Secret) (*plan.Node, error) {
 		}
 		if failureCount > 0 {
 			result.Failed = true
-			// failure-threshold is set by Rancher when the plan is updated. If it is not set, then it essentially
+			// failure-threshold is set by Ranger when the plan is updated. If it is not set, then it essentially
 			// defaults to 1, and any failure causes the plan to be marked as failed
 			rawFailureThreshold := secret.Data["failure-threshold"]
 			if len(rawFailureThreshold) > 0 {

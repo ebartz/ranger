@@ -1,9 +1,9 @@
-{{- if eq (include "rancher.chart_psp_enabled" . ) "true" -}}
+{{- if eq (include "ranger.chart_psp_enabled" . ) "true" -}}
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
-  name: {{ include "rancher.fullname" . }}-post-delete
-  labels: {{ include "rancher.labels" . | nindent 4 }}
+  name: {{ include "ranger.fullname" . }}-post-delete
+  labels: {{ include "ranger.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": post-delete
     "helm.sh/hook-weight": "1"

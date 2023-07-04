@@ -3,10 +3,10 @@ package clusterupstreamrefresher
 import (
 	"context"
 
-	gkecontroller "github.com/rancher/gke-operator/controller"
-	gkev1 "github.com/rancher/gke-operator/pkg/apis/gke.cattle.io/v1"
-	mgmtv3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	wranglerv1 "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
+	gkecontroller "github.com/ranger/gke-operator/controller"
+	gkev1 "github.com/ranger/gke-operator/pkg/apis/gke.cattle.io/v1"
+	mgmtv3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	wranglerv1 "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
 )
 
 func BuildGKEUpstreamSpec(secretsCache wranglerv1.SecretCache, cluster *mgmtv3.Cluster) (*gkev1.GKEClusterConfigSpec, error) {

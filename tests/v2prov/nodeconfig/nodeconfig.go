@@ -3,11 +3,11 @@ package nodeconfig
 import (
 	"encoding/json"
 
-	"github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/tests/v2prov/clients"
-	"github.com/rancher/rancher/tests/v2prov/defaults"
-	"github.com/rancher/rancher/tests/v2prov/wait"
-	"github.com/rancher/wrangler/pkg/condition"
+	"github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/tests/v2prov/clients"
+	"github.com/ranger/ranger/tests/v2prov/defaults"
+	"github.com/ranger/ranger/tests/v2prov/wait"
+	"github.com/ranger/wrangler/pkg/condition"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 	"k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
@@ -79,7 +79,7 @@ func NewPodConfig(clients *clients.Clients, namespace string) (*corev1.ObjectRef
 	podConfig.SetGenerateName("pod-config-")
 	podConfig.Object["image"] = defaults.PodTestImage
 	// We are providing custom userdata to force K3s/RKE2 to use the cgroupfs cgroup driver, rather than systemd
-	// We have to set invocation disabling on the rancher-system-agent because it runs rke2/k3s server on restore and this has cgroup issues
+	// We have to set invocation disabling on the ranger-system-agent because it runs rke2/k3s server on restore and this has cgroup issues
 	podConfig.Object["userdata"] = `#cloud-config
 write_files:
 - content: |
@@ -96,7 +96,7 @@ write_files:
   path: /etc/default/k3s-agent
 - content: |
     INVOCATION_ID=
-  path: /etc/default/rancher-system-agent`
+  path: /etc/default/ranger-system-agent`
 
 	podConfigClient := clients.Dynamic.Resource(schema.GroupVersionResource{
 		Group:    "rke-machine-config.cattle.io",

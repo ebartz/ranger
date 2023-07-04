@@ -1,4 +1,4 @@
-# Validation scripts for Rancher
+# Validation scripts for Ranger
 
 Validation tests are run in a similar way to integration tests.
 
@@ -40,7 +40,7 @@ DO_ACCESS_KEY no default, your DO access key
 AWS_ACCESS_KEY_ID no default, your AWS access key id
 AWS_SECRET_ACCESS_KEY no default, your AWS secret access key
 AWS_SSH_KEY_NAME no default, the filename of the private key, e.i. jenkins-rke-validation.pem
-AWS_CICD_INSTANCE_TAG defaults to 'rancher-validation', Tags the instance with CICD=AWS_CICD_INSTANCE_TAG
+AWS_CICD_INSTANCE_TAG defaults to 'ranger-validation', Tags the instance with CICD=AWS_CICD_INSTANCE_TAG
 AWS_INSTANCE_TYPE defaults to 't3a.medium', selects the instance type and size
 AWS_REGION no default, the region for your ec2 instances
 AWS_SUBNET no default, the subnet for your ec2 instances
@@ -60,7 +60,7 @@ AZURE_TENANT_ID no default your Azure tenant id, for use with Azure cloud provid
 
 ### v3_api test variables:
 ```
-CATTLE_TEST_URL no default. The Rancher server for test execution.
+CATTLE_TEST_URL no default. The Ranger server for test execution.
 ADMIN_TOKEN no default. Required to create resources during test execution
 RANCHER_CLEANUP_CLUSTER default true. Cleans up clusters after test execution
 RANCHER_CLEANUP_PROJECT default true. Cleans up projects after test execution
@@ -68,12 +68,12 @@ RANCHER_CLUSTER_NAME no default. Some tests allow test resources to be created i
 ```
 ### vmwarevsphere_driver test
 Because our vSphere servers are behind a VPN you will need to connect to the VPN and run these tests from your laptop
-or run them from a Rancher installation inside of vSphere. When running locally on your laptop you will need to connect 
-the VPN and start an ngrok tunnel and set your SERVER_URL by hand to get vSphere nodes to talk back to the Rancher Server
+or run them from a Ranger installation inside of vSphere. When running locally on your laptop you will need to connect 
+the VPN and start an ngrok tunnel and set your SERVER_URL by hand to get vSphere nodes to talk back to the Ranger Server
 
 Environment variables for this test
 ```
-CATTLE_TEST_URL no default. The Rancher server for test execution.
+CATTLE_TEST_URL no default. The Ranger server for test execution.
 RANCHER_CLUSTER_NAME defaults to a random cluster name if not set
 RANCHER_CLEANUP_CLUSTER defaults to "True", set to "False" to leave the cluster after the test
 RANCHER_VSPHERE_USERNAME username used to login to vSphere Admin Interface
@@ -87,7 +87,7 @@ RANCHER_RESOURCE_POOL defaults to the validation-tests pool resource pool to put
 ### oke_cluster test
 Environment variables for the Oracle Container Engine (OKE) cluster test
 ```
-CATTLE_TEST_URL no default. The Rancher server for test execution.
+CATTLE_TEST_URL no default. The Ranger server for test execution.
 USER_TOKEN user token used for /meta/oci/ calls
 RANCHER_OCI_TENANCY_OCID required OCID of the tenancy in which to create the cluster and resources
 RANCHER_OCI_COMPARTMENT_OCID required OCID of the compartment in which to create the cluster and resources
@@ -103,7 +103,7 @@ RANCHER_OKE_NODE_IMAGE defaults to latest Oracle Linux node image
 
 ## RKE template defaults variables:
 ```
-DEFAULT_K8S_IMAGE defaults to 'rancher/k8s:v1.8.7-rancher1-1', defaults the templates service images
+DEFAULT_K8S_IMAGE defaults to 'ranger/k8s:v1.8.7-ranger1-1', defaults the templates service images
 DEFAULT_NETWORK_PLUGIN defaults to 'canal', defaults the templates to use the select network plugin
 ```
 
@@ -119,10 +119,10 @@ PYTEST_OPTION = -n auto
 Multiple options can be passed in '-k install_roles -n auto'
 
 ## Issue 316
-Currently an issue with Ubuntu-16.04, https://github.com/rancher/rke/issues/316
+Currently an issue with Ubuntu-16.04, https://github.com/ranger/rke/issues/316
 prevents us from using a AMI where docker is already installed.
 
-At first we tried rebooting in rancher validation/lib/aws.py:
+At first we tried rebooting in ranger validation/lib/aws.py:
 ```
         if wait_for_ready:
             nodes = self.wait_for_nodes_state(nodes)

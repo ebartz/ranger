@@ -1,5 +1,5 @@
 import pytest
-from rancher import ApiError
+from ranger import ApiError
 from .common import *  # NOQA
 
 namespace = {"p_client": None,

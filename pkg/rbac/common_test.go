@@ -5,9 +5,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/rancher/norman/types"
-	mgmt "github.com/rancher/rancher/pkg/apis/management.cattle.io"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/norman/types"
+	mgmt "github.com/ranger/ranger/pkg/apis/management.cattle.io"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
 	rbacv1 "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

@@ -2,7 +2,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "rancher.name" -}}
+{{- define "ranger.name" -}}
   {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -10,7 +10,7 @@ Expand the name of the chart.
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
-{{- define "rancher.fullname" -}}
+{{- define "ranger.fullname" -}}
   {{- $name := default .Chart.Name .Values.nameOverride -}}
   {{- if contains $name .Release.Name -}}
     {{- .Release.Name | trunc 63 | trimSuffix "-" -}}
@@ -23,7 +23,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 Create a default fully qualified chart name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
-{{- define "rancher.chartname" -}}
+{{- define "ranger.chartname" -}}
   {{- printf "%s-%s" .Chart.Name .Chart.Version | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -35,9 +35,9 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{/*
 Generate the labels.
 */}}
-{{- define "rancher.labels" -}}
-app: {{ template "rancher.fullname" . }}
-chart: {{ template "rancher.chartname" . }}
+{{- define "ranger.labels" -}}
+app: {{ template "ranger.fullname" . }}
+chart: {{ template "ranger.chartname" . }}
 heritage: {{ .Release.Service }}
 release: {{ .Release.Name }}
 {{- end }}
@@ -82,7 +82,7 @@ chose an option, and that option will be used. If it is set otherwise, then we f
 the invalid value.
 */}}
 
-{{- define "rancher.chart_psp_enabled" -}}
+{{- define "ranger.chart_psp_enabled" -}}
 {{- if kindIs "bool" .Values.global.cattle.psp.enabled -}}
 {{ .Values.global.cattle.psp.enabled }}
 {{- else if empty .Values.global.cattle.psp.enabled -}}

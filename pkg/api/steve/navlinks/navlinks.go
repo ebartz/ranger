@@ -3,9 +3,9 @@ package navlinks
 import (
 	"context"
 
-	"github.com/rancher/apiserver/pkg/types"
-	schema2 "github.com/rancher/steve/pkg/schema"
-	steve "github.com/rancher/steve/pkg/server"
+	"github.com/ranger/apiserver/pkg/types"
+	schema2 "github.com/ranger/steve/pkg/schema"
+	steve "github.com/ranger/steve/pkg/server"
 )
 
 func Register(ctx context.Context, server *steve.Server) {

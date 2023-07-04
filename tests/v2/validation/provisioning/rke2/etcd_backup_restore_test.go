@@ -6,23 +6,23 @@ import (
 	"testing"
 	"time"
 
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	steveV1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/etcdsnapshot"
-	"github.com/rancher/rancher/tests/framework/extensions/ingresses"
-	"github.com/rancher/rancher/tests/framework/extensions/machinepools"
-	"github.com/rancher/rancher/tests/framework/extensions/pipeline"
-	"github.com/rancher/rancher/tests/framework/extensions/workloads"
-	"github.com/rancher/rancher/tests/framework/extensions/workloads/pods"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	steveV1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/etcdsnapshot"
+	"github.com/ranger/ranger/tests/framework/extensions/ingresses"
+	"github.com/ranger/ranger/tests/framework/extensions/machinepools"
+	"github.com/ranger/ranger/tests/framework/extensions/pipeline"
+	"github.com/ranger/ranger/tests/framework/extensions/workloads"
+	"github.com/ranger/ranger/tests/framework/extensions/workloads/pods"
 
-	"github.com/rancher/rancher/tests/framework/pkg/environmentflag"
-	namegen "github.com/rancher/rancher/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/environmentflag"
+	namegen "github.com/ranger/ranger/tests/framework/pkg/namegenerator"
 
-	"github.com/rancher/rancher/tests/framework/pkg/config"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
-	provisioning "github.com/rancher/rancher/tests/v2/validation/provisioning"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
+	provisioning "github.com/ranger/ranger/tests/v2/validation/provisioning"
 
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/require"
@@ -36,7 +36,7 @@ import (
 type RKE2EtcdSnapshotRestoreTestSuite struct {
 	suite.Suite
 	session            *session.Session
-	client             *rancher.Client
+	client             *ranger.Client
 	ns                 string
 	kubernetesVersions []string
 	cnis               []string
@@ -65,7 +65,7 @@ func (r *RKE2EtcdSnapshotRestoreTestSuite) SetupSuite() {
 	r.nodesAndRoles = clustersConfig.NodesAndRoles
 	r.advancedOptions = clustersConfig.AdvancedOptions
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(r.T(), err)
 
 	if clustersConfig.S3BackupConfig != nil {
@@ -422,7 +422,7 @@ func (r *RKE2EtcdSnapshotRestoreTestSuite) EtcdSnapshotRestoreWithUpgradeStrateg
 	require.Equal(r.T(), "10%", cluster.Spec.RKEConfig.UpgradeStrategy.WorkerConcurrency)
 }
 
-func (r *RKE2EtcdSnapshotRestoreTestSuite) watchAndWaitForPods(client *rancher.Client, clusterID string) {
+func (r *RKE2EtcdSnapshotRestoreTestSuite) watchAndWaitForPods(client *ranger.Client, clusterID string) {
 	logrus.Infof("waiting for all Pods to be up.............")
 	err := kwait.Poll(5*time.Second, 5*time.Minute, func() (done bool, err error) {
 		steveClient, err := client.Steve.ProxyDownstream(clusterID)

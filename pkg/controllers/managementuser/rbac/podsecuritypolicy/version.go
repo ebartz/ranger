@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	mVersion "github.com/mcuadros/go-version"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
 )
 
 var errVersionIncompatible = errors.New("podsecuritypolicies are not available in Kubernetes v1.25 and above")

@@ -8,9 +8,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/rancher/norman/controller"
-	"github.com/rancher/norman/objectclient"
-	v21 "github.com/rancher/rancher/pkg/generated/norman/autoscaling/v2"
+	"github.com/ranger/norman/controller"
+	"github.com/ranger/norman/objectclient"
+	v21 "github.com/ranger/ranger/pkg/generated/norman/autoscaling/v2"
 	v2 "k8s.io/api/autoscaling/v2"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"

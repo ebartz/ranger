@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
-	"github.com/rancher/norman/controller"
-	"github.com/rancher/norman/objectclient"
-	"github.com/rancher/norman/resource"
+	"github.com/ranger/norman/controller"
+	"github.com/ranger/norman/objectclient"
+	"github.com/ranger/norman/resource"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"

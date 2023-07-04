@@ -10,18 +10,18 @@ import (
 	"github.com/coreos/go-oidc/v3/oidc"
 	"github.com/mitchellh/mapstructure"
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/auth/providers/common"
-	"github.com/rancher/rancher/pkg/auth/tokens"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	publicclient "github.com/rancher/rancher/pkg/client/generated/management/v3public"
-	corev1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/user"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/auth/providers/common"
+	"github.com/ranger/ranger/pkg/auth/tokens"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	publicclient "github.com/ranger/ranger/pkg/client/generated/management/v3public"
+	corev1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/user"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -106,7 +106,7 @@ func (o *OpenIDCProvider) LoginUser(ctx context.Context, oauthLoginInfo *v32.OID
 	userPrincipal.Me = true
 	groupPrincipals = o.getGroupsFromClaimInfo(userClaimInfo)
 
-	logrus.Debugf("[generic oidc] loginuser: checking user's access to rancher")
+	logrus.Debugf("[generic oidc] loginuser: checking user's access to ranger")
 	allowed, err := o.UserMGR.CheckAccess(config.AccessMode, config.AllowedPrincipalIDs, userPrincipal.Name, groupPrincipals)
 	if err != nil {
 		return userPrincipal, groupPrincipals, "", userClaimInfo, err
@@ -190,7 +190,7 @@ func (o *OpenIDCProvider) getRedirectURL(config map[string]interface{}) string {
 		"%s?client_id=%s&response_type=code&redirect_uri=%s",
 		config["authEndpoint"],
 		config["clientId"],
-		config["rancherUrl"],
+		config["rangerUrl"],
 	)
 }
 
@@ -434,7 +434,7 @@ func ConfigToOauthConfig(endpoint oauth2.Endpoint, config *v32.OIDCConfig) oauth
 		ClientID:     config.ClientID,
 		ClientSecret: config.ClientSecret,
 		Endpoint:     endpoint,
-		RedirectURL:  config.RancherURL,
+		RedirectURL:  config.RangerURL,
 		Scopes:       finalScopes,
 	}
 }
@@ -475,7 +475,7 @@ func (o *OpenIDCProvider) UpdateToken(refreshedToken *oauth2.Token, userID strin
 	return err
 }
 
-// IsDisabledProvider checks if the OIDC auth provider is currently disabled in Rancher.
+// IsDisabledProvider checks if the OIDC auth provider is currently disabled in Ranger.
 func (o *OpenIDCProvider) IsDisabledProvider() (bool, error) {
 	oidcConfig, err := o.GetOIDCConfig()
 	if err != nil {

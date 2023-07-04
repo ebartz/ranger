@@ -3,9 +3,9 @@ package clusterindex
 import (
 	"context"
 
-	rancherv1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/wrangler"
-	"github.com/rancher/wrangler/pkg/relatedresource"
+	rangerv1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/wrangler"
+	"github.com/ranger/wrangler/pkg/relatedresource"
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -16,7 +16,7 @@ const (
 func Register(ctx context.Context, clients *wrangler.Context) {
 	clusterCache := clients.Provisioning.Cluster().Cache()
 
-	clusterCache.AddIndexer(ClusterV1ByClusterV3Reference, func(obj *rancherv1.Cluster) ([]string, error) {
+	clusterCache.AddIndexer(ClusterV1ByClusterV3Reference, func(obj *rangerv1.Cluster) ([]string, error) {
 		return []string{obj.Status.ClusterName}, nil
 	})
 

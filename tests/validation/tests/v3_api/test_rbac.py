@@ -1,5 +1,5 @@
 import pytest
-from rancher import ApiError, Client
+from ranger import ApiError, Client
 
 from .common import (
     ADMIN_TOKEN,

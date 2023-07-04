@@ -5,26 +5,26 @@ import (
 	"os"
 	"time"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/corral"
-	"github.com/rancher/rancher/tests/framework/clients/dynamic"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/defaults"
-	"github.com/rancher/rancher/tests/framework/extensions/kubeapi/workloads/deployments"
-	"github.com/rancher/rancher/tests/framework/extensions/pipeline"
-	nodepools "github.com/rancher/rancher/tests/framework/extensions/rke1/nodepools"
-	aws "github.com/rancher/rancher/tests/framework/extensions/rke1/nodetemplates/aws"
-	"github.com/rancher/rancher/tests/framework/extensions/token"
-	"github.com/rancher/rancher/tests/framework/extensions/unstructured"
-	"github.com/rancher/rancher/tests/framework/extensions/users"
-	passwordgenerator "github.com/rancher/rancher/tests/framework/extensions/users/passwordgenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
-	namegen "github.com/rancher/rancher/tests/framework/pkg/namegenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
-	"github.com/rancher/rancher/tests/v2/validation/provisioning"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/corral"
+	"github.com/ranger/ranger/tests/framework/clients/dynamic"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/defaults"
+	"github.com/ranger/ranger/tests/framework/extensions/kubeapi/workloads/deployments"
+	"github.com/ranger/ranger/tests/framework/extensions/pipeline"
+	nodepools "github.com/ranger/ranger/tests/framework/extensions/rke1/nodepools"
+	aws "github.com/ranger/ranger/tests/framework/extensions/rke1/nodetemplates/aws"
+	"github.com/ranger/ranger/tests/framework/extensions/token"
+	"github.com/ranger/ranger/tests/framework/extensions/unstructured"
+	"github.com/ranger/ranger/tests/framework/extensions/users"
+	passwordgenerator "github.com/ranger/ranger/tests/framework/extensions/users/passwordgenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
+	namegen "github.com/ranger/ranger/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
+	"github.com/ranger/ranger/tests/v2/validation/provisioning"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 	appv1 "k8s.io/api/apps/v1"
@@ -39,10 +39,10 @@ var (
 )
 
 const (
-	corralName       = "ranchertestcoverage"
-	rancherTestImage = "ranchertest/rancher:v2.7-head"
+	corralName       = "rangertestcoverage"
+	rangerTestImage = "rangertest/ranger:v2.7-head"
 	namespace        = "cattle-system"
-	deploymentName   = "rancher"
+	deploymentName   = "ranger"
 	clusterName      = "local"
 	// The json/yaml config key for the corral package to be build ..
 	userClusterConfigsConfigurationFileKey = "userClusterConfig"
@@ -57,10 +57,10 @@ type UserClusterConfig struct {
 
 // setup for code coverage testing and reporting
 func main() {
-	rancherConfig := new(rancher.Config)
-	config.LoadConfig(rancher.ConfigurationFileKey, rancherConfig)
+	rangerConfig := new(ranger.Config)
+	config.LoadConfig(ranger.ConfigurationFileKey, rangerConfig)
 
-	kubeconfig, err := getRancherKubeconfig()
+	kubeconfig, err := getRangerKubeconfig()
 	if err != nil {
 		logrus.Fatalf("error with getting kube config using corral: %v", err)
 	}
@@ -71,18 +71,18 @@ func main() {
 	}
 
 	// update deployment
-	err = updateRancherDeployment(kubeconfig)
+	err = updateRangerDeployment(kubeconfig)
 	if err != nil {
-		logrus.Fatalf("error updating rancher deployment: %v", err)
+		logrus.Fatalf("error updating ranger deployment: %v", err)
 	}
 
-	token, err := createAdminToken(password, rancherConfig)
+	token, err := createAdminToken(password, rangerConfig)
 	if err != nil {
 		logrus.Fatalf("error with generating admin token: %v", err)
 	}
 
-	rancherConfig.AdminToken = token
-	config.UpdateConfig(rancher.ConfigurationFileKey, rancherConfig)
+	rangerConfig.AdminToken = token
+	config.UpdateConfig(ranger.ConfigurationFileKey, rangerConfig)
 	//provision clusters for test
 	session := session.NewSession()
 	clustersConfig := new(provisioning.Config)
@@ -92,14 +92,14 @@ func main() {
 	nodesAndRoles := clustersConfig.NodesAndRolesRKE1
 	advancedOptions := clustersConfig.AdvancedOptions
 
-	client, err := rancher.NewClient("", session)
+	client, err := ranger.NewClient("", session)
 	if err != nil {
 		logrus.Fatalf("error creating admin client: %v", err)
 	}
 
-	err = pipeline.PostRancherInstall(client, adminPassword)
+	err = pipeline.PostRangerInstall(client, adminPassword)
 	if err != nil {
-		logrus.Errorf("error during post rancher install: %v", err)
+		logrus.Errorf("error during post ranger install: %v", err)
 	}
 
 	enabled := true
@@ -143,8 +143,8 @@ func main() {
 	userClusterConfig.AdminPassword = adminPassword
 	userClusterConfig.Clusters = standardClusterNames
 
-	rancherConfig.ClusterName = adminClusterNames[0]
-	config.UpdateConfig(rancher.ConfigurationFileKey, rancherConfig)
+	rangerConfig.ClusterName = adminClusterNames[0]
+	config.UpdateConfig(ranger.ConfigurationFileKey, rangerConfig)
 
 	err = writeToConfigFile(userClusterConfig)
 	if err != nil {
@@ -152,7 +152,7 @@ func main() {
 	}
 }
 
-func getRancherKubeconfig() ([]byte, error) {
+func getRangerKubeconfig() ([]byte, error) {
 	kubeconfig, err := corral.GetKubeConfig(corralName)
 	if err != nil {
 		return nil, err
@@ -161,13 +161,13 @@ func getRancherKubeconfig() ([]byte, error) {
 	return kubeconfig, nil
 }
 
-func createAdminToken(password string, rancherConfig *rancher.Config) (string, error) {
+func createAdminToken(password string, rangerConfig *ranger.Config) (string, error) {
 	adminUser := &management.User{
 		Username: "admin",
 		Password: password,
 	}
 
-	hostURL := rancherConfig.Host
+	hostURL := rangerConfig.Host
 	var userToken *management.Token
 	err := kwait.Poll(500*time.Millisecond, 5*time.Minute, func() (done bool, err error) {
 		userToken, err = token.GenerateUserToken(adminUser, hostURL)
@@ -184,7 +184,7 @@ func createAdminToken(password string, rancherConfig *rancher.Config) (string, e
 	return userToken.Token, nil
 }
 
-func updateRancherDeployment(kubeconfig []byte) error {
+func updateRangerDeployment(kubeconfig []byte) error {
 	session := session.NewSession()
 	clientConfig, err := clientcmd.NewClientConfigFromBytes(kubeconfig)
 	if err != nil {
@@ -216,7 +216,7 @@ func updateRancherDeployment(kubeconfig []byte) error {
 	}
 
 	updatedDeployment.Spec.Template.Spec.Containers[0].Args = []string{}
-	updatedDeployment.Spec.Template.Spec.Containers[0].Image = rancherTestImage
+	updatedDeployment.Spec.Template.Spec.Containers[0].Image = rangerTestImage
 	updatedDeployment.Spec.Strategy.RollingUpdate = nil
 	updatedDeployment.Spec.Strategy.Type = appv1.RecreateDeploymentStrategyType
 
@@ -246,12 +246,12 @@ func updateRancherDeployment(kubeconfig []byte) error {
 	})
 
 	if err != nil {
-		logrus.Infof("time out updating rancher deployment %v", err)
+		logrus.Infof("time out updating ranger deployment %v", err)
 		return err
 	}
 
 	err = kwait.Poll(500*time.Millisecond, 10*time.Minute, func() (done bool, err error) {
-		webhookDeployment, err := cattleSystemDeploymentResource.Get(context.TODO(), "rancher-webhook", metav1.GetOptions{})
+		webhookDeployment, err := cattleSystemDeploymentResource.Get(context.TODO(), "ranger-webhook", metav1.GetOptions{})
 		if k8sErrors.IsNotFound(err) {
 			return false, nil
 		} else if err != nil {
@@ -268,11 +268,11 @@ func updateRancherDeployment(kubeconfig []byte) error {
 		}
 		return false, nil
 	})
-	logrus.Infof("time out updating rancher webhook deployment %v", err)
+	logrus.Infof("time out updating ranger webhook deployment %v", err)
 	return err
 }
 
-func createTestCluster(client, adminClient *rancher.Client, numClusters int, clusterNameBase, cni, kubeVersion string, nodesAndRoles []nodepools.NodeRoles, advancedOptions provisioning.AdvancedOptions) ([]string, error) {
+func createTestCluster(client, adminClient *ranger.Client, numClusters int, clusterNameBase, cni, kubeVersion string, nodesAndRoles []nodepools.NodeRoles, advancedOptions provisioning.AdvancedOptions) ([]string, error) {
 	clusterNames := []string{}
 	for i := 0; i < numClusters; i++ {
 		nodeTemplateResp, err := aws.CreateAWSNodeTemplate(client)

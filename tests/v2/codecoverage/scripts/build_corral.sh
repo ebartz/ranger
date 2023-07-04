@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-cd  /go/src/github.com/rancherlabs/corral
+cd  /go/src/github.com/rangerlabs/corral
 
 echo "building corral bin"
 env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build 

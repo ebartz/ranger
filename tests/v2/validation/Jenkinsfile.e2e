@@ -1,7 +1,7 @@
 #!groovy
 node {
-    def rootPath = "/root/src/github.com/rancher/rancher/"
-    def workPath = "/root/src/github.com/rancher/rancher/tests/v2/validation/"
+    def rootPath = "/root/src/github.com/ranger/ranger/"
+    def workPath = "/root/src/github.com/ranger/ranger/tests/v2/validation/"
     def job_name = "${JOB_NAME}"
     if (job_name.contains('/')) { 
       job_names = job_name.split('/')
@@ -10,12 +10,12 @@ node {
     def golangTestContainer = "${job_name}${env.BUILD_NUMBER}-golangtest"
     def buildTestContainer = "${job_name}${env.BUILD_NUMBER}-buildtest"
     def cleanupTestContainer = "${job_name}${env.BUILD_NUMBER}-cleanuptest"
-    def golangImageName = "rancher-validation-${job_name}${env.BUILD_NUMBER}"
+    def golangImageName = "ranger-validation-${job_name}${env.BUILD_NUMBER}"
     def validationVolume = "ValidationSharedVolume-${job_name}${env.BUILD_NUMBER}"
-    def testsDir = "/root/src/github.com/rancher/rancher/tests/v2/validation/${env.TEST_PACKAGE}"
+    def testsDir = "/root/src/github.com/ranger/ranger/tests/v2/validation/${env.TEST_PACKAGE}"
     def testResultsOut = "results.xml"
     def envFile = ".env"
-    def rancherConfig = "rancher_env.config"
+    def rangerConfig = "ranger_env.config"
     def branch = "release/v2.7"
     def corralBranch = "main"
     def cleanup = env.RANCHER_CLEANUP.toLowerCase()
@@ -27,9 +27,9 @@ node {
       corralBranch = "${env.RANCHER_CORRAL_PACKAGES_REPO_BRANCH}"
     }
 
-    def rancherRepo = scm.getUserRemoteConfigs()[0].getUrl()
+    def rangerRepo = scm.getUserRemoteConfigs()[0].getUrl()
     if ("${env.REPO}" != "null" && "${env.REPO}" != "") {
-      rancherRepo = "${env.REPO}"
+      rangerRepo = "${env.REPO}"
     }
 
     if (scm.getUserRemoteConfigs().size() > 1) {
@@ -70,12 +70,12 @@ node {
         withEnv(paramsMap) {
           stage('Checkout') {
             deleteDir()
-            dir("./rancher") {
+            dir("./ranger") {
               checkout([
                       $class: 'GitSCM',
                       branches: [[name: "*/${branch}"]],
                       extensions: scm.extensions + [[$class: 'CleanCheckout']],
-                      userRemoteConfigs: [[url: rancherRepo]]
+                      userRemoteConfigs: [[url: rangerRepo]]
                     ])
             }
             dir('./') {
@@ -89,12 +89,12 @@ node {
                       userRemoteConfigs: [[url: corralRepo]]
                     ])
               }
-              def rancherFilename = "rancher-registry.yaml"
-              def rancherConfigContents = env.RANCHER_CORRAL_CONFIG
+              def rangerFilename = "ranger-registry.yaml"
+              def rangerConfigContents = env.RANCHER_CORRAL_CONFIG
               def registriesFilename = "registry.yaml"
               def registriesConfigContents = env.REGISTRIES_CORRAL_CONFIG
-              if (rancherConfigContents != null && registriesConfigContents != null) {
-                writeFile file: "./corral-packages/packages/aws/"+rancherFilename, text: rancherConfigContents
+              if (rangerConfigContents != null && registriesConfigContents != null) {
+                writeFile file: "./corral-packages/packages/aws/"+rangerFilename, text: rangerConfigContents
                 writeFile file: "./corral-packages/packages/aws/"+registriesFilename, text: registriesConfigContents
               }
             }
@@ -102,12 +102,12 @@ node {
           dir ("./") {
             stage('Configure and Build') {
               if (env.AWS_SSH_PEM_KEY && env.AWS_SSH_KEY_NAME) {
-                dir("./rancher/tests/v2/validation/.ssh") {
+                dir("./ranger/tests/v2/validation/.ssh") {
                   def decoded = new String(AWS_SSH_PEM_KEY.decodeBase64())
                   writeFile file: AWS_SSH_KEY_NAME, text: decoded
                 }
               }
-              dir("./rancher/tests/v2/validation") {
+              dir("./ranger/tests/v2/validation") {
                 def filename = "config.yaml"
                 def configContents = env.CONFIG
 
@@ -115,8 +115,8 @@ node {
                 env.CATTLE_TEST_CONFIG = "${workPath}"+filename
               }
               dir ("./") {
-                sh "./rancher/tests/v2/validation/configure.sh"
-                sh "docker build . -f ./rancher/tests/v2/validation/Dockerfile.e2e --build-arg CORRAL_VERSION=${env.CORRAL_VERSION} -t ${golangImageName}"
+                sh "./ranger/tests/v2/validation/configure.sh"
+                sh "docker build . -f ./ranger/tests/v2/validation/Dockerfile.e2e --build-arg CORRAL_VERSION=${env.CORRAL_VERSION} -t ${golangImageName}"
                 sh "docker volume create --name ${validationVolume}"
               }
             }
@@ -139,11 +139,11 @@ node {
                 echo 'Validation tests had failures. Aborting'
               }
             }
-            stage('Cleanup Rancher Environment') {
+            stage('Cleanup Ranger Environment') {
               try {
                 if (cleanup.toBoolean()) {
                   sh "docker run --volumes-from ${buildTestContainer} --name ${cleanupTestContainer} -t --env-file ${envFile} " +
-                  "${golangImageName} sh -c \"${workPath}pipeline/scripts/rancher_cleanup.sh\""
+                  "${golangImageName} sh -c \"${workPath}pipeline/scripts/ranger_cleanup.sh\""
                 }
               } catch(err) {
                 sh "docker stop ${buildTestContainer}"

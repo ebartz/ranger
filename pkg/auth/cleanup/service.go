@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"strings"
 
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/auth/api/secrets"
-	controllers "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3"
-	corev1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/auth/api/secrets"
+	controllers "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3"
+	corev1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -151,7 +151,7 @@ func (s *Service) deleteProjectRoleTemplateBindings(config *v3.AuthConfig) error
 // External users are those who have multiple principal IDs associated with them.
 // A local admin (not necessarily the default admin) who had set up the provider will have two principal IDs,
 // but will also have a password.
-// This is how Rancher distinguishes fully external users from those who are external, too, but were once local.
+// This is how Ranger distinguishes fully external users from those who are external, too, but were once local.
 func (s *Service) deleteUsers(config *v3.AuthConfig) error {
 	if config == nil {
 		return errAuthConfigNil

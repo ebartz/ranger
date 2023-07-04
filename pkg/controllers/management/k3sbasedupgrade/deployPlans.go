@@ -7,12 +7,12 @@ import (
 	"strings"
 	"time"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/controllers/management/clusterdeploy"
-	planClientset "github.com/rancher/rancher/pkg/generated/clientset/versioned/typed/upgrade.cattle.io/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/settings"
-	planv1 "github.com/rancher/system-upgrade-controller/pkg/apis/upgrade.cattle.io/v1"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/controllers/management/clusterdeploy"
+	planClientset "github.com/ranger/ranger/pkg/generated/clientset/versioned/typed/upgrade.cattle.io/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/settings"
+	planv1 "github.com/ranger/system-upgrade-controller/pkg/apis/upgrade.cattle.io/v1"
 	"github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -63,9 +63,9 @@ func (h *handler) deployPlans(cluster *v3.Cluster, isK3s, isRke2 bool) error {
 	}
 	masterPlan := &planv1.Plan{}
 	workerPlan := &planv1.Plan{}
-	// deactivate all existing plans that are not managed by Rancher
+	// deactivate all existing plans that are not managed by Ranger
 	for i, plan := range planList.Items {
-		if _, ok := plan.Labels[rancherManagedPlan]; !ok {
+		if _, ok := plan.Labels[rangerManagedPlan]; !ok {
 			// inverse selection is used here, we select a non-existent label
 			lsr := metav1.LabelSelectorRequirement{
 				Key:      upgradeDisableLabelKey,
@@ -94,7 +94,7 @@ func (h *handler) deployPlans(cluster *v3.Cluster, isK3s, isRke2 bool) error {
 			}
 		}
 	}
-	// if rancher plans exist, do we need to update?
+	// if ranger plans exist, do we need to update?
 	if masterPlan.Name != "" || workerPlan.Name != "" {
 		if masterPlan.Name != "" {
 			newMaster := configureMasterPlan(*masterPlan, Version,

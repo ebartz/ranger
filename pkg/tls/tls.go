@@ -13,17 +13,17 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/dynamiclistener"
-	"github.com/rancher/dynamiclistener/cert"
-	"github.com/rancher/dynamiclistener/server"
-	"github.com/rancher/dynamiclistener/storage/kubernetes"
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/wrangler/pkg/generated/controllers/apps"
-	appscontrollers "github.com/rancher/wrangler/pkg/generated/controllers/apps/v1"
-	"github.com/rancher/wrangler/pkg/generated/controllers/core"
-	corev1controllers "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
+	"github.com/ranger/dynamiclistener"
+	"github.com/ranger/dynamiclistener/cert"
+	"github.com/ranger/dynamiclistener/server"
+	"github.com/ranger/dynamiclistener/storage/kubernetes"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/wrangler/pkg/generated/controllers/apps"
+	appscontrollers "github.com/ranger/wrangler/pkg/generated/controllers/apps/v1"
+	"github.com/ranger/wrangler/pkg/generated/controllers/core"
+	corev1controllers "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
 	"github.com/sirupsen/logrus"
 	v1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -36,11 +36,11 @@ import (
 )
 
 const (
-	rancherCertFile    = "/etc/rancher/ssl/cert.pem"
-	rancherKeyFile     = "/etc/rancher/ssl/key.pem"
-	rancherCACertsFile = "/etc/rancher/ssl/cacerts.pem"
+	rangerCertFile    = "/etc/ranger/ssl/cert.pem"
+	rangerKeyFile     = "/etc/ranger/ssl/key.pem"
+	rangerCACertsFile = "/etc/ranger/ssl/cacerts.pem"
 
-	commonName = "rancher"
+	commonName = "ranger"
 )
 
 type internalAPI struct{}
@@ -82,7 +82,7 @@ func ListenAndServe(ctx context.Context, restConfig *rest.Config, handler http.H
 	}
 
 	// Try listen and serve over if there is an already exist error which comes from
-	// creating the ca. Rancher will hit this error during HA startup as all servers
+	// creating the ca. Ranger will hit this error during HA startup as all servers
 	// will race to create the ca secret.
 	err = wait.ExponentialBackoff(backoff, func() (bool, error) {
 		if err := server.ListenAndServe(ctx, httpsPort, httpPort, handler, opts); err != nil {
@@ -105,10 +105,10 @@ func ListenAndServe(ctx context.Context, restConfig *rest.Config, handler http.H
 	serverOptions := &server.ListenOpts{
 		Storage:       opts.Storage,
 		Secrets:       opts.Secrets,
-		CAName:        "tls-rancher-internal-ca",
+		CAName:        "tls-ranger-internal-ca",
 		CANamespace:   namespace.System,
 		CertNamespace: namespace.System,
-		CertName:      "tls-rancher-internal",
+		CertName:      "tls-ranger-internal",
 	}
 	clusterIP, err := getClusterIP(core.Core().V1().Service())
 	if err != nil {
@@ -233,7 +233,7 @@ func readConfig(secrets corev1controllers.SecretController, acmeDomains []string
 		return "", noCACerts, nil, errors.Wrapf(err, "parsing %s", settings.RotateCertsIfExpiringInDays.Get())
 	}
 
-	sans := []string{"localhost", "127.0.0.1", "rancher.cattle-system"}
+	sans := []string{"localhost", "127.0.0.1", "ranger.cattle-system"}
 	ip, err := net.ChooseHostInterface()
 	if err == nil {
 		sans = append(sans, ip.String())
@@ -241,7 +241,7 @@ func readConfig(secrets corev1controllers.SecretController, acmeDomains []string
 
 	opts := &server.ListenOpts{
 		Secrets:       secrets,
-		CAName:        "tls-rancher",
+		CAName:        "tls-ranger",
 		CANamespace:   "cattle-system",
 		CertNamespace: "cattle-system",
 		AcmeDomains:   acmeDomains,
@@ -262,19 +262,19 @@ func readConfig(secrets corev1controllers.SecretController, acmeDomains []string
 
 	// Mounted certificates
 	// If certificate file/key are set
-	certFileExists := fileExists(rancherCertFile)
-	keyFileExists := fileExists(rancherKeyFile)
+	certFileExists := fileExists(rangerCertFile)
+	keyFileExists := fileExists(rangerKeyFile)
 
 	// If certificate file exists but not certificate key, or other way around, error out
 	if (certFileExists && !keyFileExists) || (!certFileExists && keyFileExists) {
 		return "", noCACerts, nil, fmt.Errorf("invalid SSL configuration found, please set both certificate file and certificate key file (one is missing)")
 	}
 
-	caFileExists := fileExists(rancherCACertsFile)
+	caFileExists := fileExists(rangerCACertsFile)
 
 	// If certificate file and certificate key file exists, load files into listenConfig
 	if certFileExists && keyFileExists {
-		cert, err := tls.LoadX509KeyPair(rancherCertFile, rancherKeyFile)
+		cert, err := tls.LoadX509KeyPair(rangerCertFile, rangerKeyFile)
 		if err != nil {
 			return "", noCACerts, nil, err
 		}
@@ -286,7 +286,7 @@ func readConfig(secrets corev1controllers.SecretController, acmeDomains []string
 		}
 		// Load cacerts if exists
 		if caFileExists {
-			ca, err = readPEM(rancherCACertsFile)
+			ca, err = readPEM(rangerCACertsFile)
 			if err != nil {
 				return "", noCACerts, nil, err
 			}
@@ -302,7 +302,7 @@ func readConfig(secrets corev1controllers.SecretController, acmeDomains []string
 		if noCACerts {
 			return "", noCACerts, nil, fmt.Errorf("invalid SSL configuration found, please set cacerts when using self signed certificates or use --no-cacerts when using certificates from a recognized Certificate Authority, do not use both at the same time")
 		}
-		ca, err = readPEM(rancherCACertsFile)
+		ca, err = readPEM(rangerCACertsFile)
 		if err != nil {
 			return "", noCACerts, nil, err
 		}
@@ -321,7 +321,7 @@ func getClusterIP(services corev1controllers.ServiceController) (string, error) 
 		return "", err
 	}
 	if service.Spec.ClusterIP == "" {
-		return "", fmt.Errorf("waiting on service %s/rancher to be assigned a ClusterIP", namespace.System)
+		return "", fmt.Errorf("waiting on service %s/ranger to be assigned a ClusterIP", namespace.System)
 	}
 	return service.Spec.ClusterIP, nil
 }

@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"testing"
 
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/controllers/management/secretmigrator/assemblers"
-	corefakes "github.com/rancher/rancher/pkg/generated/norman/core/v1/fakes"
-	rketypes "github.com/rancher/rke/types"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/controllers/management/secretmigrator/assemblers"
+	corefakes "github.com/ranger/ranger/pkg/generated/norman/core/v1/fakes"
+	rketypes "github.com/ranger/rke/types"
 	"github.com/stretchr/testify/assert"
 	corev1 "k8s.io/api/core/v1"
 	apierror "k8s.io/apimachinery/pkg/api/errors"
@@ -58,7 +58,7 @@ func TestGeneratePrivateRegistryDockerConfig(t *testing.T) {
 						ClusterSecrets: v3.ClusterSecrets{
 							PrivateRegistrySecret: "test-secret",
 						},
-						RancherKubernetesEngineConfig: &rketypes.RancherKubernetesEngineConfig{
+						RangerKubernetesEngineConfig: &rketypes.RangerKubernetesEngineConfig{
 							PrivateRegistries: []rketypes.PrivateRegistry{
 								{
 									URL:  "0123456789abcdef.dkr.ecr.us-east-1.amazonaws.com",

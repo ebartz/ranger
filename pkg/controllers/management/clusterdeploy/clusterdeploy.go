@@ -11,22 +11,22 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/types"
-	apimgmtv3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/auth/tokens"
-	util "github.com/rancher/rancher/pkg/cluster"
-	"github.com/rancher/rancher/pkg/clustermanager"
-	"github.com/rancher/rancher/pkg/features"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/image"
-	"github.com/rancher/rancher/pkg/kubectl"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/systemaccount"
-	"github.com/rancher/rancher/pkg/systemtemplate"
-	"github.com/rancher/rancher/pkg/taints"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/user"
+	"github.com/ranger/norman/types"
+	apimgmtv3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/auth/tokens"
+	util "github.com/ranger/ranger/pkg/cluster"
+	"github.com/ranger/ranger/pkg/clustermanager"
+	"github.com/ranger/ranger/pkg/features"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/image"
+	"github.com/ranger/ranger/pkg/kubectl"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/systemaccount"
+	"github.com/ranger/ranger/pkg/systemtemplate"
+	"github.com/ranger/ranger/pkg/taints"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/user"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -100,11 +100,11 @@ func (cd *clusterDeploy) sync(key string, cluster *apimgmtv3.Cluster) (runtime.O
 
 	if cluster.Status.Driver == apimgmtv3.ClusterDriverRKE {
 		if cluster.Spec.LocalClusterAuthEndpoint.Enabled {
-			cluster.Spec.RancherKubernetesEngineConfig.Authentication.Strategy = "x509|webhook"
+			cluster.Spec.RangerKubernetesEngineConfig.Authentication.Strategy = "x509|webhook"
 		} else {
-			cluster.Spec.RancherKubernetesEngineConfig.Authentication.Strategy = "x509"
+			cluster.Spec.RangerKubernetesEngineConfig.Authentication.Strategy = "x509"
 		}
-		logrus.Tracef("clusterDeploy: sync: cluster.Spec.RancherKubernetesEngineConfig.Authentication.Strategy set to [%s] for cluster [%s]", cluster.Spec.RancherKubernetesEngineConfig.Authentication.Strategy, cluster.Name)
+		logrus.Tracef("clusterDeploy: sync: cluster.Spec.RangerKubernetesEngineConfig.Authentication.Strategy set to [%s] for cluster [%s]", cluster.Spec.RangerKubernetesEngineConfig.Authentication.Strategy, cluster.Name)
 	}
 
 	err = cd.doSync(cluster)
@@ -193,11 +193,11 @@ func redeployAgent(cluster *apimgmtv3.Cluster, desiredAgent, desiredAuth string,
 	imageChange := cluster.Status.AgentImage != desiredAgent || cluster.Status.AuthImage != desiredAuth
 	agentFeaturesChanged := agentFeaturesChanged(desiredFeatures, cluster.Status.AgentFeatures)
 	repoChange := false
-	if cluster.Spec.RancherKubernetesEngineConfig != nil {
-		if cluster.Status.AppliedSpec.RancherKubernetesEngineConfig != nil {
-			if len(cluster.Status.AppliedSpec.RancherKubernetesEngineConfig.PrivateRegistries) > 0 {
+	if cluster.Spec.RangerKubernetesEngineConfig != nil {
+		if cluster.Status.AppliedSpec.RangerKubernetesEngineConfig != nil {
+			if len(cluster.Status.AppliedSpec.RangerKubernetesEngineConfig.PrivateRegistries) > 0 {
 				desiredRepo := util.GetPrivateRegistry(cluster)
-				appliedRepo := &cluster.Status.AppliedSpec.RancherKubernetesEngineConfig.PrivateRegistries[0]
+				appliedRepo := &cluster.Status.AppliedSpec.RangerKubernetesEngineConfig.PrivateRegistries[0]
 
 				if desiredRepo != nil && appliedRepo != nil && !reflect.DeepEqual(desiredRepo, appliedRepo) {
 					repoChange = true
@@ -210,7 +210,7 @@ func redeployAgent(cluster *apimgmtv3.Cluster, desiredAgent, desiredAuth string,
 	}
 
 	if forceDeploy || imageChange || repoChange || agentFeaturesChanged {
-		logrus.Infof("Redeploy Rancher Agents is needed for %s: forceDeploy=%v, agent/auth image changed=%v,"+
+		logrus.Infof("Redeploy Ranger Agents is needed for %s: forceDeploy=%v, agent/auth image changed=%v,"+
 			" private repo changed=%v, agent features changed=%v", cluster.Name, forceDeploy, imageChange, repoChange,
 			agentFeaturesChanged)
 		logrus.Tracef("clusterDeploy: redeployAgent: cluster.Status.AgentImage: [%s], desiredAgent: [%s]", cluster.Status.AgentImage, desiredAgent)
@@ -222,7 +222,7 @@ func redeployAgent(cluster *apimgmtv3.Cluster, desiredAgent, desiredAuth string,
 	na, ca := getAgentImages(cluster.Name)
 	if (cluster.Status.AgentImage != na && cluster.Status.Driver == apimgmtv3.ClusterDriverRKE) || cluster.Status.AgentImage != ca {
 		// downstream agent does not match, kick a redeploy with settings agent
-		logrus.Infof("clusterDeploy: redeployAgent: redeploy Rancher agents due to downstream agent image mismatch for [%s]: was [%s] and will be [%s]",
+		logrus.Infof("clusterDeploy: redeployAgent: redeploy Ranger agents due to downstream agent image mismatch for [%s]: was [%s] and will be [%s]",
 			cluster.Name, na, image.ResolveWithCluster(settings.AgentImage.Get(), cluster))
 		clearAgentImages(cluster.Name)
 		return true
@@ -236,19 +236,19 @@ func redeployAgent(cluster *apimgmtv3.Cluster, desiredAgent, desiredAuth string,
 	toAdd, toDelete := taints.GetToDiffTaints(currentTaints, desiredTaints)
 	// Any change to current triggers redeploy
 	if len(toAdd) > 0 || len(toDelete) > 0 {
-		logrus.Infof("clusterDeploy: redeployAgent: redeploy Rancher agents due to toleration mismatch for [%s], was [%v] and will be [%v]", cluster.Name, currentTaints, desiredTaints)
+		logrus.Infof("clusterDeploy: redeployAgent: redeploy Ranger agents due to toleration mismatch for [%s], was [%v] and will be [%v]", cluster.Name, currentTaints, desiredTaints)
 		// Clear cache to refresh
 		clearControlPlaneTaints(cluster.Name)
 		return true
 	}
 
 	if !reflect.DeepEqual(append(settings.DefaultAgentSettingsAsEnvVars(), cluster.Spec.AgentEnvVars...), cluster.Status.AppliedAgentEnvVars) {
-		logrus.Infof("clusterDeploy: redeployAgent: redeploy Rancher agents due to agent env vars mismatched for [%s], was [%v] and will be [%v]", cluster.Name, cluster.Status.AppliedAgentEnvVars, cluster.Spec.AgentEnvVars)
+		logrus.Infof("clusterDeploy: redeployAgent: redeploy Ranger agents due to agent env vars mismatched for [%s], was [%v] and will be [%v]", cluster.Name, cluster.Status.AppliedAgentEnvVars, cluster.Spec.AgentEnvVars)
 		return true
 	}
 
 	if !reflect.DeepEqual(cluster.Spec.ClusterAgentDeploymentCustomization, cluster.Status.AppliedClusterAgentDeploymentCustomization) {
-		logrus.Infof("clusterDeploy: redeployAgent: redeploy Rancher agents due to agent customization mismatch for [%s], was [%v] and will be [%v]", cluster.Name, cluster.Status.AppliedClusterAgentDeploymentCustomization, cluster.Spec.ClusterAgentDeploymentCustomization)
+		logrus.Infof("clusterDeploy: redeployAgent: redeploy Ranger agents due to agent customization mismatch for [%s], was [%v] and will be [%v]", cluster.Name, cluster.Status.AppliedClusterAgentDeploymentCustomization, cluster.Spec.ClusterAgentDeploymentCustomization)
 		return true
 	}
 
@@ -397,8 +397,8 @@ func (cd *clusterDeploy) setNetworkPolicyAnn(cluster *apimgmtv3.Cluster) error {
 		return nil
 	}
 	// set current state for upgraded canal clusters
-	if cluster.Spec.RancherKubernetesEngineConfig != nil &&
-		cluster.Spec.RancherKubernetesEngineConfig.Network.Plugin == "canal" {
+	if cluster.Spec.RangerKubernetesEngineConfig != nil &&
+		cluster.Spec.RangerKubernetesEngineConfig.Network.Plugin == "canal" {
 		enableNetworkPolicy := true
 		cluster.Spec.EnableNetworkPolicy = &enableNetworkPolicy
 		cluster.Annotations["networking.management.cattle.io/enable-network-policy"] = "true"

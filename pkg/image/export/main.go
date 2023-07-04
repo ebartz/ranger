@@ -4,8 +4,8 @@ import (
 	"log"
 	"os"
 
-	img "github.com/rancher/rancher/pkg/image"
-	"github.com/rancher/rancher/pkg/image/utilities"
+	img "github.com/ranger/ranger/pkg/image"
+	"github.com/ranger/ranger/pkg/image/utilities"
 )
 
 func main() {
@@ -24,7 +24,7 @@ func run(systemChartsPath, chartsPath string, imagesFromArgs []string) error {
 		return err
 	}
 
-	// create rancher-image-origins.txt. Will fail if /pkg/image/origins.go
+	// create ranger-image-origins.txt. Will fail if /pkg/image/origins.go
 	// does not provide a mapping for each image.
 	err = img.GenerateImageOrigins(targetsAndSources.LinuxImagesFromArgs, targetsAndSources.TargetLinuxImages, targetsAndSources.TargetWindowsImages)
 	if err != nil {

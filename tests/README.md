@@ -1,15 +1,15 @@
-# Rancher Test Framework
+# Ranger Test Framework
 
-The Rancher Test Framework provides tools for writing integrations and validation tests.  The framework manages interactions with the external services being tested and aids in cleaning up resources after a test is completed.  The framework is organized into three disciplines: framework, clients, and extensions.  The framework consists of a few core libraries used to make it easy to write homologous tests. See [extensions](#extensions) and [clients](#clients) for more details.
+The Ranger Test Framework provides tools for writing integrations and validation tests.  The framework manages interactions with the external services being tested and aids in cleaning up resources after a test is completed.  The framework is organized into three disciplines: framework, clients, and extensions.  The framework consists of a few core libraries used to make it easy to write homologous tests. See [extensions](#extensions) and [clients](#clients) for more details.
 
 ## Requirements
 
 ---
 
 #### Integration
-To run rancher integration tests you will need:
-- a running instance of rancher with an accessible url
-- a rancher access token for the admin user
+To run ranger integration tests you will need:
+- a running instance of ranger with an accessible url
+- a ranger access token for the admin user
 - [golang 1.17](https://go.dev/doc/install)
 - [k3d](https://k3d.io/v5.1.0/)
 
@@ -32,7 +32,7 @@ Extensions are functions that complete common operations used by tests.  Extensi
 
 ### Clients
 
-Clients are used to create the resources in the tests. The advantage of the cients is they register the cleanups with sessions, making resource cleanup trivial. There are three clients; the rancher client, dynamic client, and the k3d client. The rancher client is used to create resources on a rancher instance. Given a host url, and a bearer token the rancher client communicates directly with the rancher instance. The dynamic client is used as means of communication on a downstream cluster, and used for kubernete resource management on that cluster. The k3d client is used to create a minimal k3d cluster, this is to give the integration tests the ability to test against a downstream cluster.
+Clients are used to create the resources in the tests. The advantage of the cients is they register the cleanups with sessions, making resource cleanup trivial. There are three clients; the ranger client, dynamic client, and the k3d client. The ranger client is used to create resources on a ranger instance. Given a host url, and a bearer token the ranger client communicates directly with the ranger instance. The dynamic client is used as means of communication on a downstream cluster, and used for kubernete resource management on that cluster. The k3d client is used to create a minimal k3d cluster, this is to give the integration tests the ability to test against a downstream cluster.
 
 ### Wait
 

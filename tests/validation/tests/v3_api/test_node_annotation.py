@@ -13,7 +13,7 @@ from .common import execute_kubectl_cmd
 from .common import if_test_rbac
 from .common import random_name
 from .common import rbac_get_user_token_by_role
-from rancher import ApiError
+from ranger import ApiError
 
 cluster_detail = {"cluster": None, "client": None}
 roles = [CLUSTER_MEMBER, CLUSTER_OWNER, PROJECT_OWNER, PROJECT_MEMBER,

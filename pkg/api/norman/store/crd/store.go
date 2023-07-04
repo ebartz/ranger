@@ -1,8 +1,8 @@
 package crd
 
 import (
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
 )
 
 type ForgetCRDNotFoundStore struct {

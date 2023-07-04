@@ -4,8 +4,8 @@ import (
 	"crypto/tls"
 	"net/http"
 
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/steve/pkg/ui"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/steve/pkg/ui"
 )
 
 var (

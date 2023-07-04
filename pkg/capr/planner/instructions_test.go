@@ -3,10 +3,10 @@ package planner
 import (
 	"testing"
 
-	v1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1/plan"
-	"github.com/rancher/rancher/pkg/capr"
-	"github.com/rancher/rancher/pkg/provisioningv2/image"
+	v1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1/plan"
+	"github.com/ranger/ranger/pkg/capr"
+	"github.com/ranger/ranger/pkg/provisioningv2/image"
 	"github.com/stretchr/testify/assert"
 )
 

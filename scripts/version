@@ -55,7 +55,7 @@ SUFFIX=""
 [ "${ARCH}" != "amd64" ] && SUFFIX="_${ARCH}"
 
 TAG=${TAG:-${VERSION}${SUFFIX}}
-REPO=${REPO:-rancher}
+REPO=${REPO:-ranger}
 
 if echo $TAG | grep -q dirty; then
     TAG=dev

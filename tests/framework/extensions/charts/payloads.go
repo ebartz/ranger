@@ -3,8 +3,8 @@ package charts
 import (
 	"time"
 
-	"github.com/rancher/rancher/pkg/api/steve/catalog/types"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/api/steve/catalog/types"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -50,7 +50,7 @@ func newChartUpgradeAction(namespace string, chartUpgrades []types.ChartUpgrade)
 func newChartInstall(name, version, clusterId, clusterName, url, defaultRegistry string, chartValues map[string]interface{}) *types.ChartInstall {
 	chartInstall := types.ChartInstall{
 		Annotations: map[string]string{
-			"catalog.cattle.io/ui-source-repo":      "rancher-charts",
+			"catalog.cattle.io/ui-source-repo":      "ranger-charts",
 			"catalog.cattle.io/ui-source-repo-type": "cluster",
 		},
 		ChartName:   name,
@@ -82,7 +82,7 @@ func newChartInstall(name, version, clusterId, clusterName, url, defaultRegistry
 func newChartUpgrade(name, version, clusterId, clusterName, url, defaultRegistry string, chartValues map[string]interface{}) *types.ChartUpgrade {
 	chartUpgrade := types.ChartUpgrade{
 		Annotations: map[string]string{
-			"catalog.cattle.io/ui-source-repo":      "rancher-charts",
+			"catalog.cattle.io/ui-source-repo":      "ranger-charts",
 			"catalog.cattle.io/ui-source-repo-type": "cluster",
 		},
 		ChartName:   name,

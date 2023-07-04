@@ -1,11 +1,11 @@
 /*
-Package catalog implements API handlers for Rancher's catalog functionality.
+Package catalog implements API handlers for Ranger's catalog functionality.
 
 It registers handlers for Helm-related operations and content management.
 
 It also links the custom resouces with the handlers with the help of Templates in the apiserver package.
 
-The package is used to facilitate interactions with Helm charts within a Rancher server environment.
+The package is used to facilitate interactions with Helm charts within a Ranger server environment.
 */
 package catalog
 
@@ -13,17 +13,17 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/rancher/apiserver/pkg/handlers"
-	responsewriter "github.com/rancher/apiserver/pkg/middleware"
-	"github.com/rancher/apiserver/pkg/types"
-	types2 "github.com/rancher/rancher/pkg/api/steve/catalog/types"
-	"github.com/rancher/rancher/pkg/apis/catalog.cattle.io"
-	"github.com/rancher/rancher/pkg/catalogv2/content"
-	"github.com/rancher/rancher/pkg/catalogv2/helmop"
-	schema2 "github.com/rancher/steve/pkg/schema"
-	steve "github.com/rancher/steve/pkg/server"
-	schemas3 "github.com/rancher/wrangler/pkg/schemas"
-	"github.com/rancher/wrangler/pkg/schemas/validation"
+	"github.com/ranger/apiserver/pkg/handlers"
+	responsewriter "github.com/ranger/apiserver/pkg/middleware"
+	"github.com/ranger/apiserver/pkg/types"
+	types2 "github.com/ranger/ranger/pkg/api/steve/catalog/types"
+	"github.com/ranger/ranger/pkg/apis/catalog.cattle.io"
+	"github.com/ranger/ranger/pkg/catalogv2/content"
+	"github.com/ranger/ranger/pkg/catalogv2/helmop"
+	schema2 "github.com/ranger/steve/pkg/schema"
+	steve "github.com/ranger/steve/pkg/server"
+	schemas3 "github.com/ranger/wrangler/pkg/schemas"
+	"github.com/ranger/wrangler/pkg/schemas/validation"
 )
 
 // Register is used to register the two handlers with the apiserver
@@ -56,7 +56,7 @@ func Register(ctx context.Context, server *steve.Server,
 //
 // The handlers for retrieving resources by their IDs are also customized.
 func addSchemas(server *steve.Server, ops *operation, index http.Handler) {
-	// Imports and generates API schemas to be handled by as requests by the Rancher API server.
+	// Imports and generates API schemas to be handled by as requests by the Ranger API server.
 	server.BaseSchemas.MustImportAndCustomize(types2.ChartUninstallAction{}, nil)
 	server.BaseSchemas.MustImportAndCustomize(types2.ChartUpgradeAction{}, nil)
 	server.BaseSchemas.MustImportAndCustomize(types2.ChartUpgrade{}, nil)

@@ -1,13 +1,13 @@
 package manager
 
 import (
-	"github.com/rancher/rancher/pkg/catalog/utils"
-	v1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	helmlib "github.com/rancher/rancher/pkg/helm"
-	"github.com/rancher/rancher/pkg/image"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/settings"
+	"github.com/ranger/ranger/pkg/catalog/utils"
+	v1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	helmlib "github.com/ranger/ranger/pkg/helm"
+	"github.com/ranger/ranger/pkg/image"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/settings"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -86,9 +86,9 @@ func CreateOrUpdateSystemCatalogImageCache(systemCatalog *v3.Catalog, configMapI
 
 	systemCatalogImageCacheName := utils.GetCatalogImageCacheName(systemCatalog.Name)
 	systemCatalogImageCache, err = configMapLister.Get(namespace.System, systemCatalogImageCacheName)
-	rancherVersion := settings.GetRancherVersion()
-	if !image.IsValidSemver(rancherVersion) {
-		rancherVersion = settings.RancherVersionDev
+	rangerVersion := settings.GetRangerVersion()
+	if !image.IsValidSemver(rangerVersion) {
+		rangerVersion = settings.RangerVersionDev
 	}
 
 	// if the cache does not exist generate it
@@ -99,7 +99,7 @@ func CreateOrUpdateSystemCatalogImageCache(systemCatalog *v3.Catalog, configMapI
 		systemCatalogImageCache.Name = systemCatalogImageCacheName
 		systemCatalogImageCache.Namespace = namespace.System
 
-		err = image.AddImagesToImageListConfigMap(systemCatalogImageCache, rancherVersion, systemCatalogChartPath)
+		err = image.AddImagesToImageListConfigMap(systemCatalogImageCache, rangerVersion, systemCatalogChartPath)
 		if err != nil {
 			return
 		}
@@ -120,7 +120,7 @@ func CreateOrUpdateSystemCatalogImageCache(systemCatalog *v3.Catalog, configMapI
 		if err != nil {
 			return err
 		}
-		err = image.AddImagesToImageListConfigMap(systemCatalogImageCache, rancherVersion, systemCatalogChartPath)
+		err = image.AddImagesToImageListConfigMap(systemCatalogImageCache, rangerVersion, systemCatalogChartPath)
 		if err != nil {
 			return
 		}

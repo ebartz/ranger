@@ -46,7 +46,7 @@ AWS_SECRET_ACCESS_KEY=
 ```
 - run scripts/rke/configure.sh
 - run scripts/rke/build.sh
-- run docker run --rm -v ~/path/to/rancher-validation:/src/rancher-validation rancher-validation-tests -c pytest -s rke_tests/
+- run docker run --rm -v ~/path/to/ranger-validation:/src/ranger-validation ranger-validation-tests -c pytest -s rke_tests/
 
 
 ## RKE Template Referenece
@@ -62,6 +62,6 @@ For Nodes, the 'N' should be replace with index starting at 0
 | ssh_key_N                | Replaced with node N's actual private key     |
 | ssh_key_path_N           | Replaced with node N's path to ssh key        |
 | internal_address_N       | Replaced with node N's private IP Address     |
-| k8_rancher_image         | Used to determine k8s images used in services |
+| k8_ranger_image         | Used to determine k8s images used in services |
 | network_plugin           | Used to determine rke network plugin          |
 | master_ssh_key_path      | Replaced by path of the master ssh for tests  |

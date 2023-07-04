@@ -3,14 +3,14 @@ package k8slookup
 import (
 	"net/http"
 
-	"github.com/rancher/norman/api/access"
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	"github.com/rancher/rancher/pkg/clusterrouter"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	schema "github.com/rancher/rancher/pkg/schemas/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/norman/api/access"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	"github.com/ranger/ranger/pkg/clusterrouter"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	schema "github.com/ranger/ranger/pkg/schemas/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
 )
 
 func New(context *config.ScaledContext, validate bool) clusterrouter.ClusterLookup {

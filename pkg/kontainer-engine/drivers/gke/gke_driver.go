@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rancher/rancher/pkg/kontainer-engine/drivers/options"
-	"github.com/rancher/rancher/pkg/kontainer-engine/drivers/util"
-	"github.com/rancher/rancher/pkg/kontainer-engine/types"
-	"github.com/rancher/rke/log"
+	"github.com/ranger/ranger/pkg/kontainer-engine/drivers/options"
+	"github.com/ranger/ranger/pkg/kontainer-engine/drivers/util"
+	"github.com/ranger/ranger/pkg/kontainer-engine/types"
+	"github.com/ranger/rke/log"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/net/context"
 	"golang.org/x/oauth2"
@@ -125,7 +125,7 @@ func (d *Driver) GetDriverCreateOptions(ctx context.Context) (*types.DriverFlags
 	}
 	driverFlag.Options["name"] = &types.Flag{
 		Type:  types.StringType,
-		Usage: "the internal name of the cluster in Rancher",
+		Usage: "the internal name of the cluster in Ranger",
 	}
 	driverFlag.Options["display-name"] = &types.Flag{
 		Type:  types.StringType,

@@ -43,7 +43,7 @@ while read -r module tag; do
     echo "${module} is different ("${tag}" vs "${roottag}")"
     badmodule="true"
   fi
-done <<< $(cat pkg/apis/go.mod | sed '1,/require/d' | head -n -1 | grep -v indirect | grep rancher |  awk '{ print $1,$2 }')
+done <<< $(cat pkg/apis/go.mod | sed '1,/require/d' | head -n -1 | grep -v indirect | grep ranger |  awk '{ print $1,$2 }')
 
 if [[ "${badmodule}" == "true" ]]; then
   echo "Diff found between ./go.mod and ./pkg/apis/go.mod"

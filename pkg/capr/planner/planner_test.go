@@ -10,15 +10,15 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/golang/mock/gomock"
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1/plan"
-	"github.com/rancher/rancher/pkg/capr"
-	"github.com/rancher/rancher/pkg/capr/mock/mockcapicontrollers"
-	"github.com/rancher/rancher/pkg/capr/mock/mockcorecontrollers"
-	"github.com/rancher/rancher/pkg/capr/mock/mockmgmtcontrollers"
-	"github.com/rancher/rancher/pkg/capr/mock/mockranchercontrollers"
-	"github.com/rancher/rancher/pkg/capr/mock/mockrkecontrollers"
-	"github.com/rancher/rancher/pkg/provisioningv2/image"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1/plan"
+	"github.com/ranger/ranger/pkg/capr"
+	"github.com/ranger/ranger/pkg/capr/mock/mockcapicontrollers"
+	"github.com/ranger/ranger/pkg/capr/mock/mockcorecontrollers"
+	"github.com/ranger/ranger/pkg/capr/mock/mockmgmtcontrollers"
+	"github.com/ranger/ranger/pkg/capr/mock/mockrangercontrollers"
+	"github.com/ranger/ranger/pkg/capr/mock/mockrkecontrollers"
+	"github.com/ranger/ranger/pkg/provisioningv2/image"
 	"github.com/stretchr/testify/assert"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -40,7 +40,7 @@ type mockPlanner struct {
 	capiClient                    *mockcapicontrollers.MockClusterClient
 	capiClusters                  *mockcapicontrollers.MockClusterCache
 	managementClusters            *mockmgmtcontrollers.MockClusterCache
-	rancherClusterCache           *mockranchercontrollers.MockClusterCache
+	rangerClusterCache           *mockrangercontrollers.MockClusterCache
 }
 
 // newMockPlanner creates a new mockPlanner that can be used for simulating a functional Planner.
@@ -60,7 +60,7 @@ func newMockPlanner(t *testing.T, functions InfoFunctions) *mockPlanner {
 		capiClient:                    mockcapicontrollers.NewMockClusterClient(ctrl),
 		capiClusters:                  mockcapicontrollers.NewMockClusterCache(ctrl),
 		managementClusters:            mockmgmtcontrollers.NewMockClusterCache(ctrl),
-		rancherClusterCache:           mockranchercontrollers.NewMockClusterCache(ctrl),
+		rangerClusterCache:           mockrangercontrollers.NewMockClusterCache(ctrl),
 	}
 	store := PlanStore{
 		secrets:      mp.secretClient,
@@ -79,7 +79,7 @@ func newMockPlanner(t *testing.T, functions InfoFunctions) *mockPlanner {
 		capiClient:                    mp.capiClient,
 		capiClusters:                  mp.capiClusters,
 		managementClusters:            mp.managementClusters,
-		rancherClusterCache:           mp.rancherClusterCache,
+		rangerClusterCache:           mp.rangerClusterCache,
 		rkeControlPlanes:              mp.rkeControlPlanes,
 		rkeBootstrap:                  mp.rkeBootstrap,
 		rkeBootstrapCache:             mp.rkeBootstrapCache,
@@ -445,7 +445,7 @@ func Test_getInstallerImage(t *testing.T) {
 	}{
 		{
 			name:     "default",
-			expected: "rancher/system-agent-installer-rke2:v1.25.7-rke2r1",
+			expected: "ranger/system-agent-installer-rke2:v1.25.7-rke2r1",
 			controlPlane: &rkev1.RKEControlPlane{
 				Spec: rkev1.RKEControlPlaneSpec{
 					KubernetesVersion: "v1.25.7+rke2r1",
@@ -454,13 +454,13 @@ func Test_getInstallerImage(t *testing.T) {
 		},
 		{
 			name:     "cluster private registry - machine global",
-			expected: "test.rancher.io/rancher/system-agent-installer-rke2:v1.25.7-rke2r1",
+			expected: "test.ranger.io/ranger/system-agent-installer-rke2:v1.25.7-rke2r1",
 			controlPlane: &rkev1.RKEControlPlane{
 				Spec: rkev1.RKEControlPlaneSpec{
 					RKEClusterSpecCommon: rkev1.RKEClusterSpecCommon{
 						MachineGlobalConfig: rkev1.GenericMap{
 							Data: map[string]any{
-								"system-default-registry": "test.rancher.io",
+								"system-default-registry": "test.ranger.io",
 							},
 						},
 					},
@@ -470,7 +470,7 @@ func Test_getInstallerImage(t *testing.T) {
 		},
 		{
 			name:     "cluster private registry - machine selector",
-			expected: "test.rancher.io/rancher/system-agent-installer-rke2:v1.25.7-rke2r1",
+			expected: "test.ranger.io/ranger/system-agent-installer-rke2:v1.25.7-rke2r1",
 			controlPlane: &rkev1.RKEControlPlane{
 				Spec: rkev1.RKEControlPlaneSpec{
 					RKEClusterSpecCommon: rkev1.RKEClusterSpecCommon{
@@ -478,7 +478,7 @@ func Test_getInstallerImage(t *testing.T) {
 							{
 								Config: rkev1.GenericMap{
 									Data: map[string]any{
-										"system-default-registry": "test.rancher.io",
+										"system-default-registry": "test.ranger.io",
 									},
 								},
 							},
@@ -490,20 +490,20 @@ func Test_getInstallerImage(t *testing.T) {
 		},
 		{
 			name:     "cluster private registry - prefer machine global",
-			expected: "test.rancher.io/rancher/system-agent-installer-rke2:v1.25.7-rke2r1",
+			expected: "test.ranger.io/ranger/system-agent-installer-rke2:v1.25.7-rke2r1",
 			controlPlane: &rkev1.RKEControlPlane{
 				Spec: rkev1.RKEControlPlaneSpec{
 					RKEClusterSpecCommon: rkev1.RKEClusterSpecCommon{
 						MachineGlobalConfig: rkev1.GenericMap{
 							Data: map[string]any{
-								"system-default-registry": "test.rancher.io",
+								"system-default-registry": "test.ranger.io",
 							},
 						},
 						MachineSelectorConfig: []rkev1.RKESystemConfig{
 							{
 								Config: rkev1.GenericMap{
 									Data: map[string]any{
-										"system-default-registry": "test2.rancher.io",
+										"system-default-registry": "test2.ranger.io",
 									},
 								},
 							},
@@ -519,7 +519,7 @@ func Test_getInstallerImage(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			var planner Planner
 			planner.retrievalFunctions.ImageResolver = image.ResolveWithControlPlane
-			planner.retrievalFunctions.SystemAgentImage = func() string { return "rancher/system-agent-installer-" }
+			planner.retrievalFunctions.SystemAgentImage = func() string { return "ranger/system-agent-installer-" }
 
 			assert.Equal(t, tt.expected, planner.getInstallerImage(tt.controlPlane))
 		})

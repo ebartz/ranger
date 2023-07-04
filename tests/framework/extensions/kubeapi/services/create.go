@@ -3,9 +3,9 @@ package services
 import (
 	"context"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/unstructured"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/unstructured"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -20,7 +20,7 @@ var ServiceGroupVersionResource = schema.GroupVersionResource{
 }
 
 // CreateService is a helper function that uses the dynamic client to create a service in a namespace for a specific cluster.
-func CreateService(client *rancher.Client, clusterName, serviceName, namespace string, spec corev1.ServiceSpec) (*corev1.Service, error) {
+func CreateService(client *ranger.Client, clusterName, serviceName, namespace string, spec corev1.ServiceSpec) (*corev1.Service, error) {
 	dynamicClient, err := client.GetDownStreamClusterClient(clusterName)
 	if err != nil {
 		return nil, err

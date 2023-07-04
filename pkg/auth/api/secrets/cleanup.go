@@ -4,11 +4,11 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/go-multierror"
-	"github.com/rancher/rancher/pkg/auth/providers/common"
-	"github.com/rancher/rancher/pkg/auth/tokens"
-	"github.com/rancher/rancher/pkg/catalog/utils"
-	corev1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/auth/providers/common"
+	"github.com/ranger/ranger/pkg/auth/tokens"
+	"github.com/ranger/ranger/pkg/catalog/utils"
+	corev1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -21,7 +21,7 @@ func CleanupClientSecrets(secretInterface corev1.SecretInterface, config *v3.Aut
 
 	fields, ok := TypeToFields[config.Type]
 	if !ok {
-		return fmt.Errorf("cannot delete auth provider %s because it's unknown to Rancher", config.Type)
+		return fmt.Errorf("cannot delete auth provider %s because it's unknown to Ranger", config.Type)
 	}
 
 	var result error

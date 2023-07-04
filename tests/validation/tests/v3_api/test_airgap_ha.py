@@ -28,10 +28,10 @@ RANCHER_HELM_EXTRA_SETTINGS = os.environ.get("RANCHER_HELM_EXTRA_SETTINGS")
 NUMBER_OF_INSTANCES = int(os.environ.get("RANCHER_AIRGAP_INSTANCE_COUNT", "3"))
 HOST_NAME = os.environ.get('RANCHER_HOST_NAME', "testsa")
 AG_HOST_NAME = HOST_NAME
-RANCHER_AG_INTERNAL_HOSTNAME = AG_HOST_NAME + "-internal.qa.rancher.space"
-RANCHER_AG_HOSTNAME = AG_HOST_NAME + ".qa.rancher.space"
+RANCHER_AG_INTERNAL_HOSTNAME = AG_HOST_NAME + "-internal.qa.ranger.space"
+RANCHER_AG_HOSTNAME = AG_HOST_NAME + ".qa.ranger.space"
 RANCHER_HELM_REPO = os.environ.get("RANCHER_HELM_REPO", "latest")
-RANCHER_HELM_URL = os.environ.get("RANCHER_HELM_URL", "https://releases.rancher.com/server-charts/")
+RANCHER_HELM_URL = os.environ.get("RANCHER_HELM_URL", "https://releases.ranger.com/server-charts/")
 
 RESOURCE_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                             'resource')
@@ -45,12 +45,12 @@ PRIVATE_REGISTRY_PASSWORD = \
 RANCHER_EXTERNAL_BASTION = os.environ.get("RANCHER_EXTERNAL_BASTION", "")
 RANCHER_EXTERNAL_HOST_NAME = os.environ.get(
     "RANCHER_EXTERNAL_HOST_NAME", AG_HOST_NAME)
-REG_HOST_NAME = RANCHER_EXTERNAL_HOST_NAME + "-registry" + ".qa.rancher.space"
+REG_HOST_NAME = RANCHER_EXTERNAL_HOST_NAME + "-registry" + ".qa.ranger.space"
 REGISTRY_HOSTNAME = os.environ.get("RANCHER_BASTION_REGISTRY", REG_HOST_NAME)
 INSTALL_DEPENDENCIES_FLAG=os.environ.get("INSTALL_DEPENDENCIES_FLAG", "True")
 
 
-def test_deploy_airgap_ha_rancher(check_hostname_length):
+def test_deploy_airgap_ha_ranger(check_hostname_length):
     # check for user entered bastion/registry
     if len(RANCHER_EXTERNAL_BASTION) > 5:
         bastion_node = AmazonWebServices().get_node(
@@ -59,7 +59,7 @@ def test_deploy_airgap_ha_rancher(check_hostname_length):
         print("using external node for private registry", REGISTRY_HOSTNAME)
     else:
         bastion_node = deploy_bastion_server()
-        add_rancher_images_to_private_registry(
+        add_ranger_images_to_private_registry(
                                         bastion_node,
                                         noauth_reg_name=REGISTRY_HOSTNAME)
         print("using new node for private registry")
@@ -70,9 +70,9 @@ def test_deploy_airgap_ha_rancher(check_hostname_length):
         "the bastion node does not have a private IP"
     assert bastion_node.execute_command("docker pull {}/{}:{}".format(
         REGISTRY_HOSTNAME,
-        "rancher/rancher-agent",
+        "ranger/ranger-agent",
         RANCHER_SERVER_VERSION))[1].find("not found") < 0, \
-        "registry is missing rancher-agent image"
+        "registry is missing ranger-agent image"
     
     # checks for and installs dependencies if missing from bastion node
     if INSTALL_DEPENDENCIES_FLAG.lower() != "false":
@@ -100,12 +100,12 @@ def test_deploy_airgap_ha_rancher(check_hostname_length):
         kube_config+"/snap/bin/kubectl version")[1].find("not found") < 0, \
         "registry does not have kubectl installed"
 
-    ag_nodes = setup_airgap_rancher(bastion_node)
+    ag_nodes = setup_airgap_ranger(bastion_node)
     public_dns = create_nlb_and_add_targets(ag_nodes)
     print(
         "\nConnect to bastion node with:\nssh -i {}.pem {}@{}\n"
-        "Connect to rancher node by connecting to bastion, then run:\n"
-        "ssh -i {}.pem {}@{}\n\nOpen the Rancher UI with: https://{}\n"
+        "Connect to ranger node by connecting to bastion, then run:\n"
+        "ssh -i {}.pem {}@{}\n\nOpen the Ranger UI with: https://{}\n"
         "** IMPORTANT: SET THE RANCHER SERVER URL UPON INITIAL LOGIN TO: {} **"
         "\nWhen creating a cluster, enable private registry with below"
         " settings:\nPrivate Registry URL: {}\nPrivate Registry is not"
@@ -116,10 +116,10 @@ def test_deploy_airgap_ha_rancher(check_hostname_length):
             public_dns, RANCHER_AG_INTERNAL_HOSTNAME,
             REGISTRY_HOSTNAME))
     time.sleep(180)
-    setup_rancher_server(bastion_node)
+    setup_ranger_server(bastion_node)
 
 
-def setup_rancher_server(bastion_node):
+def setup_ranger_server(bastion_node):
     base_url = "https://" + RANCHER_AG_HOSTNAME
     wait_for_status_code(url=base_url + "/v3", expected_code=401)
     auth_url = base_url + "/v3-public/localproviders/local?action=login"
@@ -185,7 +185,7 @@ def get_registry_resources(external_node):
 def install_rke(external_node):
     docker_compose_command = \
         'cd ~/ && sudo wget ' \
-        'https://github.com/rancher/rke/releases/download/{}' \
+        'https://github.com/ranger/rke/releases/download/{}' \
         '/rke_linux-amd64 && ' \
         'sudo mv rke_linux-amd64 rke && ' \
         'sudo chmod +x rke && ' \
@@ -215,41 +215,41 @@ def run_docker_registry(external_node):
     time.sleep(5)
 
 
-def add_rancher_images_to_private_registry(
+def add_ranger_images_to_private_registry(
         bastion_node, push_images=True, noauth_reg_name=""):
     get_images_command = \
-        'wget -O rancher-images.txt https://github.com/rancher/rancher/' \
-        'releases/download/{0}/rancher-images.txt && ' \
-        'wget -O rancher-save-images.sh https://github.com/rancher/rancher/' \
-        'releases/download/{0}/rancher-save-images.sh && ' \
-        'wget -O rancher-load-images.sh https://github.com/rancher/rancher/' \
-        'releases/download/{0}/rancher-load-images.sh'.format(
+        'wget -O ranger-images.txt https://github.com/ranger/ranger/' \
+        'releases/download/{0}/ranger-images.txt && ' \
+        'wget -O ranger-save-images.sh https://github.com/ranger/ranger/' \
+        'releases/download/{0}/ranger-save-images.sh && ' \
+        'wget -O ranger-load-images.sh https://github.com/ranger/ranger/' \
+        'releases/download/{0}/ranger-load-images.sh'.format(
             RANCHER_SERVER_VERSION)
     bastion_node.execute_command(get_images_command)
 
     # comment out the "docker save" and "docker load" lines to save time
     edit_save_and_load_command = \
-        "sudo sed -i -e 's/docker save /# docker/g' rancher-save-images.sh && " \
-        "sudo sed -i -e 's/docker load /# docker/g' rancher-load-images.sh && " \
-        "chmod +x rancher-save-images.sh && chmod +x rancher-load-images.sh"
+        "sudo sed -i -e 's/docker save /# docker/g' ranger-save-images.sh && " \
+        "sudo sed -i -e 's/docker load /# docker/g' ranger-load-images.sh && " \
+        "chmod +x ranger-save-images.sh && chmod +x ranger-load-images.sh"
     bastion_node.execute_command(edit_save_and_load_command)
 
     save_images_command = \
-        "./rancher-save-images.sh --image-list ./rancher-images.txt"
+        "./ranger-save-images.sh --image-list ./ranger-images.txt"
     save_res = bastion_node.execute_command(save_images_command)
 
     if push_images:
         if len(noauth_reg_name) == 0:
             load_images_command = \
                 "docker login {} -u {} -p {} && " \
-                "./rancher-load-images.sh --image-list ./rancher-images.txt " \
+                "./ranger-load-images.sh --image-list ./ranger-images.txt " \
                 "--registry {}".format(
                     bastion_node.host_name, PRIVATE_REGISTRY_USERNAME,
                     PRIVATE_REGISTRY_PASSWORD, bastion_node.host_name)
             load_res = bastion_node.execute_command(load_images_command)
         else:
             load_images_command = \
-                "./rancher-load-images.sh --image-list ./rancher-images.txt " \
+                "./ranger-load-images.sh --image-list ./ranger-images.txt " \
                 "--registry {}".format(noauth_reg_name)
             load_res = bastion_node.execute_command(load_images_command)
         print(load_res)
@@ -292,7 +292,7 @@ def prepare_airgap_node(bastion_node, number_of_nodes):
     return ag_nodes
 
 
-def setup_airgap_rancher(bastion_node, number_of_nodes=NUMBER_OF_INSTANCES):
+def setup_airgap_ranger(bastion_node, number_of_nodes=NUMBER_OF_INSTANCES):
     # remove old setup files, if any
     bastion_node.execute_command("rm ingress* config.* kube_config_* tls*")
     # need an odd number of nodes for HA setup
@@ -336,39 +336,39 @@ def setup_airgap_rancher(bastion_node, number_of_nodes=NUMBER_OF_INSTANCES):
     assert bastion_node.execute_command(
         "cd ~ && cat kube_config_config.yaml")[0].find(".") > -1, \
         "rke up failed, config file likely incorrect"
-    # setup helm and rancher template
+    # setup helm and ranger template
     assert bastion_node.execute_command(
         '/snap/bin/helm')[0].find("Flags:") > -1, \
         "helm is not installed correctly"
     
-    repo_name = "rancher-" + RANCHER_HELM_REPO
+    repo_name = "ranger-" + RANCHER_HELM_REPO
     repo_url = RANCHER_HELM_URL + RANCHER_HELM_REPO
     bastion_node.execute_command(
         '/snap/bin/helm repo add ' + repo_name + ' ' + repo_url)
     assert bastion_node.execute_command(
-        "/snap/bin/helm repo list")[0].find("rancher") > -1, \
-        "helm was unable to add rancher repo"
+        "/snap/bin/helm repo list")[0].find("ranger") > -1, \
+        "helm was unable to add ranger repo"
     bastion_node.execute_command(
-        "/snap/bin/helm fetch " + repo_name + "/rancher")
+        "/snap/bin/helm fetch " + repo_name + "/ranger")
     bastion_node.execute_command(
-        "/snap/bin/helm fetch {}/rancher --version={}".format(
+        "/snap/bin/helm fetch {}/ranger --version={}".format(
             repo_name,
             RANCHER_SERVER_VERSION))
     # remove `v` from the version tag for helm formatting
-    new_rancher_version = RANCHER_SERVER_VERSION
+    new_ranger_version = RANCHER_SERVER_VERSION
     if RANCHER_SERVER_VERSION[0] == 'v':
-        new_rancher_version = RANCHER_SERVER_VERSION[1:]
+        new_ranger_version = RANCHER_SERVER_VERSION[1:]
     helm_template = \
-        "cd ~/ && /snap/bin/helm template rancher ./rancher-{3}.tgz " \
+        "cd ~/ && /snap/bin/helm template ranger ./ranger-{3}.tgz " \
         "--output-dir . --namespace cattle-system --set hostname={1} " \
-        "--set rancherImage={2}/rancher/rancher " \
+        "--set rangerImage={2}/ranger/ranger " \
         "--set systemDefaultRegistry={2} " \
         "--set useBundledSystemChart=true --set ingress.tls.source=secret " \
-        "--set rancherImageTag={0} --no-hooks".format(
+        "--set rangerImageTag={0} --no-hooks".format(
             RANCHER_SERVER_VERSION,
             RANCHER_AG_INTERNAL_HOSTNAME,
             REGISTRY_HOSTNAME,
-            new_rancher_version)
+            new_ranger_version)
     extra_settings = []
     if RANCHER_HELM_EXTRA_SETTINGS:
         extra_settings.append(RANCHER_HELM_EXTRA_SETTINGS)
@@ -381,7 +381,7 @@ def setup_airgap_rancher(bastion_node, number_of_nodes=NUMBER_OF_INSTANCES):
     print(bastion_node.execute_command("cat ~/kube_config_config.yaml")[0])
     bastion_node.execute_command(helm_template)
     kube_config = 'export KUBECONFIG=~/kube_config_config.yaml && '
-    # install rancher
+    # install ranger
     bastion_node.execute_command(
         kube_config+"/snap/bin/kubectl create namespace cattle-system && 10")
     create_tls_secrets(bastion_node)
@@ -405,18 +405,18 @@ def setup_airgap_rancher(bastion_node, number_of_nodes=NUMBER_OF_INSTANCES):
     
     bastion_node.execute_command(
         kube_config + "/snap/bin/kubectl -n cattle-system apply -R -f"
-        + " ./rancher && sleep 60")
-    print("applying rancher template: \n",
+        + " ./ranger && sleep 60")
+    print("applying ranger template: \n",
           "/snap/bin/kubectl -n cattle-system apply -R -f",
-          " ./rancher && sleep 60")
+          " ./ranger && sleep 60")
     assert bastion_node.execute_command(
         kube_config+"/snap/bin/kubectl get pods -A")[0].find(
         "cattle-system") > 0, \
-        "install of rancher failed. cattle-system has no pods"
+        "install of ranger failed. cattle-system has no pods"
 
     # modify ingress to include internal and external LBs
     bastion_node.execute_command(
-        kube_config + "/snap/bin/kubectl get ingress rancher "
+        kube_config + "/snap/bin/kubectl get ingress ranger "
         + " -n cattle-system -o yaml > ingress.yaml")
     ingress_yaml = bastion_node.execute_command("cat ingress.yaml")[0]
     beginning_ingress = ingress_yaml[:ingress_yaml.find("  tls:")]
@@ -425,7 +425,7 @@ def setup_airgap_rancher(bastion_node, number_of_nodes=NUMBER_OF_INSTANCES):
       paths:
       - backend:
           service:
-            name: rancher
+            name: ranger
             port:
               number: 80
         pathType: ImplementationSpecific
@@ -571,14 +571,14 @@ def create_tls_secrets(bastion_node):
                                 bastion_node)
     kube_config = 'cd ~/ && export KUBECONFIG=kube_config_config.yaml '
     tls_command = kube_config+" && /snap/bin/kubectl -n cattle-system " \
-                              "create secret tls tls-rancher-ingress " \
+                              "create secret tls tls-ranger-ingress " \
                               "--cert=tls.crt" + " --key=tls.key"
 
     tls_output = bastion_node.execute_command(tls_command)
     bastion_node.execute_command("sleep 2")
     print(tls_output)
 
-    assert tls_output[0].find("secret/tls-rancher-ingress created") > -1
+    assert tls_output[0].find("secret/tls-ranger-ingress created") > -1
 
 
 def bastion_write_encoded_certs(path, contents, bastion_node):

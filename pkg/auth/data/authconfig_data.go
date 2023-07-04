@@ -1,19 +1,19 @@
 package data
 
 import (
-	"github.com/rancher/rancher/pkg/auth/providers/activedirectory"
-	"github.com/rancher/rancher/pkg/auth/providers/azure"
-	"github.com/rancher/rancher/pkg/auth/providers/github"
-	"github.com/rancher/rancher/pkg/auth/providers/googleoauth"
-	"github.com/rancher/rancher/pkg/auth/providers/keycloakoidc"
-	"github.com/rancher/rancher/pkg/auth/providers/ldap"
-	localprovider "github.com/rancher/rancher/pkg/auth/providers/local"
-	"github.com/rancher/rancher/pkg/auth/providers/oidc"
-	"github.com/rancher/rancher/pkg/auth/providers/saml"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	"github.com/rancher/rancher/pkg/controllers/management/auth"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/ranger/pkg/auth/providers/activedirectory"
+	"github.com/ranger/ranger/pkg/auth/providers/azure"
+	"github.com/ranger/ranger/pkg/auth/providers/github"
+	"github.com/ranger/ranger/pkg/auth/providers/googleoauth"
+	"github.com/ranger/ranger/pkg/auth/providers/keycloakoidc"
+	"github.com/ranger/ranger/pkg/auth/providers/ldap"
+	localprovider "github.com/ranger/ranger/pkg/auth/providers/local"
+	"github.com/ranger/ranger/pkg/auth/providers/oidc"
+	"github.com/ranger/ranger/pkg/auth/providers/saml"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	"github.com/ranger/ranger/pkg/controllers/management/auth"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -79,7 +79,7 @@ func addAuthConfig(name, aType string, enabled bool, management *config.Manageme
 	if name == azure.Name {
 		annotations[azure.GraphEndpointMigratedAnnotation] = "true"
 	}
-	annotations[auth.CleanupAnnotation] = auth.CleanupRancherLocked
+	annotations[auth.CleanupAnnotation] = auth.CleanupRangerLocked
 
 	_, err := management.Management.AuthConfigs("").ObjectClient().Create(&v3.AuthConfig{
 		ObjectMeta: v1.ObjectMeta{

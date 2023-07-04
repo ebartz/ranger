@@ -3,26 +3,26 @@ package rke1
 import (
 	"testing"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters/kubernetesversions"
-	nodepools "github.com/rancher/rancher/tests/framework/extensions/rke1/nodepools"
-	"github.com/rancher/rancher/tests/framework/extensions/rke1/nodetemplates"
-	"github.com/rancher/rancher/tests/framework/extensions/users"
-	password "github.com/rancher/rancher/tests/framework/extensions/users/passwordgenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
-	namegen "github.com/rancher/rancher/tests/framework/pkg/namegenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
-	provisioning "github.com/rancher/rancher/tests/v2/validation/provisioning"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters/kubernetesversions"
+	nodepools "github.com/ranger/ranger/tests/framework/extensions/rke1/nodepools"
+	"github.com/ranger/ranger/tests/framework/extensions/rke1/nodetemplates"
+	"github.com/ranger/ranger/tests/framework/extensions/users"
+	password "github.com/ranger/ranger/tests/framework/extensions/users/passwordgenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
+	namegen "github.com/ranger/ranger/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
+	provisioning "github.com/ranger/ranger/tests/v2/validation/provisioning"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 )
 
 type RKE1NodeDriverProvisioningTestSuite struct {
 	suite.Suite
-	client             *rancher.Client
-	standardUserClient *rancher.Client
+	client             *ranger.Client
+	standardUserClient *ranger.Client
 	session            *session.Session
 	cluster            *management.Cluster
 	kubernetesVersions []string
@@ -49,7 +49,7 @@ func (r *RKE1NodeDriverProvisioningTestSuite) SetupSuite() {
 	r.psact = clustersConfig.PSACT
 	r.advancedOptions = clustersConfig.AdvancedOptions
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(r.T(), err)
 
 	r.client = client
@@ -127,7 +127,7 @@ func (r *RKE1NodeDriverProvisioningTestSuite) TestProvisioningRKE1Cluster() {
 	tests := []struct {
 		name      string
 		nodeRoles []nodepools.NodeRoles
-		client    *rancher.Client
+		client    *ranger.Client
 		psact     string
 	}{
 		{"1 Node all roles " + provisioning.AdminClientName.String(), nodeRoles0, r.client, r.psact},
@@ -186,7 +186,7 @@ func (r *RKE1NodeDriverProvisioningTestSuite) TestProvisioningRKE1ClusterDynamic
 
 	tests := []struct {
 		name   string
-		client *rancher.Client
+		client *ranger.Client
 		psact  string
 	}{
 		{provisioning.AdminClientName.String(), r.client, r.psact},
@@ -230,7 +230,7 @@ func (r *RKE1NodeDriverProvisioningTestSuite) TestProvisioningRKE1ClusterDynamic
 	}
 }
 
-func (r *RKE1NodeDriverProvisioningTestSuite) testScalingRKE1NodePools(client *rancher.Client, provider Provider, nodesAndRoles []nodepools.NodeRoles, psact string, kubeVersion, cni string, cluster *management.Cluster, nodeTemplate *nodetemplates.NodeTemplate) {
+func (r *RKE1NodeDriverProvisioningTestSuite) testScalingRKE1NodePools(client *ranger.Client, provider Provider, nodesAndRoles []nodepools.NodeRoles, psact string, kubeVersion, cni string, cluster *management.Cluster, nodeTemplate *nodetemplates.NodeTemplate) {
 	if cluster == nil {
 		cluster, err := TestProvisioningRKE1Cluster(r.T(), client, provider, nodesAndRoles, psact, kubeVersion, cni, nodeTemplate, r.advancedOptions)
 		require.NoError(r.T(), err)

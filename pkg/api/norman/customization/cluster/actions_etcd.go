@@ -10,13 +10,13 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/api/access"
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	"github.com/rancher/rancher/pkg/controllers/management/etcdbackup"
-	mgmtv3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/ref"
+	"github.com/ranger/norman/api/access"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	"github.com/ranger/ranger/pkg/controllers/management/etcdbackup"
+	mgmtv3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/ref"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -106,7 +106,7 @@ func (a ActionHandler) RestoreFromEtcdBackupHandler(actionName string, action *t
 		return errors.Wrapf(err, "failed to get backup config by ID %s", input.EtcdBackupID)
 	}
 
-	clusterBackupConfig := cluster.Spec.RancherKubernetesEngineConfig.Services.Etcd.BackupConfig
+	clusterBackupConfig := cluster.Spec.RangerKubernetesEngineConfig.Services.Etcd.BackupConfig
 	if clusterBackupConfig != nil &&
 		clusterBackupConfig.S3BackupConfig == nil &&
 		backup.Spec.BackupConfig.S3BackupConfig != nil {
@@ -126,7 +126,7 @@ func (a ActionHandler) RestoreFromEtcdBackupHandler(actionName string, action *t
 	switch strings.ToLower(input.RestoreRkeConfig) {
 	case "kubernetesversion":
 		// restore from copy stored inline to not have to decompress object
-		cluster.Spec.RancherKubernetesEngineConfig.Version = backup.Status.KubernetesVersion
+		cluster.Spec.RangerKubernetesEngineConfig.Version = backup.Status.KubernetesVersion
 	case "all":
 		clusterBackup, err := etcdbackup.DecompressCluster(backup.Status.ClusterObject)
 		if err != nil {
@@ -135,7 +135,7 @@ func (a ActionHandler) RestoreFromEtcdBackupHandler(actionName string, action *t
 			return errors.Wrap(err,
 				fmt.Sprintf("error decompressing cluster object for backupid %s: %s", input.EtcdBackupID, err))
 		}
-		cluster.Spec.RancherKubernetesEngineConfig = clusterBackup.Spec.RancherKubernetesEngineConfig
+		cluster.Spec.RangerKubernetesEngineConfig = clusterBackup.Spec.RangerKubernetesEngineConfig
 		cluster.Spec.DefaultPodSecurityPolicyTemplateName = clusterBackup.Spec.DefaultPodSecurityPolicyTemplateName
 		cluster.Spec.DefaultPodSecurityAdmissionConfigurationTemplateName = clusterBackup.Spec.DefaultPodSecurityAdmissionConfigurationTemplateName
 
@@ -144,8 +144,8 @@ func (a ActionHandler) RestoreFromEtcdBackupHandler(actionName string, action *t
 	}
 
 	// flag cluster for restore
-	cluster.Spec.RancherKubernetesEngineConfig.Restore.SnapshotName = input.EtcdBackupID
-	cluster.Spec.RancherKubernetesEngineConfig.Restore.Restore = true
+	cluster.Spec.RangerKubernetesEngineConfig.Restore.SnapshotName = input.EtcdBackupID
+	cluster.Spec.RangerKubernetesEngineConfig.Restore.Restore = true
 
 	if _, err = a.ClusterClient.Update(cluster); err != nil {
 		response["message"] = "failed to update cluster object"

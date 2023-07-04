@@ -3,15 +3,15 @@ package steve
 import (
 	"context"
 
-	"github.com/rancher/rancher/pkg/api/steve/catalog"
-	"github.com/rancher/rancher/pkg/api/steve/clusters"
-	"github.com/rancher/rancher/pkg/api/steve/disallow"
-	"github.com/rancher/rancher/pkg/api/steve/machine"
-	"github.com/rancher/rancher/pkg/api/steve/navlinks"
-	"github.com/rancher/rancher/pkg/api/steve/settings"
-	"github.com/rancher/rancher/pkg/api/steve/userpreferences"
-	"github.com/rancher/rancher/pkg/wrangler"
-	steve "github.com/rancher/steve/pkg/server"
+	"github.com/ranger/ranger/pkg/api/steve/catalog"
+	"github.com/ranger/ranger/pkg/api/steve/clusters"
+	"github.com/ranger/ranger/pkg/api/steve/disallow"
+	"github.com/ranger/ranger/pkg/api/steve/machine"
+	"github.com/ranger/ranger/pkg/api/steve/navlinks"
+	"github.com/ranger/ranger/pkg/api/steve/settings"
+	"github.com/ranger/ranger/pkg/api/steve/userpreferences"
+	"github.com/ranger/ranger/pkg/wrangler"
+	steve "github.com/ranger/steve/pkg/server"
 )
 
 func Setup(ctx context.Context, server *steve.Server, config *wrangler.Context) error {

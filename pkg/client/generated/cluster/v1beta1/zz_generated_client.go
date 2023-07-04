@@ -1,7 +1,7 @@
 package client
 
 import (
-	"github.com/rancher/norman/clientbase"
+	"github.com/ranger/norman/clientbase"
 )
 
 type Client struct {

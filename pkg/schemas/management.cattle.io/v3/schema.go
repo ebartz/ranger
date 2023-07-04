@@ -3,13 +3,13 @@ package schema
 import (
 	"net/http"
 
-	rketypes "github.com/rancher/rke/types"
+	rketypes "github.com/ranger/rke/types"
 
-	"github.com/rancher/norman/types"
-	m "github.com/rancher/norman/types/mapper"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/schemas/factory"
-	"github.com/rancher/rancher/pkg/schemas/mapper"
+	"github.com/ranger/norman/types"
+	m "github.com/ranger/norman/types/mapper"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/schemas/factory"
+	"github.com/ranger/ranger/pkg/schemas/mapper"
 	v1 "k8s.io/api/core/v1"
 	apiserverconfig "k8s.io/apiserver/pkg/apis/config"
 )
@@ -227,7 +227,7 @@ func clusterTypes(schemas *types.Schemas) *types.Schemas {
 		AddMapperForType(&Version, v3.ClusterRegistrationToken{},
 			&m.Embed{Field: "status"},
 		).
-		AddMapperForType(&Version, rketypes.RancherKubernetesEngineConfig{},
+		AddMapperForType(&Version, rketypes.RangerKubernetesEngineConfig{},
 			m.Drop{Field: "systemImages"},
 		).
 		MustImport(&Version, v3.Cluster{}).
@@ -952,5 +952,5 @@ func encryptionTypes(schemas *types.Schemas) *types.Schemas {
 }
 
 func notificationTypes(schemas *types.Schemas) *types.Schemas {
-	return schemas.MustImport(&Version, v3.RancherUserNotification{})
+	return schemas.MustImport(&Version, v3.RangerUserNotification{})
 }

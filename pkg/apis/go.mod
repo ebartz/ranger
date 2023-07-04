@@ -1,17 +1,17 @@
-module github.com/rancher/rancher/pkg/apis
+module github.com/ranger/ranger/pkg/apis
 
 go 1.19
 
-replace k8s.io/client-go => github.com/rancher/client-go v1.25.4-rancher1
+replace k8s.io/client-go => github.com/ranger/client-go v1.25.4-ranger1
 
 require (
-	github.com/rancher/aks-operator v1.1.2
-	github.com/rancher/eks-operator v1.2.0
-	github.com/rancher/fleet/pkg/apis v0.0.0-20230605094423-ddbb43505e80
-	github.com/rancher/gke-operator v1.1.5
-	github.com/rancher/norman v0.0.0-20230426211126-d3552b018687
-	github.com/rancher/rke v1.4.8-rc1
-	github.com/rancher/wrangler v1.1.1
+	github.com/ranger/aks-operator v1.1.2
+	github.com/ranger/eks-operator v1.2.0
+	github.com/ranger/fleet/pkg/apis v0.0.0-20230605094423-ddbb43505e80
+	github.com/ranger/gke-operator v1.1.5
+	github.com/ranger/norman v0.0.0-20230426211126-d3552b018687
+	github.com/ranger/rke v1.4.8-rc1
+	github.com/ranger/wrangler v1.1.1
 	github.com/sirupsen/logrus v1.9.3
 	k8s.io/api v0.25.4
 	k8s.io/apimachinery v0.25.4
@@ -52,7 +52,7 @@ require (
 	github.com/prometheus/client_model v0.3.0 // indirect
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
-	github.com/rancher/lasso v0.0.0-20221227210133-6ea88ca2fbcc // indirect
+	github.com/ranger/lasso v0.0.0-20221227210133-6ea88ca2fbcc // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	golang.org/x/net v0.11.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20220608161450-d0670ef3b1eb // indirect

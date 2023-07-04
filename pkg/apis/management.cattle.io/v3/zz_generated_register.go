@@ -1,5 +1,5 @@
 /*
-Copyright 2023 Rancher Labs, Inc.
+Copyright 2023 Ranger Labs, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ limitations under the License.
 package v3
 
 import (
-	management "github.com/rancher/rancher/pkg/apis/management.cattle.io"
+	management "github.com/ranger/ranger/pkg/apis/management.cattle.io"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -90,7 +90,7 @@ var (
 	ProjectMonitorGraphResourceName                       = "projectmonitorgraphs"
 	ProjectNetworkPolicyResourceName                      = "projectnetworkpolicies"
 	ProjectRoleTemplateBindingResourceName                = "projectroletemplatebindings"
-	RancherUserNotificationResourceName                   = "rancherusernotifications"
+	RangerUserNotificationResourceName                   = "rangerusernotifications"
 	RkeAddonResourceName                                  = "rkeaddons"
 	RkeK8sServiceOptionResourceName                       = "rkek8sserviceoptions"
 	RkeK8sSystemImageResourceName                         = "rkek8ssystemimages"
@@ -251,8 +251,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&ProjectNetworkPolicyList{},
 		&ProjectRoleTemplateBinding{},
 		&ProjectRoleTemplateBindingList{},
-		&RancherUserNotification{},
-		&RancherUserNotificationList{},
+		&RangerUserNotification{},
+		&RangerUserNotificationList{},
 		&RkeAddon{},
 		&RkeAddonList{},
 		&RkeK8sServiceOption{},

@@ -1,4 +1,4 @@
-module github.com/rancher/rancher
+module github.com/ranger/ranger
 
 go 1.19
 
@@ -6,13 +6,13 @@ replace (
 	github.com/docker/distribution => github.com/docker/distribution v2.7.1+incompatible // oras dep requires a replace is set
 	github.com/docker/docker => github.com/docker/docker v20.10.18+incompatible // oras dep requires a replace is set
 
-	github.com/knative/pkg => github.com/rancher/pkg v0.0.0-20190514055449-b30ab9de040e
-	github.com/matryer/moq => github.com/rancher/moq v0.0.0-20200712062324-13d1f37d2d77
+	github.com/knative/pkg => github.com/ranger/pkg v0.0.0-20190514055449-b30ab9de040e
+	github.com/matryer/moq => github.com/ranger/moq v0.0.0-20200712062324-13d1f37d2d77
 
 	github.com/opencontainers/runc => github.com/opencontainers/runc v1.1.2
-	github.com/rancher/machine => github.com/rancher/machine v0.15.0-rancher100 // aks-operator requires rancher99 but rancher100 should not break it.
-	github.com/rancher/rancher/pkg/apis => ./pkg/apis
-	github.com/rancher/rancher/pkg/client => ./pkg/client
+	github.com/ranger/machine => github.com/ranger/machine v0.15.0-ranger100 // aks-operator requires ranger99 but ranger100 should not break it.
+	github.com/ranger/ranger/pkg/apis => ./pkg/apis
+	github.com/ranger/ranger/pkg/client => ./pkg/client
 
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc => go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.20.0
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp => go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.20.0
@@ -22,13 +22,13 @@ replace (
 	go.opentelemetry.io/otel/trace => go.opentelemetry.io/otel/trace v0.20.0
 	go.opentelemetry.io/proto/otlp => go.opentelemetry.io/proto/otlp v0.7.0
 
-	helm.sh/helm/v3 => github.com/rancher/helm/v3 v3.9.0-rancher1
+	helm.sh/helm/v3 => github.com/ranger/helm/v3 v3.9.0-ranger1
 	k8s.io/api => k8s.io/api v0.25.4
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.25.4
 	k8s.io/apimachinery => k8s.io/apimachinery v0.25.4
 	k8s.io/apiserver => k8s.io/apiserver v0.25.4
 	k8s.io/cli-runtime => k8s.io/cli-runtime v0.25.4
-	k8s.io/client-go => github.com/rancher/client-go v1.25.4-rancher1
+	k8s.io/client-go => github.com/ranger/client-go v1.25.4-ranger1
 	k8s.io/cloud-provider => k8s.io/cloud-provider v0.25.4
 	k8s.io/cluster-bootstrap => k8s.io/cluster-bootstrap v0.25.4
 	k8s.io/code-generator => k8s.io/code-generator v0.25.4
@@ -50,7 +50,7 @@ replace (
 	k8s.io/pod-security-admission => k8s.io/pod-security-admission v0.25.4
 	k8s.io/sample-apiserver => k8s.io/sample-apiserver v0.25.4
 
-	sigs.k8s.io/aws-iam-authenticator => github.com/rancher/aws-iam-authenticator v0.5.9-0.20220713170329-78acb8c83863
+	sigs.k8s.io/aws-iam-authenticator => github.com/ranger/aws-iam-authenticator v0.5.9-0.20220713170329-78acb8c83863
 	sigs.k8s.io/cluster-api => sigs.k8s.io/cluster-api v1.2.12
 )
 
@@ -102,26 +102,26 @@ require (
 	github.com/prometheus/client_golang v1.14.0
 	github.com/prometheus/client_model v0.3.0
 	github.com/prometheus/common v0.37.0
-	github.com/rancher/aks-operator v1.1.2
-	github.com/rancher/apiserver v0.0.0-20230515173455-c3b182bdbf7d
-	github.com/rancher/channelserver v0.5.1-0.20220405170618-28c9b37deff1
-	github.com/rancher/dynamiclistener v0.3.5
-	github.com/rancher/eks-operator v1.2.0
-	github.com/rancher/fleet/pkg/apis v0.0.0-20230605094423-ddbb43505e80
-	github.com/rancher/gke-operator v1.1.5
-	github.com/rancher/kubernetes-provider-detector v0.1.5
-	github.com/rancher/lasso v0.0.0-20230428185353-36908edf817b
-	github.com/rancher/lasso/controller-runtime v0.0.0-20230502204209-3eb356f3e8cf
-	github.com/rancher/machine v0.15.0-rancher99
-	github.com/rancher/norman v0.0.0-20230426211126-d3552b018687
-	github.com/rancher/rancher/pkg/apis v0.0.0
-	github.com/rancher/rancher/pkg/client v0.0.0
-	github.com/rancher/rdns-server v0.0.0-20180802070304-bf662911db6a
-	github.com/rancher/remotedialer v0.2.6-0.20220624190122-ea57207bf2b8
-	github.com/rancher/rke v1.4.8-rc1
-	github.com/rancher/steve v0.0.0-20230609202141-bf2e9655f5dd
-	github.com/rancher/system-upgrade-controller/pkg/apis v0.0.0-20210727200656-10b094e30007
-	github.com/rancher/wrangler v1.1.1
+	github.com/ranger/aks-operator v1.1.2
+	github.com/ranger/apiserver v0.0.0-20230515173455-c3b182bdbf7d
+	github.com/ranger/channelserver v0.5.1-0.20220405170618-28c9b37deff1
+	github.com/ranger/dynamiclistener v0.3.5
+	github.com/ranger/eks-operator v1.2.0
+	github.com/ranger/fleet/pkg/apis v0.0.0-20230605094423-ddbb43505e80
+	github.com/ranger/gke-operator v1.1.5
+	github.com/ranger/kubernetes-provider-detector v0.1.5
+	github.com/ranger/lasso v0.0.0-20230428185353-36908edf817b
+	github.com/ranger/lasso/controller-runtime v0.0.0-20230502204209-3eb356f3e8cf
+	github.com/ranger/machine v0.15.0-ranger99
+	github.com/ranger/norman v0.0.0-20230426211126-d3552b018687
+	github.com/ranger/ranger/pkg/apis v0.0.0
+	github.com/ranger/ranger/pkg/client v0.0.0
+	github.com/ranger/rdns-server v0.0.0-20180802070304-bf662911db6a
+	github.com/ranger/remotedialer v0.2.6-0.20220624190122-ea57207bf2b8
+	github.com/ranger/rke v1.4.8-rc1
+	github.com/ranger/steve v0.0.0-20230609202141-bf2e9655f5dd
+	github.com/ranger/system-upgrade-controller/pkg/apis v0.0.0-20210727200656-10b094e30007
+	github.com/ranger/wrangler v1.1.1
 	github.com/robfig/cron v1.1.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.8.4

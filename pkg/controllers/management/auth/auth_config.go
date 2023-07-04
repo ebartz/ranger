@@ -5,11 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/rancher/norman/objectclient"
-	"github.com/rancher/rancher/pkg/auth/cleanup"
-	"github.com/rancher/rancher/pkg/auth/providerrefresh"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/norman/objectclient"
+	"github.com/ranger/ranger/pkg/auth/cleanup"
+	"github.com/ranger/ranger/pkg/auth/providerrefresh"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
 	"github.com/sirupsen/logrus"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -23,13 +23,13 @@ const (
 	// CleanupAnnotation exists to prevent admins from running the cleanup routine in two scenarios:
 	// 1. When the provider has not been enabled or deliberately disabled, and thus does not need cleanup.
 	// 2. When the value of the annotation is 'user-locked', set manually by admins in advance.
-	// Rancher will run cleanup only if the provider becomes disabled,
+	// Ranger will run cleanup only if the provider becomes disabled,
 	// and the annotation's value is 'unlocked'.
 	CleanupAnnotation = "management.cattle.io/auth-provider-cleanup"
 
 	CleanupUnlocked      = "unlocked"
 	CleanupUserLocked    = "user-locked"
-	CleanupRancherLocked = "rancher-locked"
+	CleanupRangerLocked = "ranger-locked"
 )
 
 // CleanupService performs a cleanup of auxiliary resources belonging to a particular auth provider type.
@@ -83,7 +83,7 @@ func (ac *authConfigController) setCleanupAnnotation(unstructuredObj *unstructur
 }
 
 func (ac *authConfigController) sync(key string, obj *v3.AuthConfig) (runtime.Object, error) {
-	// If obj is nil, the auth config has been deleted. Rancher currently does not handle deletions gracefully,
+	// If obj is nil, the auth config has been deleted. Ranger currently does not handle deletions gracefully,
 	// meaning it does not perform resource cleanup. Admins should disable an auth provider instead of deleting its auth config.
 	if obj == nil {
 		return nil, nil
@@ -103,13 +103,13 @@ func (ac *authConfigController) sync(key string, obj *v3.AuthConfig) (runtime.Ob
 		if obj.Enabled {
 			value = CleanupUnlocked
 		} else {
-			value = CleanupRancherLocked
+			value = CleanupRangerLocked
 		}
 		ac.setCleanupAnnotation(unstructuredObj, value)
 		return ac.updateAuthConfig(unstructuredObj, obj)
 	}
 
-	if obj.Enabled && value == CleanupRancherLocked {
+	if obj.Enabled && value == CleanupRangerLocked {
 		ac.setCleanupAnnotation(unstructuredObj, CleanupUnlocked)
 		return ac.updateAuthConfig(unstructuredObj, obj)
 	}
@@ -132,10 +132,10 @@ func (ac *authConfigController) sync(key string, obj *v3.AuthConfig) (runtime.Ob
 
 			// Third, lock the config after cleanup and commit any updates to it.
 			logrus.Infof("The resources of the auth provider %s have been cleaned up successfully, and the auth config fields have been reset. Locking down the cleanup operation.", obj.Name)
-			ac.setCleanupAnnotation(unstructuredObj, CleanupRancherLocked)
+			ac.setCleanupAnnotation(unstructuredObj, CleanupRangerLocked)
 			return ac.updateAuthConfig(unstructuredObj, obj)
-		case CleanupRancherLocked:
-			logrus.Infof(refusalFmt, obj.Name, CleanupAnnotation, CleanupRancherLocked)
+		case CleanupRangerLocked:
+			logrus.Infof(refusalFmt, obj.Name, CleanupAnnotation, CleanupRangerLocked)
 			return obj, nil
 		case CleanupUserLocked:
 			logrus.Infof(refusalFmt, obj.Name, CleanupAnnotation, CleanupUserLocked)

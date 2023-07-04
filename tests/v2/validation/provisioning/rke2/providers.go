@@ -3,20 +3,20 @@ package rke2
 import (
 	"fmt"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	"github.com/rancher/rancher/tests/framework/extensions/cloudcredentials"
-	"github.com/rancher/rancher/tests/framework/extensions/cloudcredentials/aws"
-	"github.com/rancher/rancher/tests/framework/extensions/cloudcredentials/azure"
-	"github.com/rancher/rancher/tests/framework/extensions/cloudcredentials/digitalocean"
-	"github.com/rancher/rancher/tests/framework/extensions/cloudcredentials/harvester"
-	"github.com/rancher/rancher/tests/framework/extensions/cloudcredentials/linode"
-	"github.com/rancher/rancher/tests/framework/extensions/cloudcredentials/vsphere"
-	"github.com/rancher/rancher/tests/framework/extensions/machinepools"
-	"github.com/rancher/rancher/tests/v2/validation/provisioning"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	"github.com/ranger/ranger/tests/framework/extensions/cloudcredentials"
+	"github.com/ranger/ranger/tests/framework/extensions/cloudcredentials/aws"
+	"github.com/ranger/ranger/tests/framework/extensions/cloudcredentials/azure"
+	"github.com/ranger/ranger/tests/framework/extensions/cloudcredentials/digitalocean"
+	"github.com/ranger/ranger/tests/framework/extensions/cloudcredentials/harvester"
+	"github.com/ranger/ranger/tests/framework/extensions/cloudcredentials/linode"
+	"github.com/ranger/ranger/tests/framework/extensions/cloudcredentials/vsphere"
+	"github.com/ranger/ranger/tests/framework/extensions/machinepools"
+	"github.com/ranger/ranger/tests/v2/validation/provisioning"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
 
-type CloudCredFunc func(rancherClient *rancher.Client) (*cloudcredentials.CloudCredential, error)
+type CloudCredFunc func(rangerClient *ranger.Client) (*cloudcredentials.CloudCredential, error)
 type MachinePoolFunc func(generatedPoolName, namespace string) *unstructured.Unstructured
 
 type Provider struct {

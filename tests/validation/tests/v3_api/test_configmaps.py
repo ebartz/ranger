@@ -1,5 +1,5 @@
 from .common import *  # NOQA
-from rancher import ApiError
+from ranger import ApiError
 
 CLUSTER_NAME = os.environ.get("CLUSTER_NAME", "")
 

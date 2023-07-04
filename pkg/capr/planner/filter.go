@@ -3,10 +3,10 @@ package planner
 import (
 	"context"
 
-	"github.com/rancher/channelserver/pkg/model"
-	"github.com/rancher/norman/types/convert"
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/capr"
+	"github.com/ranger/channelserver/pkg/model"
+	"github.com/ranger/norman/types/convert"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/capr"
 )
 
 func filterConfigData(config map[string]interface{}, controlPlane *rkev1.RKEControlPlane, entry *planEntry) {

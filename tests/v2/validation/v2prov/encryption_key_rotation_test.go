@@ -7,17 +7,17 @@ import (
 	"testing"
 	"time"
 
-	apiv1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/kubeapi"
-	"github.com/rancher/rancher/tests/framework/extensions/kubeapi/secrets"
-	namegen "github.com/rancher/rancher/tests/framework/pkg/namegenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
-	"github.com/rancher/rancher/tests/integration/pkg/defaults"
+	apiv1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/kubeapi"
+	"github.com/ranger/ranger/tests/framework/extensions/kubeapi/secrets"
+	namegen "github.com/ranger/ranger/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
+	"github.com/ranger/ranger/tests/integration/pkg/defaults"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	corev1 "k8s.io/api/core/v1"
@@ -28,7 +28,7 @@ import (
 type V2ProvEncryptionKeyRotationTestSuite struct {
 	suite.Suite
 	session     *session.Session
-	client      *rancher.Client
+	client      *ranger.Client
 	clusterName string
 }
 
@@ -55,15 +55,15 @@ func (r *V2ProvEncryptionKeyRotationTestSuite) SetupSuite() {
 	testSession := session.NewSession()
 	r.session = testSession
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(r.T(), err)
 
 	r.client = client
 
-	r.clusterName = r.client.RancherConfig.ClusterName
+	r.clusterName = r.client.RangerConfig.ClusterName
 }
 
-func rotateEncryptionKeys(t *testing.T, client *rancher.Client, steveID string, generation int64, timeout time.Duration) {
+func rotateEncryptionKeys(t *testing.T, client *ranger.Client, steveID string, generation int64, timeout time.Duration) {
 	t.Logf("Applying encryption key rotation generation %d for cluster %s", generation, steveID)
 
 	kubeProvisioningClient, err := client.GetKubeAPIProvisioningClient()
@@ -104,7 +104,7 @@ func rotateEncryptionKeys(t *testing.T, client *rancher.Client, steveID string, 
 	t.Logf("Successfully completed encryption key rotation for %s", cluster.ObjectMeta.Name)
 }
 
-func createSecretsForCluster(t *testing.T, client *rancher.Client, steveID string, scale int) {
+func createSecretsForCluster(t *testing.T, client *ranger.Client, steveID string, scale int) {
 	t.Logf("Creating %d secrets in namespace default for encryption key rotation", scale)
 
 	_, clusterName, found := strings.Cut(steveID, "/")
@@ -149,7 +149,7 @@ func (r *V2ProvEncryptionKeyRotationTestSuite) TestEncryptionKeyRotation() {
 	})
 }
 
-func IsAtLeast(t *testing.T, client *rancher.Client, namespace, name string, phase rkev1.RotateEncryptionKeysPhase) kwait.ConditionFunc {
+func IsAtLeast(t *testing.T, client *ranger.Client, namespace, name string, phase rkev1.RotateEncryptionKeysPhase) kwait.ConditionFunc {
 	return func() (ready bool, err error) {
 		kubeRKEClient, err := client.GetKubeAPIRKEClient()
 		require.NoError(t, err)

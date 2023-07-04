@@ -1,7 +1,7 @@
 {
   "actions": {},
   "links": {
-    "self": "https://rancherurl/v1/secrets/test-ns-2"
+    "self": "https://rangerurl/v1/secrets/test-ns-2"
   },
   "resourceType": "secret",
   "revision": "100",

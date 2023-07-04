@@ -1,17 +1,17 @@
 #!groovy
 node {
-    def rootPath = "/root/go/src/github.com/rancher/rancher/tests/v2/validation/"
+    def rootPath = "/root/go/src/github.com/ranger/ranger/tests/v2/validation/"
     def job_name = "${JOB_NAME}"
     if (job_name.contains('/')) { 
       job_names = job_name.split('/')
       job_name = job_names[job_names.size() - 1] 
     }
     def testContainer = "${job_name}${env.BUILD_NUMBER}_test"
-    def imageName = "rancher-validation-${job_name}${env.BUILD_NUMBER}"
-    def testsDir = "github.com/rancher/rancher/tests/v2/validation/${env.TEST_PACKAGE}"
+    def imageName = "ranger-validation-${job_name}${env.BUILD_NUMBER}"
+    def testsDir = "github.com/ranger/ranger/tests/v2/validation/${env.TEST_PACKAGE}"
     def testResultsOut = "results.xml"
     def envFile = ".env"
-    def rancherConfig = "rancher_env.config"
+    def rangerConfig = "ranger_env.config"
     def branch = "release/v2.7"
     if ("${env.BRANCH}" != "null" && "${env.BRANCH}" != "") {
       branch = "${env.BRANCH}"

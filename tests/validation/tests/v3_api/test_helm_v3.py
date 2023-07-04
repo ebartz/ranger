@@ -2,7 +2,7 @@ from .common import *  # NOQA
 import pytest
 
 CATALOG_NAME = random_test_name("test-v3")
-CATALOG_URL = "https://github.com/rancher/integration-test-charts.git"
+CATALOG_URL = "https://github.com/ranger/integration-test-charts.git"
 BRANCH = "validation-tests"
 MYSQL_EXTERNALID_131 = \
     create_catalog_external_id(CATALOG_NAME, "mysql", "1.3.1")

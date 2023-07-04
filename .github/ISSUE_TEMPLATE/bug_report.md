@@ -7,8 +7,8 @@ assignees: ''
 
 ---
 
-**Rancher Server Setup**
-- Rancher version:
+**Ranger Server Setup**
+- Ranger version:
 - Installation option (Docker install/Helm Chart):
    - If Helm Chart, Kubernetes Cluster and version (RKE1, RKE2, k3s, EKS, etc):
 - Proxy/Cert Details:
@@ -21,7 +21,7 @@ assignees: ''
 * Custom = Running a docker command on a node
 * Imported = Running kubectl apply onto an existing k8s cluster
 * Hosted = EKS, GKE, AKS, etc
- * Infrastructure Provider = Rancher provisioning the nodes using different node drivers (e.g. AWS, Digital Ocean, etc)
+ * Infrastructure Provider = Ranger provisioning the nodes using different node drivers (e.g. AWS, Digital Ocean, etc)
 -->
 
 **User Information**

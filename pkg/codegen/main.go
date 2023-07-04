@@ -5,18 +5,18 @@ import (
 
 	"github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring"
 	monitoringv1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
-	fleet "github.com/rancher/fleet/pkg/apis/fleet.cattle.io/v1alpha1"
-	"github.com/rancher/norman/types"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/codegen/generator"
-	clusterSchema "github.com/rancher/rancher/pkg/schemas/cluster.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/schemas/factory"
-	managementSchema "github.com/rancher/rancher/pkg/schemas/management.cattle.io/v3"
-	publicSchema "github.com/rancher/rancher/pkg/schemas/management.cattle.io/v3public"
-	projectSchema "github.com/rancher/rancher/pkg/schemas/project.cattle.io/v3"
-	planv1 "github.com/rancher/system-upgrade-controller/pkg/apis/upgrade.cattle.io/v1"
-	controllergen "github.com/rancher/wrangler/pkg/controller-gen"
-	"github.com/rancher/wrangler/pkg/controller-gen/args"
+	fleet "github.com/ranger/fleet/pkg/apis/fleet.cattle.io/v1alpha1"
+	"github.com/ranger/norman/types"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/codegen/generator"
+	clusterSchema "github.com/ranger/ranger/pkg/schemas/cluster.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/schemas/factory"
+	managementSchema "github.com/ranger/ranger/pkg/schemas/management.cattle.io/v3"
+	publicSchema "github.com/ranger/ranger/pkg/schemas/management.cattle.io/v3public"
+	projectSchema "github.com/ranger/ranger/pkg/schemas/project.cattle.io/v3"
+	planv1 "github.com/ranger/system-upgrade-controller/pkg/apis/upgrade.cattle.io/v1"
+	controllergen "github.com/ranger/wrangler/pkg/controller-gen"
+	"github.com/ranger/wrangler/pkg/controller-gen/args"
 	appsv1 "k8s.io/api/apps/v1"
 	scalingv2 "k8s.io/api/autoscaling/v2"
 	batchv1 "k8s.io/api/batch/v1"
@@ -35,7 +35,7 @@ func main() {
 	os.Unsetenv("GOPATH")
 
 	controllergen.Run(args.Options{
-		OutputPackage: "github.com/rancher/rancher/pkg/generated",
+		OutputPackage: "github.com/ranger/ranger/pkg/generated",
 		Boilerplate:   "scripts/boilerplate.go.txt",
 		Groups: map[string]args.Group{
 			"management.cattle.io": {

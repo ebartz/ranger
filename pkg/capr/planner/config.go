@@ -10,18 +10,18 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/rancher/norman/types/values"
-	rkev1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1/plan"
-	"github.com/rancher/rancher/pkg/capr"
-	"github.com/rancher/rancher/pkg/controllers/management/secretmigrator"
-	"github.com/rancher/rancher/pkg/nodeconfig"
-	"github.com/rancher/rancher/pkg/provisioningv2/image"
-	"github.com/rancher/wrangler/pkg/data"
-	"github.com/rancher/wrangler/pkg/data/convert"
-	corecontrollers "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
-	"github.com/rancher/wrangler/pkg/kv"
-	"github.com/rancher/wrangler/pkg/yaml"
+	"github.com/ranger/norman/types/values"
+	rkev1 "github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/apis/rke.cattle.io/v1/plan"
+	"github.com/ranger/ranger/pkg/capr"
+	"github.com/ranger/ranger/pkg/controllers/management/secretmigrator"
+	"github.com/ranger/ranger/pkg/nodeconfig"
+	"github.com/ranger/ranger/pkg/provisioningv2/image"
+	"github.com/ranger/wrangler/pkg/data"
+	"github.com/ranger/wrangler/pkg/data/convert"
+	corecontrollers "github.com/ranger/wrangler/pkg/generated/controllers/core/v1"
+	"github.com/ranger/wrangler/pkg/kv"
+	"github.com/ranger/wrangler/pkg/yaml"
 	"github.com/sirupsen/logrus"
 	v1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -195,19 +195,19 @@ func isVSphereProvider(controlPlane *rkev1.RKEControlPlane, entry *planEntry) (b
 	if err := addUserConfig(data, controlPlane, entry); err != nil {
 		return false, err
 	}
-	return data["cloud-provider-name"] == "rancher-vsphere", nil
+	return data["cloud-provider-name"] == "ranger-vsphere", nil
 }
 
 func addVSphereCharts(controlPlane *rkev1.RKEControlPlane, entry *planEntry) (map[string]interface{}, error) {
 	if isVSphere, err := isVSphereProvider(controlPlane, entry); err != nil {
 		return nil, err
-	} else if isVSphere && controlPlane.Spec.ChartValues.Data["rancher-vsphere-csi"] == nil {
+	} else if isVSphere && controlPlane.Spec.ChartValues.Data["ranger-vsphere-csi"] == nil {
 		// ensure we have this chart config so that the global.cattle.clusterId is set
 		newData := controlPlane.Spec.ChartValues.DeepCopy()
 		if newData.Data == nil {
 			newData.Data = map[string]interface{}{}
 		}
-		newData.Data["rancher-vsphere-csi"] = map[string]interface{}{}
+		newData.Data["ranger-vsphere-csi"] = map[string]interface{}{}
 		return newData.Data, nil
 	}
 
@@ -273,7 +273,7 @@ func (p *Planner) addChartConfigs(nodePlan plan.NodePlan, controlPlane *rkev1.RK
 
 	nodePlan.Files = append(nodePlan.Files, plan.File{
 		Content: base64.StdEncoding.EncodeToString(contents),
-		Path:    fmt.Sprintf("/var/lib/rancher/%s/server/manifests/rancher/managed-chart-config.yaml", capr.GetRuntime(controlPlane.Spec.KubernetesVersion)),
+		Path:    fmt.Sprintf("/var/lib/ranger/%s/server/manifests/ranger/managed-chart-config.yaml", capr.GetRuntime(controlPlane.Spec.KubernetesVersion)),
 		Dynamic: true,
 	})
 
@@ -454,7 +454,7 @@ func checkForSecretFormat(secretFieldName, configValue string) (bool, string, st
 
 // configFile renders the full path to a config file based on the passed in filename and controlPlane
 // If the desired filename does not have a defined path template in the `filePaths` map, the function will fall back
-// to rendering a filepath based on `/var/lib/rancher/%s/etc/config-files/%s` where the first %s is the runtime and
+// to rendering a filepath based on `/var/lib/ranger/%s/etc/config-files/%s` where the first %s is the runtime and
 // second %s is the filename.
 func configFile(controlPlane *rkev1.RKEControlPlane, filename string) string {
 	if path := filePaths[filename]; path != "" {
@@ -463,7 +463,7 @@ func configFile(controlPlane *rkev1.RKEControlPlane, filename string) string {
 		}
 		return path
 	}
-	return fmt.Sprintf("/var/lib/rancher/%s/etc/config-files/%s",
+	return fmt.Sprintf("/var/lib/ranger/%s/etc/config-files/%s",
 		capr.GetRuntime(controlPlane.Spec.KubernetesVersion), filename)
 }
 

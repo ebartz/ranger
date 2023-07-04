@@ -11,16 +11,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rancher/norman/types/slice"
-	"github.com/rancher/rancher/pkg/kontainer-engine/drivers/rke/rkecerts"
-	"github.com/rancher/rancher/pkg/kontainer-engine/drivers/util"
-	"github.com/rancher/rancher/pkg/kontainer-engine/types"
-	"github.com/rancher/rke/cluster"
-	"github.com/rancher/rke/cmd"
-	"github.com/rancher/rke/hosts"
-	"github.com/rancher/rke/log"
-	"github.com/rancher/rke/pki"
-	v3 "github.com/rancher/rke/types"
+	"github.com/ranger/norman/types/slice"
+	"github.com/ranger/ranger/pkg/kontainer-engine/drivers/rke/rkecerts"
+	"github.com/ranger/ranger/pkg/kontainer-engine/drivers/util"
+	"github.com/ranger/ranger/pkg/kontainer-engine/types"
+	"github.com/ranger/rke/cluster"
+	"github.com/ranger/rke/cmd"
+	"github.com/ranger/rke/hosts"
+	"github.com/ranger/rke/log"
+	"github.com/ranger/rke/pki"
+	v3 "github.com/ranger/rke/types"
 	"github.com/sirupsen/logrus"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -30,13 +30,13 @@ import (
 
 const (
 	kubeConfigFile   = "kube_config_cluster.yml"
-	rancherPath      = "./management-state/rke/"
+	rangerPath      = "./management-state/rke/"
 	clusterStateFile = "cluster.rkestate"
 )
 
 // Driver is the struct of rke driver
 
-type WrapTransportFactory func(config *v3.RancherKubernetesEngineConfig) transport.WrapperFunc
+type WrapTransportFactory func(config *v3.RangerKubernetesEngineConfig) transport.WrapperFunc
 
 type Driver struct {
 	DockerDialer         hosts.DialerFactory
@@ -74,7 +74,7 @@ func NewDriver() types.Driver {
 	return d
 }
 
-func (d *Driver) wrapTransport(config *v3.RancherKubernetesEngineConfig) transport.WrapperFunc {
+func (d *Driver) wrapTransport(config *v3.RangerKubernetesEngineConfig) transport.WrapperFunc {
 	if d.WrapTransportFactory == nil {
 		return nil
 	}
@@ -429,8 +429,8 @@ func (d *Driver) RemoveLegacyServiceAccount(ctx context.Context, info *types.Clu
 }
 
 func (d *Driver) restore(info *types.ClusterInfo) (string, error) {
-	os.MkdirAll(rancherPath, 0700)
-	dir, err := ioutil.TempDir(rancherPath, "rke-")
+	os.MkdirAll(rangerPath, 0700)
+	dir, err := ioutil.TempDir(rangerPath, "rke-")
 	if err != nil {
 		return "", err
 	}
@@ -480,7 +480,7 @@ func (d *Driver) cleanup(stateDir string) {
 	}
 }
 
-func (d *Driver) getFlags(rkeConfig v3.RancherKubernetesEngineConfig, stateDir string) (hosts.DialersOptions, cluster.ExternalFlags) {
+func (d *Driver) getFlags(rkeConfig v3.RangerKubernetesEngineConfig, stateDir string) (hosts.DialersOptions, cluster.ExternalFlags) {
 	dialers := hosts.GetDialerOptions(d.DockerDialer, d.LocalDialer, d.wrapTransport(&rkeConfig))
 	externalFlags := cluster.GetExternalFlags(false, false, false, true, stateDir, "")
 	return dialers, externalFlags
@@ -502,7 +502,7 @@ func clusterState(stateDir string) string {
 
 func clusterUp(
 	ctx context.Context,
-	rkeConfig *v3.RancherKubernetesEngineConfig,
+	rkeConfig *v3.RangerKubernetesEngineConfig,
 	dialers hosts.DialersOptions,
 	externalFlags cluster.ExternalFlags, data map[string]interface{}) (string, string, string, string, map[string]pki.CertificatePKI, error) {
 	if err := cmd.ClusterInit(ctx, rkeConfig, dialers, externalFlags); err != nil {

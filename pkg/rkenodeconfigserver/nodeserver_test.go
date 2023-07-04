@@ -4,9 +4,9 @@ import (
 	"strings"
 	"testing"
 
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/taints"
-	rketypes "github.com/rancher/rke/types"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/taints"
+	rketypes "github.com/ranger/rke/types"
 	"github.com/stretchr/testify/assert"
 	v1 "k8s.io/api/core/v1"
 )
@@ -82,7 +82,7 @@ func getKubeletProcess(commands []string) map[string]rketypes.Process {
 func getAugmentedKubeletProcesses() map[string]rketypes.Process {
 	var cluster v3.Cluster
 	command := []string{"dummy"}
-	binds := []string{"/var/lib/kubelet:/var/lib/kubelet:shared,z", "/var/lib/rancher:/var/lib/rancher:shared,z"}
+	binds := []string{"/var/lib/kubelet:/var/lib/kubelet:shared,z", "/var/lib/ranger:/var/lib/ranger:shared,z"}
 	processes := map[string]rketypes.Process{
 		"kubelet": rketypes.Process{
 			Name:    "kubelet",

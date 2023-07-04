@@ -1,7 +1,7 @@
 import pytest
 from .common import random_str
 import time
-from rancher import ApiError
+from ranger import ApiError
 
 
 def ns_default_quota():

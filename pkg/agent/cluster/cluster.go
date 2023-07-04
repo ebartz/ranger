@@ -10,16 +10,16 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/serviceaccounttoken"
-	"github.com/rancher/wrangler/pkg/kubeconfig"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/serviceaccounttoken"
+	"github.com/ranger/wrangler/pkg/kubeconfig"
 	coreV1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 )
 
 const (
-	rancherCredentialsFolder = "/cattle-credentials"
+	rangerCredentialsFolder = "/cattle-credentials"
 	urlFilename              = "url"
 	tokenFilename            = "token"
 	namespaceFilename        = "namespace"
@@ -114,7 +114,7 @@ func getenv(env string) (string, error) {
 }
 
 func readKey(key string) (string, error) {
-	bytes, err := ioutil.ReadFile(path.Join(rancherCredentialsFolder, key))
+	bytes, err := ioutil.ReadFile(path.Join(rangerCredentialsFolder, key))
 	if err != nil {
 		return "", err
 	}

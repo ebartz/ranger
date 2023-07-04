@@ -5,19 +5,19 @@ import (
 	"fmt"
 	"testing"
 
-	apiv1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	"github.com/rancher/rancher/tests/framework/clients/corral"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters/bundledclusters"
-	"github.com/rancher/rancher/tests/framework/extensions/defaults"
-	nodestat "github.com/rancher/rancher/tests/framework/extensions/nodes"
-	"github.com/rancher/rancher/tests/framework/extensions/tokenregistration"
-	"github.com/rancher/rancher/tests/framework/extensions/workloads/pods"
-	namegen "github.com/rancher/rancher/tests/framework/pkg/namegenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
-	"github.com/rancher/rancher/tests/v2/validation/provisioning"
+	apiv1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	"github.com/ranger/ranger/tests/framework/clients/corral"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters/bundledclusters"
+	"github.com/ranger/ranger/tests/framework/extensions/defaults"
+	nodestat "github.com/ranger/ranger/tests/framework/extensions/nodes"
+	"github.com/ranger/ranger/tests/framework/extensions/tokenregistration"
+	"github.com/ranger/ranger/tests/framework/extensions/workloads/pods"
+	namegen "github.com/ranger/ranger/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
+	"github.com/ranger/ranger/tests/v2/validation/provisioning"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -28,7 +28,7 @@ const (
 	rke2k3sNodeCorralName      = "rke2k3sregisterNode"
 )
 
-func testProvisionAirgapRKE2K3SCustomCluster(t *testing.T, client *rancher.Client, nodesAndRoles map[int]string, corralImage, cni, kubeVersion string, cleanup bool, advancedOptions provisioning.AdvancedOptions) string {
+func testProvisionAirgapRKE2K3SCustomCluster(t *testing.T, client *ranger.Client, nodesAndRoles map[int]string, corralImage, cni, kubeVersion string, cleanup bool, advancedOptions provisioning.AdvancedOptions) string {
 	namespace := "fleet-default"
 
 	clusterName := namegen.AppendRandomString(rke2k3sAirgapCustomCluster)

@@ -4,10 +4,10 @@ import (
 	"fmt"
 
 	mVersion "github.com/mcuadros/go-version"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/namespace"
-	rketypes "github.com/rancher/rke/types"
-	"github.com/rancher/rke/util"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/namespace"
+	rketypes "github.com/ranger/rke/types"
+	"github.com/ranger/rke/util"
 	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -98,11 +98,11 @@ func GetRKEK8sServiceOptions(k8sVersion string, svcOptionLister v3.RkeK8sService
 }
 
 func GetK8sVersionInfo(
-	rancherVersion string,
+	rangerVersion string,
 	rkeSysImages map[string]rketypes.RKESystemImages,
 	linuxSvcOptions map[string]rketypes.KubernetesServicesOptions,
 	windowsSvcOptions map[string]rketypes.KubernetesServicesOptions,
-	rancherVersions map[string]rketypes.K8sVersionInfo,
+	rangerVersions map[string]rketypes.K8sVersionInfo,
 ) (linuxInfo, windowsInfo *VersionInfo) {
 
 	linuxInfo = newVersionInfo()
@@ -110,11 +110,11 @@ func GetK8sVersionInfo(
 
 	maxVersionForMajorK8sVersion := map[string]string{}
 	for k8sVersion := range rkeSysImages {
-		if rancherVersionInfo, ok := rancherVersions[k8sVersion]; ok && toIgnoreForAllK8s(rancherVersionInfo, rancherVersion) {
+		if rangerVersionInfo, ok := rangerVersions[k8sVersion]; ok && toIgnoreForAllK8s(rangerVersionInfo, rangerVersion) {
 			continue
 		}
 		majorVersion := util.GetTagMajorVersion(k8sVersion)
-		if majorVersionInfo, ok := rancherVersions[majorVersion]; ok && toIgnoreForK8sCurrent(majorVersionInfo, rancherVersion) {
+		if majorVersionInfo, ok := rangerVersions[majorVersion]; ok && toIgnoreForK8sCurrent(majorVersionInfo, rangerVersion) {
 			continue
 		}
 		if curr, ok := maxVersionForMajorK8sVersion[majorVersion]; !ok || mVersion.Compare(k8sVersion, curr, ">") {

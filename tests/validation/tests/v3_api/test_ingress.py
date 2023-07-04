@@ -3,9 +3,9 @@ This test suite contains tests to validate ingress create/edit/delete with
 different possible way and with different roles of users.
 Test requirement:
 Below Env variables need to set
-CATTLE_TEST_URL - url to rancher server
-ADMIN_TOKEN - Admin token from rancher
-USER_TOKEN - User token from rancher
+CATTLE_TEST_URL - url to ranger server
+ADMIN_TOKEN - Admin token from ranger
+USER_TOKEN - User token from ranger
 RANCHER_CLUSTER_NAME - Cluster name to run test on
 RANCHER_TEST_RBAC - Boolean (Optional), To run role based tests.
 """
@@ -418,7 +418,7 @@ def test_rbac_ingress_create(role):
     """
     This test creates first workload as cluster owner and then creates ingress
     as user i.e. role in parameter and validates the ingress created.
-    @param role: User role in rancher eg. project owner, project member etc
+    @param role: User role in ranger eg. project owner, project member etc
     """
     token = rbac_get_user_token_by_role(role)
     project = rbac_get_project()
@@ -451,7 +451,7 @@ def test_rbac_ingress_edit(role):
     """
     This test creates two workloads and then creates ingress with two targets
     and validates it.
-    @param role: User role in rancher eg. project owner, project member etc
+    @param role: User role in ranger eg. project owner, project member etc
     """
     c_owner_token = rbac_get_user_token_by_role(CLUSTER_OWNER)
     token = rbac_get_user_token_by_role(role)
@@ -490,7 +490,7 @@ def test_rbac_ingress_delete(role):
     """
     This test creates two workloads and then creates ingress with two targets
     and validates it.
-    @param role: User role in rancher eg. project owner, project member etc
+    @param role: User role in ranger eg. project owner, project member etc
     """
     c_owner_token = rbac_get_user_token_by_role(CLUSTER_OWNER)
     token = rbac_get_user_token_by_role(role)

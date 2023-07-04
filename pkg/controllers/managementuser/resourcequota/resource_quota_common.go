@@ -3,10 +3,10 @@ package resourcequota
 import (
 	"encoding/json"
 
-	"github.com/rancher/norman/types/convert"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/ref"
+	"github.com/ranger/norman/types/convert"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/ref"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -40,7 +40,7 @@ func convertResourceLimitResourceQuotaSpec(limit *v32.ResourceQuotaLimit) (*core
 	return quotaSpec, err
 }
 
-// convertProjectResourceLimitToResourceList tries to convert a Rancher-defined resource quota limit to its native Kubernetes notation.
+// convertProjectResourceLimitToResourceList tries to convert a Ranger-defined resource quota limit to its native Kubernetes notation.
 func convertProjectResourceLimitToResourceList(limit *v32.ResourceQuotaLimit) (corev1.ResourceList, error) {
 	in, err := json.Marshal(limit)
 	if err != nil {
@@ -164,8 +164,8 @@ func getProjectResourceQuotaLimit(ns *corev1.Namespace, projectLister v3.Project
 	project, err := projectLister.Get(projectNamespace, projectName)
 	if err != nil || project.Spec.ResourceQuota == nil {
 		if errors.IsNotFound(err) {
-			// If Rancher is unaware of a project, we should ignore trying to get the resource quota limit
-			// A non-existent project is likely managed by another Rancher (e.g. Hosted Rancher)
+			// If Ranger is unaware of a project, we should ignore trying to get the resource quota limit
+			// A non-existent project is likely managed by another Ranger (e.g. Hosted Ranger)
 			return nil, "", nil
 		}
 		return nil, "", err
@@ -185,8 +185,8 @@ func getProjectNamespaceDefaultQuota(ns *corev1.Namespace, projectLister v3.Proj
 	project, err := projectLister.Get(projectNamespace, projectName)
 	if err != nil || project.Spec.ResourceQuota == nil {
 		if errors.IsNotFound(err) {
-			// If Rancher is unaware of a project, we should ignore trying to get the default namespace quota
-			// A non-existent project is likely managed by another Rancher (e.g. Hosted Rancher)
+			// If Ranger is unaware of a project, we should ignore trying to get the default namespace quota
+			// A non-existent project is likely managed by another Ranger (e.g. Hosted Ranger)
 			return nil, nil
 		}
 		return nil, err
@@ -206,8 +206,8 @@ func getProjectContainerDefaultLimit(ns *corev1.Namespace, projectLister v3.Proj
 	project, err := projectLister.Get(projectNamespace, projectName)
 	if err != nil {
 		if errors.IsNotFound(err) {
-			// If Rancher is unaware of a project, we should ignore trying to get the default container limit
-			// A non-existent project is likely managed by another Rancher (e.g. Hosted Rancher)
+			// If Ranger is unaware of a project, we should ignore trying to get the default container limit
+			// A non-existent project is likely managed by another Ranger (e.g. Hosted Ranger)
 			return nil, nil
 		}
 		return nil, err

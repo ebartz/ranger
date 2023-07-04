@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"sort"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	nodehelper "github.com/rancher/rancher/pkg/node"
-	nodeserver "github.com/rancher/rancher/pkg/rkenodeconfigserver"
-	rkeservices "github.com/rancher/rke/services"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	nodehelper "github.com/ranger/ranger/pkg/node"
+	nodeserver "github.com/ranger/ranger/pkg/rkenodeconfigserver"
+	rkeservices "github.com/ranger/rke/services"
 	"github.com/sirupsen/logrus"
 )
 

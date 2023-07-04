@@ -12,7 +12,7 @@ import (
 )
 
 const fakeCommit = "9p8pvpkuorqgf7lq9nrhyp3cc0xh5wejf2g5z1s6"
-const validUrl = "git@github.com:rancher/rancher.git"
+const validUrl = "git@github.com:ranger/ranger.git"
 const invalidUrl = "%1A invalid not real url"
 const testPath = "pkg/git/git_test.go"
 
@@ -53,7 +53,7 @@ func TestClone(t *testing.T) {
 			setTestExitCode(t, test.commandExitCode)
 			err := setMockGitExecutable(t)
 			assert.NoError(t, err, "got error when setting up mock git executable")
-			err = Clone("rancher", test.url, "main")
+			err = Clone("ranger", test.url, "main")
 			if test.wantErr {
 				assert.Error(t, err, "expected an error but did not get one")
 			} else {
@@ -184,7 +184,7 @@ func TestCloneWithDepth(t *testing.T) {
 	}{
 		{
 			name:            "basic clone",
-			path:            "rancher",
+			path:            "ranger",
 			url:             validUrl,
 			branch:          "master",
 			depth:           1,
@@ -194,7 +194,7 @@ func TestCloneWithDepth(t *testing.T) {
 		},
 		{
 			name:            "invalid url",
-			path:            "rancher",
+			path:            "ranger",
 			url:             invalidUrl,
 			branch:          "master",
 			depth:           1,
@@ -204,7 +204,7 @@ func TestCloneWithDepth(t *testing.T) {
 		},
 		{
 			name:            "command error",
-			path:            "rancher",
+			path:            "ranger",
 			url:             validUrl,
 			branch:          "master",
 			depth:           1,

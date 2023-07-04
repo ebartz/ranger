@@ -1,6 +1,6 @@
 ARG RANCHER_TAG=dev
-ARG RANCHER_REPO=rancher
-FROM ${RANCHER_REPO}/rancher:${RANCHER_TAG} as rancher
+ARG RANCHER_REPO=ranger
+FROM ${RANCHER_REPO}/ranger:${RANCHER_TAG} as ranger
 
 FROM registry.suse.com/bci/bci-base:15.4
 ARG ARCH=amd64
@@ -14,17 +14,17 @@ RUN zypper -n install --no-recommends curl ca-certificates jq git-core hostname 
 
 ENV LOGLEVEL_VERSION v0.1.5
 
-RUN curl -sLf https://github.com/rancher/loglevel/releases/download/${LOGLEVEL_VERSION}/loglevel-${ARCH}-${LOGLEVEL_VERSION}.tar.gz | tar xvzf - -C /usr/bin
+RUN curl -sLf https://github.com/ranger/loglevel/releases/download/${LOGLEVEL_VERSION}/loglevel-${ARCH}-${LOGLEVEL_VERSION}.tar.gz | tar xvzf - -C /usr/bin
 
 ARG VERSION=dev
 LABEL io.cattle.agent true
-ENV AGENT_IMAGE rancher/rancher-agent:${VERSION}
+ENV AGENT_IMAGE ranger/ranger-agent:${VERSION}
 ENV CATTLE_RANCHER_WEBHOOK_MIN_VERSION=''
 # For now, this value needs to be manually synced with the one in the main Dockerfile. This pins downstream webhook's version.
 ENV CATTLE_RANCHER_WEBHOOK_VERSION=2.0.5+up0.3.5
 ENV SSL_CERT_DIR /etc/kubernetes/ssl/certs
-COPY --from=rancher /var/lib/rancher-data /var/lib/rancher-data
-COPY --from=rancher /usr/bin/tini /usr/bin/
+COPY --from=ranger /var/lib/ranger-data /var/lib/ranger-data
+COPY --from=ranger /usr/bin/tini /usr/bin/
 COPY agent run.sh kubectl-shell.sh shell-setup.sh /usr/bin/
-WORKDIR /var/lib/rancher
+WORKDIR /var/lib/ranger
 ENTRYPOINT ["run.sh"]

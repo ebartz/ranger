@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rancher/norman/types"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/wrangler"
+	"github.com/ranger/norman/types"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/wrangler"
 	"github.com/sirupsen/logrus"
 	"k8s.io/client-go/tools/cache"
 )
@@ -35,8 +35,8 @@ func CollectionFormatter(apiContext *types.APIContext, collection *types.Generic
 	if !strings.HasSuffix(currContext, "/") {
 		currContext = fmt.Sprintf("%s/", currContext)
 	}
-	collection.Links["rancher-images"] = fmt.Sprintf("%srancher-images", currContext)
-	collection.Links["rancher-windows-images"] = fmt.Sprintf("%srancher-windows-images", currContext)
+	collection.Links["ranger-images"] = fmt.Sprintf("%sranger-images", currContext)
+	collection.Links["ranger-windows-images"] = fmt.Sprintf("%sranger-windows-images", currContext)
 }
 
 const clusterByGenericEngineConfigKey = "genericEngineConfig"

@@ -16,7 +16,7 @@ const (
 	ShibbolethConfigFieldName                = "name"
 	ShibbolethConfigFieldOpenLdapConfig      = "openLdapConfig"
 	ShibbolethConfigFieldOwnerReferences     = "ownerReferences"
-	ShibbolethConfigFieldRancherAPIHost      = "rancherApiHost"
+	ShibbolethConfigFieldRangerAPIHost      = "rangerApiHost"
 	ShibbolethConfigFieldRemoved             = "removed"
 	ShibbolethConfigFieldSpCert              = "spCert"
 	ShibbolethConfigFieldSpKey               = "spKey"
@@ -41,7 +41,7 @@ type ShibbolethConfig struct {
 	Name                string            `json:"name,omitempty" yaml:"name,omitempty"`
 	OpenLdapConfig      *LdapFields       `json:"openLdapConfig,omitempty" yaml:"openLdapConfig,omitempty"`
 	OwnerReferences     []OwnerReference  `json:"ownerReferences,omitempty" yaml:"ownerReferences,omitempty"`
-	RancherAPIHost      string            `json:"rancherApiHost,omitempty" yaml:"rancherApiHost,omitempty"`
+	RangerAPIHost      string            `json:"rangerApiHost,omitempty" yaml:"rangerApiHost,omitempty"`
 	Removed             string            `json:"removed,omitempty" yaml:"removed,omitempty"`
 	SpCert              string            `json:"spCert,omitempty" yaml:"spCert,omitempty"`
 	SpKey               string            `json:"spKey,omitempty" yaml:"spKey,omitempty"`

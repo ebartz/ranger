@@ -3,13 +3,13 @@ package providers
 import (
 	"context"
 
-	"github.com/rancher/norman/store/subtype"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/rancher/pkg/auth/api/secrets"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	"github.com/rancher/rancher/pkg/namespace"
-	managementschema "github.com/rancher/rancher/pkg/schemas/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/types/config"
+	"github.com/ranger/norman/store/subtype"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/ranger/pkg/auth/api/secrets"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	"github.com/ranger/ranger/pkg/namespace"
+	managementschema "github.com/ranger/ranger/pkg/schemas/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/types/config"
 )
 
 var authConfigTypes = []string{

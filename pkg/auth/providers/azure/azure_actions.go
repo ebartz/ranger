@@ -7,14 +7,14 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/api/handler"
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/auth/providers/azure/clients"
-	"github.com/rancher/rancher/pkg/auth/providers/common"
-	client "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	managementschema "github.com/rancher/rancher/pkg/schemas/management.cattle.io/v3"
+	"github.com/ranger/norman/api/handler"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/auth/providers/azure/clients"
+	"github.com/ranger/ranger/pkg/auth/providers/common"
+	client "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	managementschema "github.com/ranger/ranger/pkg/schemas/management.cattle.io/v3"
 	"github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -66,7 +66,7 @@ func (ap *Provider) ConfigureTest(actionName string, action *types.Action, reque
 func (ap *Provider) testAndApply(actionName string, action *types.Action, request *types.APIContext) error {
 	var err error
 	// On any error, delete the cached secret containing the access token to the Microsoft Graph, in case it had been
-	// cached without having sufficient API permissions. Rancher has no precise control over when this secret is cached.
+	// cached without having sufficient API permissions. Ranger has no precise control over when this secret is cached.
 	defer func() {
 		if err != nil {
 			if err = ap.secrets.DeleteNamespaced(common.SecretsNamespace, clients.AccessTokenSecretName, &metav1.DeleteOptions{}); err != nil {
@@ -127,14 +127,14 @@ func (ap *Provider) testAndApply(actionName string, action *types.Action, reques
 }
 
 // Check the current auth config and make sure that the proposed one submitted through the API has up-to-date annotations.
-// Rancher relies on GraphEndpointMigratedAnnotation to choose the right authentication flow and Graph API.
+// Ranger relies on GraphEndpointMigratedAnnotation to choose the right authentication flow and Graph API.
 func migrateNewFlowAnnotation(current, proposed *v32.AzureADConfig) {
 	if IsConfigDeprecated(current) {
 		return
 	}
-	// This covers the case where admins upgrade Rancher to v2.6.7+ without having used Azure AD as the auth provider.
-	// In 2.6.7+, whether Azure AD is later registered or not, Rancher on startup creates the annotation on the template auth config.
-	// But in the case where the auth config had been created on Rancher startup prior to v2.6.7, the annotation would be missing.
+	// This covers the case where admins upgrade Ranger to v2.6.7+ without having used Azure AD as the auth provider.
+	// In 2.6.7+, whether Azure AD is later registered or not, Ranger on startup creates the annotation on the template auth config.
+	// But in the case where the auth config had been created on Ranger startup prior to v2.6.7, the annotation would be missing.
 	// This ensures the annotation is set on initial attempt to set up Azure AD.
 	// This also covers the case where admins want to reconfigure a v2.6.7+ new auth flow setup with a new secret or app.
 	if proposed.ObjectMeta.Annotations == nil {

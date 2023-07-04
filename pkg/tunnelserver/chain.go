@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/rancher/remotedialer"
+	"github.com/ranger/remotedialer"
 	"github.com/sirupsen/logrus"
 )
 

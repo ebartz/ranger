@@ -19,7 +19,7 @@ import (
 
 const (
 	DockerPipe = "\\\\.\\pipe\\docker_engine"
-	WinsPipe   = "\\\\.\\pipe\\rancher_wins"
+	WinsPipe   = "\\\\.\\pipe\\ranger_wins"
 	HostMount  = "c:\\host\\"
 )
 
@@ -180,7 +180,7 @@ func fileExists(path string) bool {
 func getAgentImage() string {
 	agentImage := os.Getenv(AgentImage)
 	if agentImage == "" {
-		agentImage = "rancher/rancher-agent:master"
+		agentImage = "ranger/ranger-agent:master"
 	}
 	return agentImage
 }
@@ -245,11 +245,11 @@ func getPrefixPath() string {
 }
 
 func getScriptPath() string {
-	return filepath.Join(getPrefixPath(), "etc", "rancher", "cleanup.ps1")
+	return filepath.Join(getPrefixPath(), "etc", "ranger", "cleanup.ps1")
 }
 
 func getPowershellPath() string {
-	return filepath.Join(getPrefixPath(), "etc", "rancher", "powershell.exe")
+	return filepath.Join(getPrefixPath(), "etc", "ranger", "powershell.exe")
 }
 
 func usage() string {
@@ -259,7 +259,7 @@ script out of the container and run it locally as administrator. Read the top of
 if you only want to clean pieces of the node.
 
 You can clean an entire node with this one line command:
-docker run rancher/rancher-agent:master -- agent clean script > cleanup.ps1; ./cleanup.ps1
+docker run ranger/ranger-agent:master -- agent clean script > cleanup.ps1; ./cleanup.ps1
 
 Note: If your cluster was created with a prefixPath use the env param -e WINDOWS_PREFIX_PATH=c:\my\prefix
 
@@ -277,29 +277,29 @@ func script() string {
 	return `#Requires -RunAsAdministrator
 <#
 .SYNOPSIS 
-    Cleans Rancher managed Windows Worker Nodes. Backup your data. Use at your own risk.
+    Cleans Ranger managed Windows Worker Nodes. Backup your data. Use at your own risk.
 .DESCRIPTION 
-    Run the script to clean the windows host of all Rancher related data (kubernetes, docker, network) 
+    Run the script to clean the windows host of all Ranger related data (kubernetes, docker, network) 
 .NOTES
     This script needs to be run with Elevated permissions to allow for the complete collection of information.
     Backup your data.
     Use at your own risk.
 .EXAMPLE 
     cleanup.ps1    
-    Clean the windows host of all Rancher related data (kubernetes, docker, network).
+    Clean the windows host of all Ranger related data (kubernetes, docker, network).
 
     cleanup.ps1 -Tasks Docker
-    Cleans the windows host of all Rancher docker related data.
+    Cleans the windows host of all Ranger docker related data.
 
     cleanup.ps1 -Tasks Docker,Network
-    Cleans the windows host of all Rancher docker and network related data.
+    Cleans the windows host of all Ranger docker and network related data.
 #>
 [CmdletBinding()]
 param (
     [Parameter()]
-    [ValidateSet("Docker", "Kubernetes", "Firewall", "Rancher", "Network", "Paths", "Spawn", "Logs")]
+    [ValidateSet("Docker", "Kubernetes", "Firewall", "Ranger", "Network", "Paths", "Spawn", "Logs")]
     [string[]]
-    $Tasks = ("Docker", "Kubernetes", "Rancher", "Firewall", , "Network", "Paths")
+    $Tasks = ("Docker", "Kubernetes", "Ranger", "Firewall", , "Network", "Paths")
 )
 
 $ErrorActionPreference = 'Stop'
@@ -397,32 +397,32 @@ function Remove-DockerContainers {
         if (-not $?) {
             Log-Warn "Could not remove docker containers: $errMsg"
         }
-        # wait a while for rancher-wins to clean up processes
+        # wait a while for ranger-wins to clean up processes
         Start-Sleep -Seconds 10
     }
 }
 
 function Remove-Kubernetes {
-    Get-Process -ErrorAction Ignore -Name "rancher-wins-*" | ForEach-Object {
+    Get-Process -ErrorAction Ignore -Name "ranger-wins-*" | ForEach-Object {
         Log-Info "Stopping process $($_.Name) ..."
         $_ | Stop-Process -ErrorAction Ignore -Force
     }
 }
 
 function Remove-FirewallRules {
-    Get-NetFirewallRule -PolicyStore ActiveStore -Name "rancher-wins-*" -ErrorAction Ignore | ForEach-Object {
+    Get-NetFirewallRule -PolicyStore ActiveStore -Name "ranger-wins-*" -ErrorAction Ignore | ForEach-Object {
         Log-Info "Cleaning up firewall rule $($_.Name) ..."
         $_ | Remove-NetFirewallRule -ErrorAction Ignore | Out-Null
     }
 }
 
-function Remove-RancherWins {
-	$service = Get-Service -Name "rancher-wins" -ErrorAction Ignore
+function Remove-RangerWins {
+	$service = Get-Service -Name "ranger-wins" -ErrorAction Ignore
 	if ($service.Status -eq "Running") {
 		Stop-Service $service.Name
 	}
 
-	Push-Location c:\etc\rancher
+	Push-Location c:\etc\ranger
 	$errMsg = $(.\wins.exe srv app run --unregister)
 	if (-not $?) {
 		Log-Warn "Could not unregister: $errMsg"
@@ -597,9 +597,9 @@ foreach ($task in $Tasks) {
             # clean up links
             Remove-Links
         }
-        "Rancher" {
-            # clean up rancher-wins service
-            Remove-RancherWins
+        "Ranger" {
+            # clean up ranger-wins service
+            Remove-RangerWins
         }
         "Paths" {
             # clean up data

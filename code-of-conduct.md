@@ -30,6 +30,6 @@ Examples of unacceptable behavior by participants include:
  when an individual is representing the project or its community.
 
  Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by
- contacting a Rancher administrator  on [Slack](https://slack.rancher.io), or <conduct@rancher.com>.
+ contacting a Ranger administrator  on [Slack](https://slack.ranger.io), or <conduct@ranger.com>.
 
  This Code of Conduct is adapted from the [Contributor Covenant](http://contributor-covenant.org).

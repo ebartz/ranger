@@ -24,32 +24,32 @@ createCert() {
 
 createECRRepo() {
     echo -e "\nDownloading "${RANCHER_VERSION}" image list and scripts..."
-    wget https://github.com/rancher/rancher/releases/download/"${RANCHER_VERSION}"/rancher-images.txt
-    wget https://github.com/rancher/rancher/releases/download/"${RANCHER_VERSION}"/rancher-save-images.sh
-    chmod +x rancher-save-images.sh
+    wget https://github.com/ranger/ranger/releases/download/"${RANCHER_VERSION}"/ranger-images.txt
+    wget https://github.com/ranger/ranger/releases/download/"${RANCHER_VERSION}"/ranger-save-images.sh
+    chmod +x ranger-save-images.sh
 
     echo -e "\nCutting the tags from the image names..."
     while read LINE; do
         echo ${LINE} | cut -d: -f1
-    done < rancher-images.txt > rancher-images-no-tags.txt
+    done < ranger-images.txt > ranger-images-no-tags.txt
 
     echo -e "\nCreating ECR repositories..."
-    for IMAGE in $(cat rancher-images-no-tags.txt); do
+    for IMAGE in $(cat ranger-images-no-tags.txt); do
         aws ecr create-repository --repository-name ${IMAGE}
     done
 }
 
 saveAndLoadImages() {
     echo -e "\nSaving the images..."
-    ./rancher-save-images.sh --image-list ./rancher-images.txt
+    ./ranger-save-images.sh --image-list ./ranger-images.txt
 
     echo -e "\nTagging the images..."
-    for IMAGE in $(cat rancher-images.txt); do
+    for IMAGE in $(cat ranger-images.txt); do
         docker tag ${IMAGE} ${ECR}/${IMAGE}
     done
 
     echo -e "\nPushing the newly tagged images ECR..."
-    for IMAGE in $(cat rancher-images.txt); do
+    for IMAGE in $(cat ranger-images.txt); do
         docker push ${ECR}/${IMAGE}
     done
 }
@@ -59,13 +59,13 @@ usage() {
 
 $(basename "$0")
 
-This script will populate a private ECR with Rancher images. This script assumes you have the following
+This script will populate a private ECR with Ranger images. This script assumes you have the following
 tools installed and configured on the system:
 
     * Docker
     * AWS CLI
 
-When running the script, specify the ECR URI and the version of Rancher, prefixed with a leading 'v'.
+When running the script, specify the ECR URI and the version of Ranger, prefixed with a leading 'v'.
 
 USAGE: % ./$(basename "$0") [options]
 
@@ -76,7 +76,7 @@ EXAMPLES OF USAGE:
 
 * Run script
 	
-	$ ./$(basename "$0") <ECR URI> v<Rancher version>
+	$ ./$(basename "$0") <ECR URI> v<Ranger version>
 
 EOF
 }

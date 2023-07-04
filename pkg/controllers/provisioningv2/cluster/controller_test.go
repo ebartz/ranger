@@ -12,9 +12,9 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v1 "github.com/rancher/rancher/pkg/apis/provisioning.cattle.io/v1"
-	mgmtv3 "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v1 "github.com/ranger/ranger/pkg/apis/provisioning.cattle.io/v1"
+	mgmtv3 "github.com/ranger/ranger/pkg/generated/controllers/management.cattle.io/v3"
 )
 
 func TestRegexp(t *testing.T) {

@@ -1,4 +1,4 @@
-# Developing Rancher
+# Developing Ranger
 
 ## Generate a local container image
 
@@ -8,7 +8,7 @@ script.
 
 This script uses `docker buildx` in order to enable cross-building of different
 architecture images. To build an image for your current OS and architecture, run
-from the Rancher project root:
+from the Ranger project root:
 ```shell
 TARGET_REPO="localhost:5000/my-test-repo/image:tag" dev-scripts/build-local.sh
 ```
@@ -30,11 +30,11 @@ GO_BINARY="/opt/go1.18/bin/go" dev-scripts/build-local.sh
 
 ## Deploy your custom image via Helm
 
-To deploy a custom image via Helm, set the variables `rancherImage` and `rancherImageTag`:
+To deploy a custom image via Helm, set the variables `rangerImage` and `rangerImageTag`:
 ```shell
-helm upgrade --install rancher/rancher \
+helm upgrade --install ranger/ranger \
   --namespace cattle-system \
   --create-namespace \
-  --set rancherImage="my-test-repo/image" \
-  --set rancherImageTag="dev-tag"
+  --set rangerImage="my-test-repo/image" \
+  --set rangerImageTag="dev-tag"
 ```

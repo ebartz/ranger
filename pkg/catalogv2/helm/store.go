@@ -3,12 +3,12 @@ package helm
 import (
 	"strings"
 
-	"github.com/rancher/apiserver/pkg/store/empty"
-	"github.com/rancher/apiserver/pkg/types"
-	"github.com/rancher/steve/pkg/stores/partition"
-	"github.com/rancher/steve/pkg/stores/selector"
-	"github.com/rancher/steve/pkg/stores/switchschema"
-	"github.com/rancher/wrangler/pkg/schemas/validation"
+	"github.com/ranger/apiserver/pkg/store/empty"
+	"github.com/ranger/apiserver/pkg/types"
+	"github.com/ranger/steve/pkg/stores/partition"
+	"github.com/ranger/steve/pkg/stores/selector"
+	"github.com/ranger/steve/pkg/stores/switchschema"
+	"github.com/ranger/wrangler/pkg/schemas/validation"
 	"k8s.io/apimachinery/pkg/labels"
 )
 

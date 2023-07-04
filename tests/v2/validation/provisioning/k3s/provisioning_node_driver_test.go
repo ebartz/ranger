@@ -3,26 +3,26 @@ package k3s
 import (
 	"testing"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters/kubernetesversions"
-	"github.com/rancher/rancher/tests/framework/extensions/machinepools"
-	"github.com/rancher/rancher/tests/framework/extensions/users"
-	password "github.com/rancher/rancher/tests/framework/extensions/users/passwordgenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
-	namegen "github.com/rancher/rancher/tests/framework/pkg/namegenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
-	provisioning "github.com/rancher/rancher/tests/v2/validation/provisioning"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters/kubernetesversions"
+	"github.com/ranger/ranger/tests/framework/extensions/machinepools"
+	"github.com/ranger/ranger/tests/framework/extensions/users"
+	password "github.com/ranger/ranger/tests/framework/extensions/users/passwordgenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
+	namegen "github.com/ranger/ranger/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
+	provisioning "github.com/ranger/ranger/tests/v2/validation/provisioning"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 )
 
 type K3SNodeDriverProvisioningTestSuite struct {
 	suite.Suite
-	client             *rancher.Client
+	client             *ranger.Client
 	session            *session.Session
-	standardUserClient *rancher.Client
+	standardUserClient *ranger.Client
 	kubernetesVersions []string
 	providers          []string
 	psact              string
@@ -45,7 +45,7 @@ func (k *K3SNodeDriverProvisioningTestSuite) SetupSuite() {
 	k.psact = clustersConfig.PSACT
 	k.advancedOptions = clustersConfig.AdvancedOptions
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(k.T(), err)
 
 	k.client = client
@@ -123,7 +123,7 @@ func (k *K3SNodeDriverProvisioningTestSuite) TestProvisioningK3SCluster() {
 	tests := []struct {
 		name      string
 		nodeRoles []machinepools.NodeRoles
-		client    *rancher.Client
+		client    *ranger.Client
 		psact     string
 	}{
 		{"1 Node all roles " + provisioning.AdminClientName.String(), nodeRoles0, k.client, k.psact},
@@ -166,7 +166,7 @@ func (k *K3SNodeDriverProvisioningTestSuite) TestProvisioningK3SClusterDynamicIn
 
 	tests := []struct {
 		name   string
-		client *rancher.Client
+		client *ranger.Client
 		psact  string
 	}{
 		{provisioning.AdminClientName.String(), k.client, k.psact},

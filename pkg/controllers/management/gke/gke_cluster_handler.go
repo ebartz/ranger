@@ -12,20 +12,20 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rancher/gke-operator/controller"
-	gkev1 "github.com/rancher/gke-operator/pkg/apis/gke.cattle.io/v1"
-	apimgmtv3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/controllers/management/clusteroperator"
-	"github.com/rancher/rancher/pkg/controllers/management/clusterupstreamrefresher"
-	"github.com/rancher/rancher/pkg/controllers/management/rbac"
-	"github.com/rancher/rancher/pkg/controllers/management/secretmigrator"
-	"github.com/rancher/rancher/pkg/dialer"
-	mgmtv3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/systemaccount"
-	"github.com/rancher/rancher/pkg/types/config"
-	typesDialer "github.com/rancher/rancher/pkg/types/config/dialer"
-	"github.com/rancher/rancher/pkg/wrangler"
+	"github.com/ranger/gke-operator/controller"
+	gkev1 "github.com/ranger/gke-operator/pkg/apis/gke.cattle.io/v1"
+	apimgmtv3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/controllers/management/clusteroperator"
+	"github.com/ranger/ranger/pkg/controllers/management/clusterupstreamrefresher"
+	"github.com/ranger/ranger/pkg/controllers/management/rbac"
+	"github.com/ranger/ranger/pkg/controllers/management/secretmigrator"
+	"github.com/ranger/ranger/pkg/dialer"
+	mgmtv3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/systemaccount"
+	"github.com/ranger/ranger/pkg/types/config"
+	typesDialer "github.com/ranger/ranger/pkg/types/config/dialer"
+	"github.com/ranger/ranger/pkg/wrangler"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -40,8 +40,8 @@ import (
 const (
 	gkeAPIGroup         = "gke.cattle.io"
 	gkeV1               = "gke.cattle.io/v1"
-	gkeOperatorTemplate = "system-library-rancher-gke-operator"
-	gkeOperator         = "rancher-gke-operator"
+	gkeOperatorTemplate = "system-library-ranger-gke-operator"
+	gkeOperator         = "ranger-gke-operator"
 	gkeShortName        = "GKE"
 	enqueueTime         = time.Second * 5
 )
@@ -188,7 +188,7 @@ func (e *gkeOperatorController) onClusterChange(key string, cluster *mgmtv3.Clus
 		if cluster.Status.GKEStatus.PrivateRequiresTunnel == nil &&
 			cluster.Status.GKEStatus.UpstreamSpec.PrivateClusterConfig != nil &&
 			cluster.Status.GKEStatus.UpstreamSpec.PrivateClusterConfig.EnablePrivateEndpoint {
-			// In this case, the API endpoint is private and it has not been determined if Rancher must tunnel to communicate with it.
+			// In this case, the API endpoint is private and it has not been determined if Ranger must tunnel to communicate with it.
 			// Check to see if we can still use the control plane endpoint even though
 			// the cluster has private-only access
 			serviceToken, mustTunnel, err := e.generateSATokenWithPublicAPI(cluster)
@@ -219,7 +219,7 @@ func (e *gkeOperatorController) onClusterChange(key string, cluster *mgmtv3.Clus
 			if err != nil {
 				var statusErr error
 				if err == dialer.ErrAgentDisconnected {
-					// In this case, the API endpoint is private and rancher is waiting for the import cluster command to be run.
+					// In this case, the API endpoint is private and ranger is waiting for the import cluster command to be run.
 					cluster, statusErr = e.SetUnknown(cluster, apimgmtv3.ClusterConditionWaiting, "waiting for cluster agent to be deployed")
 					if statusErr == nil {
 						e.ClusterEnqueueAfter(cluster.Name, enqueueTime)
@@ -388,7 +388,7 @@ func buildGKECCCreateObject(cluster *mgmtv3.Cluster) (*unstructured.Unstructured
 			OwnerReferences: []v1.OwnerReference{
 				{
 					Kind:       cluster.Kind,
-					APIVersion: rbac.RancherManagementAPIVersion,
+					APIVersion: rbac.RangerManagementAPIVersion,
 					Name:       cluster.Name,
 					UID:        cluster.UID,
 				},
@@ -421,14 +421,14 @@ func (e *gkeOperatorController) recordAppliedSpec(cluster *mgmtv3.Cluster) (*mgm
 
 // generateSATokenWithPublicAPI tries to get a service account token from the cluster using the public API endpoint.
 // This function is called if the cluster has only privateEndpoint enabled and not publicly available.
-// If Rancher is able to communicate with the cluster through its API endpoint even though it is private, then this function will retrieve
+// If Ranger is able to communicate with the cluster through its API endpoint even though it is private, then this function will retrieve
 // a service account token and the *bool returned will refer to a false value (doesn't have to tunnel).
 //
-// If the Rancher server cannot connect to the cluster's API endpoint, then one of the two errors below will happen.
-// In this case, we know that Rancher must use the cluster agent tunnel for communication. This function will return an empty service account token,
+// If the Ranger server cannot connect to the cluster's API endpoint, then one of the two errors below will happen.
+// In this case, we know that Ranger must use the cluster agent tunnel for communication. This function will return an empty service account token,
 // and the *bool return value will refer to a true value (must tunnel).
 //
-// If an error different from the two below occur, then the *bool return value will be nil, indicating that Rancher was not able to determine if
+// If an error different from the two below occur, then the *bool return value will be nil, indicating that Ranger was not able to determine if
 // tunneling is required to communicate with the cluster.
 func (e *gkeOperatorController) generateSATokenWithPublicAPI(cluster *mgmtv3.Cluster) (string, *bool, error) {
 	restConfig, err := e.getRestConfig(cluster, (&net.Dialer{
@@ -447,7 +447,7 @@ func (e *gkeOperatorController) generateSATokenWithPublicAPI(cluster *mgmtv3.Clu
 		}
 
 		// In the existence of a proxy, it may be the case that the following error occurs,
-		// in which case rancher should use the tunnel connection to communicate with the cluster.
+		// in which case ranger should use the tunnel connection to communicate with the cluster.
 		var urlError *url.Error
 		if stderrors.As(err, &urlError) && urlError.Timeout() {
 			return "", requiresTunnel, nil

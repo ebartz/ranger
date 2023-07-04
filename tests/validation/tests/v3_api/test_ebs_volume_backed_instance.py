@@ -2,7 +2,7 @@ import os
 import pytest
 import time
 from lib.aws import AmazonWebServices
-from rancher import ApiError
+from ranger import ApiError
 
 from .common import (
     AWS_ACCESS_KEY_ID,

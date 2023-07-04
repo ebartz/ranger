@@ -1,10 +1,10 @@
 #!/bin/bash
 set -e
 
-echo Starting rancher server
+echo Starting ranger server
 cd $(dirname $0)/..
 
-CMD=bin/rancher
+CMD=bin/ranger
 if [ ! -x $CMD ]; then
     ./scripts/build-server
 fi
@@ -25,10 +25,10 @@ export CATTLE_FEATURES="harvester=false"
 #########################################################################################################################################
 # DISCLAIMER                                                                                                                            #
 # Copied from https://github.com/moby/moby/blob/ed89041433a031cafc0a0f19cfe573c31688d377/hack/dind#L28-L37                              #
-# Permission granted by Akihiro Suda <akihiro.suda.cz@hco.ntt.co.jp> (https://github.com/rancher/k3d/issues/493#issuecomment-827405962) #
+# Permission granted by Akihiro Suda <akihiro.suda.cz@hco.ntt.co.jp> (https://github.com/ranger/k3d/issues/493#issuecomment-827405962) #
 # Moby License Apache 2.0: https://github.com/moby/moby/blob/ed89041433a031cafc0a0f19cfe573c31688d377/LICENSE                           #
 #########################################################################################################################################
-# only run this if rancher is not running in kubernetes cluster
+# only run this if ranger is not running in kubernetes cluster
 if [ -f /sys/fs/cgroup/cgroup.controllers ]; then
   # move the processes from the root group to the /init group,
   # otherwise writing subtree_control fails with EBUSY.
@@ -43,7 +43,7 @@ if [ $CI ]; then
   # This code relies on the fact that our CI pipleine runs on one system at a time. Currently with drone this means that the setting `DRONE_AGENT_CONCURRENCY=1`
 
   # Attempt to find and stop any previous instances of dapper containers.
-  # To combat the scenario where drone runners are reused and an instance of rancher is still running.
+  # To combat the scenario where drone runners are reused and an instance of ranger is still running.
   echo "Checking for running containers from a previous build."
 
   # gets a list of all docker containers that were started in a CI build.

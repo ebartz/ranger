@@ -43,8 +43,8 @@ def test_deploy_rke():
     global env_details
     global cluster_details
 
-    rancher_version = get_setting_value_by_name('server-version')
-    if str(rancher_version).startswith('v2.2'):
+    ranger_version = get_setting_value_by_name('server-version')
+    if str(ranger_version).startswith('v2.2'):
         k8s_v = get_setting_value_by_name('k8s-version-to-images')
         default_k8s_versions = json.loads(k8s_v).keys()
     else:

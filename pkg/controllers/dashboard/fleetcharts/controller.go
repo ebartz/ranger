@@ -5,13 +5,13 @@ import (
 	"os"
 	"sync"
 
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/controllers/dashboard/chart"
-	"github.com/rancher/rancher/pkg/features"
-	fleetconst "github.com/rancher/rancher/pkg/fleet"
-	"github.com/rancher/rancher/pkg/settings"
-	"github.com/rancher/rancher/pkg/wrangler"
-	"github.com/rancher/wrangler/pkg/relatedresource"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/controllers/dashboard/chart"
+	"github.com/ranger/ranger/pkg/features"
+	fleetconst "github.com/ranger/ranger/pkg/fleet"
+	"github.com/ranger/ranger/pkg/settings"
+	"github.com/ranger/ranger/pkg/wrangler"
+	"github.com/ranger/wrangler/pkg/relatedresource"
 	"github.com/sirupsen/logrus"
 	apierror "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -35,13 +35,13 @@ var (
 func Register(ctx context.Context, wContext *wrangler.Context) error {
 	h := &handler{
 		manager:      wContext.SystemChartsManager,
-		chartsConfig: chart.RancherConfigGetter{ConfigCache: wContext.Core.ConfigMap().Cache()},
+		chartsConfig: chart.RangerConfigGetter{ConfigCache: wContext.Core.ConfigMap().Cache()},
 	}
 
 	wContext.Mgmt.Setting().OnChange(ctx, "fleet-install", h.onSetting)
-	// watch cluster repo `rancher-charts` and enqueue the setting to make sure the latest fleet is installed after catalog refresh
+	// watch cluster repo `ranger-charts` and enqueue the setting to make sure the latest fleet is installed after catalog refresh
 	relatedresource.WatchClusterScoped(ctx, "bootstrap-fleet-charts", func(namespace, name string, obj runtime.Object) ([]relatedresource.Key, error) {
-		if name == "rancher-charts" {
+		if name == "ranger-charts" {
 			return []relatedresource.Key{{
 				Name: settings.ServerURL.Name,
 			}}, nil
@@ -54,7 +54,7 @@ func Register(ctx context.Context, wContext *wrangler.Context) error {
 type handler struct {
 	sync.Mutex
 	manager      chart.Manager
-	chartsConfig chart.RancherConfigGetter
+	chartsConfig chart.RangerConfigGetter
 }
 
 func (h *handler) onSetting(key string, setting *v3.Setting) (*v3.Setting, error) {
@@ -113,7 +113,7 @@ func (h *handler) onSetting(key string, setting *v3.Setting) (*v3.Setting, error
 	// add priority class value
 	if priorityClassName, err := h.chartsConfig.GetPriorityClassName(); err != nil {
 		if !apierror.IsNotFound(err) {
-			logrus.Warnf("Failed to get rancher priorityClassName for '%s': %v", fleetChart.ChartName, err)
+			logrus.Warnf("Failed to get ranger priorityClassName for '%s': %v", fleetChart.ChartName, err)
 		}
 	} else {
 		fleetChartValues[chart.PriorityClassKey] = priorityClassName

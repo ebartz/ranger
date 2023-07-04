@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
 if [ -z "$1" ]; then
-    master="(Rancher tag not specified)"
+    master="(Ranger tag not specified)"
     tag='master'
 else
     tag=$1
 fi
 
-CATTLE_VER=$(curl https://raw.githubusercontent.com/rancher/rancher/$tag/server/Dockerfile 2>/dev/null | grep 'ENV CATTLE_CATTLE_VERSION' | awk '{print $3}')
+CATTLE_VER=$(curl https://raw.githubusercontent.com/ranger/ranger/$tag/server/Dockerfile 2>/dev/null | grep 'ENV CATTLE_CATTLE_VERSION' | awk '{print $3}')
 
-echo -e "\nPrinting project/service tag information for Rancher tag $tag. $master"
+echo -e "\nPrinting project/service tag information for Ranger tag $tag. $master"
 
 echo -e "\nCattle Tag: $CATTLE_VER\n"
 
@@ -33,7 +33,7 @@ while read -r l; do
         printf "%40s %15s %s\n" "$PROP" "$VER" "$URL"
     fi
 
-done < <(curl -s https://raw.githubusercontent.com/rancher/cattle/$CATTLE_VER/resources/content/cattle-global.properties)
+done < <(curl -s https://raw.githubusercontent.com/ranger/cattle/$CATTLE_VER/resources/content/cattle-global.properties)
 
 echo -e "\n\nCatalog item versions: (Pulling image may take several minutes)"
-docker run --rm -it rancher/server:$tag bash -c 'for i in /var/lib/cattle/cache/global/*; do git -C $i remote -vv; git -C $i rev-parse HEAD; for j in $i/infra-templates/*; do A=$(grep version $j/config.yml 2>/dev/null | cut -d" " -f2); echo $(basename $j): $A; for x in $(grep -Irl --exclude=config.yml $A $j 2>/dev/null); do grep -rh --include="docker-compose.*" -e "^[ \t]*image: " $(dirname $x) 2>/dev/null; done; done; echo -e "\n"; done' 2>/dev/null
+docker run --rm -it ranger/server:$tag bash -c 'for i in /var/lib/cattle/cache/global/*; do git -C $i remote -vv; git -C $i rev-parse HEAD; for j in $i/infra-templates/*; do A=$(grep version $j/config.yml 2>/dev/null | cut -d" " -f2); echo $(basename $j): $A; for x in $(grep -Irl --exclude=config.yml $A $j 2>/dev/null); do grep -rh --include="docker-compose.*" -e "^[ \t]*image: " $(dirname $x) 2>/dev/null; done; done; echo -e "\n"; done' 2>/dev/null

@@ -1,7 +1,7 @@
 import os
 import tempfile
 import pytest
-from rancher import ApiError
+from ranger import ApiError
 from kubernetes.client import CoreV1Api
 from .common import auth_check, random_str, string_to_encoding
 from .conftest import wait_for, wait_for_condition
@@ -313,7 +313,7 @@ def test_user_cluster_owner_access_to_pool(admin_mc,
     # make a cluster
     cluster = admin_client.create_cluster(
         name=random_str(),
-        rancherKubernetesEngineConfig={
+        rangerKubernetesEngineConfig={
             "accessKey": "junk"
         }
     )

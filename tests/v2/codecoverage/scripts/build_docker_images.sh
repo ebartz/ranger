@@ -2,7 +2,7 @@
 set -e
 
 ARCH=${ARCH:-"amd64"}
-REPO=ranchertest
+REPO=rangertest
 TAG=v2.7-head
 SYSTEM_CHART_REPO_DIR=build/system-charts
 SYSTEM_CHART_DEFAULT_BRANCH=${SYSTEM_CHART_DEFAULT_BRANCH:-"dev-v2.7"}
@@ -13,15 +13,15 @@ cd $(dirname $0)/../package
 
 ../scripts/k3s-images.sh
 
-cp ../bin/rancher ../bin/agent ../bin/data.json ../bin/k3s-airgap-images.tar .
+cp ../bin/ranger ../bin/agent ../bin/data.json ../bin/k3s-airgap-images.tar .
 
 # Make sure the used data.json is a release artifact
-cp ../bin/data.json ../bin/rancher-data.json
+cp ../bin/data.json ../bin/ranger-data.json
 
-IMAGE=${REPO}/rancher:${TAG}
-AGENT_IMAGE=${REPO}/rancher-agent:${TAG}
+IMAGE=${REPO}/ranger:${TAG}
+AGENT_IMAGE=${REPO}/ranger-agent:${TAG}
 
-echo "building rancher test docker image"
+echo "building ranger test docker image"
 docker build --build-arg VERSION=${TAG} --build-arg ARCH=${ARCH} --build-arg IMAGE_REPO=${REPO} -t ${IMAGE} -f Dockerfile . --no-cache
 
 echo "building agent test docker image"
@@ -29,7 +29,7 @@ docker build --build-arg VERSION=${TAG} --build-arg ARCH=${ARCH} --build-arg RAN
 
 echo ${DOCKERHUB_PASSWORD} | docker login --username ${DOCKERHUB_USERNAME} --password-stdin
 
-echo "docker push rancher"
+echo "docker push ranger"
 docker image push ${IMAGE}
 
 echo "docker push agent"

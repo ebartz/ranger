@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/rancher/pkg/settings"
+	"github.com/ranger/ranger/pkg/settings"
 	"github.com/sirupsen/logrus"
 )
 

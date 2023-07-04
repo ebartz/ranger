@@ -1,5 +1,5 @@
 {{- if eq .Values.tls "ingress" -}}
-  {{- if eq .Values.ingress.tls.source "rancher" -}}
+  {{- if eq .Values.ingress.tls.source "ranger" -}}
     {{- $certmanagerVer :=  split "." .Values.certmanager.version -}}
     {{- if or (.Capabilities.APIVersions.Has "cert-manager.io/v1beta1") (and (gt (len $certmanagerVer._0) 0) (eq (int $certmanagerVer._0) 0) (ge (int $certmanagerVer._1) 16)) }}
 apiVersion: cert-manager.io/v1beta1
@@ -12,11 +12,11 @@ apiVersion: cert-manager.io/v1
     {{- end }}
 kind: Issuer
 metadata:
-  name: {{ template "rancher.fullname" . }}
+  name: {{ template "ranger.fullname" . }}
   labels:
-{{ include "rancher.labels" . | indent 4 }}
+{{ include "ranger.labels" . | indent 4 }}
 spec:
   ca:
-    secretName: tls-rancher
+    secretName: tls-ranger
   {{- end -}}
 {{- end -}}

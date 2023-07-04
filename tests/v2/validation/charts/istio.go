@@ -5,10 +5,10 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/charts"
-	"github.com/rancher/rancher/tests/framework/extensions/workloads"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/charts"
+	"github.com/ranger/ranger/tests/framework/extensions/workloads"
 	appv1 "k8s.io/api/apps/v1"
 	kubewait "k8s.io/apimachinery/pkg/util/wait"
 )
@@ -30,9 +30,9 @@ const (
 )
 
 var (
-	// Rancher istio chart kiali path
+	// Ranger istio chart kiali path
 	kialiPath = "api/v1/namespaces/istio-system/services/http:kiali:20001/proxy/kiali/"
-	// Rancher istio chart tracing path
+	// Ranger istio chart tracing path
 	tracingPath = "api/v1/namespaces/istio-system/services/http:tracing:16686/proxy/jaeger/search"
 )
 
@@ -44,13 +44,13 @@ type chartInstallOptions struct {
 
 // chartFeatureOptions is a private struct that has istio and monitoring charts feature options
 type chartFeatureOptions struct {
-	monitoring *charts.RancherMonitoringOpts
-	istio      *charts.RancherIstioOpts
+	monitoring *charts.RangerMonitoringOpts
+	istio      *charts.RangerIstioOpts
 }
 
 // getChartCaseEndpointUntilBodyHas is a private helper function
 // that awaits the body of the response until the desired string is found
-func getChartCaseEndpointUntilBodyHas(client *rancher.Client, host, path, bodyPart string) (found bool, err error) {
+func getChartCaseEndpointUntilBodyHas(client *ranger.Client, host, path, bodyPart string) (found bool, err error) {
 	trimAllSpaces := func(str string) string {
 		return strings.Map(func(r rune) rune {
 			if unicode.IsSpace(r) {

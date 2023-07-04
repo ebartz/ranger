@@ -3,10 +3,10 @@ package monitoring
 import (
 	"fmt"
 
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
 
 	"github.com/pkg/errors"
-	appsv1 "github.com/rancher/rancher/pkg/generated/norman/apps/v1"
+	appsv1 "github.com/ranger/ranger/pkg/generated/norman/apps/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -17,7 +17,7 @@ var (
 	ConditionMetricExpressionDeployed = condition(v32.MonitoringConditionMetricExpressionDeployed)
 )
 
-// All component names base on rancher-monitoring chart
+// All component names base on ranger-monitoring chart
 
 func isGrafanaDeployed(agentDeploymentClient appsv1.DeploymentInterface, appNamespace, appNameSuffix string, monitoringStatus *v32.MonitoringStatus, clusterName string) error {
 	_, err := ConditionGrafanaDeployed.DoUntilTrue(monitoringStatus, func() (*v32.MonitoringStatus, error) {

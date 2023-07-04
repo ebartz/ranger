@@ -10,16 +10,16 @@ import (
 	"path/filepath"
 	"text/template"
 
-	"github.com/rancher/norman/generator"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
+	"github.com/ranger/norman/generator"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/gengo/args"
 )
 
 var (
 	outputDir   = "./pkg/generated"
-	basePackage = "github.com/rancher/rancher/pkg/apis"
+	basePackage = "github.com/ranger/ranger/pkg/apis"
 	baseCattle  = "../client/generated"
 	baseK8s     = "norman"
 	baseCompose = "compose"

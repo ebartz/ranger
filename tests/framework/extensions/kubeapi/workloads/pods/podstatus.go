@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/rancher/rancher/pkg/api/scheme"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
+	"github.com/ranger/ranger/pkg/api/scheme"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -20,7 +20,7 @@ var PodGroupVersionResource = schema.GroupVersionResource{
 }
 
 // StatusPods is a helper function that uses the dynamic client to list pods on a namespace for a specific cluster with its list options.
-func StatusPods(client *rancher.Client, clusterID string, listOpts metav1.ListOptions) ([]string, []error) {
+func StatusPods(client *ranger.Client, clusterID string, listOpts metav1.ListOptions) ([]string, []error) {
 	var podList []corev1.Pod
 
 	dynamicClient, err := client.GetDownStreamClusterClient(clusterID)

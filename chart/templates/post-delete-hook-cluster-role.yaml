@@ -2,8 +2,8 @@
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{ template "rancher.fullname" . }}-post-delete
-  labels: {{ include "rancher.labels" . | nindent 4 }}
+  name: {{ template "ranger.fullname" . }}-post-delete
+  labels: {{ include "ranger.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": post-delete
     "helm.sh/hook-weight": "1"
@@ -33,7 +33,7 @@ rules:
   - apiGroups: [ "policy" ]
     resources: [ "podsecuritypolicies" ]
     verbs: ["delete", "create" ]
-{{- if eq (include "rancher.chart_psp_enabled" . ) "true" }}
+{{- if eq (include "ranger.chart_psp_enabled" . ) "true" }}
   - apiGroups: [ "policy" ]
     resources: [ "podsecuritypolicies" ]
     verbs: [ "use"]

@@ -8,12 +8,12 @@ import (
 
 	b64 "encoding/base64"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	"github.com/rancher/rancher/tests/framework/extensions/pipeline"
-	"github.com/rancher/rancher/tests/framework/extensions/token"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/extensions/pipeline"
+	"github.com/ranger/ranger/tests/framework/extensions/token"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 	kwait "k8s.io/apimachinery/pkg/util/wait"
@@ -33,14 +33,14 @@ var (
 )
 
 type wrappedConfig struct {
-	Configuration *rancher.Config `yaml:"rancher"`
+	Configuration *ranger.Config `yaml:"ranger"`
 }
 
 func main() {
-	rancherConfig := new(rancher.Config)
-	rancherConfig.Host = host
+	rangerConfig := new(ranger.Config)
+	rangerConfig.Host = host
 	isCleanupEnabled := false
-	rancherConfig.Cleanup = &isCleanupEnabled
+	rangerConfig.Cleanup = &isCleanupEnabled
 
 	adminUser := &management.User{
 		Username: "admin",
@@ -59,11 +59,11 @@ func main() {
 	if err != nil {
 		logrus.Fatalf("error creating admin token", err)
 	}
-	rancherConfig.AdminToken = adminToken.Token
+	rangerConfig.AdminToken = adminToken.Token
 
 	//create config file
 	configWrapped := &wrappedConfig{
-		Configuration: rancherConfig,
+		Configuration: rangerConfig,
 	}
 	configData, err := yaml.Marshal(configWrapped)
 	if err != nil {
@@ -80,7 +80,7 @@ func main() {
 
 	//generate kubeconfig
 	session := session.NewSession()
-	client, err := rancher.NewClient("", session)
+	client, err := ranger.NewClient("", session)
 	if err != nil {
 		logrus.Fatalf("error creating client", err)
 	}

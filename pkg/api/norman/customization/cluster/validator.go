@@ -9,19 +9,19 @@ import (
 	"github.com/Azure/azure-sdk-for-go/services/containerservice/mgmt/2020-11-01/containerservice"
 	"github.com/Azure/go-autorest/autorest/to"
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/rancher/norman/api/access"
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	gaccess "github.com/rancher/rancher/pkg/api/norman/customization/globalnamespaceaccess"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	mgmtclient "github.com/rancher/rancher/pkg/client/generated/management/v3"
-	"github.com/rancher/rancher/pkg/controllers/management/k3sbasedupgrade"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/kontainer-engine/service"
-	"github.com/rancher/rancher/pkg/namespace"
-	mgmtSchema "github.com/rancher/rancher/pkg/schemas/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/settings"
+	"github.com/ranger/norman/api/access"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	gaccess "github.com/ranger/ranger/pkg/api/norman/customization/globalnamespaceaccess"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	mgmtclient "github.com/ranger/ranger/pkg/client/generated/management/v3"
+	"github.com/ranger/ranger/pkg/controllers/management/k3sbasedupgrade"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/kontainer-engine/service"
+	"github.com/ranger/ranger/pkg/namespace"
+	mgmtSchema "github.com/ranger/ranger/pkg/schemas/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/settings"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -80,7 +80,7 @@ func (v *Validator) validateLocalClusterAuthEndpoint(request *types.APIContext, 
 
 	var isValidCluster bool
 	if request.ID == "" {
-		isValidCluster = spec.RancherKubernetesEngineConfig != nil
+		isValidCluster = spec.RangerKubernetesEngineConfig != nil
 	} else {
 		cluster, err := v.ClusterLister.Get("", request.ID)
 		if err != nil {
@@ -216,7 +216,7 @@ func (v *Validator) validateK3sBasedVersionUpgrade(request *types.APIContext, sp
 }
 
 func (v *Validator) checkClusterForEnforcement(spec *mgmtclient.Cluster) bool {
-	if spec.RancherKubernetesEngineConfig != nil {
+	if spec.RangerKubernetesEngineConfig != nil {
 		return true
 	}
 
@@ -241,7 +241,7 @@ func (v *Validator) accessTemplate(request *types.APIContext, spec *mgmtclient.C
 	return access.ByID(request, &mgmtSchema.Version, mgmtclient.ClusterTemplateType, clusterTempRev.Spec.ClusterTemplateName, &ctMap)
 }
 
-// validateGenericEngineConfig allows for additional validation of clusters that depend on Kontainer Engine or Rancher Machine driver
+// validateGenericEngineConfig allows for additional validation of clusters that depend on Kontainer Engine or Ranger Machine driver
 func (v *Validator) validateGenericEngineConfig(request *types.APIContext, spec *v32.ClusterSpec) error {
 
 	if request.Method == http.MethodPost {
@@ -361,7 +361,7 @@ func validateAKSNodePools(spec *v32.ClusterSpec) error {
 }
 
 func validateAKSClusterName(client v3.ClusterInterface, spec *v32.ClusterSpec) error {
-	// validate cluster does not reference an AKS cluster that is already backed by a Rancher cluster
+	// validate cluster does not reference an AKS cluster that is already backed by a Ranger cluster
 	name := spec.AKSConfig.ClusterName
 	region := spec.AKSConfig.ResourceLocation
 	msgSuffix := fmt.Sprintf("in region [%s]", region)
@@ -369,7 +369,7 @@ func validateAKSClusterName(client v3.ClusterInterface, spec *v32.ClusterSpec) e
 	// cluster client is being used instead of lister to avoid the use of an outdated cache
 	clusters, err := client.List(metav1.ListOptions{})
 	if err != nil {
-		return httperror.NewAPIError(httperror.ServerError, "failed to confirm clusterName is unique among Rancher AKS clusters "+msgSuffix)
+		return httperror.NewAPIError(httperror.ServerError, "failed to confirm clusterName is unique among Ranger AKS clusters "+msgSuffix)
 	}
 
 	for _, cluster := range clusters.Items {
@@ -455,14 +455,14 @@ func (v *Validator) validateEKSConfig(request *types.APIContext, cluster map[str
 
 	// validation for creates only
 
-	// validate cluster does not reference an EKS cluster that is already backed by a Rancher cluster
+	// validate cluster does not reference an EKS cluster that is already backed by a Ranger cluster
 	name, _ := eksConfig["displayName"]
 	region, _ := eksConfig["region"]
 
 	// cluster client is being used instead of lister to avoid the use of an outdated cache
 	clusters, err := v.ClusterClient.List(metav1.ListOptions{})
 	if err != nil {
-		return httperror.NewAPIError(httperror.ServerError, fmt.Sprintf("failed to confirm displayName is unique among Rancher EKS clusters for region %s", region))
+		return httperror.NewAPIError(httperror.ServerError, fmt.Sprintf("failed to confirm displayName is unique among Ranger EKS clusters for region %s", region))
 	}
 
 	for _, cluster := range clusters.Items {
@@ -730,7 +730,7 @@ func validateGKENodePools(spec *v32.ClusterSpec) error {
 }
 
 func validateGKEClusterName(client v3.ClusterInterface, spec *v32.ClusterSpec) error {
-	// validate cluster does not reference an GKE cluster that is already backed by a Rancher cluster
+	// validate cluster does not reference an GKE cluster that is already backed by a Ranger cluster
 	name := spec.GKEConfig.ClusterName
 	region := spec.GKEConfig.Region
 	zone := spec.GKEConfig.Zone
@@ -742,7 +742,7 @@ func validateGKEClusterName(client v3.ClusterInterface, spec *v32.ClusterSpec) e
 	// cluster client is being used instead of lister to avoid the use of an outdated cache
 	clusters, err := client.List(metav1.ListOptions{})
 	if err != nil {
-		return httperror.NewAPIError(httperror.ServerError, "failed to confirm clusterName is unique among Rancher GKE clusters "+msgSuffix)
+		return httperror.NewAPIError(httperror.ServerError, "failed to confirm clusterName is unique among Ranger GKE clusters "+msgSuffix)
 	}
 
 	for _, cluster := range clusters.Items {

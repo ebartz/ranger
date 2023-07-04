@@ -14,7 +14,7 @@ mkdir -p /opt/jail/$NAME/dev
 mkdir -p /opt/jail/$NAME/etc/ssl
 mkdir -p /opt/jail/$NAME/usr/bin
 mkdir -p /opt/jail/$NAME/management-state/node/nodes
-mkdir -p /opt/jail/$NAME/var/lib/rancher/management-state/bin
+mkdir -p /opt/jail/$NAME/var/lib/ranger/management-state/bin
 mkdir -p /opt/jail/$NAME/management-state/bin
 mkdir -p /opt/jail/$NAME/tmp
 mkdir -p /opt/jail/$NAME/bin
@@ -33,8 +33,8 @@ cp /etc/passwd /opt/jail/$NAME/etc/
 cp /etc/hosts /opt/jail/$NAME/etc/
 cp /etc/nsswitch.conf /opt/jail/$NAME/etc/
 
-if [ -d /var/lib/rancher/management-state/bin ] && [ "$(ls -A /var/lib/rancher/management-state/bin)" ]; then
-  ( cd /var/lib/rancher/management-state/bin
+if [ -d /var/lib/ranger/management-state/bin ] && [ "$(ls -A /var/lib/ranger/management-state/bin)" ]; then
+  ( cd /var/lib/ranger/management-state/bin
     for f in *; do
       if [ ! -f "/opt/drivers/management-state/bin/$f" ]; then
         cp "$f" "/opt/drivers/management-state/bin/$f"
@@ -47,24 +47,24 @@ if [[ -f /etc/ssl/certs/ca-additional.pem ]]; then
   cp /etc/ssl/certs/ca-additional.pem /opt/jail/$NAME/etc/ssl
 fi
 
-if [[ -f /etc/rancher/ssl/cacerts.pem ]]; then
-  cp /etc/rancher/ssl/cacerts.pem /opt/jail/$NAME/etc/ssl
+if [[ -f /etc/ranger/ssl/cacerts.pem ]]; then
+  cp /etc/ranger/ssl/cacerts.pem /opt/jail/$NAME/etc/ssl
 fi
 
 # Hard link driver binaries
-cp -r -l /opt/drivers/management-state/bin /opt/jail/$NAME/var/lib/rancher/management-state
+cp -r -l /opt/drivers/management-state/bin /opt/jail/$NAME/var/lib/ranger/management-state
 
-# Hard link rancher-machine into the jail
-cp -l /usr/bin/rancher-machine /opt/jail/$NAME/usr/bin
+# Hard link ranger-machine into the jail
+cp -l /usr/bin/ranger-machine /opt/jail/$NAME/usr/bin
 
 # Hard link helm_2 into the jail
-cp -l /usr/bin/rancher-helm /opt/jail/$NAME/usr/bin
+cp -l /usr/bin/ranger-helm /opt/jail/$NAME/usr/bin
 
 # Hard link helm_3 into the jail
 cp -l /usr/bin/helm_v3 /opt/jail/$NAME/usr/bin
 
 # Hard link tiller into the jail
-cp -l /usr/bin/rancher-tiller /opt/jail/$NAME/usr/bin
+cp -l /usr/bin/ranger-tiller /opt/jail/$NAME/usr/bin
 
 # Hard link kustomize into the jail
 cp -l /usr/bin/kustomize /opt/jail/$NAME/usr/bin

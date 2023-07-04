@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/mapper"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/mapper"
 )
 
 type Creator struct {

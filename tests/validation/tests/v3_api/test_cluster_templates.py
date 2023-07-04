@@ -2,7 +2,7 @@ import copy
 import os
 import pytest
 import requests
-from rancher import ApiError
+from ranger import ApiError
 from .common import *  # NOQA
 from .test_monitoring import cluster_query_template
 from .test_monitoring import validate_cluster_graph
@@ -51,7 +51,7 @@ def setup(request):
 
 def get_k8s_versionlist():
 
-    # Get the list of K8s version supported by the rancher server
+    # Get the list of K8s version supported by the ranger server
     headers = {"Content-Type": "application/json",
                "Accept": "application/json",
                "Authorization": "Bearer " + ADMIN_TOKEN}
@@ -81,7 +81,7 @@ def get_cluster_config(k8sversion, enableMonitoring="false"):
             "enabled": "true",
             "type": "localClusterAuthEndpoint"
         },
-        "rancherKubernetesEngineConfig": rke_config
+        "rangerKubernetesEngineConfig": rke_config
     }
     return cluster_config
 
@@ -119,7 +119,7 @@ def get_cisscan_enabled_clusterconfig(k8sversion):
             },
             "type": "/v3/schemas/scheduledClusterScan"
         },
-        "rancherKubernetesEngineConfig": rke_config
+        "rangerKubernetesEngineConfig": rke_config
     }
     return cluster_config
 
@@ -132,26 +132,26 @@ def test_cluster_template_create_with_questions():
     cluster_config = get_cluster_config(k8sversionlist[0])
 
     questions = [{
-        "variable": "rancherKubernetesEngineConfig.kubernetesVersion",
+        "variable": "rangerKubernetesEngineConfig.kubernetesVersion",
         "required": "true",
         "type": "string",
         "default": k8sversionlist[0]
     },
         {
-        "variable": "rancherKubernetesEngineConfig.network.plugin",
+        "variable": "rangerKubernetesEngineConfig.network.plugin",
         "required": "true",
         "type": "string",
         "default": "canal"
     },
         {
-        "variable": "rancherKubernetesEngineConfig.services.etcd.backupConfig."
+        "variable": "rangerKubernetesEngineConfig.services.etcd.backupConfig."
                     "s3BackupConfig.bucketName",
         "required": "true",
         "type": "string",
         "default": ""
     },
         {
-        "variable": "rancherKubernetesEngineConfig.services.etcd.backupConfig."
+        "variable": "rangerKubernetesEngineConfig.services.etcd.backupConfig."
                     "s3BackupConfig.endpoint",
         "required": "true",
         "type": "string",
@@ -159,14 +159,14 @@ def test_cluster_template_create_with_questions():
 
     },
         {
-        "variable": "rancherKubernetesEngineConfig.services.etcd.backupConfig."
+        "variable": "rangerKubernetesEngineConfig.services.etcd.backupConfig."
                     "s3BackupConfig.accessKey",
         "required": "true",
         "type": "string",
         "default": ""
     },
         {
-        "variable": "rancherKubernetesEngineConfig.services.etcd.backupConfig."
+        "variable": "rangerKubernetesEngineConfig.services.etcd.backupConfig."
                     "s3BackupConfig.secretKey",
         "required": "true",
         "type": "string",
@@ -175,16 +175,16 @@ def test_cluster_template_create_with_questions():
 
     answers = {
         "values": {
-            "rancherKubernetesEngineConfig.kubernetesVersion":
+            "rangerKubernetesEngineConfig.kubernetesVersion":
                 k8sversionlist[1],
-            "rancherKubernetesEngineConfig.network.plugin": "flannel",
-            "rancherKubernetesEngineConfig.services.etcd.backupConfig."
+            "rangerKubernetesEngineConfig.network.plugin": "flannel",
+            "rangerKubernetesEngineConfig.services.etcd.backupConfig."
                 "s3BackupConfig.bucketName": RANCHER_S3_BUCKETNAME,
-            "rancherKubernetesEngineConfig.services.etcd.backupConfig."
+            "rangerKubernetesEngineConfig.services.etcd.backupConfig."
                 "s3BackupConfig.endpoint": RANCHER_S3_ENDPOINT,
-            "rancherKubernetesEngineConfig.services.etcd.backupConfig."
+            "rangerKubernetesEngineConfig.services.etcd.backupConfig."
                 "s3BackupConfig.accessKey": AWS_ACCESS_KEY_ID,
-            "rancherKubernetesEngineConfig.services.etcd.backupConfig."
+            "rangerKubernetesEngineConfig.services.etcd.backupConfig."
                 "s3BackupConfig.secretKey": AWS_SECRET_ACCESS_KEY
         }
     }
@@ -217,17 +217,17 @@ def test_cluster_template_create_with_questions():
     # Verify that the cluster's applied spec has the parameters set as expected
     assert cluster.appliedSpec.dockerRootDir == "/var/lib/docker123"
     assert cluster.appliedSpec.localClusterAuthEndpoint.enabled is True
-    assert cluster.appliedSpec.rancherKubernetesEngineConfig.\
+    assert cluster.appliedSpec.rangerKubernetesEngineConfig.\
         kubernetesVersion == k8sversionlist[1]
-    assert cluster.appliedSpec.rancherKubernetesEngineConfig.services.etcd.\
+    assert cluster.appliedSpec.rangerKubernetesEngineConfig.services.etcd.\
         backupConfig.s3BackupConfig.bucketName == RANCHER_S3_BUCKETNAME
-    assert cluster.appliedSpec.rancherKubernetesEngineConfig.services.\
+    assert cluster.appliedSpec.rangerKubernetesEngineConfig.services.\
         etcd.backupConfig.s3BackupConfig.endpoint == RANCHER_S3_ENDPOINT
-    assert cluster.appliedSpec.rancherKubernetesEngineConfig.services.etcd.\
+    assert cluster.appliedSpec.rangerKubernetesEngineConfig.services.etcd.\
         backupConfig.s3BackupConfig.accessKey == AWS_ACCESS_KEY_ID
-    assert cluster.appliedSpec.rancherKubernetesEngineConfig.services.etcd.\
+    assert cluster.appliedSpec.rangerKubernetesEngineConfig.services.etcd.\
         backupConfig.s3BackupConfig.type == "/v3/schemas/s3BackupConfig"
-    assert cluster.appliedSpec.rancherKubernetesEngineConfig.network.plugin ==\
+    assert cluster.appliedSpec.rangerKubernetesEngineConfig.network.plugin ==\
         "flannel"
 
     check_cluster_version(cluster, k8sversionlist[1])
@@ -455,7 +455,7 @@ def test_cluster_template_export():
     cluster_name = random_test_name("test-auto-export")
     userToken = user_token["stduser_with_createrketemplate_role"]["token"]
     cluster = create_node_cluster(standard_user_client, cluster_name,
-                                  rancherKubernetesEngineConfig=rke_config,
+                                  rangerKubernetesEngineConfig=rke_config,
                                   userToken=userToken)
 
     # Export a Template
@@ -505,7 +505,7 @@ def test_cluster_template_enforcement_on_admin(request):
 
         rkecluster = \
             create_node_cluster(client, cluster_name,
-                                rancherKubernetesEngineConfig=rke_config,
+                                rangerKubernetesEngineConfig=rke_config,
                                 userToken=ADMIN_TOKEN)
 
     # Verify creating cluster using rke template succeeds
@@ -594,7 +594,7 @@ def test_cluster_template_enforcement_on_stduser():
         cluster_name = random_test_name("test-auto-rkeconfig")
         with pytest.raises(ApiError) as e:
             create_node_cluster(standard_user_client, cluster_name,
-                                rancherKubernetesEngineConfig=rke_config,
+                                rangerKubernetesEngineConfig=rke_config,
                                 userToken=userToken)
         print(e)
         assert e.value.error.status == 422
@@ -891,7 +891,7 @@ def validate_cluster_with_template(client, cluster,
     In this method, we are checking cluster state, verifying state of workloads
     in system project. For user workloads, we are just checking the state. We
     are skipping the kubectl verification for user workloads because of this
-    issue: https://github.com/rancher/rancher/issues/27788
+    issue: https://github.com/ranger/ranger/issues/27788
     Hence this method is introduced locally in test_cluster_templates.py and
     we are not using validate_cluster method from common.py
     '''
@@ -906,7 +906,7 @@ def validate_cluster_with_template(client, cluster,
     create_kubeconfig(cluster)
     if k8s_version != "":
         check_cluster_version(cluster, k8s_version)
-    if hasattr(cluster, 'rancherKubernetesEngineConfig'):
+    if hasattr(cluster, 'rangerKubernetesEngineConfig'):
         check_cluster_state(len(get_role_nodes(cluster, "etcd", client)))
     # check all workloads under the system project are active
     # wait for workloads to be active
@@ -1006,7 +1006,7 @@ def node_template_linode(userclient, nodesize):
                       "stackscriptData": "",
                       "swapSize": "512",
                       "tags": "",
-                      "uaPrefix": "Rancher"},
+                      "uaPrefix": "Ranger"},
         name=random_name(),
         driver="linode",
         namespaceId="lin",
@@ -1019,13 +1019,13 @@ def node_template_linode(userclient, nodesize):
 
 def create_node_cluster(userclient, name, nodecount=1, nodesize="s-2vcpu-4gb",
                         clusterTemplateRevisionId=None,
-                        rancherKubernetesEngineConfig=None, answers=None,
+                        rangerKubernetesEngineConfig=None, answers=None,
                         userToken=None):
     client = userclient
-    if(rancherKubernetesEngineConfig is not None):
+    if(rangerKubernetesEngineConfig is not None):
         cluster = client.create_cluster(
             name=name,
-            rancherKubernetesEngineConfig=rancherKubernetesEngineConfig)
+            rangerKubernetesEngineConfig=rangerKubernetesEngineConfig)
     else:
         cluster = \
             client.create_cluster(
@@ -1074,7 +1074,7 @@ def getRKEConfig(k8sversion):
         "addonJobTimeout": 30,
         "ignoreDockerVersion": "true",
         "sshAgentAuth": "false",
-        "type": "rancherKubernetesEngineConfig",
+        "type": "rangerKubernetesEngineConfig",
         "kubernetesVersion": k8sversion,
         "authentication": {
             "strategy": "x509",

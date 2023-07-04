@@ -3,19 +3,19 @@ package rke1
 import (
 	"testing"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters/kubernetesversions"
-	"github.com/rancher/rancher/tests/framework/extensions/defaults"
-	nodepools "github.com/rancher/rancher/tests/framework/extensions/rke1/nodepools"
-	"github.com/rancher/rancher/tests/framework/extensions/rke1/nodetemplates"
-	"github.com/rancher/rancher/tests/framework/extensions/workloads/pods"
-	"github.com/rancher/rancher/tests/framework/pkg/config"
-	namegen "github.com/rancher/rancher/tests/framework/pkg/namegenerator"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
-	"github.com/rancher/rancher/tests/framework/pkg/wait"
-	"github.com/rancher/rancher/tests/v2/validation/provisioning"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters/kubernetesversions"
+	"github.com/ranger/ranger/tests/framework/extensions/defaults"
+	nodepools "github.com/ranger/ranger/tests/framework/extensions/rke1/nodepools"
+	"github.com/ranger/ranger/tests/framework/extensions/rke1/nodetemplates"
+	"github.com/ranger/ranger/tests/framework/extensions/workloads/pods"
+	"github.com/ranger/ranger/tests/framework/pkg/config"
+	namegen "github.com/ranger/ranger/tests/framework/pkg/namegenerator"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/framework/pkg/wait"
+	"github.com/ranger/ranger/tests/v2/validation/provisioning"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -26,7 +26,7 @@ import (
 type KdmChecksTestSuite struct {
 	suite.Suite
 	session                *session.Session
-	client                 *rancher.Client
+	client                 *ranger.Client
 	ns                     string
 	rke1kubernetesVersions []string
 	cnis                   []string
@@ -60,7 +60,7 @@ func (k *KdmChecksTestSuite) SetupSuite() {
 	k.nodesAndRoles = clustersConfig.NodesAndRolesRKE1
 	k.advancedOptions = clustersConfig.AdvancedOptions
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(k.T(), err)
 
 	k.client = client
@@ -69,10 +69,10 @@ func (k *KdmChecksTestSuite) SetupSuite() {
 func (k *KdmChecksTestSuite) TestRKE1K8sVersions() {
 	logrus.Infof("checking for valid k8s versions..")
 	require.GreaterOrEqual(k.T(), len(k.rke1kubernetesVersions), 1)
-	// fetching all available k8s versions from rancher
+	// fetching all available k8s versions from ranger
 	releasedK8sVersions, _ := kubernetesversions.ListRKE1AllVersions(k.client)
 	logrus.Info("expected k8s versions : ", k.rke1kubernetesVersions)
-	logrus.Info("k8s versions available on rancher server : ", releasedK8sVersions)
+	logrus.Info("k8s versions available on ranger server : ", releasedK8sVersions)
 	for _, expectedK8sVersion := range k.rke1kubernetesVersions {
 		require.Contains(k.T(), releasedK8sVersions, expectedK8sVersion)
 	}
@@ -116,7 +116,7 @@ func (k *KdmChecksTestSuite) TestProvisioningSingleNodeRKE1Clusters() {
 
 }
 
-func (k *KdmChecksTestSuite) provisionRKE1Cluster(client *rancher.Client, provider Provider, nodesAndRoles []nodepools.NodeRoles, k8sVersion, cni string, nodeTemplate *nodetemplates.NodeTemplate, advancedOptions provisioning.AdvancedOptions) (*management.Cluster, *management.NodePool, string, string, error) {
+func (k *KdmChecksTestSuite) provisionRKE1Cluster(client *ranger.Client, provider Provider, nodesAndRoles []nodepools.NodeRoles, k8sVersion, cni string, nodeTemplate *nodetemplates.NodeTemplate, advancedOptions provisioning.AdvancedOptions) (*management.Cluster, *management.NodePool, string, string, error) {
 	clusterName := namegen.AppendRandomString(provider.Name.String())
 
 	cluster := clusters.NewRKE1ClusterConfig(clusterName, cni, k8sVersion, "", client, advancedOptions)
@@ -131,7 +131,7 @@ func (k *KdmChecksTestSuite) provisionRKE1Cluster(client *rancher.Client, provid
 	return clusterResp, nodePool, nodePoolName, clusterName, nil
 }
 
-func (k *KdmChecksTestSuite) checkClustersReady(client *rancher.Client, clusterResps []*management.Cluster, nodePools []*management.NodePool, clusterNames []string, nodePoolNames []string) {
+func (k *KdmChecksTestSuite) checkClustersReady(client *ranger.Client, clusterResps []*management.Cluster, nodePools []*management.NodePool, clusterNames []string, nodePoolNames []string) {
 	for i, clusterResp := range clusterResps {
 		opts := metav1.ListOptions{
 			FieldSelector:  "metadata.name=" + clusterResp.ID,
@@ -148,7 +148,7 @@ func (k *KdmChecksTestSuite) checkClustersReady(client *rancher.Client, clusterR
 		require.NoError(k.T(), err)
 		assert.Equal(k.T(), clusterNames[i], clusterResp.Name)
 		assert.Equal(k.T(), nodePoolNames[i], nodePools[i].Name)
-		assert.Equal(k.T(), k.rke1kubernetesVersions[i], clusterResp.RancherKubernetesEngineConfig.Version)
+		assert.Equal(k.T(), k.rke1kubernetesVersions[i], clusterResp.RangerKubernetesEngineConfig.Version)
 
 		podResults, podErrors := pods.StatusPods(client, clusterResp.ID)
 		assert.NotEmpty(k.T(), podResults)

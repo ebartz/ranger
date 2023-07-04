@@ -1,5 +1,5 @@
 /*
-Copyright 2023 Rancher Labs, Inc.
+Copyright 2023 Ranger Labs, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ limitations under the License.
 package v3
 
 import (
-	"github.com/rancher/lasso/pkg/controller"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/wrangler/pkg/schemes"
+	"github.com/ranger/lasso/pkg/controller"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/wrangler/pkg/schemes"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
@@ -92,7 +92,7 @@ type Interface interface {
 	ProjectMonitorGraph() ProjectMonitorGraphController
 	ProjectNetworkPolicy() ProjectNetworkPolicyController
 	ProjectRoleTemplateBinding() ProjectRoleTemplateBindingController
-	RancherUserNotification() RancherUserNotificationController
+	RangerUserNotification() RangerUserNotificationController
 	RkeAddon() RkeAddonController
 	RkeK8sServiceOption() RkeK8sServiceOptionController
 	RkeK8sSystemImage() RkeK8sSystemImageController
@@ -304,8 +304,8 @@ func (c *version) ProjectNetworkPolicy() ProjectNetworkPolicyController {
 func (c *version) ProjectRoleTemplateBinding() ProjectRoleTemplateBindingController {
 	return NewProjectRoleTemplateBindingController(schema.GroupVersionKind{Group: "management.cattle.io", Version: "v3", Kind: "ProjectRoleTemplateBinding"}, "projectroletemplatebindings", true, c.controllerFactory)
 }
-func (c *version) RancherUserNotification() RancherUserNotificationController {
-	return NewRancherUserNotificationController(schema.GroupVersionKind{Group: "management.cattle.io", Version: "v3", Kind: "RancherUserNotification"}, "rancherusernotifications", false, c.controllerFactory)
+func (c *version) RangerUserNotification() RangerUserNotificationController {
+	return NewRangerUserNotificationController(schema.GroupVersionKind{Group: "management.cattle.io", Version: "v3", Kind: "RangerUserNotification"}, "rangerusernotifications", false, c.controllerFactory)
 }
 func (c *version) RkeAddon() RkeAddonController {
 	return NewRkeAddonController(schema.GroupVersionKind{Group: "management.cattle.io", Version: "v3", Kind: "RkeAddon"}, "rkeaddons", true, c.controllerFactory)

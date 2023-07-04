@@ -7,7 +7,7 @@ def test_run_scan_not_available_on_not_ready_cluster(admin_mc,
     client = admin_mc.client
     cluster = client.create_cluster(
         name=random_str(),
-        rancherKubernetesEngineConfig={
+        rangerKubernetesEngineConfig={
             "accessKey": "junk"
         }
     )

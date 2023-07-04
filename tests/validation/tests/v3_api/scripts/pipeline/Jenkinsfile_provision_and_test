@@ -1,5 +1,5 @@
 node {
-  def rootPath = "/src/rancher-validation/"
+  def rootPath = "/src/ranger-validation/"
   def job_name = "${JOB_NAME}"
   if (job_name.contains('/')) { 
     job_names = job_name.split('/')
@@ -11,9 +11,9 @@ node {
 
   def provisionResultsOut = "provision-results.xml"
   def testResultsOut = "api-results.xml"
-  def imageName = "rancher-validation-${job_name}${env.BUILD_NUMBER}"
+  def imageName = "ranger-validation-${job_name}${env.BUILD_NUMBER}"
   def testsDir = "tests/v3_api/"
-  def rancherConfig = "rancher_env.config"
+  def rangerConfig = "ranger_env.config"
 
   def TESTS_TO_RUN =  [ "test_wl", "test_dns_record", "test_rbac","test_connectivity", "test_ingress",
                         "test_secrets", "test_registry", "test_service_discovery", "test_websocket"]
@@ -85,8 +85,8 @@ node {
                   "${imageName} /bin/bash -c \'pytest -v -s --junit-xml=${provisionResultsOut} ${PYTEST_PROVISION_OPTIONS} ${testsDir}\'"
 
                 // copy file containing CATTLE_TEST_URL & ADMIN_TOKEN and load into environment variables
-                sh "docker cp ${provisionContainer}:${rootPath}${testsDir}${rancherConfig} ."
-                load rancherConfig
+                sh "docker cp ${provisionContainer}:${rootPath}${testsDir}${rangerConfig} ."
+                load rangerConfig
 
                 if (env.RANCHER_TEST_OS == 'windows') {
                   PYTEST_OPTIONS = WINDOWS_PYTEST_OPTIONS

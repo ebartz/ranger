@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/rancher/rancher/tests/framework/clients/corral"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/framework/clients/corral"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
 	"github.com/sirupsen/logrus"
 )
 
@@ -16,8 +16,8 @@ func main() {
 	}
 	configPackage := corral.CorralPackagesConfig()
 
-	path := configPackage.CorralPackageImages["ranchertestcoverage"]
-	_, err = corral.CreateCorral(testSession, "ranchertestcoverage", path, true, configPackage.HasCleanup)
+	path := configPackage.CorralPackageImages["rangertestcoverage"]
+	_, err = corral.CreateCorral(testSession, "rangertestcoverage", path, true, configPackage.HasCleanup)
 	if err != nil {
 		logrus.Errorf("error creating corral: %v", err)
 	}

@@ -5,13 +5,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rancher/norman/types"
-	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	v1 "github.com/rancher/rancher/tests/framework/clients/rancher/v1"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/token"
+	"github.com/ranger/norman/types"
+	v3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	v1 "github.com/ranger/ranger/tests/framework/clients/ranger/v1"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/token"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kwait "k8s.io/apimachinery/pkg/util/wait"
 )
@@ -21,13 +21,13 @@ const (
 )
 
 // CreateAdminToken is a function that creates a new admin token
-func CreateAdminToken(password string, rancherConfig *rancher.Config) (string, error) {
+func CreateAdminToken(password string, rangerConfig *ranger.Config) (string, error) {
 	adminUser := &management.User{
 		Username: "admin",
 		Password: password,
 	}
 
-	hostURL := rancherConfig.Host
+	hostURL := rangerConfig.Host
 	var userToken *management.Token
 	err := kwait.Poll(500*time.Millisecond, 5*time.Minute, func() (done bool, err error) {
 		userToken, err = token.GenerateUserToken(adminUser, hostURL)
@@ -44,9 +44,9 @@ func CreateAdminToken(password string, rancherConfig *rancher.Config) (string, e
 	return userToken.Token, nil
 }
 
-// PostRancherInstall is a function that updates EULA after the rancher installation
+// PostRangerInstall is a function that updates EULA after the ranger installation
 // and sets new admin password to the admin user
-func PostRancherInstall(adminClient *rancher.Client, adminPassword string) error {
+func PostRangerInstall(adminClient *ranger.Client, adminPassword string) error {
 	clusterID, err := clusters.GetClusterIDByName(adminClient, clusterName)
 	if err != nil {
 		return err
@@ -74,8 +74,8 @@ func PostRancherInstall(adminClient *rancher.Client, adminPassword string) error
 	return err
 }
 
-// UpdateEULA is a function that updates EULA after the rancher installation
-func UpdateEULA(adminClient *rancher.Client, clusterID string) error {
+// UpdateEULA is a function that updates EULA after the ranger installation
+func UpdateEULA(adminClient *ranger.Client, clusterID string) error {
 	clusterID, err := clusters.GetClusterIDByName(adminClient, clusterID)
 	if err != nil {
 		return err
@@ -97,7 +97,7 @@ func UpdateEULA(adminClient *rancher.Client, clusterID string) error {
 		return err
 	}
 
-	urlSetting.Value = fmt.Sprintf("https://%s", adminClient.RancherConfig.Host)
+	urlSetting.Value = fmt.Sprintf("https://%s", adminClient.RangerConfig.Host)
 
 	_, err = steveClient.SteveType("management.cattle.io.setting").Update(urlSettingResp, urlSetting)
 	if err != nil {

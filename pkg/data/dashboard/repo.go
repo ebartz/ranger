@@ -4,18 +4,18 @@ import (
 	"context"
 	"strings"
 
-	"github.com/rancher/rancher/pkg/features"
+	"github.com/ranger/ranger/pkg/features"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 
-	"github.com/rancher/rancher/pkg/settings"
+	"github.com/ranger/ranger/pkg/settings"
 
-	v1 "github.com/rancher/rancher/pkg/apis/catalog.cattle.io/v1"
-	"github.com/rancher/rancher/pkg/wrangler"
+	v1 "github.com/ranger/ranger/pkg/apis/catalog.cattle.io/v1"
+	"github.com/ranger/ranger/pkg/wrangler"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 var (
-	prefix = "rancher-"
+	prefix = "ranger-"
 )
 
 func addRepo(wrangler *wrangler.Context, repoName, branchName string) error {
@@ -26,7 +26,7 @@ func addRepo(wrangler *wrangler.Context, repoName, branchName string) error {
 				Name: repoName,
 			},
 			Spec: v1.RepoSpec{
-				GitRepo:   "https://git.rancher.io/" + strings.TrimPrefix(repoName, prefix),
+				GitRepo:   "https://git.ranger.io/" + strings.TrimPrefix(repoName, prefix),
 				GitBranch: branchName,
 			},
 		})
@@ -39,15 +39,15 @@ func addRepo(wrangler *wrangler.Context, repoName, branchName string) error {
 }
 
 func addRepos(ctx context.Context, wrangler *wrangler.Context) error {
-	if err := addRepo(wrangler, "rancher-charts", settings.ChartDefaultBranch.Get()); err != nil {
+	if err := addRepo(wrangler, "ranger-charts", settings.ChartDefaultBranch.Get()); err != nil {
 		return err
 	}
-	if err := addRepo(wrangler, "rancher-partner-charts", settings.PartnerChartDefaultBranch.Get()); err != nil {
+	if err := addRepo(wrangler, "ranger-partner-charts", settings.PartnerChartDefaultBranch.Get()); err != nil {
 		return err
 	}
 
 	if features.RKE2.Enabled() {
-		if err := addRepo(wrangler, "rancher-rke2-charts", settings.RKE2ChartDefaultBranch.Get()); err != nil {
+		if err := addRepo(wrangler, "ranger-rke2-charts", settings.RKE2ChartDefaultBranch.Get()); err != nil {
 			return err
 		}
 	}

@@ -7,29 +7,29 @@ import (
 	"sync"
 	"time"
 
-	"github.com/rancher/rancher/pkg/auth/providers/migration"
+	"github.com/ranger/ranger/pkg/auth/providers/migration"
 
 	"github.com/pkg/errors"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/rancher/pkg/auth/providerrefresh"
-	"github.com/rancher/rancher/pkg/auth/providers/common"
-	"github.com/rancher/rancher/pkg/auth/tokens"
-	"github.com/rancher/rancher/pkg/catalog/manager"
-	"github.com/rancher/rancher/pkg/clustermanager"
-	managementController "github.com/rancher/rancher/pkg/controllers/management"
-	"github.com/rancher/rancher/pkg/controllers/management/clusterupstreamrefresher"
-	managementcrds "github.com/rancher/rancher/pkg/crds/management"
-	"github.com/rancher/rancher/pkg/cron"
-	managementdata "github.com/rancher/rancher/pkg/data/management"
-	"github.com/rancher/rancher/pkg/dialer"
-	"github.com/rancher/rancher/pkg/jailer"
-	"github.com/rancher/rancher/pkg/metrics"
-	"github.com/rancher/rancher/pkg/namespace"
-	"github.com/rancher/rancher/pkg/systemtokens"
-	"github.com/rancher/rancher/pkg/telemetry"
-	"github.com/rancher/rancher/pkg/tunnelserver/mcmauthorizer"
-	"github.com/rancher/rancher/pkg/types/config"
-	"github.com/rancher/rancher/pkg/wrangler"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/ranger/pkg/auth/providerrefresh"
+	"github.com/ranger/ranger/pkg/auth/providers/common"
+	"github.com/ranger/ranger/pkg/auth/tokens"
+	"github.com/ranger/ranger/pkg/catalog/manager"
+	"github.com/ranger/ranger/pkg/clustermanager"
+	managementController "github.com/ranger/ranger/pkg/controllers/management"
+	"github.com/ranger/ranger/pkg/controllers/management/clusterupstreamrefresher"
+	managementcrds "github.com/ranger/ranger/pkg/crds/management"
+	"github.com/ranger/ranger/pkg/cron"
+	managementdata "github.com/ranger/ranger/pkg/data/management"
+	"github.com/ranger/ranger/pkg/dialer"
+	"github.com/ranger/ranger/pkg/jailer"
+	"github.com/ranger/ranger/pkg/metrics"
+	"github.com/ranger/ranger/pkg/namespace"
+	"github.com/ranger/ranger/pkg/systemtokens"
+	"github.com/ranger/ranger/pkg/telemetry"
+	"github.com/ranger/ranger/pkg/tunnelserver/mcmauthorizer"
+	"github.com/ranger/ranger/pkg/types/config"
+	"github.com/ranger/ranger/pkg/wrangler"
 	"github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -222,7 +222,7 @@ func (m *mcm) Start(ctx context.Context) error {
 		clusterupstreamrefresher.MigrateEksRefreshCronSetting(m.wranglerContext)
 		go managementdata.CleanupDuplicateBindings(m.ScaledContext, m.wranglerContext)
 		go managementdata.CleanupOrphanBindings(m.ScaledContext, m.wranglerContext)
-		logrus.Infof("Rancher startup complete")
+		logrus.Infof("Ranger startup complete")
 		return nil
 	})
 

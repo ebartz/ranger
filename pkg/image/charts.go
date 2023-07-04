@@ -12,29 +12,29 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/pkg/errors"
-	libhelm "github.com/rancher/rancher/pkg/helm"
+	libhelm "github.com/ranger/ranger/pkg/helm"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 	"helm.sh/helm/v3/pkg/repo"
 )
 
-const RancherVersionAnnotationKey = "catalog.cattle.io/rancher-version"
+const RangerVersionAnnotationKey = "catalog.cattle.io/ranger-version"
 
 // chartsToCheckConstraints and systemChartsToCheckConstraints define which charts and system charts should
-// be checked for images and added to imageSet based on whether the given Rancher version/tag satisfies the chart's
-// Rancher version constraints to allow support for multiple version lines of a chart in airgap setups. If a chart is
+// be checked for images and added to imageSet based on whether the given Ranger version/tag satisfies the chart's
+// Ranger version constraints to allow support for multiple version lines of a chart in airgap setups. If a chart is
 // not defined here, only the latest version of it will be checked for images.
 // Note: CRD charts need to be added as well.
 var chartsToCheckConstraints = map[string]struct{}{}
 var systemChartsToCheckConstraints = map[string]struct{}{
-	"rancher-monitoring": {},
+	"ranger-monitoring": {},
 }
 
 // chartsToIgnoreTags and systemChartsToIgnoreTags defines the charts and system charts in which a specified
 // image tag should be ignored.
 var chartsToIgnoreTags = map[string]string{
-	"rancher-vsphere-csi": "latest",
-	"rancher-vsphere-cpi": "latest",
+	"ranger-vsphere-csi": "latest",
+	"ranger-vsphere-cpi": "latest",
 }
 var systemChartsToIgnoreTags = map[string]string{}
 
@@ -42,18 +42,18 @@ type Charts struct {
 	Config ExportConfig
 }
 
-// FetchImages finds all the images used by all the charts in a Rancher charts repository and adds them to imageSet.
+// FetchImages finds all the images used by all the charts in a Ranger charts repository and adds them to imageSet.
 // The images from the latest version of each chart are always added to the images set, whereas the remaining versions
-// are added only if the given Rancher version/tag satisfies the chart's Rancher version constraint annotation.
+// are added only if the given Ranger version/tag satisfies the chart's Ranger version constraint annotation.
 func (c Charts) FetchImages(imagesSet map[string]map[string]struct{}) error {
-	if c.Config.ChartsPath == "" || c.Config.RancherVersion == "" {
+	if c.Config.ChartsPath == "" || c.Config.RangerVersion == "" {
 		return nil
 	}
 	index, err := repo.LoadIndexFile(filepath.Join(c.Config.ChartsPath, "index.yaml"))
 	if err != nil {
 		return err
 	}
-	// Filter index entries based on their Rancher version constraint
+	// Filter index entries based on their Ranger version constraint
 	var filteredVersions repo.ChartVersions
 	for _, versions := range index.Entries {
 		if len(versions) == 0 {
@@ -65,7 +65,7 @@ func (c Charts) FetchImages(imagesSet map[string]map[string]struct{}) error {
 		latestVersion := versions[0]
 		filteredVersions = append(filteredVersions, latestVersion)
 		// Append the remaining versions of the chart if the chart exists in the chartsToCheckConstraints map
-		// and the given Rancher version satisfies the chart's Rancher version constraint annotation.
+		// and the given Ranger version satisfies the chart's Ranger version constraint annotation.
 		chartName := versions[0].Metadata.Name
 		if _, ok := chartsToCheckConstraints[chartName]; ok {
 			for _, version := range versions[1:] {
@@ -96,12 +96,12 @@ func (c Charts) FetchImages(imagesSet map[string]map[string]struct{}) error {
 	return nil
 }
 
-// checkChartVersionConstraint retrieves the value of a chart's Rancher version constraint annotation, and
-// returns true if the Rancher version in the export configuration satisfies the chart's constraint, false otherwise.
-// If a chart does not have a Rancher version annotation defined, this function returns false.
+// checkChartVersionConstraint retrieves the value of a chart's Ranger version constraint annotation, and
+// returns true if the Ranger version in the export configuration satisfies the chart's constraint, false otherwise.
+// If a chart does not have a Ranger version annotation defined, this function returns false.
 func (c Charts) checkChartVersionConstraint(version repo.ChartVersion) (bool, error) {
-	if constraintStr, ok := version.Annotations[RancherVersionAnnotationKey]; ok {
-		return compareRancherVersionToConstraint(c.Config.RancherVersion, constraintStr)
+	if constraintStr, ok := version.Annotations[RangerVersionAnnotationKey]; ok {
+		return compareRangerVersionToConstraint(c.Config.RangerVersion, constraintStr)
 	}
 	return false, nil
 }
@@ -111,15 +111,15 @@ type SystemCharts struct {
 }
 
 type Questions struct {
-	RancherMinVersion string `yaml:"rancher_min_version"`
-	RancherMaxVersion string `yaml:"rancher_max_version"`
+	RangerMinVersion string `yaml:"ranger_min_version"`
+	RangerMaxVersion string `yaml:"ranger_max_version"`
 }
 
-// FetchImages finds all the images used by all the charts in a Rancher system charts repository and adds them to imageSet.
+// FetchImages finds all the images used by all the charts in a Ranger system charts repository and adds them to imageSet.
 // The images from the latest version of each chart are always added to the images set, whereas the remaining versions
-// are added only if the given Rancher version/tag satisfies the chart's Rancher version constraint defined in its questions file.
+// are added only if the given Ranger version/tag satisfies the chart's Ranger version constraint defined in its questions file.
 func (sc SystemCharts) FetchImages(imagesSet map[string]map[string]struct{}) error {
-	if sc.Config.SystemChartsPath == "" || sc.Config.RancherVersion == "" {
+	if sc.Config.SystemChartsPath == "" || sc.Config.RangerVersion == "" {
 		return nil
 	}
 	// Load system charts virtual index
@@ -132,7 +132,7 @@ func (sc SystemCharts) FetchImages(imagesSet map[string]map[string]struct{}) err
 	if err != nil {
 		return errors.Wrapf(err, "failed to load system charts index")
 	}
-	// Filter index entries based on their Rancher version constraint
+	// Filter index entries based on their Ranger version constraint
 	var filteredVersions libhelm.ChartVersions
 	for _, versions := range virtualIndex.IndexFile.Entries {
 		if len(versions) == 0 {
@@ -146,7 +146,7 @@ func (sc SystemCharts) FetchImages(imagesSet map[string]map[string]struct{}) err
 			filteredVersions = append(filteredVersions, latestVersion)
 		}
 		// Append the remaining versions of the chart if the chart exists in the systemChartsToCheckConstraints map
-		// and the given Rancher version satisfies the chart's Rancher version constraint defined in its questions file
+		// and the given Ranger version satisfies the chart's Ranger version constraint defined in its questions file
 		chartName := versions[0].ChartMetadata.Name
 		if _, ok := systemChartsToCheckConstraints[chartName]; ok {
 			for _, version := range versions[1:] {
@@ -178,9 +178,9 @@ func (sc SystemCharts) FetchImages(imagesSet map[string]map[string]struct{}) err
 	return nil
 }
 
-// checkChartVersionConstraint retrieves the value of a chart's Rancher version defined in its questions file, and
-// returns true if the Rancher version in the export configuration satisfies the chart's constraint, false otherwise.
-// If a chart does not have a Rancher version constraint defined, this function returns false.
+// checkChartVersionConstraint retrieves the value of a chart's Ranger version defined in its questions file, and
+// returns true if the Ranger version in the export configuration satisfies the chart's constraint, false otherwise.
+// If a chart does not have a Ranger version constraint defined, this function returns false.
 func (sc SystemCharts) checkChartVersionConstraint(version libhelm.ChartVersion) (bool, error) {
 	questionsPath := filepath.Join(sc.Config.SystemChartsPath, version.Dir, "questions.yaml")
 	questions, err := decodeQuestionsFile(questionsPath)
@@ -192,15 +192,15 @@ func (sc SystemCharts) checkChartVersionConstraint(version libhelm.ChartVersion)
 		logrus.Warnf("skipping system chart, %s:%s does not have a questions file", version.ChartMetadata.Name, version.ChartMetadata.Version)
 		return false, nil
 	}
-	constraintStr := minMaxToConstraintStr(questions.RancherMinVersion, questions.RancherMaxVersion)
+	constraintStr := minMaxToConstraintStr(questions.RangerMinVersion, questions.RangerMaxVersion)
 	if constraintStr == "" {
 		return false, nil
 	}
-	return compareRancherVersionToConstraint(sc.Config.RancherVersion, constraintStr)
+	return compareRangerVersionToConstraint(sc.Config.RangerVersion, constraintStr)
 }
 
-// compareRancherVersionToConstraint returns true if the Rancher version satisfies constraintStr, false otherwise.
-func compareRancherVersionToConstraint(rancherVersion, constraintStr string) (bool, error) {
+// compareRangerVersionToConstraint returns true if the Ranger version satisfies constraintStr, false otherwise.
+func compareRangerVersionToConstraint(rangerVersion, constraintStr string) (bool, error) {
 	if constraintStr == "" {
 		return false, errors.Errorf("Invalid constraint string: \"%s\"", constraintStr)
 	}
@@ -208,29 +208,29 @@ func compareRancherVersionToConstraint(rancherVersion, constraintStr string) (bo
 	if err != nil {
 		return false, err
 	}
-	rancherSemVer, err := semver.NewVersion(rancherVersion)
+	rangerSemVer, err := semver.NewVersion(rangerVersion)
 	if err != nil {
 		return false, err
 	}
-	// When the exporter is ran in a dev environment, we replace the rancher version with a dev version (e.g 2.X.99).
-	// This breaks the semver compare logic for exporting because we use the Rancher version constraint < 2.X.99-0 in
+	// When the exporter is ran in a dev environment, we replace the ranger version with a dev version (e.g 2.X.99).
+	// This breaks the semver compare logic for exporting because we use the Ranger version constraint < 2.X.99-0 in
 	// many of our charts and since 2.X.99 > 2.X.99-0 the comparison returns false which is not the desired behavior.
-	patch := rancherSemVer.Patch()
+	patch := rangerSemVer.Patch()
 	if patch == 99 {
 		patch = 98
 	}
 	// All pre-release versions are removed because the semver comparison will not yield the desired behavior unless
 	// the constraint has a pre-release too. Since the exporter for charts can treat pre-releases and releases equally,
-	// is cleaner to remove it. E.g. comparing rancherVersion 2.6.4-rc1 and constraint 2.6.3 - 2.6.5 yields false because
+	// is cleaner to remove it. E.g. comparing rangerVersion 2.6.4-rc1 and constraint 2.6.3 - 2.6.5 yields false because
 	// the versions in the contraint do not have a pre-release. This behavior comes from the semver module and is intentional.
-	rSemVer, err := semver.NewVersion(fmt.Sprintf("%d.%d.%d", rancherSemVer.Major(), rancherSemVer.Minor(), patch))
+	rSemVer, err := semver.NewVersion(fmt.Sprintf("%d.%d.%d", rangerSemVer.Major(), rangerSemVer.Minor(), patch))
 	if err != nil {
 		return false, err
 	}
 	return constraint.Check(rSemVer), nil
 }
 
-// minMaxToConstraintStr converts min and max Rancher version strings into a constraint string
+// minMaxToConstraintStr converts min and max Ranger version strings into a constraint string
 // E.g min "2.6.3" max "2.6.4" -> constraintStr "2.6.3 - 2.6.4".
 func minMaxToConstraintStr(min, max string) string {
 	if min != "" && max != "" {

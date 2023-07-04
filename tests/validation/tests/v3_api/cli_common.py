@@ -19,7 +19,7 @@ class BaseCli:
 
     @classmethod
     def run_command(cls, command, expect_error=False):
-        command = "rancherctl {}".format(command)
+        command = "rangerctl {}".format(command)
         cls.log.debug("run cmd:\t%s", command)
         if expect_error:
             result = run_command_with_stderr(command, log_out=False)
@@ -34,7 +34,7 @@ class BaseCli:
     def login(self, url, token, **kwargs):
         context = kwargs.get("context", self.DEFAULT_CONTEXT)
         if context is None:
-            raise ValueError("No context supplied for rancher login!")
+            raise ValueError("No context supplied for ranger login!")
         cmd = "login {} --token {} --context {} --skip-verify".format(
             url, token, context)
         self.run_command(cmd, expect_error=True)

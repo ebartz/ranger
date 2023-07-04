@@ -3,11 +3,11 @@ package cert
 import (
 	"time"
 
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	"github.com/rancher/norman/types/convert"
-	"github.com/rancher/rancher/pkg/cert"
-	client "github.com/rancher/rancher/pkg/client/generated/project/v3"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	"github.com/ranger/norman/types/convert"
+	"github.com/ranger/ranger/pkg/cert"
+	client "github.com/ranger/ranger/pkg/client/generated/project/v3"
 )
 
 func Wrap(store types.Store) types.Store {

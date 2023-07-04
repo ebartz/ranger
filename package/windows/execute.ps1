@@ -90,7 +90,7 @@ Set-Env -Key "CATTLE_ROLE" -Value "worker"
 $CLUSTER_CLEANUP = Get-Env -Key "CLUSTER_CLEANUP"
 if ($CLUSTER_CLEANUP -eq "true")
 {
-    Start-Process -NoNewWindow -Wait -FilePath "c:\etc\rancher\agent.exe"
+    Start-Process -NoNewWindow -Wait -FilePath "c:\etc\ranger\agent.exe"
     exit 0
 }
 
@@ -239,13 +239,13 @@ if ($CATTLE_K8S_MANAGED -ne "true")
     }
 }
 
-# check rancher server address
+# check ranger server address
 if (-not $CATTLE_SERVER)
 {
     Log-Fatal "--server is a required option"
 }
 
-# check rancher server
+# check ranger server
 try
 {
     curl.exe --insecure -s -fL "$CATTLE_SERVER/ping" | Out-Null
@@ -297,7 +297,7 @@ if ($CATTLE_CA_CHECKSUM)
             certoc.exe -addstore root $caTemp.FullName | Out-Null
             if (-not $?) {
                 $caTemp.Delete()
-                Log-Fatal "Failed to import rancher server certificates to Root"
+                Log-Fatal "Failed to import ranger server certificates to Root"
             }
             $caTemp.Delete()
         } else {
@@ -345,6 +345,6 @@ Set-Env -Key "CATTLE_NODE_LABEL" -Value $($CATTLE_NODE_LABEL -join ",")
 Set-Env -Key "CATTLE_NODE_TAINTS" -Value $($CATTLE_NODE_TAINTS -join ",")
 
 # upgrade wins.exe
-Transfer-File -Src c:\Windows\wins.exe -Dst c:\etc\rancher\wins\wins.exe
+Transfer-File -Src c:\Windows\wins.exe -Dst c:\etc\ranger\wins\wins.exe
 
-Start-Process -NoNewWindow -Wait -FilePath "c:\etc\rancher\agent.exe"
+Start-Process -NoNewWindow -Wait -FilePath "c:\etc\ranger\agent.exe"

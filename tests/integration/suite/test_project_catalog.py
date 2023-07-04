@@ -1,6 +1,6 @@
 from .conftest import wait_until, wait_until_available, wait_for_condition,\
     user_project_client
-from rancher import ApiError
+from ranger import ApiError
 from .common import random_str
 import time
 
@@ -229,7 +229,7 @@ def test_project_catalog_access_before_app_creation(admin_mc, admin_pc,
 
     project_name = str.lstrip(new_project.id, "local:")
     catalog_name = project_name + ":" + name
-    url = "https://github.com/rancher/integration-test-charts.git"
+    url = "https://github.com/ranger/integration-test-charts.git"
 
     client.create_project_catalog(name=name,
                                   branch="master",

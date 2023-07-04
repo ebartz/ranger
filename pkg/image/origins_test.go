@@ -5,14 +5,14 @@ import "testing"
 func TestGetAllUniqueImages(t *testing.T) {
 	images := [][]string{
 		{
-			"rancher/hardened-coredns:v1.8.5-build20211119",
-			"rancher/hardened-coredns:v1.9.1-build20220318",
-			"rancher/hardened-coredns:v1.9.3-build20220613",
+			"ranger/hardened-coredns:v1.8.5-build20211119",
+			"ranger/hardened-coredns:v1.9.1-build20220318",
+			"ranger/hardened-coredns:v1.9.3-build20220613",
 		},
 		{
-			"rancher/hardened-kubernetes:v1.22.10-rke2r2-build20220608",
-			"rancher/hardened-kubernetes:v1.22.11-rke2r1-build20220616",
-			"rancher/hardened-kubernetes:v1.22.13-rke2r1-build20220817",
+			"ranger/hardened-kubernetes:v1.22.10-rke2r2-build20220608",
+			"ranger/hardened-kubernetes:v1.22.11-rke2r1-build20220616",
+			"ranger/hardened-kubernetes:v1.22.13-rke2r1-build20220817",
 		},
 	}
 	uniqueImages := []string{
@@ -41,7 +41,7 @@ func TestGatherUnknownImages(t *testing.T) {
 }
 
 func TestRepoFromImage(t *testing.T) {
-	image := "rancher/hardened-sriov-network-operator:v1.0.0-build20210429"
+	image := "ranger/hardened-sriov-network-operator:v1.0.0-build20210429"
 	repo := "hardened-sriov-network-operator"
 
 	returnedRepo := repoFromImage(image)
@@ -51,7 +51,7 @@ func TestRepoFromImage(t *testing.T) {
 	}
 
 	badImage1 := "hardened-sriov-network-operator:v1.0.0-build20210429"
-	badImage2 := "rancher/hardened-sriov-network-operator"
+	badImage2 := "ranger/hardened-sriov-network-operator"
 
 	returnedRepo = repoFromImage(badImage1)
 	if returnedRepo != "" {
@@ -68,12 +68,12 @@ func TestRepoFromImage(t *testing.T) {
 
 func TestUniqueTargetImages(t *testing.T) {
 	targetImages := []string{
-		"rancher/mirrored-calico-operator:v1.28.1",
-		"rancher/mirrored-calico-operator:v1.27.1",
-		"rancher/mirrored-calico-operator:v1.25.3",
-		"rancher/mirrored-calico-pod2daemon-flexvol:v3.17.2",
-		"rancher/mirrored-calico-pod2daemon-flexvol:v3.16.5",
-		"rancher/mirrored-calico-pod2daemon-flexvol:v3.13.4",
+		"ranger/mirrored-calico-operator:v1.28.1",
+		"ranger/mirrored-calico-operator:v1.27.1",
+		"ranger/mirrored-calico-operator:v1.25.3",
+		"ranger/mirrored-calico-pod2daemon-flexvol:v3.17.2",
+		"ranger/mirrored-calico-pod2daemon-flexvol:v3.16.5",
+		"ranger/mirrored-calico-pod2daemon-flexvol:v3.13.4",
 	}
 
 	uniqueImages := []string{

@@ -1,6 +1,6 @@
 # KEv2 Unit Tests
 
-KEv2 integration (unit) tests tests code functionality in the rancher/rancher handler for each KEv2 cloud provider (AKS EKS and GKE). The tests are written using the [Go Test Framework](https://pkg.go.dev/testing) and [MockCompose](https://github.com/kelveny/mockcompose). They mock the cluster state and `AKSClusterConfig` objects using test files to simulate reactions to a real cluster, and mock any mockable Interfaces used by the OperatorController. Test files are located in each handler folder and data used by the tests are located in a `/test` sub folder. The unit test structure is different from `rancher/rancher/tests` because [Go Test Framework](https://pkg.go.dev/testing) requires test files to be in the same package as the source code.
+KEv2 integration (unit) tests tests code functionality in the ranger/ranger handler for each KEv2 cloud provider (AKS EKS and GKE). The tests are written using the [Go Test Framework](https://pkg.go.dev/testing) and [MockCompose](https://github.com/kelveny/mockcompose). They mock the cluster state and `AKSClusterConfig` objects using test files to simulate reactions to a real cluster, and mock any mockable Interfaces used by the OperatorController. Test files are located in each handler folder and data used by the tests are located in a `/test` sub folder. The unit test structure is different from `ranger/ranger/tests` because [Go Test Framework](https://pkg.go.dev/testing) requires test files to be in the same package as the source code.
 
 ## File structure
 
@@ -16,7 +16,7 @@ To run kev2 unit tests you will need:
 ---
 
 ```
-rancher/rancher
+ranger/ranger
 -> pkg/controllers/management/aks
      -> aks_cluster_handler.go
      -> aks_cluster_handler_test.go
@@ -30,8 +30,8 @@ rancher/rancher
 Clone the repo
 
 ```
-Git clone rancher/rancher
-cd rancher
+Git clone ranger/ranger
+cd ranger
 ```
 
 If you want to test each provider separately

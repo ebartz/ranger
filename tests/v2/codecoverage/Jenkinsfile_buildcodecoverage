@@ -1,16 +1,16 @@
 #!groovy
 node {
-  def workPath = "/root/go/src/github.com/rancher/rancher/tests/v2/codecoverage/"
+  def workPath = "/root/go/src/github.com/ranger/ranger/tests/v2/codecoverage/"
   def job_name = "${JOB_NAME}"
   if (job_name.contains('/')) { 
     job_names = job_name.split('/')
     job_name = job_names[job_names.size() - 1] 
   }
   def testContainer = "${job_name}${env.BUILD_NUMBER}_test"
-  def imageName = "rancher-code-coverage-image-build-${job_name}${env.BUILD_NUMBER}"
+  def imageName = "ranger-code-coverage-image-build-${job_name}${env.BUILD_NUMBER}"
   def buildDockerContainer = "build-code-cover-docker-container"
   def envFile = ".env"
-  def rancherConfig = "rancher_env.config"
+  def rangerConfig = "ranger_env.config"
   def branch = "release/v2.7"
   def coverfile = "cover.out"
   if ("${env.BRANCH}" != "null" && "${env.BRANCH}" != "") {
@@ -42,7 +42,7 @@ node {
                       userRemoteConfigs: repo
                     ])
           }
-          dir ("/home/jenkins/go/src/github.com/rancher/rancher") {
+          dir ("/home/jenkins/go/src/github.com/ranger/ranger") {
             try {
               stage('Configure and Build') {
                 sh "tests/v2/validation/configure.sh"

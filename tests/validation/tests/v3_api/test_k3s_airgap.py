@@ -7,7 +7,7 @@ from .test_airgap import (AG_HOST_NAME, ARCH, NUMBER_OF_INSTANCES,
                           run_command_on_airgap_node, prepare_private_registry,
                           copy_certs_to_node, deploy_airgap_cluster,
                           trust_certs_on_node, add_tarball_to_node,
-                          optionally_add_cluster_to_rancher)
+                          optionally_add_cluster_to_ranger)
 
 RANCHER_K3S_VERSION = os.environ.get("RANCHER_K3S_VERSION", "")
 K3S_SERVER_OPTIONS = os.environ.get("K3S_SERVER_OPTIONS", "")
@@ -32,7 +32,7 @@ def test_deploy_airgap_k3s_private_registry():
                                   'private_registry')
     deploy_airgap_cluster(bastion_node, ag_nodes, "k3s",
                           K3S_SERVER_OPTIONS, K3S_AGENT_OPTIONS)
-    optionally_add_cluster_to_rancher(bastion_node, ag_nodes)
+    optionally_add_cluster_to_ranger(bastion_node, ag_nodes)
 
 
 def test_deploy_airgap_k3s_tarball():
@@ -41,7 +41,7 @@ def test_deploy_airgap_k3s_tarball():
     ag_nodes = prepare_airgap_k3s(bastion_node, NUMBER_OF_INSTANCES, 'tarball')
     deploy_airgap_cluster(bastion_node, ag_nodes, "k3s",
                           K3S_SERVER_OPTIONS, K3S_AGENT_OPTIONS)
-    optionally_add_cluster_to_rancher(bastion_node, ag_nodes, prep="k3s")
+    optionally_add_cluster_to_ranger(bastion_node, ag_nodes, prep="k3s")
 
 
 def add_k3s_tarball_to_bastion(bastion_node, k3s_version):

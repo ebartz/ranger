@@ -4,12 +4,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/rancher/rancher/tests/framework/clients/rancher"
-	management "github.com/rancher/rancher/tests/framework/clients/rancher/generated/management/v3"
-	"github.com/rancher/rancher/tests/framework/extensions/clusters"
-	"github.com/rancher/rancher/tests/framework/extensions/etcdsnapshot"
-	"github.com/rancher/rancher/tests/framework/extensions/users"
-	"github.com/rancher/rancher/tests/framework/pkg/session"
+	"github.com/ranger/ranger/tests/framework/clients/ranger"
+	management "github.com/ranger/ranger/tests/framework/clients/ranger/generated/management/v3"
+	"github.com/ranger/ranger/tests/framework/extensions/clusters"
+	"github.com/ranger/ranger/tests/framework/extensions/etcdsnapshot"
+	"github.com/ranger/ranger/tests/framework/extensions/users"
+	"github.com/ranger/ranger/tests/framework/pkg/session"
 	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -18,9 +18,9 @@ import (
 
 type ETCDRbacBackupTestSuite struct {
 	suite.Suite
-	client             *rancher.Client
+	client             *ranger.Client
 	standardUser       *management.User
-	standardUserClient *rancher.Client
+	standardUserClient *ranger.Client
 	session            *session.Session
 	cluster            *management.Cluster
 	adminProject       *management.Project
@@ -38,11 +38,11 @@ func (rb *ETCDRbacBackupTestSuite) SetupSuite() {
 
 	rb.namespace = defaultNamespace
 
-	client, err := rancher.NewClient("", testSession)
+	client, err := ranger.NewClient("", testSession)
 	require.NoError(rb.T(), err)
 
 	rb.client = client
-	rb.clusterName = client.RancherConfig.ClusterName
+	rb.clusterName = client.RangerConfig.ClusterName
 	require.NotEmptyf(rb.T(), rb.clusterName, "Cluster name to install should be set")
 	clusterID, err := clusters.GetClusterIDByName(rb.client, rb.clusterName)
 	require.NoError(rb.T(), err, "Error getting cluster ID")

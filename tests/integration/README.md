@@ -4,7 +4,7 @@
 
 ---
 
-To execute a full CI test, run `make test` or `make ci` which will build Rancher (including any local changes) and run the test suite on it.
+To execute a full CI test, run `make test` or `make ci` which will build Ranger (including any local changes) and run the test suite on it.
 
 ## Install
 
@@ -20,7 +20,7 @@ pip install tox
 
 ---
 
-Start a local rancher instance on port 8443
+Start a local ranger instance on port 8443
 
 Run with Tox - from tests/integration dir. See tox.ini for configuration
 
@@ -39,7 +39,7 @@ Run with pytest
 
 To debug, use the standard inline process: `breakpoint()`
 
-The tests use a [Rancher python client](https://github.com/rancher/client-python) which is dynamically generated based on the Rancher API, so any methods called on it do not exist until runtime.
+The tests use a [Ranger python client](https://github.com/ranger/client-python) which is dynamically generated based on the Ranger API, so any methods called on it do not exist until runtime.
 It will be helpful to use the debugger and tools like `dir(admin_mc)` to see all methods on a variable.
 
 `conftest.py` holds the primary supporting code. See [pytest docs](https://docs.pytest.org) for more info.

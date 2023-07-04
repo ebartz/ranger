@@ -8,9 +8,9 @@ const (
 	TemplateVersionSpecFieldFiles               = "files"
 	TemplateVersionSpecFieldKubeVersion         = "kubeVersion"
 	TemplateVersionSpecFieldQuestions           = "questions"
-	TemplateVersionSpecFieldRancherMaxVersion   = "rancherMaxVersion"
-	TemplateVersionSpecFieldRancherMinVersion   = "rancherMinVersion"
-	TemplateVersionSpecFieldRancherVersion      = "rancherVersion"
+	TemplateVersionSpecFieldRangerMaxVersion   = "rangerMaxVersion"
+	TemplateVersionSpecFieldRangerMinVersion   = "rangerMinVersion"
+	TemplateVersionSpecFieldRangerVersion      = "rangerVersion"
 	TemplateVersionSpecFieldReadme              = "readme"
 	TemplateVersionSpecFieldRequiredNamespace   = "requiredNamespace"
 	TemplateVersionSpecFieldUpgradeVersionLinks = "upgradeVersionLinks"
@@ -27,9 +27,9 @@ type TemplateVersionSpec struct {
 	Files               map[string]string `json:"files,omitempty" yaml:"files,omitempty"`
 	KubeVersion         string            `json:"kubeVersion,omitempty" yaml:"kubeVersion,omitempty"`
 	Questions           []Question        `json:"questions,omitempty" yaml:"questions,omitempty"`
-	RancherMaxVersion   string            `json:"rancherMaxVersion,omitempty" yaml:"rancherMaxVersion,omitempty"`
-	RancherMinVersion   string            `json:"rancherMinVersion,omitempty" yaml:"rancherMinVersion,omitempty"`
-	RancherVersion      string            `json:"rancherVersion,omitempty" yaml:"rancherVersion,omitempty"`
+	RangerMaxVersion   string            `json:"rangerMaxVersion,omitempty" yaml:"rangerMaxVersion,omitempty"`
+	RangerMinVersion   string            `json:"rangerMinVersion,omitempty" yaml:"rangerMinVersion,omitempty"`
+	RangerVersion      string            `json:"rangerVersion,omitempty" yaml:"rangerVersion,omitempty"`
 	Readme              string            `json:"readme,omitempty" yaml:"readme,omitempty"`
 	RequiredNamespace   string            `json:"requiredNamespace,omitempty" yaml:"requiredNamespace,omitempty"`
 	UpgradeVersionLinks map[string]string `json:"upgradeVersionLinks,omitempty" yaml:"upgradeVersionLinks,omitempty"`

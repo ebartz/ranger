@@ -1,9 +1,9 @@
 package globalrole
 
 import (
-	"github.com/rancher/norman/httperror"
-	"github.com/rancher/norman/types"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
+	"github.com/ranger/norman/httperror"
+	"github.com/ranger/norman/types"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
 )
 
 type store struct {

@@ -4,10 +4,10 @@
 Your GO suite should be set to `-run ^Test<enter_pkg_name_here>ProvisioningTestSuite$`. You can find the correct suite name in the below README links, or by checking the test file you plan to run.
 In your config file, set the following:
 ```json
-"rancher": { 
-  "host": "rancher_server_address",
-  "adminToken": "rancher_admin_token",
-  "userToken": "your_rancher_user_token",
+"ranger": { 
+  "host": "ranger_server_address",
+  "adminToken": "ranger_admin_token",
+  "userToken": "your_ranger_user_token",
   "insecure": true/optional,
   "cleanup": false/optional,
 }

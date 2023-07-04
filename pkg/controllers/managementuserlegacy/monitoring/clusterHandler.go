@@ -8,19 +8,19 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	v32 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	v33 "github.com/rancher/rancher/pkg/apis/project.cattle.io/v3"
-	app2 "github.com/rancher/rancher/pkg/app"
-	"github.com/rancher/rancher/pkg/catalog/manager"
-	"github.com/rancher/rancher/pkg/controllers/managementagent/nslabels"
-	corev1 "github.com/rancher/rancher/pkg/generated/norman/core/v1"
-	mgmtv3 "github.com/rancher/rancher/pkg/generated/norman/management.cattle.io/v3"
-	v3 "github.com/rancher/rancher/pkg/generated/norman/project.cattle.io/v3"
-	kcluster "github.com/rancher/rancher/pkg/kontainer-engine/cluster"
-	"github.com/rancher/rancher/pkg/monitoring"
-	"github.com/rancher/rancher/pkg/node"
-	"github.com/rancher/rancher/pkg/ref"
-	"github.com/rancher/rke/pki"
+	v32 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	v33 "github.com/ranger/ranger/pkg/apis/project.cattle.io/v3"
+	app2 "github.com/ranger/ranger/pkg/app"
+	"github.com/ranger/ranger/pkg/catalog/manager"
+	"github.com/ranger/ranger/pkg/controllers/managementagent/nslabels"
+	corev1 "github.com/ranger/ranger/pkg/generated/norman/core/v1"
+	mgmtv3 "github.com/ranger/ranger/pkg/generated/norman/management.cattle.io/v3"
+	v3 "github.com/ranger/ranger/pkg/generated/norman/project.cattle.io/v3"
+	kcluster "github.com/ranger/ranger/pkg/kontainer-engine/cluster"
+	"github.com/ranger/ranger/pkg/monitoring"
+	"github.com/ranger/ranger/pkg/node"
+	"github.com/ranger/ranger/pkg/ref"
+	"github.com/ranger/rke/pki"
 	k8scorev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
@@ -406,7 +406,7 @@ func (ch *clusterHandler) deployApp(appName, appTargetNamespace string, appProje
 		Spec: v33.AppSpec{
 			Answers:          appAnswers,
 			AnswersSetString: appAnswersSetString,
-			Description:      "Rancher Cluster Monitoring",
+			Description:      "Ranger Cluster Monitoring",
 			ExternalID:       appCatalogID,
 			ProjectName:      appProjectName,
 			TargetNamespace:  appTargetNamespace,

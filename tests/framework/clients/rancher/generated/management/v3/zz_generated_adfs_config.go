@@ -15,7 +15,7 @@ const (
 	ADFSConfigFieldLabels              = "labels"
 	ADFSConfigFieldName                = "name"
 	ADFSConfigFieldOwnerReferences     = "ownerReferences"
-	ADFSConfigFieldRancherAPIHost      = "rancherApiHost"
+	ADFSConfigFieldRangerAPIHost      = "rangerApiHost"
 	ADFSConfigFieldRemoved             = "removed"
 	ADFSConfigFieldSpCert              = "spCert"
 	ADFSConfigFieldSpKey               = "spKey"
@@ -39,7 +39,7 @@ type ADFSConfig struct {
 	Labels              map[string]string `json:"labels,omitempty" yaml:"labels,omitempty"`
 	Name                string            `json:"name,omitempty" yaml:"name,omitempty"`
 	OwnerReferences     []OwnerReference  `json:"ownerReferences,omitempty" yaml:"ownerReferences,omitempty"`
-	RancherAPIHost      string            `json:"rancherApiHost,omitempty" yaml:"rancherApiHost,omitempty"`
+	RangerAPIHost      string            `json:"rangerApiHost,omitempty" yaml:"rangerApiHost,omitempty"`
 	Removed             string            `json:"removed,omitempty" yaml:"removed,omitempty"`
 	SpCert              string            `json:"spCert,omitempty" yaml:"spCert,omitempty"`
 	SpKey               string            `json:"spKey,omitempty" yaml:"spKey,omitempty"`

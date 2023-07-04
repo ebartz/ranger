@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"reflect"
 
-	apimgmtv3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
-	"github.com/rancher/rancher/pkg/clusterprovisioninglogger"
-	"github.com/rancher/rancher/pkg/controllers/management/secretmigrator/assemblers"
-	"github.com/rancher/rancher/pkg/kontainer-engine/service"
-	"github.com/rancher/rke/services"
-	rketypes "github.com/rancher/rke/types"
+	apimgmtv3 "github.com/ranger/ranger/pkg/apis/management.cattle.io/v3"
+	"github.com/ranger/ranger/pkg/clusterprovisioninglogger"
+	"github.com/ranger/ranger/pkg/controllers/management/secretmigrator/assemblers"
+	"github.com/ranger/ranger/pkg/kontainer-engine/service"
+	"github.com/ranger/rke/services"
+	rketypes "github.com/ranger/rke/types"
 	"github.com/sirupsen/logrus"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -45,8 +45,8 @@ func (p *Provisioner) getKontainerDriver(spec apimgmtv3.ClusterSpec) (*apimgmtv3
 		return p.KontainerDriverLister.Get("", (*spec.GenericEngineConfig)[DriverNameField].(string))
 	}
 
-	if spec.RancherKubernetesEngineConfig != nil {
-		return p.KontainerDriverLister.Get("", service.RancherKubernetesEngineDriverName)
+	if spec.RangerKubernetesEngineConfig != nil {
+		return p.KontainerDriverLister.Get("", service.RangerKubernetesEngineDriverName)
 	}
 
 	if spec.ImportedConfig != nil {
@@ -63,8 +63,8 @@ func (p *Provisioner) driverUpdate(cluster *apimgmtv3.Cluster, spec apimgmtv3.Cl
 	spec = cleanRKE(spec)
 	applied := cleanRKE(cluster.Status.AppliedSpec)
 
-	if spec.RancherKubernetesEngineConfig != nil && cluster.Status.APIEndpoint != "" && cluster.Status.ServiceAccountTokenSecret != "" &&
-		reflect.DeepEqual(applied.RancherKubernetesEngineConfig, spec.RancherKubernetesEngineConfig) {
+	if spec.RangerKubernetesEngineConfig != nil && cluster.Status.APIEndpoint != "" && cluster.Status.ServiceAccountTokenSecret != "" &&
+		reflect.DeepEqual(applied.RangerKubernetesEngineConfig, spec.RangerKubernetesEngineConfig) {
 		secret, err := p.Secrets.GetNamespaced("cattle-global-data", cluster.Status.ServiceAccountTokenSecret, v1.GetOptions{})
 		if err != nil {
 			logrus.Errorf("Could not find service account token secret %s for cluster %s: [%v]", cluster.Status.ServiceAccountTokenSecret, cluster.Name, err)
@@ -73,10 +73,10 @@ func (p *Provisioner) driverUpdate(cluster *apimgmtv3.Cluster, spec apimgmtv3.Cl
 		return cluster.Status.APIEndpoint, string(secret.Data["credential"]), cluster.Status.CACert, false, nil
 	}
 
-	if spec.RancherKubernetesEngineConfig != nil && spec.RancherKubernetesEngineConfig.Services.Etcd.Snapshot == nil &&
-		applied.RancherKubernetesEngineConfig != nil && applied.RancherKubernetesEngineConfig.Services.Etcd.Snapshot == nil {
+	if spec.RangerKubernetesEngineConfig != nil && spec.RangerKubernetesEngineConfig.Services.Etcd.Snapshot == nil &&
+		applied.RangerKubernetesEngineConfig != nil && applied.RangerKubernetesEngineConfig.Services.Etcd.Snapshot == nil {
 		_false := false
-		cluster.Spec.RancherKubernetesEngineConfig.Services.Etcd.Snapshot = &_false
+		cluster.Spec.RangerKubernetesEngineConfig.Services.Etcd.Snapshot = &_false
 	}
 
 	spec, err = assemblers.AssembleRKEConfigSpec(cluster, spec, p.SecretLister)
@@ -176,20 +176,20 @@ func (p *Provisioner) removeLegacyServiceAccount(cluster *apimgmtv3.Cluster, spe
 }
 
 func cleanRKE(spec apimgmtv3.ClusterSpec) apimgmtv3.ClusterSpec {
-	if spec.RancherKubernetesEngineConfig == nil {
+	if spec.RangerKubernetesEngineConfig == nil {
 		return spec
 	}
 
 	result := spec.DeepCopy()
 
 	var filteredNodes []rketypes.RKEConfigNode
-	for _, node := range spec.RancherKubernetesEngineConfig.Nodes {
+	for _, node := range spec.RangerKubernetesEngineConfig.Nodes {
 		if len(node.Role) == 1 && node.Role[0] == services.WorkerRole {
 			continue
 		}
 		filteredNodes = append(filteredNodes, node)
 	}
 
-	result.RancherKubernetesEngineConfig.Nodes = filteredNodes
+	result.RangerKubernetesEngineConfig.Nodes = filteredNodes
 	return *result
 }

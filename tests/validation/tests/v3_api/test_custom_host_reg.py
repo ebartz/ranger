@@ -11,7 +11,7 @@ RANCHER_SERVER_VERSION = os.environ.get('RANCHER_SERVER_VERSION',
 rke_config = {"authentication": {"type": "authnConfig", "strategy": "x509"},
               "ignoreDockerVersion": False,
               "network": {"type": "networkConfig", "plugin": "canal"},
-              "type": "rancherKubernetesEngineConfig"
+              "type": "rangerKubernetesEngineConfig"
               }
 AUTO_DEPLOY_CUSTOM_CLUSTER = ast.literal_eval(
     os.environ.get('RANCHER_AUTO_DEPLOY_CUSTOM_CLUSTER', "True"))
@@ -43,21 +43,21 @@ def test_delete_keypair():
     AmazonWebServices().delete_keypairs(KEYPAIR_NAME_PREFIX)
 
 
-def test_deploy_rancher_server():
+def test_deploy_ranger_server():
     if "v2.5" in RANCHER_SERVER_VERSION or \
             "master" in RANCHER_SERVER_VERSION or \
             "v2.6" in RANCHER_SERVER_VERSION or \
             "v2.7" in RANCHER_SERVER_VERSION:
         RANCHER_SERVER_CMD = \
-            'sudo docker run -d --privileged --name="rancher-server" ' \
+            'sudo docker run -d --privileged --name="ranger-server" ' \
             '--restart=unless-stopped -p 80:80 -p 443:443  ' \
             '-e CATTLE_BOOTSTRAP_PASSWORD="{}" ' \
-            'rancher/rancher'.format(ADMIN_PASSWORD)
+            'ranger/ranger'.format(ADMIN_PASSWORD)
     else:
         RANCHER_SERVER_CMD = \
-            'sudo docker run -d --name="rancher-server" ' \
+            'sudo docker run -d --name="ranger-server" ' \
             '--restart=unless-stopped -p 80:80 -p 443:443  ' \
-            'rancher/rancher'
+            'ranger/ranger'
     RANCHER_SERVER_CMD += ":" + RANCHER_SERVER_VERSION + " --trace"
     print(RANCHER_SERVER_CMD)
     aws_nodes = AmazonWebServices().create_multiple_nodes(
@@ -70,7 +70,7 @@ def test_deploy_rancher_server():
     wait_until_active(RANCHER_SERVER_URL, timeout=300)
 
     RANCHER_SET_DEBUG_CMD = \
-        "sudo docker exec rancher-server loglevel --set debug"
+        "sudo docker exec ranger-server loglevel --set debug"
     aws_nodes[0].execute_command(RANCHER_SET_DEBUG_CMD)
 
     token = set_url_password_token(RANCHER_SERVER_URL,
@@ -78,7 +78,7 @@ def test_deploy_rancher_server():
     t_end = time.time() + 30
     while time.time() < t_end:
         try:
-            admin_client = rancher.Client(url=RANCHER_SERVER_URL + "/v3",
+            admin_client = ranger.Client(url=RANCHER_SERVER_URL + "/v3",
                                           token=token, verify=False)
         except requests.exceptions:
             print("Got exception while creating admin client - retry")
@@ -131,7 +131,7 @@ def test_deploy_rancher_server():
 
     if UPDATE_KDM:
         update_and_validate_kdm(KDM_URL, admin_token=token,
-                                rancher_api_url=RANCHER_SERVER_URL + "/v3")
+                                ranger_api_url=RANCHER_SERVER_URL + "/v3")
 
     if AUTO_DEPLOY_CUSTOM_CLUSTER:
         aws_nodes = \
@@ -139,7 +139,7 @@ def test_deploy_rancher_server():
                 5, random_test_name("testcustom"))
         node_roles = [["controlplane"], ["etcd"],
                       ["worker"], ["worker"], ["worker"]]
-        client = rancher.Client(url=RANCHER_SERVER_URL + "/v3",
+        client = ranger.Client(url=RANCHER_SERVER_URL + "/v3",
                                 token=user_token, verify=False)
         if K8S_VERSION != "":
             rke_config["kubernetesVersion"] = K8S_VERSION
@@ -147,8 +147,8 @@ def test_deploy_rancher_server():
         print(rke_config)
         cluster = client.create_cluster(
             name=random_name(),
-            driver="rancherKubernetesEngine",
-            rancherKubernetesEngineConfig=rke_config)
+            driver="rangerKubernetesEngine",
+            rangerKubernetesEngineConfig=rke_config)
         assert cluster.state == "provisioning"
         i = 0
         for aws_node in aws_nodes:
@@ -163,7 +163,7 @@ def test_deploy_rancher_server():
     create_config_file(env_details)
 
 
-def test_delete_rancher_server():
+def test_delete_ranger_server():
     client = get_admin_client()
     clusters = client.list_cluster().data
     for cluster in clusters:
@@ -205,4 +205,4 @@ def test_cluster_enable_logging_elasticsearch():
     assert len(projects) == 1
     project = projects[0]
     p_client = get_project_client_for_token(project, USER_TOKEN)
-    wait_for_app_to_active(p_client, "rancher-logging")
+    wait_for_app_to_active(p_client, "ranger-logging")

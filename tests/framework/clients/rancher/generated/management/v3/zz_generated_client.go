@@ -1,7 +1,7 @@
 package client
 
 import (
-	"github.com/rancher/rancher/tests/framework/pkg/clientbase"
+	"github.com/ranger/ranger/tests/framework/pkg/clientbase"
 )
 
 type Client struct {
@@ -69,7 +69,7 @@ type Client struct {
 	RkeK8sServiceOption                     RkeK8sServiceOptionOperations
 	RkeAddon                                RkeAddonOperations
 	FleetWorkspace                          FleetWorkspaceOperations
-	RancherUserNotification                 RancherUserNotificationOperations
+	RangerUserNotification                 RangerUserNotificationOperations
 }
 
 func NewClient(opts *clientbase.ClientOpts) (*Client, error) {
@@ -144,7 +144,7 @@ func NewClient(opts *clientbase.ClientOpts) (*Client, error) {
 	client.RkeK8sServiceOption = newRkeK8sServiceOptionClient(client)
 	client.RkeAddon = newRkeAddonClient(client)
 	client.FleetWorkspace = newFleetWorkspaceClient(client)
-	client.RancherUserNotification = newRancherUserNotificationClient(client)
+	client.RangerUserNotification = newRangerUserNotificationClient(client)
 
 	return client, nil
 }

@@ -11,13 +11,13 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/rancher/rancher/pkg/settings"
+	"github.com/ranger/ranger/pkg/settings"
 	corev1 "k8s.io/api/core/v1"
 )
 
 const (
 	stateDir  = "management-state/git-repo"
-	staticDir = "/var/lib/rancher-data/local-catalogs/v2"
+	staticDir = "/var/lib/ranger-data/local-catalogs/v2"
 )
 
 func gitDir(namespace, name, gitURL string) string {
